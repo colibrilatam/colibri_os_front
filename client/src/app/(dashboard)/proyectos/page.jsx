@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import ProjectCard from '@/components/proyectos/ProjectCard';
 import ProjectDetailSheet from '@/components/proyectos/ProjectDetailSheet';
+import CreateProjectSheet from '@/components/proyectos/CreateProjectSheet';
 
 // Datos mock con una estructura clara
 const mockUserData = {
   nombre: 'María García',
-  nombreDeProyectoCreado: 'Recuperación Postoperatoria',
+  nombreDeProyectoCreado: null,
   proyectosSecundariosEnLosQueParticipa: [
     {
       id: 'proyecto-1',
@@ -37,25 +38,28 @@ const mockUserData = {
   ],
 };
 
-// Mi Proyecto Principal
-const mockProyectoPrincipal = {
-  id: 'mi-proyecto',
-  nombre: 'Recuperación Postoperatoria',
-  descripción: 'Programa especializado de recuperación para personas mayores de 65 años tras intervenciones quirúrgicas. Incluye ejercicios terapéuticos, seguimiento médico y apoyo emocional personalizado.',
-  porcentajeCompletado: 45,
-  miembros: [
-    { nombre: 'Dr. Manuel Gómez', sexo: 'hombre' },
-    { nombre: 'Enfermera Patricia Núñez', sexo: 'mujer' },
-    { nombre: 'Fisioterapeuta David Torres', sexo: 'hombre' },
-    { nombre: 'Psicóloga Claudia Herrera', sexo: 'mujer' },
-    { nombre: 'Auxiliar de enfermería José Ramírez', sexo: 'hombre' },
-  ],
-  conteoDeSexos: { hombres: 3, mujeres: 2 },
-};
+// Mi Proyecto Principal - COMENTADO
+// const mockProyectoPrincipal = {
+//   id: 'mi-proyecto',
+//   nombre: 'Recuperación Postoperatoria',
+//   descripción: 'Programa especializado de recuperación para personas mayores de 65 años tras intervenciones quirúrgicas. Incluye ejercicios terapéuticos, seguimiento médico y apoyo emocional personalizado.',
+//   porcentajeCompletado: 45,
+//   miembros: [
+//     { nombre: 'Dr. Manuel Gómez', sexo: 'hombre' },
+//     { nombre: 'Enfermera Patricia Núñez', sexo: 'mujer' },
+//     { nombre: 'Fisioterapeuta David Torres', sexo: 'hombre' },
+//     { nombre: 'Psicóloga Claudia Herrera', sexo: 'mujer' },
+//     { nombre: 'Auxiliar de enfermería José Ramírez', sexo: 'hombre' },
+//   ],
+//   conteoDeSexos: { hombres: 3, mujeres: 2 },
+// };
 
 export default function ProyectosPage() {
   const [selectedProject, setSelectedProject] = useState(null);
   const [isMiProyecto, setIsMiProyecto] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [miProyecto, setMiProyecto] = useState(null);
+  const [userData, setUserData] = useState(mockUserData);
 
   const handleProjectClick = (project, esProyectoPrincipal = false) => {
     setSelectedProject(project);
@@ -67,20 +71,36 @@ export default function ProyectosPage() {
     setIsMiProyecto(false);
   };
 
-  const totalProyectosSecundarios = mockUserData.proyectosSecundariosEnLosQueParticipa.length;
-  const tieneProyectoPrincipal = mockUserData.nombreDeProyectoCreado !== null;
+  const handleOpenCreateForm = () => {
+    setShowCreateForm(true);
+  };
+
+  const handleCloseCreateForm = () => {
+    setShowCreateForm(false);
+  };
+
+  const handleCreateProject = (nuevoProyecto) => {
+    setMiProyecto(nuevoProyecto);
+    setUserData((prev) => ({
+      ...prev,
+      nombreDeProyectoCreado: nuevoProyecto.nombre,
+    }));
+  };
+
+  const totalProyectosSecundarios = userData.proyectosSecundariosEnLosQueParticipa.length;
+  const tieneProyectoPrincipal = miProyecto || userData.nombreDeProyectoCreado !== null;
 
   return (
     <div className="flex flex-col gap-6 pb-8">
       {/* 1. Header del Usuario */}
       <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Hola, {mockUserData.nombre} 👋
+          Hola, {userData.nombre} 👋
         </h1>
         <div className="flex flex-col gap-3">
           {tieneProyectoPrincipal && (
             <p className="text-xl text-gray-700">
-              <span className="font-semibold text-blue-700">Tu proyecto:</span> {mockUserData.nombreDeProyectoCreado}
+              <span className="font-semibold text-blue-700">Tu proyecto:</span> {miProyecto?.nombre || userData.nombreDeProyectoCreado}
             </p>
           )}
           <p className="text-xl text-gray-700">
@@ -90,14 +110,33 @@ export default function ProyectosPage() {
       </section>
 
       {/* 2. Tarjeta "Mi Proyecto" - Solo si existe */}
-      {tieneProyectoPrincipal && (
+      {tieneProyectoPrincipal ? (
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu Proyecto</h2>
           <ProjectCard
-            project={mockProyectoPrincipal}
+            project={miProyecto}
             isMiProyecto={true}
-            onClick={() => handleProjectClick(mockProyectoPrincipal, true)}
+            onClick={() => handleProjectClick(miProyecto, true)}
           />
+        </section>
+      ) : (
+        <section>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu Proyecto</h2>
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
+            <div className="text-5xl mb-4">📋</div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              Todavía no creaste ningún proyecto
+            </h3>
+            <p className="text-xl text-gray-700 mb-8 max-w-md">
+              ¡Es el momento perfecto! Crea tu primer proyecto y comparte tu iniciativa con otros adultos mayores.
+            </p>
+            <button
+              onClick={handleOpenCreateForm}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl px-8 py-4 rounded-xl transition-colors active:scale-95 min-h-14 min-w-48"
+            >
+              + Crear Proyecto
+            </button>
+          </div>
         </section>
       )}
 
@@ -105,10 +144,10 @@ export default function ProyectosPage() {
       {totalProyectosSecundarios > 0 && (
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Proyectos secundarios en los que participas
+            Otros Proyectos
           </h2>
           <div className="flex flex-col gap-4">
-            {mockUserData.proyectosSecundariosEnLosQueParticipa.map((proyecto) => (
+            {userData.proyectosSecundariosEnLosQueParticipa.map((proyecto) => (
               <ProjectCard
                 key={proyecto.id}
                 project={proyecto}
@@ -126,6 +165,14 @@ export default function ProyectosPage() {
           project={selectedProject}
           isMiProyecto={isMiProyecto}
           onClose={handleCloseSheet}
+        />
+      )}
+
+      {/* Bottom Sheet - Crear Proyecto */}
+      {showCreateForm && (
+        <CreateProjectSheet
+          onClose={handleCloseCreateForm}
+          onCreate={handleCreateProject}
         />
       )}
     </div>
