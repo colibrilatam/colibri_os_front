@@ -12,7 +12,7 @@ export default function ProjectCard({ project, isMiProyecto, onClick }) {
       onClick={onClick}
       className={`w-full text-left p-6 rounded-2xl transition-all duration-200 active:scale-98 ${
         isMiProyecto
-          ? 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-500 shadow-md hover:shadow-lg'
+          ? 'bg-linear-to-br from-blue-50 to-blue-100 border-2 border-blue-500 shadow-md hover:shadow-lg'
           : 'bg-white border-2 border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300'
       }`}
       style={{ minHeight: '160px' }}
@@ -47,7 +47,7 @@ export default function ProjectCard({ project, isMiProyecto, onClick }) {
         </div>
 
         {/* Indicador de interactividad */}
-        <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full">
+        <div className="shrink-0 flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full">
           <span className="text-2xl text-blue-600">›</span>
         </div>
       </div>

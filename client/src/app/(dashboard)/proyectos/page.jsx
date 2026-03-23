@@ -122,7 +122,7 @@ export default function ProyectosPage() {
       ) : (
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu Proyecto</h2>
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
+          <div className="bg-linear-to-br from-gray-50 to-gray-100 p-8 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
             <div className="text-5xl mb-4">📋</div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">
               Todavía no creaste ningún proyecto
