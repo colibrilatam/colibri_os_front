@@ -51,7 +51,7 @@ export default function MembersList({ miembros, conteoDeSexos }) {
               className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border-l-4 border-blue-400"
             >
               {/* Icono de sexo */}
-              <span className="text-3xl flex-shrink-0">
+              <span className="text-3xl shrink-0">
                 {miembro.sexo === 'hombre' ? '♂️' : '♀️'}
               </span>
 

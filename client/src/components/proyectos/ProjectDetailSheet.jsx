@@ -56,7 +56,7 @@ export default function ProjectDetailSheet({ project, isMiProyecto, onClose }) {
               )}
               <h2
                 id="sheet-title"
-                className="text-3xl font-bold text-gray-900 break-words pr-4"
+                className="text-3xl font-bold text-gray-900 wrap-break-words pr-4"
               >
                 {project.nombre}
               </h2>
@@ -65,7 +65,7 @@ export default function ProjectDetailSheet({ project, isMiProyecto, onClose }) {
             {/* Botón de cierre - Grande y accesible */}
             <button
               onClick={handleClose}
-              className="flex-shrink-0 w-14 h-14 min-w-12 min-h-12 rounded-full bg-red-100 hover:bg-red-200 text-red-700 font-bold text-2xl transition-colors active:scale-95 flex items-center justify-center"
+              className="shrink-0 w-14 h-14 min-w-12 min-h-12 rounded-full bg-red-100 hover:bg-red-200 text-red-700 font-bold text-2xl transition-colors active:scale-95 flex items-center justify-center"
               aria-label="Cerrar detalles del proyecto"
               title="Cerrar"
             >
