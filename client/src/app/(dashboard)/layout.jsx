@@ -1,12 +1,24 @@
 'use client';
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
+import { useUserStore } from '@/lib/store';
 
 export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter()
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated)
 
+  // Verificar autenticación al montar el componente
+  useEffect(() => {
+    if (!isAuthenticated()) router.push('/login')
+  }, [])
+
+  if (!isAuthenticated()) return null
+  
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}

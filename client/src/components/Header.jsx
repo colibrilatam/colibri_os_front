@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 
+
+
 export default function Header({ sidebarOpen, setSidebarOpen }) {
+  const { token, logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +44,24 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
         <h1 className="text-2xl font-bold text-gray-800">R-Lab</h1>
       </div>
 
+<div className='flex flex-row gap-4'>
+  {!token ? (
+    <a
+        href="/login"
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+      >
+        Iniciar sesión
+      </a>
+  ) : (
+    <button
+      onClick={logout}
+      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+    >
+      Cerrar sesión
+    </button>
+  )}
+      
+
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -64,6 +85,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
             ))}
           </div>
         )}
+      </div>
       </div>
     </header>
   );

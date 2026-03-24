@@ -1,15 +1,5 @@
 
-// Simular delay de 3 segundos para probar loading
-async function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-// fin de prueba de loading
-
-export default async function DashboardHome() {
-  // Delay de 3 segundos para probar el loading.jsx
-  await delay(3000);
-  // Fin de prueba de loading.jsx
-
+export default function DashboardHome() {
   // PRUEBA DE ERROR: Descomentar la siguiente línea para activar el error screen
   // throw new Error('Error de prueba en el dashboard');
 
