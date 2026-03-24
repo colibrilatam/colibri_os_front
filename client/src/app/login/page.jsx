@@ -182,15 +182,16 @@ export default function LoginRegisterPage() {
 
   return (
     <div className=" flex items-center relative flex-col justify-center min-h-screen bg-linear-to-br from-slate-50 to-slate-100 px-4 py-6">
-        {/* Home button */}
+        {/* Home button
       <Link
         href="/"
         className="top-4 left-4 absolute px-6 py-3 bg-slate-600 text-white rounded-lg font-semibold text-base sm:text-lg hover:bg-slate-700 transition"
       >
         Volver al inicio
       </Link> 
+       */}
 
-      <div className="mt-4 w-full max-w-md bg-white rounded-lg shadow-lg p-6 sm:p-8">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 sm:p-8">
         {/* Title */}
         <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3 text-center">
           {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}

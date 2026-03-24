@@ -1,8 +1,10 @@
 import { login } from '@/services/authService'
+import { useUserStore } from '@/lib/store'
 
 export const useLogin = () => {
+    const setToken = useUserStore((state) => state.setToken)
 
-  const handleLogin = async (formData) => {
+    const handleLogin = async (formData) => {
     try {
       const data = await login({
         email: formData.email,
@@ -10,6 +12,7 @@ export const useLogin = () => {
       })
 
       localStorage.setItem('token', data.token)
+      setToken(data.token)
       return { success: true, data }
 
     } catch (err) {
