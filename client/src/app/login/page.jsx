@@ -6,6 +6,7 @@ import Link from 'next/link';
 import LoadingScreen from '@/components/LoadingScreen';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useRegister } from '@/hooks/useRegister';
+import { useLogin } from '@/hooks/useLogin';
 
 export default function LoginRegisterPage() {
   const [view, setView] = useState('login');
@@ -13,6 +14,7 @@ export default function LoginRegisterPage() {
   const router = useRouter();
 
   const { handleRegister } = useRegister();
+  const { handleLogin } = useLogin();
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -45,6 +47,7 @@ export default function LoginRegisterPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
 
     const newErrors = { ...errors };
+    if(isLogin) return;
 
     // Validation logic
     if (name === 'username') {
@@ -124,12 +127,21 @@ export default function LoginRegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!isFormValid()) return alert('Por favor, corrige los errores en el formulario antes de continuar.');
+    if(!isLogin){
+      if (!isFormValid()) return alert('Por favor, corrige los errores en el formulario antes de continuar.');
+    }
 
     setLoading(true);
     if(isLogin){
-      //logica de login
-    } else {
+      //logica de inicio de sesión
+      const result = await handleLogin(formData);
+      if(result.success){
+        alert('¡Has iniciado sesión correctamente! Bienvenido a Colibri OS');
+        router.push('/'); // Redirige al dashboard u otra página protegida
+      } else {
+        alert(result.error) // o mostrarlo en un estado de error en el componente
+      }
+    } else { // Lógica del registro
     const result = await handleRegister(formData)
     if (result.success) {
       alert('¡Te has registrado correctamente! Bienvenido a Colibri OS');
