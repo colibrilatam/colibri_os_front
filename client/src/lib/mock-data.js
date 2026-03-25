@@ -61,39 +61,48 @@ export const tramoMock = {
   totalDays: 21, // opcional (execution_window_days)
 };
 
-
 export const actionsManagementMock = {
   current: {
-    pacTitle: "Validación de propuesta de valor",
+    pacTitle: 'Validación de propuesta de valor',
     microActions: [
       {
         id: 1,
-        name: "Definir hipótesis de cliente",
-        status: "in_progress",
+        name: 'Definir hipótesis de cliente',
+        status: 'in_progress',
       },
       {
         id: 2,
-        name: "Realizar 5 entrevistas",
-        status: "pending",
+        name: 'Realizar 5 entrevistas',
+        status: 'pending',
       },
       {
         id: 3,
-        name: "Documentar aprendizajes",
-        status: "pending",
+        name: 'Documentar aprendizajes',
+        status: 'pending',
       },
     ],
     evidence: {
-      name: "Informe de validación",
-      status: "pending",
+      name: 'Informe de validación',
+      status: 'pending',
     },
   },
 
   next: {
-    pacTitle: "Primer experimento de mercado",
+    pacTitle: 'Primer experimento de mercado',
     microActions: [
-      { id: 4, name: "Definir experimento", status: "locked" },
-      { id: 5, name: "Ejecutar prueba", status: "locked" },
-      { id: 6, name: "Analizar resultados", status: "locked" },
+      { id: 4, name: 'Definir experimento', status: 'locked' },
+      { id: 5, name: 'Ejecutar prueba', status: 'locked' },
+      { id: 6, name: 'Analizar resultados', status: 'locked' },
     ],
   },
 };
+
+export const radarCompetenciasMock = [
+  { category: 'C1 Equipo', value: 4.2 },
+  { category: 'C2 Problema', value: 5.1 },
+  { category: 'C3 Negocio', value: 3.8 },
+  { category: 'C4 Finanzas', value: 2.9 },
+  { category: 'C5 Estrategia', value: 4.5 },
+  { category: 'C6 Factores Exógenos', value: 3.2 },
+  { category: 'C7 Métricas', value: 2.7 },
+];
