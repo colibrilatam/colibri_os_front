@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import LoadingScreen from '@/components/LoadingScreen';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useRegister } from '@/hooks/useRegister';
@@ -157,7 +156,7 @@ export default function LoginRegisterPage() {
 
   // Handle Google button click
   const handleGoogleClick = () => {
-    console.log('Google button clicked');
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/google` // CAMBIAR VARIABLE DE ENTORNO
   };
 
   // Switch between views
@@ -341,7 +340,7 @@ export default function LoginRegisterPage() {
         <button
           type="button"
           onClick={handleGoogleClick}
-          className="w-full py-3 px-4 border-2 border-slate-300 rounded-lg font-semibold text-base sm:text-lg text-slate-700 hover:bg-slate-50 transition mt-6 flex items-center justify-center gap-2"
+          className="cursor-pointer w-full py-3 px-4 border-2 border-slate-300 rounded-lg font-semibold text-base sm:text-lg text-slate-700 hover:bg-slate-50 transition mt-6 flex items-center justify-center gap-2"
         >
           <svg
             className="w-6 h-6"
