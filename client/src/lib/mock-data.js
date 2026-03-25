@@ -53,3 +53,10 @@ export const pacsMock = [
     },
   })),
 ];
+
+export const tramoMock = {
+  name: 'Validación Inicial', // nombre simbólico
+  progress: 0.58, // 0–1 (58%)
+  elapsedDays: 12,
+  totalDays: 21, // opcional (execution_window_days)
+};
