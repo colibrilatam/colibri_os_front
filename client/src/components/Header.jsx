@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -10,6 +11,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
   const rol = useUserStore((state) => state.rol);
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const roles = ['CEO', 'Colaborador', 'Mecenas', 'Visitante'];
 
@@ -17,6 +19,10 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
     setRol(newRol);
     setIsOpen(false);
   };
+  function handleLogout() {
+    logout();
+    router.push('/login')
+  }
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
@@ -54,8 +60,8 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
       </a>
   ) : (
     <button
-      onClick={logout}
-      className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+      onClick={() => handleLogout()}
+      className="cursor-pointer px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
     >
       Cerrar sesión
     </button>
