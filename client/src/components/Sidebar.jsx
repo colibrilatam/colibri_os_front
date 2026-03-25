@@ -22,6 +22,7 @@ export default function Sidebar() {
     { href: '/competencias', label: 'Competencias' },
     { href: '/incertidumbre', label: 'Incertidumbre' },
     { href: '/trazabilidad', label: 'Trazabilidad' },
+    { href: '/proyectos', label: 'Proyectos' },
   ];
 
   return (
