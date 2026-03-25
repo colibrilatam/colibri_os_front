@@ -106,3 +106,45 @@ export const radarCompetenciasMock = [
   { category: 'C6 Factores Exógenos', value: 3.2 },
   { category: 'C7 Métricas', value: 2.7 },
 ];
+
+export const entrecompMock = [
+  {
+    date: '2026-01',
+    equipo: 2.5,
+    problema: 3.2,
+    negocio: 2.8,
+  },
+  {
+    date: '2026-02',
+    equipo: 3.4,
+    problema: 3.8,
+    negocio: 3.1,
+  },
+  {
+    date: '2026-03',
+    equipo: 4.1,
+    problema: 4.5,
+    negocio: 3.9,
+  },
+];
+
+export const wefSkillsMock = [
+  {
+    date: '2026-01',
+    pensamiento_critico: 2.8,
+    creatividad: 3.1,
+    liderazgo: 2.6,
+  },
+  {
+    date: '2026-02',
+    pensamiento_critico: 3.5,
+    creatividad: 3.6,
+    liderazgo: 3.2,
+  },
+  {
+    date: '2026-03',
+    pensamiento_critico: 4.2,
+    creatividad: 4.0,
+    liderazgo: 3.8,
+  },
+];
