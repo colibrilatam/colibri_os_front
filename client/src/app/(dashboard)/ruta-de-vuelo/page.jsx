@@ -1,26 +1,34 @@
 import EstadoTramo from './components/EstadoTramo';
 import Microacciones from './components/Microacciones';
+import ActionsManagement from './components/ActionsManagement';
 
-import { tramoMock, pacsMock } from '@/lib/mock-data';
+import { tramoMock, pacsMock, actionsManagementMock } from '@/lib/mock-data';
 
 export default function RutaDeVueloPage() {
   return (
     <main className="min-h-screen bg-zinc-950 p-6">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl text-white font-semibold">Ruta de Vuelo</h1>
-        <p className="text-sm text-zinc-400">
-          Progreso del tramo y ejecución de PACs
-        </p>
-      </div>
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* HEADER */}
+        <div>
+          <h1 className="text-2xl text-white font-semibold">Ruta de Vuelo</h1>
+          <p className="text-sm text-zinc-400">
+            Progreso, ejecución y próximos pasos del proyecto
+          </p>
+        </div>
 
-      {/* 🟣 Estado del tramo */}
-      <div className="mb-8">
+        {/* 🟣 ESTADO GLOBAL */}
         <EstadoTramo tramo={tramoMock} />
-      </div>
 
-      {/* 🔵 PACs y microacciones */}
-      <Microacciones pacs={pacsMock} />
+        {/* 🔵 ACCIÓN ACTUAL (LO MÁS IMPORTANTE) */}
+        <ActionsManagement data={actionsManagementMock} />
+
+        {/* 🧠 MAPA COMPLETO */}
+        <div>
+          <h2 className="text-sm text-zinc-400 mb-4">Mapa del tramo</h2>
+
+          <Microacciones pacs={pacsMock} />
+        </div>
+      </div>
     </main>
   );
 }

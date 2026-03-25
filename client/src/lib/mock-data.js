@@ -60,3 +60,40 @@ export const tramoMock = {
   elapsedDays: 12,
   totalDays: 21, // opcional (execution_window_days)
 };
+
+
+export const actionsManagementMock = {
+  current: {
+    pacTitle: "Validación de propuesta de valor",
+    microActions: [
+      {
+        id: 1,
+        name: "Definir hipótesis de cliente",
+        status: "in_progress",
+      },
+      {
+        id: 2,
+        name: "Realizar 5 entrevistas",
+        status: "pending",
+      },
+      {
+        id: 3,
+        name: "Documentar aprendizajes",
+        status: "pending",
+      },
+    ],
+    evidence: {
+      name: "Informe de validación",
+      status: "pending",
+    },
+  },
+
+  next: {
+    pacTitle: "Primer experimento de mercado",
+    microActions: [
+      { id: 4, name: "Definir experimento", status: "locked" },
+      { id: 5, name: "Ejecutar prueba", status: "locked" },
+      { id: 6, name: "Analizar resultados", status: "locked" },
+    ],
+  },
+};
