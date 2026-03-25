@@ -1,64 +1,75 @@
 'use client';
 
+import { motion } from 'framer-motion';
+
 export default function NFTColibri({ nft }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg border border-gray-200 max-w-md w-full transition hover:shadow-xl">
-      {/* Header con badge */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="text-lg font-semibold text-gray-800">{nft.name}</h2>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 shadow-xl"
+    >
+      {/* Glow */}
+      <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-blue-500/20 blur-3xl" />
 
-        <span className="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-600 font-medium">
+      {/* Header */}
+      <div className="mb-5 flex items-center justify-between">
+        <h2 className="text-base font-semibold text-white">
+          {nft.name}
+        </h2>
+
+        <span className="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-400">
           {nft.type}
         </span>
       </div>
 
       {/* Body */}
-      <div className="p-5 space-y-4">
+      <div className="space-y-4 text-sm">
         {/* Owner */}
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Owner</span>
-          <span className="font-medium text-gray-800">{nft.owner}</span>
+        <div className="flex justify-between">
+          <span className="text-zinc-400">Owner</span>
+          <span className="text-white font-medium">{nft.owner}</span>
         </div>
 
         {/* Wallet */}
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Wallet</span>
-          <span className="font-mono text-gray-700">{nft.wallet}</span>
+        <div className="flex justify-between">
+          <span className="text-zinc-400">Wallet</span>
+          <span className="font-mono text-zinc-300 truncate max-w-[140px]">
+            {nft.wallet}
+          </span>
         </div>
 
         {/* Network */}
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Network</span>
-          <span className="text-gray-800">{nft.network}</span>
+        <div className="flex justify-between">
+          <span className="text-zinc-400">Network</span>
+          <span className="text-white">{nft.network}</span>
         </div>
 
         {/* Token ID */}
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Token ID</span>
-          <span className="text-gray-800">{nft.tokenId}</span>
+        <div className="flex justify-between">
+          <span className="text-zinc-400">Token ID</span>
+          <span className="text-white">{nft.tokenId}</span>
         </div>
 
         {/* Status */}
-        <div className="flex justify-between items-center text-sm">
-          <span className="text-gray-500">Estado</span>
-          <span className="px-2 py-1 text-xs rounded-full bg-green-100 text-green-600 font-medium">
+        <div className="flex items-center justify-between">
+          <span className="text-zinc-400">Estado</span>
+          <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-400">
             {nft.status}
           </span>
         </div>
 
-        {/* Description */}
-        <p className="text-sm text-gray-500 pt-2 border-t">{nft.description}</p>
+        {/* Divider */}
+        <div className="border-t border-white/10 pt-3 text-zinc-400 text-xs">
+          {nft.description}
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="px-5 pb-5">
-        <button className="w-full mt-3 py-2 rounded-lg bg-black text-white text-sm font-medium hover:bg-gray-800 transition">
-          Ver detalles
-        </button>
-      </div>
-
-      {/* Glow decorativo */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-100 rounded-full blur-3xl opacity-30"></div>
-    </div>
+      <button className="mt-6 w-full rounded-lg bg-white/5 py-2 text-sm font-medium text-white transition hover:bg-white/10">
+        Ver detalles
+      </button>
+    </motion.div>
   );
 }
