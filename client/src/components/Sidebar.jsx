@@ -26,7 +26,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-gray-900 text-white p-4 fixed h-screen overflow-y-auto">
+    <aside className="w-64 bg-gray-900 text-white p-4 fixed h-screen overflow-y-auto z-98">
       <h2 className="text-lg font-bold mb-4">Dashboard</h2>
       <p className="text-sm text-gray-400 mb-6">Rol: {rol}</p>
 

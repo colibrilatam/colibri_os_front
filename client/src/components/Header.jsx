@@ -25,7 +25,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center" >
       <div className="flex items-center gap-4">
         {/* Botón Hamburguesa */}
         <button
