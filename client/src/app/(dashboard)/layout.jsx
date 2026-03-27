@@ -9,12 +9,12 @@ export default function DashboardLayout({ children }) {
   const router = useRouter()
   const isAuthenticated = useUserStore((state) => state.isAuthenticated)
 
-  // Verificar autenticación al montar el componente
+  /*// Verificar autenticación al montar el componente
   useEffect(() => {
     if (!isAuthenticated()) router.push('/login')
   }, [])
 
-  if (!isAuthenticated()) return null
+  if (!isAuthenticated()) return null*/
   
   return (
     <div className="min-h-screen flex flex-col">
