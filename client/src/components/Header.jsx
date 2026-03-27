@@ -3,15 +3,17 @@
 import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
+import Sidebar from './Sidebar';
 
 
 
-export default function Header({ sidebarOpen, setSidebarOpen }) {
+export default function Header() {
   const { token, logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const [ sidebarOpen, setSidebarOpen ] = useState(false);
 
   const roles = ['CEO', 'Colaborador', 'Mecenas', 'Visitante'];
 
@@ -25,7 +27,7 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center" >
+    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-99" >
       <div className="flex items-center gap-4">
         {/* Botón Hamburguesa */}
         <button
@@ -93,6 +95,11 @@ export default function Header({ sidebarOpen, setSidebarOpen }) {
         )}
       </div>
       </div>
+      {
+        sidebarOpen && (
+          <Sidebar></Sidebar>
+        )
+      }
     </header>
   );
 }
