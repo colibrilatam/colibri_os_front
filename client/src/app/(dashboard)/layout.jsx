@@ -2,13 +2,10 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react';
-import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useUserStore } from '@/lib/store';
 
 export default function DashboardLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter()
   const isAuthenticated = useUserStore((state) => state.isAuthenticated)
 
@@ -22,12 +19,9 @@ export default function DashboardLayout({ children }) {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Header/>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
-        {sidebarOpen && <Sidebar />}
-
         {/* Contenido */}
         <main className="text-black flex-1 p-6 bg-gray-100">
           {children}
