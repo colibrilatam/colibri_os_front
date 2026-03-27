@@ -12,6 +12,12 @@ import {
 import { motion } from 'framer-motion';
 
 export default function RadarCompetencias({ data }) {
+  // Mapear a C1, C2, etc
+  const mappedData = data.map((item, index) => ({
+    ...item,
+    short: `C${index + 1}`,
+  }));
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -21,9 +27,7 @@ export default function RadarCompetencias({ data }) {
     >
       {/* Header */}
       <div className="mb-4">
-        <h3 className="text-sm text-zinc-400">
-          Radar de Competencias
-        </h3>
+        <h3 className="text-sm text-zinc-400">Radar de Competencias</h3>
         <p className="text-xs text-zinc-500">
           Señal analítica por categoría (C1–C7)
         </p>
@@ -32,11 +36,11 @@ export default function RadarCompetencias({ data }) {
       {/* Chart */}
       <div className="h-[300px] w-full">
         <ResponsiveContainer>
-          <RadarChart data={data}>
+          <RadarChart data={mappedData}>
             <PolarGrid stroke="#3f3f46" />
 
             <PolarAngleAxis
-              dataKey="category"
+              dataKey="short" // 👈 usamos C1, C2...
               tick={{ fill: '#a1a1aa', fontSize: 11 }}
             />
 
@@ -55,6 +59,16 @@ export default function RadarCompetencias({ data }) {
             />
           </RadarChart>
         </ResponsiveContainer>
+      </div>
+
+      {/* Leyenda abajo */}
+      <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-zinc-400">
+        {mappedData.map((item, index) => (
+          <div key={index}>
+            <span className="font-medium text-zinc-300">{item.short}:</span>{' '}
+            {item.category}
+          </div>
+        ))}
       </div>
     </motion.div>
   );
