@@ -12,10 +12,10 @@ export default function ProjectCard({ project, isMiProyecto, onClick }) {
       onClick={onClick}
       className={`w-full text-left p-6 rounded-2xl transition-all duration-200 active:scale-98 ${
         isMiProyecto
-          ? 'bg-linear-to-br from-blue-50 to-blue-100 border-2 border-blue-500 shadow-md hover:shadow-lg'
-          : 'bg-white border-2 border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300'
+          ? 'bg-gradient-to-br from-zinc-900 to-zinc-800 border-2 border-blue-500 shadow-md hover:shadow-lg'
+          : 'bg-gradient-to-br from-zinc-900 to-zinc-800 border-2 border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300'
       }`}
-      style={{ minHeight: '160px' }}
+      style={{ minHeight: '160px', color: "var(--text-primary)" }}
       aria-label={`Ver detalles del proyecto ${project.nombre}`}
     >
       <div className="flex items-start gap-4">
@@ -29,12 +29,12 @@ export default function ProjectCard({ project, isMiProyecto, onClick }) {
           )}
 
           {/* Título */}
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
+          <h3 className="text-2xl font-bold  mb-3">
             {project.nombre}
           </h3>
 
           {/* Descripción truncada */}
-          <p className="text-lg text-gray-700 mb-4 leading-snug">
+          <p className="text-lg text-gray-400 mb-4 leading-snug">
             {descripcionTruncada}
           </p>
 

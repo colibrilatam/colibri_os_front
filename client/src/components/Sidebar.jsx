@@ -26,8 +26,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-gray-900 text-white p-4 fixed h-screen overflow-y-auto z-98">
-      <h2 className="text-lg font-bold mb-4">Dashboard</h2>
+    <aside className="w-64 bg-gray-900 text-white p-4 absolute h-fit rounded-br-3xl overflow-y-auto z-98 top-21 left-0">
+      <h2 className="text-lg font-bold mb-4">Colibrí OS</h2>
       <p className="text-sm text-gray-400 mb-6">Rol: {rol}</p>
 
       <nav className="flex flex-col gap-2">
@@ -37,7 +37,7 @@ export default function Sidebar() {
             href={link.href}
             className={`px-4 py-2 rounded transition-colors ${
               isActive(link.href)
-                ? 'bg-blue-600 text-white font-semibold'
+                ? 'bg-blue-600 text-(text-link) font-semibold'
                 : 'text-gray-300 hover:bg-gray-800'
             }`}
           >

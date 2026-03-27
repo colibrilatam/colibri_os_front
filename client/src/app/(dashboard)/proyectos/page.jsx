@@ -91,20 +91,21 @@ export default function ProyectosPage() {
   const tieneProyectoPrincipal = miProyecto || userData.nombreDeProyectoCreado !== null;
 
   return (
-    <div className="flex flex-col gap-6 pb-8">
+    <main className="min-h-screen bg-zinc-950 p-6">
+    <div className="flex flex-col gap-6 pb-8" style={{"color": "var(--text-primary)"}}>
       {/* 1. Header del Usuario */}
-      <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      <section className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 rounded-2xl shadow-sm border border-gray-600">
+        <h1 className="text-3xl font-bold  mb-2">
           Hola, {userData.nombre} 👋
         </h1>
         <div className="flex flex-col gap-3">
           {tieneProyectoPrincipal && (
-            <p className="text-xl text-gray-700">
+            <p className="text-xl">
               <span className="font-semibold text-blue-700">Tu proyecto:</span> {miProyecto?.nombre || userData.nombreDeProyectoCreado}
             </p>
           )}
-          <p className="text-xl text-gray-700">
-            <span className="font-semibold text-blue-700">Participas en:</span> {totalProyectosSecundarios} proyecto{totalProyectosSecundarios !== 1 ? 's' : ''} más
+          <p className="text-xl text-gray-300">
+            <span className="font-semibold text-blue-500">Participas en:</span> {totalProyectosSecundarios} proyecto{totalProyectosSecundarios !== 1 ? 's' : ''} más
           </p>
         </div>
       </section>
@@ -112,7 +113,7 @@ export default function ProyectosPage() {
       {/* 2. Tarjeta "Mi Proyecto" - Solo si existe */}
       {tieneProyectoPrincipal ? (
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu Proyecto</h2>
+          <h2 className="text-2xl font-bold  mb-4">Tu Proyecto</h2>
           <ProjectCard
             project={miProyecto}
             isMiProyecto={true}
@@ -120,14 +121,14 @@ export default function ProyectosPage() {
           />
         </section>
       ) : (
-        <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Tu Proyecto</h2>
-          <div className="bg-linear-to-br from-gray-50 to-gray-100 p-8 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
+        <section >
+          <h2 className="text-2xl font-bold  mb-4">Tu Proyecto</h2>
+          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-8 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
             <div className="text-5xl mb-4">📋</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+            <h3 className="text-2xl font-bold  mb-3">
               Todavía no creaste ningún proyecto
             </h3>
-            <p className="text-xl text-gray-700 mb-8 max-w-md">
+            <p className="text-xl text-gray-400 mb-8 max-w-md">
               ¡Es el momento perfecto! Crea tu primer proyecto y comparte tu iniciativa con otros adultos mayores.
             </p>
             <button
@@ -143,7 +144,7 @@ export default function ProyectosPage() {
       {/* 3. Listado de Proyectos Secundarios */}
       {totalProyectosSecundarios > 0 && (
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold mb-4">
             Otros Proyectos
           </h2>
           <div className="flex flex-col gap-4">
@@ -176,5 +177,7 @@ export default function ProyectosPage() {
         />
       )}
     </div>
+    </main>
+    
   );
 }

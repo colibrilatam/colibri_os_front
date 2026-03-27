@@ -49,10 +49,10 @@
   --bg-overlay:  rgba(0, 51, 102, 0.08);
  
   /* Texto */
-  --text-primary:    var(--color-deep-blue);
+  --text-primary:    var(--color-cream);
   --text-secondary:  var(--gray-600);
   --text-tertiary:   var(--gray-500);
-  --text-inverse:    var(--color-cream);
+  --text-inverse:    var(--color-deep-blue);
   --text-link:       var(--color-turquoise);
   --text-link-hover: var(--color-emerald);
  
@@ -170,7 +170,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: var(--font-bold);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
-  color: var(--text-primary);
 }
  
 h1 { font-size: var(--text-3xl); }
@@ -181,7 +180,6 @@ h5 { font-size: var(--text-md); }
 h6 { font-size: var(--text-base); }
  
 p {
-  color: var(--text-secondary);
   line-height: var(--leading-normal);
   font-size: var(--text-base);
 }
