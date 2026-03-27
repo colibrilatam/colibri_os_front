@@ -74,14 +74,41 @@ export default function IndiceColibri({ data }) {
       </div>
 
       {/* Progress bar */}
-      <div className="mt-4">
-        <div className="h-2 w-full rounded-full bg-zinc-700">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${(value / 6) * 100}%` }}
-            transition={{ duration: 0.6 }}
-            className="h-2 rounded-full bg-emerald-500"
+      <div className="mt-6 flex items-center justify-center">
+        <svg width="120" height="120" className="rotate-[-90deg]">
+          {/* Fondo */}
+          <circle
+            cx="60"
+            cy="60"
+            r="50"
+            stroke="#3f3f46"
+            strokeWidth="8"
+            fill="transparent"
           />
+
+          {/* Progreso */}
+          <motion.circle
+            cx="60"
+            cy="60"
+            r="50"
+            stroke="#10b981"
+            strokeWidth="8"
+            fill="transparent"
+            strokeLinecap="round"
+            strokeDasharray={2 * Math.PI * 50}
+            initial={{ strokeDashoffset: 2 * Math.PI * 50 }}
+            animate={{
+              strokeDashoffset: 2 * Math.PI * 50 * (1 - value / 6),
+            }}
+            transition={{ duration: 0.6 }}
+          />
+        </svg>
+
+        {/* Valor centrado */}
+        <div className="absolute text-center">
+          <span className="text-2xl font-bold text-white">
+            {value.toFixed(2)}
+          </span>
         </div>
       </div>
 
