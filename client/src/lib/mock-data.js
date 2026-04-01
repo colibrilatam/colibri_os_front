@@ -1,3 +1,12 @@
+// Incertidumbre 
+
+export const incertidumbreMock = {
+  incertidumbreDominante: {
+  name: 'Incertidumbre Humana/Identitaria',
+  level: 86
+  },
+};
+
 export const nftColibriMock = {
   id: 'nft-001',
   name: 'Colibrí Genesis',
