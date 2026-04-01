@@ -16,27 +16,6 @@
   --color-soft-coral:   #FF7C7C;
   --color-gold:         #FFD580;
  
-  /* --- Variantes con Opacidad --- */
-  --color-emerald-10:   #00997519;
-  --color-emerald-20:   #00997533;
-  --color-turquoise-10: #00CFCF19;
-  --color-turquoise-20: #00CFCF33;
-  --color-magenta-10:   #FF4D6D19;
-  --color-nectar-10:    #FFD16619;
-  --color-deep-blue-10: #00336619;
- 
-  /* --- Grises Neutral --- */
-  --gray-50:   #FAFAFA;
-  --gray-100:  #F4F4F5;
-  --gray-200:  #E4E4E7;
-  --gray-300:  #D1D1D6;
-  --gray-400:  #A1A1AA;
-  --gray-500:  #71717A;
-  --gray-600:  #52525B;
-  --gray-700:  #3F3F46;
-  --gray-800:  #27272A;
-  --gray-900:  #18181B;
- 
   /* ------------------------------------------------------------
      2. SEMÁNTICA DE COLOR — Roles del Sistema UI
      ------------------------------------------------------------ */

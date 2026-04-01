@@ -24,11 +24,21 @@ export const useUserStore = create(
   }
   return true
 },
+
+      // Estado del Sidebar
+      sidebarMobileOpen: false,
+      setSidebarMobileOpen: (isOpen) => set({ sidebarMobileOpen: isOpen }),
+      toggleSidebarMobile: () => set((state) => ({ sidebarMobileOpen: !state.sidebarMobileOpen })),
+
+      // Estado del Sidebar en Desktop (colapsado/expandido)
+      sidebarDesktopExpanded: false,
+      setSidebarDesktopExpanded: (isExpanded) => set({ sidebarDesktopExpanded: isExpanded }),
+      toggleSidebarDesktop: () => set((state) => ({ sidebarDesktopExpanded: !state.sidebarDesktopExpanded })),
     }),
 
     
     {
-      name: 'auth', // key en localStorage
+      name: 'app-state', // key en localStorage
     }
   )
 );

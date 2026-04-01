@@ -3,9 +3,6 @@
 import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
-import Sidebar from './Sidebar';
-
-
 
 export default function Header() {
   const { token, logout } = useUserStore();
@@ -13,7 +10,8 @@ export default function Header() {
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [ sidebarOpen, setSidebarOpen ] = useState(false);
+  const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
+  const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
   const roles = ['CEO', 'Colaborador', 'Mecenas', 'Visitante'];
 
@@ -27,13 +25,13 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-99" >
+    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-40 relative" >
       <div className="flex items-center gap-4">
         {/* Botón Hamburguesa */}
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 bg-gray-900 hover:bg-gray-800 rounded transition-colors"
-          title={sidebarOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
+          onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
+          className="p-2 bg-gray-900 hover:bg-gray-800 rounded transition-colors lg:hidden"
+          title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
         >
           <svg
             className="w-6 h-6 text-white"
@@ -95,11 +93,6 @@ export default function Header() {
         )}
       </div>
       </div>
-      {
-        sidebarOpen && (
-          <Sidebar></Sidebar>
-        )
-      }
     </header>
   );
 }
