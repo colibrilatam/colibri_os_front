@@ -50,7 +50,7 @@
  
   /* Texto */
   --text-primary:    var(--color-cream);
-  --text-secondary:  var(--gray-600);
+  --text-secondary:  var(--gray-400);
   --text-tertiary:   var(--gray-500);
   --text-inverse:    var(--color-deep-blue);
   --text-link:       var(--color-turquoise);

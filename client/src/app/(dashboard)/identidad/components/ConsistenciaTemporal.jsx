@@ -71,15 +71,54 @@ export default function ConsistenciaTemporal({ data }) {
         {config.label}
       </div>
 
-      {/* Barra visual */}
-      <div className="mt-4 h-2 w-full rounded-full bg-zinc-700">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{
-            width: level === 'Alta' ? '85%' : level === 'Media' ? '55%' : '25%',
-          }}
-          className="h-2 rounded-full bg-emerald-500"
-        />
+      {/* Indicador circular */}
+      <div className="relative mt-6 flex items-center justify-center">
+        <svg width="120" height="120" className="rotate-[-90deg]">
+          {/* Fondo */}
+          <circle
+            cx="60"
+            cy="60"
+            r="50"
+            stroke="#3f3f46"
+            strokeWidth="8"
+            fill="transparent"
+          />
+
+          {/* Progreso */}
+          <motion.circle
+            cx="60"
+            cy="60"
+            r="50"
+            stroke={
+              level === 'Alta'
+                ? '#34d399'
+                : level === 'Media'
+                  ? '#facc15'
+                  : '#f87171'
+            }
+            strokeWidth="8"
+            fill="transparent"
+            strokeLinecap="round"
+            strokeDasharray={2 * Math.PI * 50}
+            initial={{ strokeDashoffset: 2 * Math.PI * 50 }}
+            animate={{
+              strokeDashoffset:
+                2 *
+                Math.PI *
+                50 *
+                (1 -
+                  (level === 'Alta' ? 0.85 : level === 'Media' ? 0.55 : 0.25)),
+            }}
+            transition={{ duration: 0.6 }}
+          />
+        </svg>
+
+        {/* Texto centrado */}
+        <div className="absolute text-center">
+          <span className={`text-sm font-semibold ${config.color}`}>
+            {level}
+          </span>
+        </div>
       </div>
 
       {/* Footer */}
