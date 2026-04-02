@@ -5,7 +5,7 @@ const nivelColors = ['#71717A', '#FF7C7C', '#FFCA28', '#78D9B4'];
 
 export default function SeñalesDeCoherencia({ señales }) {
   return (
-    <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 rounded-2xl shadow-md border border-white/10">
+    <div className="glass-effect border-glass p-6 rounded-2xl shadow-md">
       <h2 style={{ fontSize: 'var(--text-2xl)', color: 'white' }} className="font-semibold mb-6">Señales de Coherencia</h2>
       <div className="space-y-8">
         {señales.map((señal, index) => (

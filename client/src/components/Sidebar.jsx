@@ -47,7 +47,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     <>
       {/* Mobile */}
       <aside
-        className={`fixed lg:hidden w-64 bg-gray-900 text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
+        className={`glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -87,7 +87,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
       {/* Desktop */}
       <aside
-        className={`hidden lg:flex flex-col bg-gray-900 text-white h-screen overflow-y-auto fixed left-0 top-0 z-45 transition-all duration-300 ${
+        className={` border-right hidden lg:flex flex-col glass-effect-dark text-white h-screen overflow-y-auto fixed left-0 top-0 z-45 transition-all duration-300 ${
           sidebarDesktopExpanded ? 'w-64 p-4' : 'w-24 p-3'
         }`}
       >

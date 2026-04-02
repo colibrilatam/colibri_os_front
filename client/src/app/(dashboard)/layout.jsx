@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }) {
 
       <div className="flex flex-1">
         {/* Contenido - siempre deja espacio al sidebar contraído */}
-        <main className="text-black flex-1 p-6 bg-gray-100 lg:ml-24">
+        <main className="text-black flex-1 p-6  lg:ml-24">
           {children}
         </main>
       </div>

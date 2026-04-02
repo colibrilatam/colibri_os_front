@@ -2,12 +2,12 @@ import React from 'react';
 
 export default function IncertidumbreDominante({ incertidumbreData }) {
   return (
-    <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 rounded-2xl shadow-md border border-white/10">
+    <div style={{color: 'var(--color-cream)'}} className="h-fit glass-effect border-glass p-6 rounded-2xl shadow-md">
       <h2 style={{ fontSize: 'var(--text-2xl)', color: 'white' }} className="font-semibold mb-6">Incertidumbre Dominante</h2>
       <div className='flex flex-col gap-4'>
-        <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>Riesgo principal del tramo actual</p>
+        <p style={{ fontSize: 'var(--text-base)' }}>Riesgo principal del tramo actual</p>
         <p style={{ fontSize: 'var(--text-lg)', color: 'white' }} className="font-bold">{incertidumbreData.name}</p>
-        <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>Nivel: <span style={{ color: 'var(--status-danger)' }} className="font-bold">Crítica</span> - {incertidumbreData.level}%</p>
+        <p style={{ fontSize: 'var(--text-base)' }}>Nivel: <span style={{ color: 'var(--status-danger)' }} className="font-bold">Crítica</span> - {incertidumbreData.level}%</p>
       </div>
       
       <div className="mt-8">
