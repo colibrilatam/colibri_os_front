@@ -182,10 +182,10 @@ export default function CreateProjectSheet({ onClose, onCreate }) {
                 maxLength={500}
               />
               <div className="flex items-center justify-between mt-2">
-                <p className="text-sm text-gray-600">
+                <p className="text-base text-gray-600">
                   Mínimo 20 caracteres
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-base text-gray-600">
                   {formData.descripción.length}/500
                 </p>
               </div>

@@ -28,8 +28,8 @@ export default function Microacciones({ pacs }) {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-3 py-1 rounded-full text-xs border border-white/10 
-              ${filter === f ? 'bg-white text-black' : 'text-zinc-400'}`}
+            className={`px-3 py-1 rounded-full text-sm border border-white/10 
+              ${filter === f ? 'bg-white text-black' : 'text-zinc-300'}`}
           >
             {f}
           </button>
@@ -43,10 +43,10 @@ export default function Microacciones({ pacs }) {
             key={pac.id}
             whileHover={{ scale: 1.02 }}
             onClick={() => setSelectedPac(pac)}
-            className="cursor-pointer rounded-xl bg-zinc-900 border border-white/10 p-4"
+            className="cursor-pointer rounded-xl glass-effect border-glass p-4"
           >
             <h3 className="text-white font-medium">{pac.title}</h3>
-            <p className="text-xs text-zinc-400 mt-1">
+            <p className="text-sm text-zinc-400 mt-1">
               3 microacciones + 1 evidencia
             </p>
           </motion.div>
@@ -58,9 +58,9 @@ export default function Microacciones({ pacs }) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="rounded-2xl border border-white/10 bg-zinc-900 p-6"
+          className="rounded-2xl glass-effect border-glass p-6"
         >
-          <h2 className="text-lg text-white mb-4">
+          <h2 className="text-xl text-white font-semibold mb-4">
             {selectedPac.title}
           </h2>
 
@@ -71,11 +71,11 @@ export default function Microacciones({ pacs }) {
               .map((ma) => (
                 <div
                   key={ma.id}
-                  className="flex justify-between items-center text-sm"
+                  className="flex justify-between items-center text-base"
                 >
                   <span className="text-zinc-300">{ma.name}</span>
                   <span
-                    className={`px-2 py-1 rounded-full text-xs ${
+                    className={`px-2 py-1 rounded-full text-sm ${
                       statusConfig[ma.status]
                     }`}
                   >
@@ -88,11 +88,11 @@ export default function Microacciones({ pacs }) {
           {/* Evidencia */}
           {filterFn(selectedPac.evidence) && (
             <div className="mt-6 pt-4 border-t border-white/10">
-              <h4 className="text-sm text-zinc-400 mb-2">
+              <h4 className="text-lg text-white font-semibold mb-2">
                 Evidencia
               </h4>
 
-              <div className="flex justify-between items-center text-sm">
+              <div className="flex justify-between items-center text-base">
                 <span className="text-zinc-300">
                   {selectedPac.evidence.name}
                 </span>

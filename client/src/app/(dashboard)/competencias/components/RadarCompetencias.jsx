@@ -23,12 +23,12 @@ export default function RadarCompetencias({ data }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 shadow-xl"
+      className="rounded-2xl glass-effect border-glass p-6 shadow-xl"
     >
       {/* Header */}
       <div className="mb-4">
-        <h3 className="text-sm text-zinc-400">Radar de Competencias</h3>
-        <p className="text-xs text-zinc-500">
+        <h3 className="text-lg text-zinc-300 font-semibold">Radar de Competencias</h3>
+        <p className="text-base text-zinc-400 mt-1">
           Señal analítica por categoría (C1–C7)
         </p>
       </div>
@@ -62,10 +62,10 @@ export default function RadarCompetencias({ data }) {
       </div>
 
       {/* Leyenda abajo */}
-      <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-zinc-400">
+      <div className="mt-4 grid grid-cols-2 gap-2 text-base text-zinc-300">
         {mappedData.map((item, index) => (
           <div key={index}>
-            <span className="font-medium text-zinc-300">{item.short}:</span>{' '}
+            <span className="font-semibold text-zinc-200">{item.short}:</span>{' '}
             {item.category}
           </div>
         ))}

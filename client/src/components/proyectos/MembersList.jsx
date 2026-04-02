@@ -60,7 +60,7 @@ export default function MembersList({ miembros, conteoDeSexos }) {
                 <p className="text-lg font-semibold text-gray-900">
                   {miembro.nombre}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-base text-gray-600 mt-1">
                   {miembro.sexo === 'hombre' ? 'Hombre' : 'Mujer'}
                 </p>
               </div>
