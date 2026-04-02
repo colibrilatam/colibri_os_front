@@ -13,10 +13,10 @@ export default function RolIndicator() {
   };
 
   return (
-    <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-4">
-      <p className="text-sm text-gray-600">Tipo de usuario actual:</p>
-      <p className="text-lg font-semibold text-blue-900">{rol}</p>
-      <p className="text-sm text-gray-600 mt-2">{mensajesPorRol[rol]}</p>
+    <div className="glass-effect border-glass p-4 mb-4">
+      <p className="text-base text-zinc-300">Tipo de usuario actual:</p>
+      <p className="text-xl font-semibold text-white mt-1">{rol}</p>
+      <p className="text-base text-zinc-400 mt-2">{mensajesPorRol[rol]}</p>
     </div>
   );
 }

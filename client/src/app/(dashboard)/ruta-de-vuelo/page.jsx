@@ -10,8 +10,8 @@ export default function RutaDeVueloPage() {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* HEADER */}
         <div>
-          <h1 className="text-2xl text-white font-semibold">Ruta de Vuelo</h1>
-          <p className="text-sm text-zinc-400">
+          <h1 className="text-3xl text-white font-semibold">Ruta de Vuelo</h1>
+          <p className="text-lg text-zinc-400">
             Progreso, ejecución y próximos pasos del proyecto
           </p>
         </div>
@@ -24,7 +24,7 @@ export default function RutaDeVueloPage() {
 
         {/* 🧠 MAPA COMPLETO */}
         <div>
-          <h2 className="text-sm text-zinc-400 mb-4">Mapa del tramo</h2>
+          <h2 className="text-lg text-white font-semibold mb-4">Mapa del tramo</h2>
 
           <Microacciones pacs={pacsMock} />
         </div>

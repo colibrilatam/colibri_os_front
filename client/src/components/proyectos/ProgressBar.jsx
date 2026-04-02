@@ -39,7 +39,7 @@ export default function ProgressBar({ porcentaje }) {
         >
           {/* Mostrar número dentro de la barra si hay espacio */}
           {validoPorcentaje > 20 && (
-            <span className="text-sm font-bold text-white">
+            <span className="text-base font-bold text-white">
               {validoPorcentaje}%
             </span>
           )}

@@ -268,8 +268,8 @@ export default function LoginRegisterPage() {
             {/* Password requirements display (only in register) */}
             {!isLogin && formData.password && (
               <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <p className="text-xs sm:text-sm font-semibold text-slate-700 mb-2">Requisitos:</p>
-                <ul className="space-y-1 text-xs sm:text-sm">
+                <p className="text-sm sm:text-base font-semibold text-slate-700 mb-2">Requisitos:</p>
+                <ul className="space-y-1 text-sm sm:text-base">
                   <li className={`flex items-center gap-2 ${passwordValidation.hasMinLength ? 'text-green-600' : 'text-slate-500'}`}>
                     <span className={`w-4 h-4 rounded-full flex items-center justify-center ${passwordValidation.hasMinLength ? 'bg-green-600' : 'bg-slate-300'}`}>
                       {passwordValidation.hasMinLength && <span className="text-white text-xs">✓</span>}

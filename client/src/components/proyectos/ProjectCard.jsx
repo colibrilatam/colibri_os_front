@@ -10,10 +10,10 @@ export default function ProjectCard({ project, isMiProyecto, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left p-6 rounded-2xl transition-all duration-200 active:scale-98 ${
+      className={`w-full text-left p-6 rounded-2xl transition-all duration-200 active:scale-98 glass-effect ${
         isMiProyecto
-          ? 'bg-gradient-to-br from-zinc-900 to-zinc-800 border-2 border-blue-500 shadow-md hover:shadow-lg'
-          : 'bg-gradient-to-br from-zinc-900 to-zinc-800 border-2 border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300'
+          ? 'border-2 border-turquoise/40 hover:border-turquoise/60'
+          : 'border-2 border-white/20 hover:border-turquoise/40'
       }`}
       style={{ minHeight: '160px', color: "var(--text-primary)" }}
       aria-label={`Ver detalles del proyecto ${project.nombre}`}
@@ -23,7 +23,7 @@ export default function ProjectCard({ project, isMiProyecto, onClick }) {
         <div className="flex-1">
           {/* Badge "Tu proyecto" */}
           {isMiProyecto && (
-            <div className="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold mb-3">
+            <div className="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-base font-semibold mb-3">
               ✓ Tu Proyecto
             </div>
           )}

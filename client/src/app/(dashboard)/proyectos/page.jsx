@@ -94,18 +94,18 @@ export default function ProyectosPage() {
     <main className="min-h-screen bg-zinc-950 p-6">
     <div className="flex flex-col gap-6 pb-8" style={{"color": "var(--text-primary)"}}>
       {/* 1. Header del Usuario */}
-      <section className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 rounded-2xl shadow-sm border border-gray-600">
-        <h1 className="text-3xl font-bold  mb-2">
+      <section className="glass-effect border-glass p-6 rounded-2xl shadow-sm">
+        <h1 className="text-4xl font-bold  mb-2">
           Hola, {userData.nombre} 👋
         </h1>
         <div className="flex flex-col gap-3">
           {tieneProyectoPrincipal && (
-            <p className="text-xl">
-              <span className="font-semibold text-blue-700">Tu proyecto:</span> {miProyecto?.nombre || userData.nombreDeProyectoCreado}
+            <p className="text-2xl">
+              <span className="font-semibold text-blue-400">Tu proyecto:</span> {miProyecto?.nombre || userData.nombreDeProyectoCreado}
             </p>
           )}
-          <p className="text-xl text-gray-300">
-            <span className="font-semibold text-blue-500">Participas en:</span> {totalProyectosSecundarios} proyecto{totalProyectosSecundarios !== 1 ? 's' : ''} más
+          <p className="text-2xl text-gray-300">
+            <span className="font-semibold text-blue-400">Participas en:</span> {totalProyectosSecundarios} proyecto{totalProyectosSecundarios !== 1 ? 's' : ''} más
           </p>
         </div>
       </section>
@@ -113,7 +113,7 @@ export default function ProyectosPage() {
       {/* 2. Tarjeta "Mi Proyecto" - Solo si existe */}
       {tieneProyectoPrincipal ? (
         <section>
-          <h2 className="text-2xl font-bold  mb-4">Tu Proyecto</h2>
+          <h2 className="text-3xl font-bold  mb-4">Tu Proyecto</h2>
           <ProjectCard
             project={miProyecto}
             isMiProyecto={true}
@@ -122,10 +122,10 @@ export default function ProyectosPage() {
         </section>
       ) : (
         <section >
-          <h2 className="text-2xl font-bold  mb-4">Tu Proyecto</h2>
-          <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 p-8 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-center">
+          <h2 className="text-3xl font-bold  mb-4">Tu Proyecto</h2>
+          <div className="glass-effect border-glass p-8 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-center">
             <div className="text-5xl mb-4">📋</div>
-            <h3 className="text-2xl font-bold  mb-3">
+            <h3 className="text-3xl font-bold  mb-3">
               Todavía no creaste ningún proyecto
             </h3>
             <p className="text-xl text-gray-400 mb-8 max-w-md">
@@ -144,7 +144,7 @@ export default function ProyectosPage() {
       {/* 3. Listado de Proyectos Secundarios */}
       {totalProyectosSecundarios > 0 && (
         <section>
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-3xl font-bold mb-4">
             Otros Proyectos
           </h2>
           <div className="flex flex-col gap-4">
