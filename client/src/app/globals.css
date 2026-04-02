@@ -244,7 +244,11 @@ a {
     color-scheme: dark;
   }
 }
-
+/* FONDO PARA OVERLAY POPUP*/
+.overlay-bg{
+  background: rgba(0, 0, 0, 0.774);
+  backdrop-filter: blur(6px);
+}
 
 /* ============================================================
    EFECTO GLASS MORPHISM PARA CARDS/DIV
