@@ -27,8 +27,8 @@ export default function TransicionEstructural({ data, selectedIndex, onSelectInd
 
   return (
     <div className="min-w-3/6 h-fit glass-effect border-glass p-6 rounded-2xl shadow-md">
-      <h2 style={{ fontSize: 'var(--text-2xl)', color: 'white' }} className="font-semibold mb-6">Transición Estructural por PAC</h2>
-      <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }} className="mb-6">Comparativa antes y después de ejecutar un Protocolo de Acción Colibrí</p>
+      <h2 style={{ fontSize: 'var(--text-3xl)', color: 'white' }} className="font-semibold mb-6">Transición Estructural por PAC</h2>
+      <p style={{ fontSize: 'var(--text-lg)', color: 'var(--text-secondary)' }} className="mb-6">Comparativa antes y después de ejecutar un Protocolo de Acción Colibrí</p>
       
       {/* Selector de gráficos */}
       <div className="flex gap-3 mb-8 flex-wrap">

@@ -59,8 +59,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         </button>
 
         <div className="mt-6">
-          <h2 className="text-lg font-bold mb-2">Colibrí OS</h2>
-          <p className="text-sm text-gray-400 mb-6">Rol: {rol}</p>
+          <h2 className="text-xl font-bold mb-2">Colibrí OS</h2>
+          <p className="text-base text-gray-400 mb-6">Rol: {rol}</p>
 
           <nav className="flex flex-col gap-2">
             {links.map((link) => {
@@ -103,8 +103,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         {/* Header */}
         {sidebarDesktopExpanded && (
           <div className="mb-6">
-            <h2 className="text-lg font-bold mb-2">Colibrí OS</h2>
-            <p className="text-sm text-gray-400">Rol: {rol}</p>
+            <h2 className="text-xl font-bold mb-2">Colibrí OS</h2>
+            <p className="text-base text-gray-400">Rol: {rol}</p>
           </div>
         )}
 

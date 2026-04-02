@@ -50,7 +50,7 @@ export default function ProjectDetailSheet({ project, isMiProyecto, onClose }) {
           <div className="flex items-start justify-between gap-4 mb-6">
             <div className="flex-1">
               {isMiProyecto && (
-                <div className="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-semibold mb-3">
+                <div className="inline-block bg-blue-600 text-white px-4 py-1 rounded-full text-base font-semibold mb-3">
                   ✓ Tu Proyecto
                 </div>
               )}

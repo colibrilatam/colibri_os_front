@@ -41,10 +41,10 @@ export default function IncertidumbrePage() {
     <main className="min-h-screen rounded glass-effect-dark border-glass p-6">
       <div className=" mx-auto space-y-8">
         <div>
-          <h1 style={{ fontSize: 'var(--text-2xl)' }} className="font-semibold text-white">Reducción de Incertidumbre y Coherencia</h1>
-          <p style={{ fontSize: 'var(--text-base)' }} className="text-zinc-400 mt-2">Volver medible la esperanza. Evolución estructural bajo fricción real.</p>
+          <h1 style={{ fontSize: 'var(--text-3xl)' }} className="font-semibold text-white">Reducción de Incertidumbre y Coherencia</h1>
+          <p style={{ fontSize: 'var(--text-lg)' }} className="text-zinc-400 mt-2">Volver medible la esperanza. Evolución estructural bajo fricción real.</p>
         </div>
-        <div className="flex flex-row justify-between gap-6 ">
+        <div className="flex flex-col lg:flex-row lg:justify-between gap-6 ">
           <div className="flex flex-col gap-6 w-full lg:w-1/2">
       {/* Incertidumbre Dominante */}
       <IncertidumbreDominante incertidumbreData={incertidumbreMock.incertidumbreDominante} />
