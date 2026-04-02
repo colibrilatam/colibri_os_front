@@ -5,7 +5,7 @@ import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 
 export default function Header() {
-  const { token, logout } = useUserStore();
+  const { token, isGuest, logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +51,7 @@ export default function Header() {
       </div>
 
 <div className='flex flex-row gap-4'>
-  {!token ? (
+  {(!token&&!isGuest) ? (
     <a
         href="/login"
         className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
