@@ -14,6 +14,7 @@ export default function DashboardLayout({ children }) {
   const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
   const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
+  
   useEffect(() => {
     // Verificar autenticación
     if (!isAuthenticated()) {
