@@ -1,4 +1,5 @@
 import { useUserStore } from '@/lib/store'
+import { setCookie } from '@/lib/cookies'
 
 export const useGuestLogin = () => {
   const setIsGuest = useUserStore((state) => state.setIsGuest)
@@ -8,6 +9,7 @@ export const useGuestLogin = () => {
     try {
       setIsGuest(true)
       setRol('GUEST')
+      setCookie('isGuest', 'true')
       return { success: true }
     } catch (err) {
       console.log(err)
