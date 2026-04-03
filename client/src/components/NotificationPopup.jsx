@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Button from './Button';
 
 export default function NotificationPopup({ message, isOpen: initialIsOpen = true, onClose }) {
   const [isOpen, setIsOpen] = useState(initialIsOpen);
@@ -23,7 +24,7 @@ export default function NotificationPopup({ message, isOpen: initialIsOpen = tru
           {/* Botón Cerrar (X) */}
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold leading-none"
+            className="border border-red-900 absolute p-2 rounded-2xl top-4 right-4 text-red-800 hover:text-red-700 text-2xl font-bold leading-none cursor-pointer"
             aria-label="Cerrar"
           >
             ✕
@@ -38,12 +39,7 @@ export default function NotificationPopup({ message, isOpen: initialIsOpen = tru
 
           {/* Botón Aceptar */}
           <div className="flex justify-center">
-            <button
-              onClick={handleClose}
-              className=" bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
-            >
-              Aceptar
-            </button>
+            <Button content="Aceptar" onClick={handleClose} color="blue" />
           </div>
         </div>
       </div>

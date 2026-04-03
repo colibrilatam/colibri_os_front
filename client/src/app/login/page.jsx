@@ -202,7 +202,7 @@ export default function LoginRegisterPage() {
   const isLogin = view === 'login';
 
   return (
-    <div className=" flex items-center relative flex-col justify-center min-h-screen bg-linear-to-br from-slate-50 to-slate-100 px-4 py-6">
+    <div className=" flex items-center relative flex-col justify-center min-h-screen  px-4 py-6">
         {/* Home button
       <Link
         href="/"
@@ -216,12 +216,12 @@ export default function LoginRegisterPage() {
        )}
        
 
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 sm:p-8">
+      <div className="w-full max-w-md glass-effect-dark border-glass rounded-lg shadow-lg p-6 sm:p-8">
         {/* Title */}
-        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3 text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-3 text-center">
           {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h1>
-        <p className="text-center text-slate-500 text-lg sm:text-xl mb-8">
+        <p className="text-center  text-lg sm:text-xl mb-8">
           {isLogin ? 'Bienvenido de vuelta' : 'Únete a nosotros hoy'}
         </p>
 
@@ -230,7 +230,7 @@ export default function LoginRegisterPage() {
           {/* Username field (only in register) */}
           {!isLogin && (
             <div>
-              <label htmlFor="username" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+              <label htmlFor="username" className="block text-base sm:text-lg font-medium  mb-2">
                 Nombre completo
               </label>
               <input
@@ -240,8 +240,8 @@ export default function LoginRegisterPage() {
                 value={formData.username}
                 onChange={handleInputChange}
                 placeholder="tu_usuario"
-                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                  errors.username ? 'border-red-500 bg-red-50' : 'border-slate-300'
+                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 ${
+                  errors.username ? 'border-red-500 ' : 'border-slate-300'
                 }`}
               />
               {errors.username && (
@@ -252,7 +252,7 @@ export default function LoginRegisterPage() {
 
           {/* Email field */}
           <div>
-            <label htmlFor="email" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+            <label htmlFor="email" className="block text-base sm:text-lg font-medium mb-2">
               Email
             </label>
             <input
@@ -262,8 +262,8 @@ export default function LoginRegisterPage() {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="tu_email@ejemplo.com"
-              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                errors.email ? 'border-red-500 bg-red-50' : 'border-slate-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500  ${
+                errors.email ? 'border-red-500 ' : 'border-slate-300'
               }`}
             />
             {errors.email && (
@@ -273,7 +273,7 @@ export default function LoginRegisterPage() {
 
           {/* Password field */}
           <div>
-            <label htmlFor="password" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+            <label htmlFor="password" className="block text-base sm:text-lg font-medium  mb-2">
               Contraseña
             </label>
             <input
@@ -283,8 +283,8 @@ export default function LoginRegisterPage() {
               value={formData.password}
               onChange={handleInputChange}
               placeholder="Mínimo 6 caracteres con mayúscula, número y símbolo"
-              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                errors.password ? 'border-red-500 bg-red-50' : 'border-slate-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500  ${
+                errors.password ? 'border-red-500 ' : 'border-slate-300'
               }`}
             />
             {errors.password && (
@@ -328,7 +328,7 @@ export default function LoginRegisterPage() {
           {/* Confirm Password field (only in register) */}
           {!isLogin && (
             <div>
-              <label htmlFor="confirmPassword" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-base sm:text-lg font-medium  mb-2">
                 Confirmar Contraseña
               </label>
               <input
@@ -338,8 +338,8 @@ export default function LoginRegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Repite tu contraseña"
-                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                  errors.confirmPassword ? 'border-red-500 bg-red-50' : 'border-slate-300'
+                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500  ${
+                  errors.confirmPassword ? 'border-red-500 ' : 'border-slate-300'
                 }`}
               />
               {errors.confirmPassword && (
@@ -366,7 +366,7 @@ export default function LoginRegisterPage() {
         <button
           type="button"
           onClick={handleGoogleClick}
-          className="cursor-pointer w-full py-3 px-4 border-2 border-slate-300 rounded-lg font-semibold text-base sm:text-lg text-slate-700 hover:bg-slate-50 transition mt-6 flex items-center justify-center gap-2"
+          className="cursor-pointer w-full py-3 px-4 border-2 border-slate-300 rounded-lg font-semibold text-base sm:text-lg  hover:bg-slate-50 hover:text-slate-600 transition mt-6 flex items-center justify-center gap-2"
         >
           <svg
             className="w-6 h-6"
@@ -385,7 +385,7 @@ export default function LoginRegisterPage() {
           <button
             type="button"
             onClick={handleGuestLoginClick}
-            className="cursor-pointer w-full py-3 px-4 border-2 border-slate-400 rounded-lg font-semibold text-base sm:text-lg text-slate-600 hover:bg-slate-100 transition mt-4 flex items-center justify-center gap-2"
+            className="cursor-pointer w-full py-3 px-4 border-2 border-slate-400 rounded-lg font-semibold text-base sm:text-lg  hover:bg-slate-100 hover:text-slate-600 transition mt-4 flex items-center justify-center gap-2"
           >
             <svg
               className="w-6 h-6"
