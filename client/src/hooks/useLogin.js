@@ -1,5 +1,6 @@
 import { login } from '@/services/authService'
 import { useUserStore } from '@/lib/store'
+import { setCookie } from '@/lib/cookies'
 
 export const useLogin = () => {
     const setToken = useUserStore((state) => state.setToken)
@@ -12,6 +13,7 @@ export const useLogin = () => {
       })
 
       localStorage.setItem('token', data.token)
+      setCookie('token', data.token)
       setToken(data.token)
       return { success: true, data }
 

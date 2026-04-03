@@ -6,14 +6,19 @@ import LoadingScreen from '@/components/LoadingScreen';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useRegister } from '@/hooks/useRegister';
 import { useLogin } from '@/hooks/useLogin';
+import { useGuestLogin } from '@/hooks/useGuestLogin';
+import NotificationPopup from '@/components/NotificationPopup';
 
 export default function LoginRegisterPage() {
   const [view, setView] = useState('login');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
 
   const { handleRegister } = useRegister();
   const { handleLogin } = useLogin();
+  const { handleGuestLogin } = useGuestLogin();
 
   // Form fields
   const [formData, setFormData] = useState({
@@ -159,6 +164,23 @@ export default function LoginRegisterPage() {
     window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/google` // CAMBIAR VARIABLE DE ENTORNO
   };
 
+  // Handle Guest Login
+  const handleGuestLoginClick = () => {
+    const result = handleGuestLogin();
+    if (result.success) {
+      setPopupMessage('¡Iniciaste sesión como invitado! Tu acceso será limitado y no podrás guardar tu progreso. ¡Disfruta explorando Colibri OS!');
+      setIsPopupOpen(true);
+    } else {
+      alert(result.error);
+    }
+  };
+
+  // Handle Popup Close and redirect to dashboard
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
+    router.push('/'); // Redirige al dashboard después de cerrar el popup
+  };
+
   // Switch between views
   const switchView = () => {
     setView(view === 'login' ? 'register' : 'login');
@@ -180,7 +202,7 @@ export default function LoginRegisterPage() {
   const isLogin = view === 'login';
 
   return (
-    <div className=" flex items-center relative flex-col justify-center min-h-screen bg-linear-to-br from-slate-50 to-slate-100 px-4 py-6">
+    <div className=" flex items-center relative flex-col justify-center min-h-screen  px-4 py-6">
         {/* Home button
       <Link
         href="/"
@@ -189,13 +211,17 @@ export default function LoginRegisterPage() {
         Volver al inicio
       </Link> 
        */}
+       { isPopupOpen && (
+        <NotificationPopup message={popupMessage} isOpen={isPopupOpen} onClose={handlePopupClose}></NotificationPopup> 
+       )}
+       
 
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6 sm:p-8">
+      <div className="w-full max-w-md glass-effect-dark border-glass rounded-lg shadow-lg p-6 sm:p-8">
         {/* Title */}
-        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-3 text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-3 text-center">
           {isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h1>
-        <p className="text-center text-slate-500 text-lg sm:text-xl mb-8">
+        <p className="text-center  text-lg sm:text-xl mb-8">
           {isLogin ? 'Bienvenido de vuelta' : 'Únete a nosotros hoy'}
         </p>
 
@@ -204,7 +230,7 @@ export default function LoginRegisterPage() {
           {/* Username field (only in register) */}
           {!isLogin && (
             <div>
-              <label htmlFor="username" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+              <label htmlFor="username" className="block text-base sm:text-lg font-medium  mb-2">
                 Nombre completo
               </label>
               <input
@@ -214,8 +240,8 @@ export default function LoginRegisterPage() {
                 value={formData.username}
                 onChange={handleInputChange}
                 placeholder="tu_usuario"
-                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                  errors.username ? 'border-red-500 bg-red-50' : 'border-slate-300'
+                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 ${
+                  errors.username ? 'border-red-500 ' : 'border-slate-300'
                 }`}
               />
               {errors.username && (
@@ -226,7 +252,7 @@ export default function LoginRegisterPage() {
 
           {/* Email field */}
           <div>
-            <label htmlFor="email" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+            <label htmlFor="email" className="block text-base sm:text-lg font-medium mb-2">
               Email
             </label>
             <input
@@ -236,8 +262,8 @@ export default function LoginRegisterPage() {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="tu_email@ejemplo.com"
-              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                errors.email ? 'border-red-500 bg-red-50' : 'border-slate-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500  ${
+                errors.email ? 'border-red-500 ' : 'border-slate-300'
               }`}
             />
             {errors.email && (
@@ -247,7 +273,7 @@ export default function LoginRegisterPage() {
 
           {/* Password field */}
           <div>
-            <label htmlFor="password" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+            <label htmlFor="password" className="block text-base sm:text-lg font-medium  mb-2">
               Contraseña
             </label>
             <input
@@ -257,8 +283,8 @@ export default function LoginRegisterPage() {
               value={formData.password}
               onChange={handleInputChange}
               placeholder="Mínimo 6 caracteres con mayúscula, número y símbolo"
-              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                errors.password ? 'border-red-500 bg-red-50' : 'border-slate-300'
+              className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500  ${
+                errors.password ? 'border-red-500 ' : 'border-slate-300'
               }`}
             />
             {errors.password && (
@@ -268,8 +294,8 @@ export default function LoginRegisterPage() {
             {/* Password requirements display (only in register) */}
             {!isLogin && formData.password && (
               <div className="mt-3 p-3 bg-slate-50 rounded-lg border border-slate-200">
-                <p className="text-xs sm:text-sm font-semibold text-slate-700 mb-2">Requisitos:</p>
-                <ul className="space-y-1 text-xs sm:text-sm">
+                <p className="text-sm sm:text-base font-semibold text-slate-700 mb-2">Requisitos:</p>
+                <ul className="space-y-1 text-sm sm:text-base">
                   <li className={`flex items-center gap-2 ${passwordValidation.hasMinLength ? 'text-green-600' : 'text-slate-500'}`}>
                     <span className={`w-4 h-4 rounded-full flex items-center justify-center ${passwordValidation.hasMinLength ? 'bg-green-600' : 'bg-slate-300'}`}>
                       {passwordValidation.hasMinLength && <span className="text-white text-xs">✓</span>}
@@ -302,7 +328,7 @@ export default function LoginRegisterPage() {
           {/* Confirm Password field (only in register) */}
           {!isLogin && (
             <div>
-              <label htmlFor="confirmPassword" className="block text-base sm:text-lg font-medium text-slate-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-base sm:text-lg font-medium  mb-2">
                 Confirmar Contraseña
               </label>
               <input
@@ -312,8 +338,8 @@ export default function LoginRegisterPage() {
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 placeholder="Repite tu contraseña"
-                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500 text-black ${
-                  errors.confirmPassword ? 'border-red-500 bg-red-50' : 'border-slate-300'
+                className={`w-full px-4 py-3 border-2 rounded-lg text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition placeholder:text-gray-500  ${
+                  errors.confirmPassword ? 'border-red-500 ' : 'border-slate-300'
                 }`}
               />
               {errors.confirmPassword && (
@@ -340,7 +366,7 @@ export default function LoginRegisterPage() {
         <button
           type="button"
           onClick={handleGoogleClick}
-          className="cursor-pointer w-full py-3 px-4 border-2 border-slate-300 rounded-lg font-semibold text-base sm:text-lg text-slate-700 hover:bg-slate-50 transition mt-6 flex items-center justify-center gap-2"
+          className="cursor-pointer w-full py-3 px-4 border-2 border-slate-300 rounded-lg font-semibold text-base sm:text-lg  hover:bg-slate-50 hover:text-slate-600 transition mt-6 flex items-center justify-center gap-2"
         >
           <svg
             className="w-6 h-6"
@@ -353,6 +379,26 @@ export default function LoginRegisterPage() {
           </svg>
           Continuar con Google
         </button>
+
+        {/* Guest Login button */}
+        {isLogin && (
+          <button
+            type="button"
+            onClick={handleGuestLoginClick}
+            className="cursor-pointer w-full py-3 px-4 border-2 border-slate-400 rounded-lg font-semibold text-base sm:text-lg  hover:bg-slate-100 hover:text-slate-600 transition mt-4 flex items-center justify-center gap-2"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Entrar como Invitado
+          </button>
+        )}
 
         {/* Toggle view link */}
         <p className="text-center text-slate-600 text-base sm:text-lg mt-8">

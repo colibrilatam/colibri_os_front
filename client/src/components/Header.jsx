@@ -3,17 +3,16 @@
 import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
-import Sidebar from './Sidebar';
-
-
+import Button from './Button';
 
 export default function Header() {
-  const { token, logout } = useUserStore();
+  const { token, isGuest, logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [ sidebarOpen, setSidebarOpen ] = useState(false);
+  const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
+  const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
   const roles = ['CEO', 'Colaborador', 'Mecenas', 'Visitante'];
 
@@ -27,13 +26,13 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center z-99" >
+    <header  className="border-bottom  glass-effect-dark  px-6 py-4 flex justify-between items-center z-40 relative" >
       <div className="flex items-center gap-4">
         {/* Botón Hamburguesa */}
         <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 bg-gray-900 hover:bg-gray-800 rounded transition-colors"
-          title={sidebarOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
+          onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
+          className="p-2 bg-gray-900 hover:bg-gray-800 rounded transition-colors lg:hidden"
+          title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
         >
           <svg
             className="w-6 h-6 text-white"
@@ -49,34 +48,20 @@ export default function Header() {
             />
           </svg>
         </button>
-        <h1 className="text-2xl font-bold text-gray-800">R-Lab</h1>
+        <h1 className="text-2xl font-bold">R-Lab</h1>
       </div>
 
 <div className='flex flex-row gap-4'>
-  {!token ? (
-    <a
-        href="/login"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-      >
-        Iniciar sesión
-      </a>
+  {(!token&&!isGuest) ? (
+    <Button content="Iniciar sesión" onClick={() => router.push('/login')} color='blue'/>      
   ) : (
-    <button
-      onClick={() => handleLogout()}
-      className="cursor-pointer px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-    >
-      Cerrar sesión
-    </button>
+    <Button content="Cerrar sesión" onClick={handleLogout} color="red"/>
   )}
       
 
       <div className="relative">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-        >
-          {rol} ▼
-        </button>
+       
+        <Button onClick={() => setIsOpen(!isOpen)} color="white" content={`${rol ? rol : 'Rol'} ▼`}></Button>
 
         {isOpen && (
           <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10">
@@ -95,11 +80,6 @@ export default function Header() {
         )}
       </div>
       </div>
-      {
-        sidebarOpen && (
-          <Sidebar></Sidebar>
-        )
-      }
     </header>
   );
 }

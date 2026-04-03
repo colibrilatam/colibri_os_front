@@ -1,10 +1,12 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { incertidumbreMock } from '@/lib/mock-data';
 import IncertidumbreDominante from './components/IncertidumbreDominante';
 import SeñalesDeCoherencia from './components/SeñalesDeCoherencia';
 import TransicionEstructural from './components/TransicionEstructural';
 
 export default function IncertidumbrePage() {
+  const [selectedTransicionIndex, setSelectedTransicionIndex] = useState(0);
   // Mock data for Incertidumbre Dominante
 
 
@@ -36,21 +38,29 @@ export default function IncertidumbrePage() {
   ];
 
   return (
-    <main className="min-h-screen bg-zinc-950 p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <main className="min-h-screen rounded glass-effect-dark border-glass p-6">
+      <div className=" mx-auto space-y-8">
         <div>
-          <h1 style={{ fontSize: 'var(--text-2xl)' }} className="font-semibold text-white">Pilar 2: Reducción de Incertidumbre y Coherencia</h1>
-          <p style={{ fontSize: 'var(--text-base)' }} className="text-zinc-400 mt-2">Volver medible la esperanza. Evolución estructural bajo fricción real.</p>
+          <h1 style={{ fontSize: 'var(--text-3xl)' }} className="font-semibold text-white">Reducción de Incertidumbre y Coherencia</h1>
+          <p style={{ fontSize: 'var(--text-lg)' }} className="text-zinc-400 mt-2">Volver medible la esperanza. Evolución estructural bajo fricción real.</p>
         </div>
-
+        <div className="flex flex-col lg:flex-row lg:justify-between gap-6 ">
+          <div className="flex flex-col gap-6 w-full lg:w-1/2">
       {/* Incertidumbre Dominante */}
       <IncertidumbreDominante incertidumbreData={incertidumbreMock.incertidumbreDominante} />
-
       {/* Señales de Coherencia */}
       <SeñalesDeCoherencia señales={señales} />
+      </div>
+{/* Transición Estructural por PAC */}
+      <TransicionEstructural 
+        data={transicionData} 
+        selectedIndex={selectedTransicionIndex}
+        onSelectIndex={setSelectedTransicionIndex}
+      />
+      
 
-        {/* Transición Estructural por PAC */}
-      <TransicionEstructural data={transicionData} />
+        
+      </div>
       </div>
     </main>
   );

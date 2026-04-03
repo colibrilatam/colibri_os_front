@@ -13,8 +13,8 @@ export default function CompetenciasPage() {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl text-white font-semibold">Competencias</h1>
-          <p className="text-sm text-zinc-400">
+          <h1 className="text-3xl text-white font-semibold">Competencias</h1>
+          <p className="text-lg text-zinc-400">
             Evolución y análisis del desarrollo del proyecto
           </p>
         </div>

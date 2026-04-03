@@ -24,12 +24,12 @@ export default function MultivariateLineChart({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-white/10 bg-gradient-to-br from-zinc-900 to-zinc-800 p-6 shadow-xl"
+      className="rounded-2xl glass-effect border-glass p-6 shadow-xl"
     >
       {/* Header */}
       <div className="mb-4">
-        <h3 className="text-sm text-zinc-400">{title}</h3>
-        <p className="text-xs text-zinc-500">{description}</p>
+        <h3 className="text-lg text-zinc-300 font-semibold">{title}</h3>
+        <p className="text-base text-zinc-400 mt-1">{description}</p>
       </div>
 
       {/* Chart */}
