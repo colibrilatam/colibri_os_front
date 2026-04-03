@@ -13,11 +13,11 @@ export default function DashboardLayout({ children }) {
   const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen)
 
   // Verificar autenticación al montar el componente
-  useEffect(() => {
+  /* useEffect(() => {
     if (!isAuthenticated()) router.push('/login')
   }, [])
 
-  if (!isAuthenticated()) return null
+  if (!isAuthenticated()) return null */
   
   return (
     <div className="min-h-screen flex flex-col">
