@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
+import Button from './Button';
 
 export default function Header() {
   const { token, isGuest, logout } = useUserStore();
@@ -52,29 +53,15 @@ export default function Header() {
 
 <div className='flex flex-row gap-4'>
   {(!token&&!isGuest) ? (
-    <a
-        href="/login"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-      >
-        Iniciar sesión
-      </a>
+    <Button content="Iniciar sesión" onClick={() => router.push('/login')} color='blue'/>      
   ) : (
-    <button
-      onClick={() => handleLogout()}
-      className="cursor-pointer px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-    >
-      Cerrar sesión
-    </button>
+    <Button content="Cerrar sesión" onClick={handleLogout} color="red"/>
   )}
       
 
       <div className="relative">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-        >
-          {rol} ▼
-        </button>
+       
+        <Button onClick={() => setIsOpen(!isOpen)} color="white" content={`${rol ? rol : 'Rol'} ▼`}></Button>
 
         {isOpen && (
           <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-10">

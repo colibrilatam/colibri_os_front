@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { isTokenExpired } from './auth';
+import { setCookie, deleteCookie } from './cookies';
 
 export const useUserStore = create(
   persist(
@@ -11,14 +12,38 @@ export const useUserStore = create(
 
       // Token
       token: null,
-      setToken: (token) => set({ token }),
+      setToken: (token) => {
+        set({ token })
+        if (typeof window !== 'undefined') {
+          if (token) {
+            setCookie('token', token)
+          } else {
+            deleteCookie('token')
+          }
+        }
+      },
       getToken: () => get().token,
 
       // Guest mode
       isGuest: false,
-      setIsGuest: (isGuest) => set({ isGuest }),
+      setIsGuest: (isGuest) => {
+        set({ isGuest })
+        if (typeof window !== 'undefined') {
+          if (isGuest) {
+            setCookie('isGuest', 'true')
+          } else {
+            deleteCookie('isGuest')
+          }
+        }
+      },
 
-      logout: () => set({ token: null, rol: null, isGuest: false }),
+      logout: () => {
+        if (typeof window !== 'undefined') {
+          deleteCookie('token')
+          deleteCookie('isGuest')
+        }
+        set({ token: null, rol: null, isGuest: false })
+      },
 
       // Verificar si hay token y si es válido, o si es invitado
       isAuthenticated: () => {
