@@ -1,23 +1,31 @@
 'use client';
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import { useUserStore } from '@/lib/store';
+import LoadingScreen from '@/components/LoadingScreen';
 
 export default function DashboardLayout({ children }) {
-  const router = useRouter()
-  const isAuthenticated = useUserStore((state) => state.isAuthenticated)
-  const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen)
-  const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
+  const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
+  const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
-  // Verificar autenticación al montar el componente
   useEffect(() => {
-    if (!isAuthenticated()) router.push('/login')
-  }, [])
+    // Verificar autenticación
+    if (!isAuthenticated()) {
+      router.push('/login');
+    } else {
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, router]);
 
-  if (!isAuthenticated()) return null
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
   
   return (
     <div className="min-h-screen flex flex-col">
