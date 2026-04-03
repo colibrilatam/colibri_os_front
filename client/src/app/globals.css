@@ -214,6 +214,10 @@ code, kbd, pre {
   }
 }
 
+div{
+  color: var(--color-cream);
+}
+
 html {
   height: 100%;
 }
