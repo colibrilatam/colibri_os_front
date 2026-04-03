@@ -35,6 +35,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     { href: '/incertidumbre', label: 'Incertidumbre', icon: AlertCircle },
     { href: '/trazabilidad', label: 'Trazabilidad', icon: Link2 },
     { href: '/proyectos', label: 'Proyectos', icon: Folder },
+    { href: '/reputacion', label: 'Reputacion', icon: Folder },
   ];
 
   const handleNavClick = () => {
