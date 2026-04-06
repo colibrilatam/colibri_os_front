@@ -102,11 +102,13 @@ function CategorySection() {
                 }}
               />
 
-              {/* Barra con gradiente + animación */}
+              {/* Valor actual (gradiente progresivo) */}
               <div
-                className="absolute h-3 rounded-full transition-all duration-700 ease-out gradient-bar"
+                className="absolute h-3 rounded-full transition-all duration-500 ease-out"
                 style={{
                   width: `${c.value}%`,
+                  background:
+                    "linear-gradient(90deg, #ff8c00 0%, #FFD166 40%, #78D9B4 70%, #009975 100%)",
                 }}
               />
 
@@ -148,9 +150,11 @@ function SkillsSection() {
 
             <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
               <div
-                className="h-2 rounded-full transition-all duration-700 ease-out gradient-bar"
+                className="h-2 rounded-full transition-all duration-500 ease-out"
                 style={{
                   width: `${s.value}%`,
+                  background:
+                    "linear-gradient(90deg, #ff8c00 0%, #FFD166 40%, #78D9B4 70%, #009975 100%)",
                 }}
               />
             </div>

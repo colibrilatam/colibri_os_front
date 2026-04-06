@@ -1,7 +1,7 @@
 "use client";
 
 /* ============================================================
-   MOCK DATA (luego reemplazás por fetch real)
+   MOCK DATA
    ============================================================ */
 const data = {
   uncertaintyType: "Mercado",
@@ -27,7 +27,6 @@ export default function Capa2Page() {
   return (
     <section className="w-full min-h-screen p-6 flex flex-col gap-6">
 
-      {/* HEADER */}
       <div>
         <h2 className="text-2xl font-bold">
           Reducción de incertidumbre por tramo
@@ -37,7 +36,6 @@ export default function Capa2Page() {
         </p>
       </div>
 
-      {/* GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <div className="lg:col-span-2">
@@ -57,7 +55,7 @@ export default function Capa2Page() {
 }
 
 /* ============================================================
-   A. TARJETA DE INCERTIDUMBRE
+   A. TARJETA
    ============================================================ */
 function UncertaintyCard({ data }) {
 
@@ -105,16 +103,9 @@ function UncertaintyCard({ data }) {
 }
 
 /* ============================================================
-   B. BARRAS DE RIESGO
+   B. BARRAS DE RIESGO (ACTUALIZADAS)
    ============================================================ */
 function RiskBars({ data }) {
-
-  const getColor = (value) => {
-    if (value < 40) return "var(--score-excellent)";
-    if (value < 60) return "var(--score-medium)";
-    return "var(--score-low)";
-  };
-
   return (
     <div className="glass-effect border-glass rounded-2xl p-6">
 
@@ -130,12 +121,13 @@ function RiskBars({ data }) {
             <span>{r.value}%</span>
           </div>
 
-          <div className="w-full h-2 bg-gray-700 rounded-full">
+          <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
             <div
-              className="h-2 rounded-full transition-all duration-500"
+              className="h-2 rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${r.value}%`,
-                background: getColor(r.value),
+                background:
+                  "linear-gradient(90deg, #ff8c00 0%, #FFD166 40%, #78D9B4 70%, #009975 100%)",
               }}
             />
           </div>
@@ -148,7 +140,7 @@ function RiskBars({ data }) {
 }
 
 /* ============================================================
-   C. SLOPE CHART SIMPLE
+   C. SLOPE CHART
    ============================================================ */
 function SlopeChart({ data }) {
 
@@ -163,13 +155,11 @@ function SlopeChart({ data }) {
 
       <div className="flex items-center justify-between">
 
-        {/* Inicio */}
         <div>
           <p className="text-sm text-secondary">Inicio</p>
           <p className="text-lg font-bold">{data.start}%</p>
         </div>
 
-        {/* Línea */}
         <div className="flex-1 mx-4 relative">
           <div className="h-[2px] bg-gray-600 w-full"></div>
 
@@ -184,7 +174,6 @@ function SlopeChart({ data }) {
           />
         </div>
 
-        {/* Actual */}
         <div>
           <p className="text-sm text-secondary">Actual</p>
           <p className="text-lg font-bold text-[var(--color-emerald)]">
@@ -199,7 +188,7 @@ function SlopeChart({ data }) {
 }
 
 /* ============================================================
-   MICROCOPY DINÁMICO
+   MICROCOPY
    ============================================================ */
 function Microcopy({ data }) {
 
