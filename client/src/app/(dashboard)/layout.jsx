@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }) {
   const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
   
-  /* useEffect(() => {
+   useEffect(() => {
     // Verificar autenticación
     if (!isAuthenticated()) {
       router.push('/login');
@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }) {
 
   if (isLoading) {
     return <LoadingScreen />;
-  } */
+  } 
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -44,7 +44,7 @@ export default function DashboardLayout({ children }) {
 
       <div className="flex flex-1">
         {/* Contenido - siempre deja espacio al sidebar contraído */}
-        <main className="text-black flex-1 p-6  lg:ml-24">
+        <main className="text-black flex-1 p-4  lg:ml-24">
           {children}
         </main>
       </div>
