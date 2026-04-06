@@ -28,9 +28,6 @@ export default function MockupCapa0Colibri() {
   return (
     <div className="min-h-screen bg-slate-950 p-6 text-slate-100 md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <header className="rounded-3xl border border-slate-800 bg-slate-900/90 px-6 py-5 shadow-2xl">
-          
-        </header>
 
         <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
           <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl xl:col-span-5">
