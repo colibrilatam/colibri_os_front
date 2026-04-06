@@ -33,7 +33,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     { href: '/ruta-de-vuelo', label: 'Ruta de Vuelo', icon: Map },
     { href: '/competencias', label: 'Competencias', icon: Zap },
     { href: '/incertidumbre', label: 'Incertidumbre', icon: AlertCircle },
-    { href: '/trazabilidad', label: 'Trazabilidad', icon: Link2 },
+    { href: '/evidencia', label: 'Evidencia', icon: Link2 },
     { href: '/proyectos', label: 'Proyectos', icon: Folder },
     { href: '/reputacion', label: 'Reputacion', icon: Folder },
   ];

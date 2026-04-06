@@ -1,68 +1,229 @@
-'use client';
-import React, { useState } from 'react';
-import { incertidumbreMock } from '@/lib/mock-data';
-import IncertidumbreDominante from './components/IncertidumbreDominante';
-import SeñalesDeCoherencia from './components/SeñalesDeCoherencia';
-import TransicionEstructural from './components/TransicionEstructural';
+"use client";
 
-export default function IncertidumbrePage() {
-  const [selectedTransicionIndex, setSelectedTransicionIndex] = useState(0);
-  // Mock data for Incertidumbre Dominante
+/* ============================================================
+   MOCK DATA (luego reemplazás por fetch real)
+   ============================================================ */
+const data = {
+  uncertaintyType: "Mercado",
+  level: "en_proceso",
+  levelLabel: "En proceso",
+  description: "Validación parcial de hipótesis con evidencia en crecimiento.",
 
+  risks: [
+    { label: "Humano", value: 65 },
+    { label: "Mercado", value: 55 },
+    { label: "Técnico", value: 40 },
+    { label: "Organizacional", value: 70 },
+  ],
 
-  // Mock data for Transición Estructural
-  const transicionData = [
-    {
-      name: 'Madurez del Equipo',
-      levels: [0, 25, 50, 75, 100],
-      progression: [20, 40, 60]
-    },
-    {
-      name: 'Coherencia Interna',
-      levels: [0, 25, 50, 75, 100],
-      progression: [30, 50, 70]
-    },
-    {
-      name: 'Capacidad de Ejecución',
-      levels: [0, 25, 50, 75, 100],
-      progression: [40, 65, 80]
+  start: 82,
+  current: 54,
+};
+
+/* ============================================================
+   COMPONENTE PRINCIPAL
+   ============================================================ */
+export default function Capa2Page() {
+  return (
+    <section className="w-full min-h-screen p-6 flex flex-col gap-6">
+
+      {/* HEADER */}
+      <div>
+        <h2 className="text-2xl font-bold">
+          Reducción de incertidumbre por tramo
+        </h2>
+        <p className="text-sm text-[var(--text-secondary)]">
+          Evolución estructural del riesgo durante el tramo actual
+        </p>
+      </div>
+
+      {/* GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div className="lg:col-span-2">
+          <UncertaintyCard data={data} />
+        </div>
+
+        <RiskBars data={data} />
+
+        <SlopeChart data={data} />
+
+      </div>
+
+      <Microcopy data={data} />
+
+    </section>
+  );
+}
+
+/* ============================================================
+   A. TARJETA DE INCERTIDUMBRE
+   ============================================================ */
+function UncertaintyCard({ data }) {
+
+  const getStatusStyle = (level) => {
+    switch (level) {
+      case "critica":
+        return "bg-[var(--status-danger-bg)] text-[var(--status-danger)]";
+      case "en_proceso":
+        return "bg-[var(--status-warning-bg)] text-[var(--status-warning)]";
+      case "reducida":
+        return "bg-[var(--status-success-bg)] text-[var(--status-success)]";
+      default:
+        return "bg-gray-700 text-white";
     }
-  ];
-
-  // Señales de Coherencia
-  const señales = [
-    { nombre: 'Roles Definidos', nivel: 3, evidencia: 'https://notion.so/acta-fundacional' },
-    { nombre: 'Fricción Documentada', nivel: 1, evidencia: 'https://notion.so/registro-fricciones' },
-    { nombre: 'Toma de Decisiones bajo Presión', nivel: 2, evidencia: 'https://notion.so/minutas-reuniones' },
-    { nombre: 'Coachability', nivel: 1, evidencia: 'https://notion.so/feedback-sesiones' }
-  ];
+  };
 
   return (
-    <main className="min-h-screen rounded glass-effect-dark border-glass p-6">
-      <div className=" mx-auto space-y-8">
-        <div>
-          <h1 style={{ fontSize: 'var(--text-3xl)' }} className="font-semibold text-white">Reducción de Incertidumbre y Coherencia</h1>
-          <p style={{ fontSize: 'var(--text-lg)' }} className="text-zinc-400 mt-2">Volver medible la esperanza. Evolución estructural bajo fricción real.</p>
-        </div>
-        <div className="flex flex-col lg:flex-row lg:justify-between gap-6 ">
-          <div className="flex flex-col gap-6 w-full lg:w-1/2">
-      {/* Incertidumbre Dominante */}
-      <IncertidumbreDominante incertidumbreData={incertidumbreMock.incertidumbreDominante} />
-      {/* Señales de Coherencia */}
-      <SeñalesDeCoherencia señales={señales} />
-      </div>
-{/* Transición Estructural por PAC */}
-      <TransicionEstructural 
-        data={transicionData} 
-        selectedIndex={selectedTransicionIndex}
-        onSelectIndex={setSelectedTransicionIndex}
-      />
-      
+    <div className="glass-effect border-glass rounded-2xl p-6 flex flex-col gap-4">
 
-        
+      <h3 className="text-xl font-semibold">
+        Incertidumbre dominante
+      </h3>
+
+      <div className="flex items-center justify-between">
+
+        <div>
+          <p className="text-sm text-[var(--text-secondary)]">Tipo</p>
+          <p className="text-2xl font-bold">
+            {data.uncertaintyType}
+          </p>
+        </div>
+
+        <div className={`px-4 py-2 rounded-xl ${getStatusStyle(data.level)}`}>
+          {data.levelLabel}
+        </div>
+
       </div>
+
+      <p className="text-sm text-[var(--text-secondary)]">
+        {data.description}
+      </p>
+
+    </div>
+  );
+}
+
+/* ============================================================
+   B. BARRAS DE RIESGO
+   ============================================================ */
+function RiskBars({ data }) {
+
+  const getColor = (value) => {
+    if (value < 40) return "var(--score-excellent)";
+    if (value < 60) return "var(--score-medium)";
+    return "var(--score-low)";
+  };
+
+  return (
+    <div className="glass-effect border-glass rounded-2xl p-6">
+
+      <h3 className="text-xl font-semibold mb-4">
+        Riesgo por bloque
+      </h3>
+
+      {data.risks.map((r, i) => (
+        <div key={i} className="mb-4">
+
+          <div className="flex justify-between text-sm mb-1">
+            <span>{r.label}</span>
+            <span>{r.value}%</span>
+          </div>
+
+          <div className="w-full h-2 bg-gray-700 rounded-full">
+            <div
+              className="h-2 rounded-full transition-all duration-500"
+              style={{
+                width: `${r.value}%`,
+                background: getColor(r.value),
+              }}
+            />
+          </div>
+
+        </div>
+      ))}
+
+    </div>
+  );
+}
+
+/* ============================================================
+   C. SLOPE CHART SIMPLE
+   ============================================================ */
+function SlopeChart({ data }) {
+
+  const diff = data.current - data.start;
+
+  return (
+    <div className="glass-effect border-glass rounded-2xl p-6">
+
+      <h3 className="text-xl font-semibold mb-4">
+        Evolución del tramo
+      </h3>
+
+      <div className="flex items-center justify-between">
+
+        {/* Inicio */}
+        <div>
+          <p className="text-sm text-secondary">Inicio</p>
+          <p className="text-lg font-bold">{data.start}%</p>
+        </div>
+
+        {/* Línea */}
+        <div className="flex-1 mx-4 relative">
+          <div className="h-[2px] bg-gray-600 w-full"></div>
+
+          <div
+            className="absolute top-[-4px] w-3 h-3 rounded-full transition-all duration-500"
+            style={{
+              left: diff < 0 ? "20%" : "80%",
+              background: diff < 0
+                ? "var(--color-emerald)"
+                : "var(--color-magenta)"
+            }}
+          />
+        </div>
+
+        {/* Actual */}
+        <div>
+          <p className="text-sm text-secondary">Actual</p>
+          <p className="text-lg font-bold text-[var(--color-emerald)]">
+            {data.current}%
+          </p>
+        </div>
+
       </div>
-    </main>
+
+    </div>
+  );
+}
+
+/* ============================================================
+   MICROCOPY DINÁMICO
+   ============================================================ */
+function Microcopy({ data }) {
+
+  const generateText = () => {
+
+    if (data.current < data.start) {
+      return "La incertidumbre dominante pasó de crítica a en proceso.";
+    }
+
+    if (data.risks[0].value < 50) {
+      return "Se redujo riesgo humano mediante evidencia de coordinación y coachability.";
+    }
+
+    if (data.risks[1].value < 50) {
+      return "La validación temprana disminuyó incertidumbre de mercado.";
+    }
+
+    return "La reducción estructural aún es parcial.";
+  };
+
+  return (
+    <div className="text-sm text-secondary">
+      {generateText()}
+    </div>
   );
 }
 
