@@ -214,6 +214,10 @@ code, kbd, pre {
   }
 }
 
+div{
+  color: var(--color-cream);
+}
+
 html {
   height: 100%;
 }
@@ -318,3 +322,28 @@ a {
 .border-left {
   border-left: 1px solid rgba(0, 207, 207, 0.1);
 }
+
+/* ============================================================
+   GRADIENTE PROGRESIVO + ANIMACIÓN FLUJO
+   ============================================================ */
+
+   .gradient-bar {
+    background: linear-gradient(
+      90deg,
+      #ff8c00 0%,
+      #FFD166 40%,
+      #78D9B4 70%,
+      #009975 100%
+    );
+    background-size: 200% 100%;
+    animation: flowGradient 4s linear infinite;
+  }
+  
+  @keyframes flowGradient {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 200% 0%;
+    }
+  }

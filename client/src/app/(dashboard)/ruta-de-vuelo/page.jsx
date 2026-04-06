@@ -1,186 +1,203 @@
 "use client";
 
 import { useState } from "react";
-import { flightData } from "@/lib/mock/homeData";
 
-export default function Flight() {
+/* ============================================================
+   DATA MOCK (alineado con tu modelo)
+   ============================================================ */
+const project = {
+  name: "Aurora Labs",
+  ic: 2.43,
+  icMax: 6.0,
+};
+
+const pacs = [
+  {
+    id: "T2-C1",
+    title: "Alineación del equipo base",
+    objective: "Confirmar roles y coordinación del equipo.",
+    status: "completed",
+    friction: "Desalineación inicial del equipo",
+    decision: "Definir estructura operativa",
+    evidence: "Roles validados",
+    competency: "Coordinación",
+    progress: 30,
+  },
+  {
+    id: "T2-C6",
+    title: "Validación del entorno",
+    objective: "Analizar variables externas.",
+    status: "current",
+    friction: "Incertidumbre regulatoria",
+    decision: "Mapeo de señales externas",
+    evidence: "Evidencia parcial",
+    competency: "Análisis sistémico",
+    progress: 65,
+  },
+  {
+    id: "T2-C7",
+    title: "Lectura de tracción",
+    objective: "Medir señales reales.",
+    status: "pending",
+    friction: "Falta de datos",
+    decision: "Definir métricas base",
+    evidence: "Pendiente",
+    competency: "Data literacy",
+    progress: 90,
+  },
+];
+
+/* ============================================================
+   COMPONENTE PRINCIPAL
+   ============================================================ */
+export default function Capa3Colibri() {
+  const [selectedPacId, setSelectedPacId] = useState(pacs[1].id);
+
+  const selectedPac = pacs.find((p) => p.id === selectedPacId);
+
+  const icPct = (project.ic / project.icMax) * 100;
+
   return (
-    <div className="space-y-6 pb-10">
+    <div className="min-h-screen p-6 flex flex-col gap-6">
 
-      <Header />
+      {/* HEADER */}
+      <div>
+        <h1 className="text-2xl font-bold">{project.name}</h1>
+        <p className="text-[var(--text-sm)] text-[var(--text-secondary)]">
+          Trayectoria longitudinal por PAC
+        </p>
+      </div>
 
-      <div className="space-y-5">
-        {flightData.map((pac, index) => (
-          <FlightCard
-            key={pac.id}
-            pac={pac}
-            isLast={index === flightData.length - 1}
+      {/* IC */}
+      <div className="glass-effect border-glass p-5 rounded-2xl">
+        <div className="text-[var(--text-sm)] text-[var(--text-secondary)]">
+          Índice Colibrí
+        </div>
+
+        <div className="text-[var(--text-xl)] font-semibold">
+          {project.ic} / {project.icMax}
+        </div>
+
+        <div className="h-2 bg-gray-700 mt-3 rounded-full">
+          <div
+            className="h-2 rounded-full transition-all duration-500"
+            style={{
+              width: `${icPct}%`,
+              background: "linear-gradient(90deg, orange, gold, var(--color-emerald))",
+            }}
           />
-        ))}
+        </div>
       </div>
 
-    </div>
-  );
-}
+      {/* TIMELINE PACs */}
+      <div className="glass-effect border-glass rounded-2xl p-6 overflow-x-auto">
+        <div className="flex gap-10 min-w-[700px]">
 
-/* HEADER */
+          {pacs.map((pac, i) => (
+            <button
+              key={pac.id}
+              onClick={() => setSelectedPacId(pac.id)}
+              className="flex flex-col items-center gap-3 min-w-[180px]"
+            >
+              {/* Nodo */}
+              <div
+                className={`w-5 h-5 rounded-full ${
+                  selectedPacId === pac.id ? "scale-125" : ""
+                } transition-all`}
+                style={{
+                  background: getStatusColor(pac.status),
+                }}
+              />
 
-function Header() {
-  return (
-    <div className="glass-effect border-glass rounded-[26px] p-6">
-      <div className="text-[var(--text-secondary)] text-sm uppercase">
-        Vuelo del Proyecto
+              {/* Línea */}
+              {i < pacs.length - 1 && (
+                <div className="w-full h-[2px]"
+                  style={{
+                    background: "linear-gradient(90deg, orange, gold, var(--color-emerald))",
+                    opacity: 0.5,
+                  }}
+                />
+              )}
+
+              {/* Label */}
+              <div className="text-center">
+                <div className="text-[var(--text-md)] font-semibold">
+                  {pac.id}
+                </div>
+                <div className="text-[var(--text-sm)] text-[var(--text-secondary)]">
+                  {pac.title}
+                </div>
+              </div>
+            </button>
+          ))}
+
+        </div>
       </div>
 
-      <h1 className="mt-2 text-[var(--text-2xl)]">
-        Secuencia verificable de transformación
-      </h1>
+      {/* DETALLE PAC */}
+      <div className="glass-effect-dark border-glass rounded-2xl p-6 flex flex-col gap-4">
 
-      <p className="mt-3 text-[var(--text-base)] text-[var(--text-secondary)]">
-        Navega cada decisión, evidencia y aprendizaje del proyecto.
-      </p>
-    </div>
-  );
-}
+        <h2 className="text-[var(--text-lg)] font-semibold">
+          {selectedPac.title}
+        </h2>
 
-/* CARD */
+        <p className="text-[var(--text-base)] text-[var(--text-secondary)]">
+          {selectedPac.objective}
+        </p>
 
-function FlightCard({ pac, isLast }) {
-  const [open, setOpen] = useState(pac.defaultOpen || false);
-
-  return (
-    <div className="relative">
-
-      {/* LINE */}
-      {!isLast && (
-        <div className="absolute left-4 top-16 bottom-0 w-px bg-[var(--color-nectar)]/40" />
-      )}
-
-      <div className="glass-effect border-glass rounded-[22px] p-5 pl-12">
-
-        {/* DOT */}
-        <div className="absolute left-2 top-6 h-4 w-4 rounded-full bg-[var(--color-nectar)]" />
-
-        {/* HEADER CLICKABLE */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="w-full text-left"
-        >
-
-          <div className="flex justify-between items-center gap-3">
-
-            <div>
-              <div className="text-[var(--text-secondary)] text-sm">
-                {pac.id} · {pac.fecha}
-              </div>
-
-              <div className="text-[var(--text-lg)] font-semibold mt-1">
-                {pac.title}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <StatusBadge estado={pac.estado} />
-
-              <span
-                className={`transition-transform duration-300 ${
-                  open ? "rotate-180" : ""
-                }`}
-              >
-                ▼
-              </span>
-            </div>
-
-          </div>
-
-        </button>
-
-        {/* SCORE */}
-        <div className="mt-3 text-[var(--text-secondary)] text-sm">
-          Score:{" "}
-          <span className="text-[var(--text-primary)]">
-            {pac.score}/100
-          </span>
+        {/* BARRA PROGRESIVA */}
+        <div className="w-full h-2 bg-gray-700 rounded-full">
+          <div
+            className="h-2 rounded-full"
+            style={{
+              width: `${selectedPac.progress}%`,
+              background: getProgressColor(selectedPac.progress),
+            }}
+          />
         </div>
 
-        {/* CONTENT (ANIMADO) */}
-        <div
-          className={`overflow-hidden transition-all duration-500 ${
-            open ? "max-h-[1000px] opacity-100 mt-5" : "max-h-0 opacity-0"
-          }`}
-        >
+        {/* INFO */}
+        <div className="grid md:grid-cols-2 gap-4 text-[var(--text-sm)]">
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            <Narrative label="Fricción" value={pac.narrativa.friccion} />
-            <Narrative label="Decisión" value={pac.narrativa.decision} />
-            <Narrative label="Acción" value={pac.narrativa.accion} />
-            <Narrative label="Evidencia" value={pac.narrativa.evidencia} />
-            <Narrative label="Resultado" value={pac.narrativa.resultado} />
-            <Narrative label="Insight" value={pac.narrativa.insight} />
-
-          </div>
+          <Info label="Fricción" value={selectedPac.friction} />
+          <Info label="Decisión" value={selectedPac.decision} />
+          <Info label="Evidencia" value={selectedPac.evidence} />
+          <Info label="Competencia" value={selectedPac.competency} />
 
         </div>
 
       </div>
-    </div>
-  );
-}
-
-/* COMPONENTES */
-
-function Narrative({ label, value }) {
-  return (
-    <div className="glass-effect border-glass rounded-xl p-4">
-
-      <div className="text-[var(--text-secondary)] text-sm uppercase">
-        {label}
-      </div>
-
-      <div className="mt-2 text-[var(--text-base)]">
-        {value}
-      </div>
 
     </div>
   );
 }
 
-function StatusBadge({ estado }) {
-  const config = {
-    validado: {
-      bg: "var(--status-success-bg)",
-      color: "var(--status-success)",
-      label: "Validado",
-    },
-    revision: {
-      bg: "var(--status-warning-bg)",
-      color: "var(--status-warning)",
-      label: "En revisión",
-    },
-    pendiente: {
-      bg: "rgba(255,255,255,0.05)",
-      color: "var(--text-secondary)",
-      label: "Pendiente",
-    },
-  };
-
-  const s = config[estado];
-
+/* ============================================================
+   COMPONENTES AUXILIARES
+   ============================================================ */
+function Info({ label, value }) {
   return (
-    <span
-      className="px-3 py-1 rounded-full text-sm border"
-      style={{
-        background: s.bg,
-        color: s.color,
-        borderColor: "rgba(255,255,255,0.1)",
-      }}
-    >
-      {s.label}
-    </span>
+    <div>
+      <span className="text-[var(--text-secondary)]">{label}: </span>
+      <span>{value}</span>
+    </div>
   );
 }
 
+/* ============================================================
+   COLORES
+   ============================================================ */
+function getStatusColor(status) {
+  if (status === "completed") return "var(--color-emerald)";
+  if (status === "current") return "var(--color-nectar)";
+  return "var(--color-magenta)";
+}
+
+function getProgressColor(progress) {
+  if (progress < 33) return "orange";
+  if (progress < 66) return "gold";
+  return "var(--color-emerald)";
+}
 
 /* import EstadoTramo from './components/EstadoTramo';
 import Microacciones from './components/Microacciones';
