@@ -13,9 +13,11 @@ import {
   Link2,
   Folder,
 } from 'lucide-react';
+import Button from './Button';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const pathname = usePathname();
+  const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
   const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
@@ -43,6 +45,12 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       onClose();
     }
   };
+
+  function handleLogout() {
+    logout();
+    router.push('/login')
+  }
+
 
   return (
     <>
@@ -130,6 +138,9 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             );
           })}
         </nav>
+        {sidebarDesktopExpanded && (
+          <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
+        )}
       </aside>
     </>
   );
