@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import Button from './Button';
+import { NftAvatar } from '@/app/(dashboard)/identidad/page';
 
 export default function Header() {
   const { token, isGuest, logout } = useUserStore();
@@ -79,15 +80,17 @@ export default function Header() {
             {/* Sección izquierda: Nombre, ID, Tramo, Estado */}
             <div className="min-w-0 flex-1 flex flex-col gap-2 md:gap-3 items-start justify-start w-fit">
               <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center gap-x-4 gap-y-1 sm:gap-y-2">
+                <NftAvatar size="sm" />
                 <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
                   {project.name}
                 </h1>
-                <span className="rounded-full border border-slate-700 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-slate-300">
-                  ID {project.id}
-                </span>
+               
               </div>
 
               <div className="mt-2 md:mt-3 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-300">
+                 <span className="rounded-full border border-slate-700 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-slate-300">
+                  ID {project.id}
+                </span>
                 <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
                   {project.tramoCode} · {project.tramoName}
                 </span>
