@@ -1,3 +1,26 @@
+// Mock de proyecto para flujo de invitado
+export const project = {
+    name: "Aurora Labs",
+    id: "COL-AR-00231",
+    tramoCode: "T2",
+    tramoName: "Validación temprana",
+    status: "En avance estructural",
+    updatedAt: "2026-04-03",
+    nftState: "T2",
+    ic: 2.43,
+    icMax: 6.0,
+    icNarrative: "T2 en tránsito a T3",
+    trendLabel: "Tendencia ascendente breve",
+    currentPac: "T2-C6",
+    approvedPacs: 5,
+    totalPacs: 7,
+    microActions: 15,
+    evidences: 5,
+    nextMilestone: "Cierre de T2-C6",
+    uncertainty: "Mercado",
+    primaryRisk: "Inexistencia de demanda",
+    window: "4 meses",
+  };
 // Incertidumbre 
 
 export const incertidumbreMock = {
