@@ -5,49 +5,18 @@ import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import Button from './Button';
 import NftAvatar from './señal/NftAvatar';
+import { project } from '@/lib/mock-data';
 export default function Header() {
+  /*
   const { token, isGuest, logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const setRol = useUserStore((state) => state.setRol);
   const [isOpen, setIsOpen] = useState(false);
+  
   const router = useRouter();
+  */
   const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
   const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
-    const project = {
-    name: "Aurora Labs",
-    id: "COL-AR-00231",
-    tramoCode: "T2",
-    tramoName: "Validación temprana",
-    status: "En avance estructural",
-    updatedAt: "2026-04-03",
-    nftState: "T2",
-    ic: 2.43,
-    icMax: 6.0,
-    icNarrative: "T2 en tránsito a T3",
-    trendLabel: "Tendencia ascendente breve",
-    currentPac: "T2-C6",
-    approvedPacs: 5,
-    totalPacs: 7,
-    microActions: 15,
-    evidences: 5,
-    nextMilestone: "Cierre de T2-C6",
-    uncertainty: "Mercado",
-    primaryRisk: "Inexistencia de demanda",
-    window: "4 meses",
-  };
-    const progressPct = (project.approvedPacs / project.totalPacs) * 100;
-  const icPct = (project.ic / project.icMax) * 100;
-
-  const roles = ['CEO', 'Colaborador', 'Mecenas', 'Visitante'];
-
-  const handleRolChange = (newRol) => {
-    setRol(newRol);
-    setIsOpen(false);
-  };
-  function handleLogout() {
-    logout();
-    router.push('/login')
-  }
 
   return (
     <header  className="m-4 border-glass rounded-2xl glass-effect-dark lg:px-4 pr-4 py-2 flex justify-between  z-40 relative min-h-16 lg:min-h-auto content-center items-center" >
