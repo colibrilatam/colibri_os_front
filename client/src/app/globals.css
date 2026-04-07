@@ -336,7 +336,7 @@ a {
       #009975 100%
     );
     background-size: 200% 100%;
-    animation: flowGradient 4s linear infinite;
+    /* animation: flowGradient 4s linear infinite; */
   }
   
   @keyframes flowGradient {
