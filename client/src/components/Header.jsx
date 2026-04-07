@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useUserStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 import Button from './Button';
-import { NftAvatar } from '@/app/(dashboard)/identidad/page';
-
+import NftAvatar from './señal/NftAvatar';
 export default function Header() {
   const { token, isGuest, logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
@@ -57,11 +56,11 @@ export default function Header() {
         
         <button
           onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
-          className="px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
+          className="cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
           title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
         >
           <svg
-            className="w-10 h-10 text-white"
+            className="w-12 h-32 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
