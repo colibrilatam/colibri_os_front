@@ -12,6 +12,7 @@ import {
   AlertCircle,
   Link2,
   Folder,
+  Layers
 } from 'lucide-react';
 import Button from './Button';
 
@@ -32,12 +33,12 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const links = [
     { href: '/', label: 'Inicio', icon: Home },
     { href: '/senial', label: 'Señal', icon: User },
-    { href: '/ruta-de-vuelo', label: 'Ruta de Vuelo', icon: Map },
-    { href: '/competencias', label: 'Competencias', icon: Zap },
-    { href: '/incertidumbre', label: 'Incertidumbre', icon: AlertCircle },
+    { href: '/reputacion', label: 'Reputacion', icon: Layers },
+    { href: '/tramo', label: 'Tramo', icon: Map },
+    { href: '/trayectoria', label: 'Trayectoria', icon: AlertCircle },
     { href: '/evidencia', label: 'Evidencia', icon: Link2 },
     { href: '/proyectos', label: 'Proyectos', icon: Folder },
-    { href: '/reputacion', label: 'Reputacion', icon: Folder },
+    /* { href: '/competencias', label: 'Competencias', icon: Zap }, */
   ];
 
   const handleNavClick = () => {
