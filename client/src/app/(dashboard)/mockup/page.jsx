@@ -87,7 +87,7 @@ export default function MockupCapa0Colibri() {
                     {[22, 28, 31, 34, 40, 46, 52].map((value, index) => (
                       <div
                         key={index}
-                        className="flex-1 rounded-t-md border border-slate-600 bg-slate-700/80"
+                        className="flex-1 rounded-t-md border border-slate-600 bg-emerald-600"
                         style={{ height: `${value}%` }}
                       />
                     ))}

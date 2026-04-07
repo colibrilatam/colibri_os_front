@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
   const links = [
     { href: '/', label: 'Inicio', icon: Home },
-    { href: '/identidad', label: 'Señal', icon: User },
+    { href: '/senial', label: 'Señal', icon: User },
     { href: '/ruta-de-vuelo', label: 'Ruta de Vuelo', icon: Map },
     { href: '/competencias', label: 'Competencias', icon: Zap },
     { href: '/incertidumbre', label: 'Incertidumbre', icon: AlertCircle },

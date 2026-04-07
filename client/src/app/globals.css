@@ -276,7 +276,7 @@ a {
 }
 
 .glass-effect-red {
-  background: rgba(239, 68, 68, 0.4);
+  background: rgba(121, 0, 0, 0.205);
   backdrop-filter: blur(12px);
 }
 
