@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { tramoData } from '@/lib/mock/tramoData';
+import { textStyles } from '@/design-system/typography';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -23,13 +24,12 @@ export default function TramoDashboard() {
       >
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <p className="text-[var(--text-xs)] text-[var(--text-secondary)] uppercase">
-              Cabecera analítica del tramo
-            </p>
-            <h1 className="text-[var(--text-2xl)] font-bold">
+            <p className={textStyles.labelXs}>Cabecera analítica del tramo</p>
+            <h1 className={textStyles.headingLg}>
               {tramoData.id} · {tramoData.name}
             </h1>
-            <p className="text-[var(--text-sm)] text-[var(--text-secondary)] mt-1">
+
+            <p className={`${textStyles.bodyLg} mt-1`}>
               {tramoData.strategicQuestion}
             </p>
           </div>
@@ -52,21 +52,21 @@ export default function TramoDashboard() {
         {/* AVANCE PAC */}
         <AnimatedCard title="Avance por PAC">
           <div className="flex justify-between items-center mb-3">
-            <Block>
-              <h2 className="text-[var(--text-lg)] font-semibold">
+            <div>
+              <h2 className={textStyles.headingSm}>
                 {tramoData.progress.currentPac.code}
               </h2>
-              <p className="text-[var(--text-sm)] text-[var(--text-secondary)]">
+
+              <p className={textStyles.bodyMuted}>
                 PAC actual · {tramoData.progress.currentPac.category} ·{' '}
                 {tramoData.progress.currentPac.name}
               </p>
-            </Block>
+            </div>
 
             <Block>
-              <p className="text-[var(--text-xs)] text-[var(--text-secondary)]">
-                PACs cerrados
-              </p>
-              <p className="text-[var(--text-lg)] font-semibold">
+              <p className={textStyles.labelXs}>PACs cerrados</p>
+
+              <p className={textStyles.metric}>
                 {tramoData.progress.closedPacs} de{' '}
                 {tramoData.progress.totalPacs}
               </p>
@@ -113,7 +113,7 @@ export default function TramoDashboard() {
                     )}
                   </div>
 
-                  <div className="text-[10px] opacity-70">
+                  <div className="text-[13px] opacity-70">
                     {isClosed ? 'cerrado' : isCurrent ? 'actual' : 'pendiente'}
                   </div>
                 </motion.div>
@@ -127,19 +127,17 @@ export default function TramoDashboard() {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <MetricBox
               label="Microacciones"
-              value={tramoData.density.microactions}
+              value={tramoData.density.microactions + ' / 21'}
               sub="Actividad visible"
             />
             <MetricBox
               label="Evidencias"
-              value={tramoData.density.evidences}
+              value={tramoData.density.evidences + ' / 7'}
               sub="Soporte probatorio"
             />
           </div>
 
-          <Block className="text-[var(--text-sm)] text-[var(--text-secondary)]">
-            {tramoData.density.message}
-          </Block>
+          <Block>{tramoData.density.message}</Block>
         </AnimatedCard>
 
         {/* CATEGORÍAS */}
@@ -161,30 +159,27 @@ export default function TramoDashboard() {
                         : 'bg-[rgba(255,209,102,0.15)] border-glass text-[var(--status-warning)]'
                   }`}
                 >
-                  <span className="font-medium">{c.code}</span>
-                  <span>·</span>
-                  <span>{c.label}</span>
+                  <span className={`${textStyles.bodyStrong}`}>{c.code}</span>
+                  <span className={textStyles.subtle}>·</span>
+                  <span className={textStyles.body}>{c.label}</span>
 
                   {isDone && <span>✔</span>}
-                  {isCurrent && (
-                    <span className="text-xs opacity-80">actual</span>
-                  )}
-                  {isNext && (
-                    <span className="text-xs opacity-80">próxima</span>
-                  )}
+                  {isCurrent && <span className={textStyles.meta}>actual</span>}
+                  {isNext && <span className={textStyles.meta}>próxima</span>}
                 </div>
               );
             })}
           </div>
         </AnimatedCard>
 
-        {/* SEÑALES */}
         <AnimatedCard title="Señales de avance">
-          {tramoData.signals.map((s, i) => (
-            <Block key={i} ok={s.type === 'success'}>
-              {s.text}
-            </Block>
-          ))}
+          <div className="space-y-3">
+            {tramoData.signals.map((s, i) => (
+              <Signal key={i} ok={s.type === 'success'}>
+                {s.text}
+              </Signal>
+            ))}
+          </div>
         </AnimatedCard>
 
         {/* BLOQUEOS */}
@@ -207,47 +202,59 @@ const AnimatedCard = ({ title, children }) => (
     animate="show"
     className="glass-effect border-glass rounded-2xl p-6"
   >
-    <h3 className="text-[var(--text-sm)] uppercase text-[var(--text-secondary)] mb-4">
-      {title}
-    </h3>
+    <p className={`${textStyles.labelStrong} mb-4`}>{title}</p>
+
     {children}
   </motion.div>
 );
 
 const InfoBox = ({ label, value }) => (
   <div className="glass-effect border-glass px-4 py-2 rounded-xl">
-    <p className="text-[var(--text-xs)] text-[var(--text-secondary)]">
-      {label}
-    </p>
-    <p className="text-[var(--text-sm)]">{value}</p>
+    <p className={textStyles.labelXs}>{label}</p>
+    <p className={textStyles.bodyStrong}>{value}</p>
   </div>
 );
 
 const MetricBox = ({ label, value, sub }) => (
   <div className="glass-effect border-glass p-4 rounded-xl text-center">
-    <p className="text-[var(--text-xs)] text-[var(--text-secondary)]">
-      {label}
-    </p>
-    <p className="text-[var(--text-2xl)] font-bold">{value}</p>
-    <p className="text-[10px] text-[var(--text-secondary)]">{sub}</p>
+    <p className={textStyles.labelXs}>{label}</p>
+    <p className={textStyles.metric}>{value}</p>
+    <p className={textStyles.meta}>{sub}</p>
   </div>
 );
 
-const Signal = ({ children, ok }) => (
-  <div className="flex justify-between items-center py-2 text-[var(--text-sm)]">
-    <span>{children}</span>
-    <span
-      className={
-        ok ? 'text-[var(--status-success)]' : 'text-[var(--status-warning)]'
+const Signal = ({ children, ok }) => {
+  const styles = ok
+    ? {
+        container: 'border-emerald-800/40 bg-emerald-950/40 text-emerald-300',
+        icon: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300',
+        symbol: '✓',
       }
+    : {
+        container: 'border-amber-800/40 bg-amber-950/40 text-amber-300',
+        icon: 'border-amber-500/40 bg-amber-500/10 text-amber-300',
+        symbol: '⚠',
+      };
+
+  return (
+    <div
+      className={`flex items-center gap-3 rounded-2xl border px-4 py-3 ${styles.container}`}
     >
-      {ok ? '✔' : '⚠'}
-    </span>
-  </div>
-);
+      {/* ICONO */}
+      <div
+        className={`flex h-6 w-6 items-center justify-center rounded-full border text-xs font-semibold ${styles.icon}`}
+      >
+        {styles.symbol}
+      </div>
+
+      {/* TEXTO */}
+      <p className={textStyles.body}>{children}</p>
+    </div>
+  );
+};
 
 const Block = ({ children }) => (
-  <div className="glass-effect border-glass p-3 rounded-xl text-[var(--text-sm)] mb-2">
+  <div className="glass-effect border-glass p-3 rounded-xl mb-2">
     {children}
   </div>
 );

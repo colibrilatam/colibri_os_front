@@ -57,13 +57,13 @@ export default function DashboardLayout({ children }) {
               </button>
 
       {/* Header - siempre deja espacio al sidebar contraído */}
-      <header className="lg:ml-24">
+      <header className="lg:ml-24 p-1 lg:p-0">
         <Header />
       </header>
 
       <div className="flex flex-1">
         {/* Contenido - siempre deja espacio al sidebar contraído */}
-        <main className="text-black flex-1 lg:p-4 py-4 lg:ml-24">
+        <main className="text-black flex-1 p-1 lg:p-4 py-4 lg:ml-24">
           {children}
         </main>
       </div>
