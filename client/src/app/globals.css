@@ -44,9 +44,9 @@ html {
   --bg-overlay:  rgba(0, 51, 102, 0.08);
  
   /* Texto */
-  --text-primary:    var(--color-cream);
-  --text-secondary:  rgb(216, 216, 216);
-  --text-tertiary:   var(--gray-500);
+  --text-primary:    #FFFFFF;
+  --text-secondary:  #A8A8AA;
+  --text-tertiary:   #7A8A9C;
   --text-inverse:    var(--color-deep-blue);
   --text-link:       var(--color-turquoise);
   --text-link-hover: var(--color-emerald);
