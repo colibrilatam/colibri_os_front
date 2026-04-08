@@ -48,19 +48,19 @@ export default function RLabColibriMockup() {
 
   return (
     <div className="min-h-screen w-full bg-[#09111D] text-[#F4F1EA] p-6 md:p-8">
-      <div className="mx-auto max-w-[1560px] rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,207,207,0.10),transparent_22%),radial-gradient(circle_at_24%_18%,rgba(255,209,102,0.10),transparent_18%),linear-gradient(180deg,#0B1422_0%,#09111D_100%)] shadow-2xl shadow-black/30 overflow-hidden">
-        <div className="grid grid-cols-[88px_1.25fr_1.2fr_0.95fr] min-h-[920px]">
-          <aside className="border-r border-white/8 bg-white/[0.02] p-4 flex flex-col items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#FFD166]/25 to-[#00CFCF]/20 border border-white/10 flex items-center justify-center text-lg font-semibold">C</div>
+      <div className="mx-auto max-w-390 rounded-[28px] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(0,207,207,0.10),transparent_22%),radial-gradient(circle_at_24%_18%,rgba(255,209,102,0.10),transparent_18%),linear-gradient(180deg,#0B1422_0%,#09111D_100%)] shadow-2xl shadow-black/30 overflow-hidden">
+        <div className="grid grid-cols-[88px_1.25fr_1.2fr_0.95fr] min-h-230">
+          <aside className="border-r border-white/8 bg-white/2 p-4 flex flex-col items-center gap-4">
+            <div className="h-12 w-12 rounded-2xl bg-linear-to-br from-[#FFD166]/25 to-[#00CFCF]/20 border border-white/10 flex items-center justify-center text-lg font-semibold">C</div>
             <div className="mt-6 flex flex-col gap-3 w-full items-center">
               {['⌂', '◎', '↗', '◫', '✦', '≡'].map((i, idx) => (
-                <div key={idx} className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${idx === 1 ? 'bg-[#FFD166]/15 border-[#FFD166]/30 text-[#FFD166]' : 'bg-white/[0.03] border-white/8 text-white/65'}`}>
+                <div key={idx} className={`h-11 w-11 rounded-2xl flex items-center justify-center border ${idx === 1 ? 'bg-[#FFD166]/15 border-[#FFD166]/30 text-[#FFD166]' : 'bg-white/3 border-white/8 text-white/65'}`}>
                   <span className="text-sm">{i}</span>
                 </div>
               ))}
             </div>
             <div className="mt-auto w-full">
-              <div className="mx-auto h-11 w-11 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-xs">JD</div>
+              <div className="mx-auto h-11 w-11 rounded-2xl bg-white/4 border border-white/10 flex items-center justify-center text-xs">JD</div>
             </div>
           </aside>
 
@@ -71,8 +71,8 @@ export default function RLabColibriMockup() {
                 <h1 className="text-2xl font-semibold mt-2">Pantalla principal · Reputación longitudinal</h1>
               </div>
               <div className="flex items-center gap-2 text-xs text-white/70">
-                <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">Modo Mecenas</span>
-                <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">T1 · Fundacional</span>
+                <span className="rounded-full border border-white/10 bg-white/3 px-3 py-1.5">Modo Mecenas</span>
+                <span className="rounded-full border border-white/10 bg-white/3 px-3 py-1.5">T1 · Fundacional</span>
               </div>
             </div>
 
@@ -109,7 +109,7 @@ export default function RLabColibriMockup() {
                 </div>
               </div>
 
-              <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5 flex flex-col">
+              <div className="rounded-[26px] border border-white/10 bg-white/3 p-5 flex flex-col">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Índice Colibrí</div>
@@ -136,7 +136,7 @@ export default function RLabColibriMockup() {
               </div>
             </div>
 
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[26px] border border-white/10 bg-white/3 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Reducción de incertidumbre</div>
@@ -177,8 +177,8 @@ export default function RLabColibriMockup() {
             </div>
           </section>
 
-          <section className="border-r border-white/8 p-6 space-y-6 bg-white/[0.015]">
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+          <section className="border-r border-white/8 p-6 space-y-6 bg-white/1.5">
+            <div className="rounded-[26px] border border-white/10 bg-white/3 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Trayectoria longitudinal por PAC</div>
@@ -190,7 +190,7 @@ export default function RLabColibriMockup() {
               <div className="mt-6 space-y-4">
                 {pacs.map((pac, idx) => (
                   <div key={pac.id} className="relative rounded-2xl border border-white/8 bg-black/10 p-4">
-                    {idx !== pacs.length - 1 && <div className="absolute left-[19px] top-[56px] h-[54px] w-px bg-gradient-to-b from-[#FFD166]/60 to-transparent" />}
+                    {idx !== pacs.length - 1 && <div className="absolute left-4.75 top-14 h-13.5 w-px bg-linear-to-b from-[#FFD166]/60 to-transparent" />}
                     <div className="flex gap-4">
                       <div className={`mt-1 h-5 w-5 rounded-full border ${pac.status === 'Validado' ? 'bg-emerald-400/70 border-emerald-300/40' : pac.status === 'En revisión' ? 'bg-amber-400/70 border-amber-300/40' : 'bg-white/25 border-white/20'}`} />
                       <div className="flex-1">
@@ -213,7 +213,7 @@ export default function RLabColibriMockup() {
               </div>
             </div>
 
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[26px] border border-white/10 bg-white/3 p-5">
               <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Tendencia longitudinal</div>
               <div className="mt-2 flex items-end justify-between">
                 <h2 className="text-xl font-medium">Evolución de reputación y consistencia</h2>
@@ -233,7 +233,7 @@ export default function RLabColibriMockup() {
           </section>
 
           <section className="p-6 space-y-6 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0))]">
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[26px] border border-white/10 bg-white/3 p-5">
               <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Contexto rápido</div>
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <TinyMetric label="Última evidencia" value="03 Abr" />
@@ -243,7 +243,7 @@ export default function RLabColibriMockup() {
               </div>
             </div>
 
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[26px] border border-white/10 bg-white/3 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Categorías troncales</div>
@@ -256,21 +256,21 @@ export default function RLabColibriMockup() {
                   <div key={item.label}>
                     <div className="mb-1.5 flex justify-between text-sm"><span>{item.label}</span><span className="text-white/45">{item.value} / {item.target}</span></div>
                     <div className="relative h-3 rounded-full bg-white/8 overflow-hidden">
-                      <div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#00CFCF] to-[#FFD166]" style={{ width: `${item.value}%` }} />
-                      <div className="absolute inset-y-[-3px] w-px bg-white/70" style={{ left: `${item.target}%` }} />
+                      <div className="absolute inset-y-0 left-0 rounded-full bg-linear-to-r from-[#00CFCF] to-[#FFD166]" style={{ width: `${item.value}%` }} />
+                      <div className="absolute -inset-y-0.75 w-px bg-white/70" style={{ left: `${item.target}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-[26px] border border-white/10 bg-white/[0.03] p-5">
+            <div className="rounded-[26px] border border-white/10 bg-white/3 p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-[11px] uppercase tracking-[0.22em] text-white/45">Evidencia trazable</div>
                   <h2 className="text-xl font-medium mt-2">Prueba verificable reciente</h2>
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/60">3 visibles</span>
+                <span className="rounded-full border border-white/10 bg-white/3 px-3 py-1 text-xs text-white/60">3 visibles</span>
               </div>
               <div className="mt-4 space-y-3">
                 {evidence.map((row) => (
@@ -331,7 +331,7 @@ function RiskBar({ title, value, tone = 'amber', invert = false }) {
         <span className="text-white/45">{value}%</span>
       </div>
       <div className="mt-3 h-3 rounded-full bg-white/8 overflow-hidden">
-        <div className={`h-full rounded-full bg-gradient-to-r ${tones[tone]}`} style={{ width: `${invert ? value : value}%` }} />
+        <div className={`h-full rounded-full bg-linear-to-r ${tones[tone]}`} style={{ width: `${invert ? value : value}%` }} />
       </div>
       <div className="mt-2 text-xs text-white/45">{invert ? 'fortaleza observable' : 'riesgo residual'}</div>
     </div>
@@ -340,7 +340,7 @@ function RiskBar({ title, value, tone = 'amber', invert = false }) {
 
 function InfoPill({ label, value }) {
   return (
-    <div className="rounded-xl border border-white/8 bg-white/[0.03] px-3 py-2">
+    <div className="rounded-xl border border-white/8 bg-white/3 px-3 py-2">
       <div className="text-[10px] uppercase tracking-[0.18em] text-white/38">{label}</div>
       <div className="mt-1 text-sm">{value}</div>
     </div>
