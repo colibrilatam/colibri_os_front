@@ -18,7 +18,7 @@ export default function Header() {
 
 
   return (
-    <header  className="mt-15 mt-0 lg:m-4 border-glass rounded-2xl glass-effect-dark lg:px-4 pr-4 py-2 flex justify-between  z-40 relative min-h-16 lg:min-h-auto content-center items-center" >
+    <header  className=" mt-15 mt-0 lg:m-4 border-glass rounded-2xl glass-effect-dark lg:px-4 py-2 flex justify-between  z-40 relative min-h-16 lg:min-h-auto content-center items-center" >
       <div className=" flex items-center gap-0 lg:items-center lg:gap-4 content-center  w-full ">
         {/* Botón Hamburguesa */}
         
