@@ -38,7 +38,6 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     { href: '/trayectoria', label: 'Trayectoria', icon: AlertCircle },
     { href: '/evidencia', label: 'Evidencia', icon: Link2 },
     { href: '/proyectos', label: 'Proyectos', icon: Folder },
-    /* { href: '/competencias', label: 'Competencias', icon: Zap }, */
   ];
 
   const handleNavClick = () => {
