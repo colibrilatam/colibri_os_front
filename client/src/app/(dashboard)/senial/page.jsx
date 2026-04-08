@@ -11,7 +11,7 @@ export default function IdentidadPage() {
   return (
     <main className="min-h-screen glass-effect border-glass rounded-2xl">
       {/* Header */}
-      <div className="p-4">
+      <div className="text-center lg:p-4">
         <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--text-primary)' }}>
           Identidad del Proyecto
         </h1>
@@ -21,25 +21,23 @@ export default function IdentidadPage() {
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-1 lg:p-4">
         <div className="mx-auto w-full space-y-6">
           <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
             <div className="glass-effect border-glass  rounded-3xl p-6 xl:col-span-5">
-              <div className="mb-5 flex items-start justify-between gap-4">
-                <div>
+              <div className="mb-5 flex flex-col items-center justify-between ">
+                
                   <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-secondary)' }}>
                     Identidad reputacional
                   </div>
                   <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)' }}>
                     NFT Colibrí dinámico
                   </h2>
-                  <p className="mt-1" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                    Último tramo alcanzado: {project.nftState}
-                  </p>
-                </div>
-                <span className="rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-turquoise)' }}>
+                  <span className="m-2 rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-turquoise)' }}>
                   Estado visual {project.nftState}
                 </span>
+                
+                
               </div>
 
               <div className="relative flex h-[320px] items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass">
