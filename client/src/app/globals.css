@@ -280,12 +280,17 @@ a {
 }
 
 .glass-effect-red {
-  background: rgba(200, 50, 50, 0.35);
+  background: rgba(200, 50, 50, 0.25);
   backdrop-filter: blur(12px);
 }
 
 .glass-effect-green {
-  background: rgba(16, 185, 129, 0.45);
+  background: rgba(16, 185, 129, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.glass-effect-cyan {
+  background: rgba(0, 207, 207, 0.25);
   backdrop-filter: blur(12px);
 }
 

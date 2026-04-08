@@ -138,59 +138,7 @@ export default function MockupFuncionalCapa1Colibri(): JSX.Element {
       <div className="mx-auto max-w-7xl space-y-6">
         <header className="rounded-3xl border border-slate-800 bg-slate-900/90 px-6 py-5 shadow-2xl">
           <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-            <div className="min-w-0 flex-1">
-              <div className="mb-2 text-xs uppercase tracking-[0.24em] text-slate-400">
-                Reputación actual y composición del IC
-              </div>
-
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <div className="flex items-center gap-3">
-                      <NftAvatar size="sm" />
-                      <h1 className="text-2xl font-semibold text-slate-50 md:text-3xl">
-                        {project.name}
-                      </h1>
-                    </div>
-                    <span className="rounded-full border border-slate-700 px-3 py-1 text-sm text-slate-300">
-                      ID {project.id}
-                    </span>
-                  </div>
-
-                  <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-300">
-                    <span className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1">
-                      {project.nftTramo} · {project.icNarrative}
-                    </span>
-                    <span className="rounded-full border border-emerald-800/60 bg-emerald-950/60 px-3 py-1 text-emerald-300">
-                      En avance estructural
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid w-full gap-3 sm:grid-cols-2 md:max-w-md">
-                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3">
-                    <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                      Índice Colibrí
-                    </div>
-                    <div className="mt-1 flex items-end gap-2">
-                      <div className="text-2xl font-semibold text-slate-50">
-                        {project.ic.toFixed(2)}
-                      </div>
-                      <div className="pb-0.5 text-sm text-slate-400">
-                        / {project.icMax.toFixed(2)}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3 sm:text-right">
-                    <div className="text-[11px] uppercase tracking-[0.18em] text-slate-500">
-                      Última actualización
-                    </div>
-                    <div className="mt-1 text-base text-slate-200">{project.snapshotDate}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </header>
 
