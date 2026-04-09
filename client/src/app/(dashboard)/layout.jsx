@@ -12,10 +12,11 @@ export default function DashboardLayout({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
-  const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
+  const setSidebarMobileOpen = useUserStore(
+    (state) => state.setSidebarMobileOpen,
+  );
 
-  
-   useEffect(() => {
+  useEffect(() => {
     // Verificar autenticación
     if (!isAuthenticated()) {
       router.push('/login');
@@ -26,15 +27,14 @@ export default function DashboardLayout({ children }) {
 
   if (isLoading) {
     return <LoadingScreen />;
-  } 
-  
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      
       {/* Sidebar */}
-      <Sidebar 
-        isOpen={sidebarMobileOpen} 
-        onClose={() => setSidebarMobileOpen(false)} 
+      <Sidebar
+        isOpen={sidebarMobileOpen}
+        onClose={() => setSidebarMobileOpen(false)}
       />
 
       {/* Header - siempre deja espacio al sidebar contraído */}
@@ -44,7 +44,7 @@ export default function DashboardLayout({ children }) {
 
       <div className="flex flex-1">
         {/* Contenido - siempre deja espacio al sidebar contraído */}
-        <main className="text-black flex-1 p-4  lg:ml-24">
+        <main className="text-black flex-1 p-4 lg:ml-24 w-full max-w-[100vw] overflow-x-hidden">
           {children}
         </main>
       </div>
