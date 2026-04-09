@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }) {
       />
       <button
                 onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
-                className="absolute z-50  top-0 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
+                className="absolute   top-0 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
                 title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
               >
                 <svg

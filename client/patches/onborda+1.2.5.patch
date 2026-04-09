@@ -1,0 +1,23 @@
+diff --git a/node_modules/onborda/tsconfig.json b/node_modules/onborda/tsconfig.json
+index 6940623..5a8c228 100644
+--- a/node_modules/onborda/tsconfig.json
++++ b/node_modules/onborda/tsconfig.json
+@@ -9,7 +9,9 @@
+     "strict": true,
+     "forceConsistentCasingInFileNames": true,
+     "module": "esnext",
+-    "moduleResolution": "node",
++    
++    "ignoreDeprecations": "6.0",
++    "moduleResolution": "node10",
+     "resolveJsonModule": true,
+     "isolatedModules": true,
+     "noEmit": false,
+@@ -17,6 +19,7 @@
+     "outDir": "dist",
+     "declaration": true,
+     "rootDir": "./src",
++    
+   },
+   "include": ["src/**/*"],
+   "exclude": ["node_modules"]
