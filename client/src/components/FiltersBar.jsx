@@ -5,20 +5,18 @@ const trancheChipStyles = {
   T2: "data-[active=true]:border-cyan-400/60 data-[active=true]:bg-cyan-500/20 data-[active=true]:text-cyan-300 data-[active=true]:shadow-[0_0_0_1px_rgba(34,211,238,0.15)]",
   T3: "data-[active=true]:border-teal-400/60 data-[active=true]:bg-teal-500/20 data-[active=true]:text-teal-300 data-[active=true]:shadow-[0_0_0_1px_rgba(45,212,191,0.15)]",
   T4: "data-[active=true]:border-indigo-400/60 data-[active=true]:bg-indigo-500/20 data-[active=true]:text-indigo-300 data-[active=true]:shadow-[0_0_0_1px_rgba(129,140,248,0.15)]",
-  "Sin tramo":
+  SIN_TRAMO:
     "data-[active=true]:border-slate-400/60 data-[active=true]:bg-slate-500/20 data-[active=true]:text-slate-300 data-[active=true]:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]",
 };
 
 const statusChipStyles = {
   active:
     "data-[active=true]:border-amber-400/60 data-[active=true]:bg-amber-500/20 data-[active=true]:text-amber-300 data-[active=true]:shadow-[0_0_0_1px_rgba(251,191,36,0.14)]",
-  solid:
-    "data-[active=true]:border-emerald-400/60 data-[active=true]:bg-emerald-500/20 data-[active=true]:text-emerald-300 data-[active=true]:shadow-[0_0_0_1px_rgba(52,211,153,0.14)]",
-  risk:
-    "data-[active=true]:border-red-400/60 data-[active=true]:bg-red-500/20 data-[active=true]:text-red-300 data-[active=true]:shadow-[0_0_0_1px_rgba(248,113,113,0.14)]",
-  paused:
+  inactive:
     "data-[active=true]:border-slate-400/60 data-[active=true]:bg-slate-500/20 data-[active=true]:text-slate-300 data-[active=true]:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]",
-  completed:
+  closed:
+    "data-[active=true]:border-red-400/60 data-[active=true]:bg-red-500/20 data-[active=true]:text-red-300 data-[active=true]:shadow-[0_0_0_1px_rgba(248,113,113,0.14)]",
+  suspended:
     "data-[active=true]:border-violet-400/60 data-[active=true]:bg-violet-500/20 data-[active=true]:text-violet-300 data-[active=true]:shadow-[0_0_0_1px_rgba(167,139,250,0.14)]",
 };
 
@@ -28,21 +26,12 @@ const baseChipClasses =
 function getStatusLabel(statusValue) {
   const statusLabelMap = {
     active: "Activo",
-    solid: "Sólido",
-    risk: "En riesgo",
-    paused: "Pausado",
-    completed: "Completado",
+    inactive: "Inactivo",
+    closed: "Cerrado",
+    suspended: "Suspendido",
   };
 
   return statusLabelMap[statusValue] || statusValue;
-}
-
-function getTrancheLabel(trancheValue) {
-  if (!trancheValue) {
-    return "Sin tramo";
-  }
-
-  return trancheValue;
 }
 
 export function FiltersBar({
@@ -98,23 +87,19 @@ export function FiltersBar({
                 Tramo
               </span>
 
-              {allTranches.map((tranche) => {
-                const normalizedTranche = tranche || "Sin tramo";
-
-                return (
-                  <button
-                    key={normalizedTranche}
-                    type="button"
-                    data-active={selectedTranches.includes(normalizedTranche)}
-                    onClick={() => onTrancheToggle(normalizedTranche)}
-                    className={`${baseChipClasses} ${
-                      trancheChipStyles[normalizedTranche] || ""
-                    }`}
-                  >
-                    {getTrancheLabel(normalizedTranche)}
-                  </button>
-                );
-              })}
+              {allTranches.map((tranche) => (
+                <button
+                  key={tranche.value}
+                  type="button"
+                  data-active={selectedTranches.includes(tranche.value)}
+                  onClick={() => onTrancheToggle(tranche.value)}
+                  className={`${baseChipClasses} ${
+                    trancheChipStyles[tranche.value] || ""
+                  }`}
+                >
+                  {tranche.label}
+                </button>
+              ))}
             </div>
 
             <div className="hidden h-8 w-px bg-white/10 xl:block" />
