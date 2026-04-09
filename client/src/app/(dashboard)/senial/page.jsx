@@ -11,8 +11,8 @@ export default function IdentidadPage() {
   return (
     <main className="min-h-screen glass-effect border-glass rounded-2xl">
       {/* Header */}
-      <div className="p-4">
-        <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--color-cream)' }}>
+      <div className="text-center lg:p-4">
+        <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--text-primary)' }}>
           Identidad del Proyecto
         </h1>
         <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>
@@ -21,25 +21,23 @@ export default function IdentidadPage() {
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-1 lg:p-4">
         <div className="mx-auto w-full space-y-6">
           <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
             <div className="glass-effect border-glass  rounded-3xl p-6 xl:col-span-5">
-              <div className="mb-5 flex items-start justify-between gap-4">
-                <div>
+              <div className="mb-5 flex flex-col items-center justify-between ">
+                
                   <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-secondary)' }}>
                     Identidad reputacional
                   </div>
-                  <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 'var(--font-semibold)', color: 'var(--color-cream)' }}>
+                  <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)' }}>
                     NFT Colibrí dinámico
                   </h2>
-                  <p className="mt-1" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-                    Último tramo alcanzado: {project.nftState}
-                  </p>
-                </div>
-                <span className="rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-turquoise)' }}>
+                  <span className="m-2 rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-turquoise)' }}>
                   Estado visual {project.nftState}
                 </span>
+                
+                
               </div>
 
               <div className="relative flex h-[320px] items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass">
@@ -56,7 +54,7 @@ export default function IdentidadPage() {
                       Señal reputacional actual
                     </div>
                     <div className="flex items-end gap-3">
-                      <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-semibold)', color: 'var(--color-cream)' }}>
+                      <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)' }}>
                         {project.ic.toFixed(2)}
                       </div>
                       <div style={{ fontSize: 'var(--text-lg)', color: 'var(--text-secondary)' }}>/ {project.icMax.toFixed(2)}</div>
@@ -105,7 +103,7 @@ export default function IdentidadPage() {
                         <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                           PAC actual
                         </div>
-                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)' }}>
+                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
                           {project.currentPac}
                         </div>
                       </div>
@@ -113,7 +111,7 @@ export default function IdentidadPage() {
                         <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                           PACs aprobados
                         </div>
-                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)' }}>
+                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
                           {project.approvedPacs} de {project.totalPacs}
                         </div>
                       </div>
@@ -121,7 +119,7 @@ export default function IdentidadPage() {
                         <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                           Microacciones acumuladas
                         </div>
-                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)' }}>
+                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
                           {project.microActions} / 21
                         </div>
                       </div>
@@ -129,7 +127,7 @@ export default function IdentidadPage() {
                         <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                           Evidencias aprobadas
                         </div>
-                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)' }}>
+                        <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
                           {project.evidences} / 7
                         </div>
                       </div>
@@ -140,7 +138,7 @@ export default function IdentidadPage() {
                     <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                       Próximo hito
                     </div>
-                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)' }}>
+                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
                       {project.nextMilestone}
                     </div>
                     
@@ -166,7 +164,7 @@ export default function IdentidadPage() {
                     <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                       Incertidumbre dominante
                     </div>
-                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)', lineHeight: 'var(--leading-normal)' }}>
+                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)', lineHeight: 'var(--leading-normal)' }}>
                       {project.uncertainty}
                     </div>
                     <div className="mt-2" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
@@ -177,7 +175,7 @@ export default function IdentidadPage() {
                     <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                       Riesgo principal del tramo
                     </div>
-                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)', lineHeight: 'var(--leading-normal)' }}>
+                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)', lineHeight: 'var(--leading-normal)' }}>
                       {project.primaryRisk}
                     </div>
                     <div className="mt-2" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
@@ -188,7 +186,7 @@ export default function IdentidadPage() {
                     <div className="mb-2 text-xs uppercase tracking-[0.18em]" style={{ color: 'var(--text-tertiary)' }}>
                       Ventana estimada
                     </div>
-                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--color-cream)', lineHeight: 'var(--leading-normal)' }}>
+                    <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)', lineHeight: 'var(--leading-normal)' }}>
                       {project.window}
                     </div>
                     <div className="mt-2" style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
