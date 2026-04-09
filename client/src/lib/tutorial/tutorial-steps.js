@@ -39,3 +39,10 @@ export function getDashboardSteps(isMobile) {
     },
   ];
 }
+
+
+export function getTramoSteps(isMobile) {
+  return [
+    {},
+  ];
+}
