@@ -18,7 +18,7 @@ export default function Header() {
 
 
   return (
-    <header  className="mt-15 mt-0 lg:m-4 border-glass rounded-2xl glass-effect-dark lg:px-4 pr-4 py-2 flex justify-between  z-40 relative min-h-16 lg:min-h-auto content-center items-center" >
+    <header  className=" mt-15 mt-0 lg:m-4 border-glass rounded-2xl glass-effect-dark lg:px-4 py-2 flex justify-between  relative min-h-16 lg:min-h-auto content-center items-center" >
       <div className=" flex items-center gap-0 lg:items-center lg:gap-4 content-center  w-full ">
         {/* Botón Hamburguesa */}
         
@@ -29,7 +29,7 @@ export default function Header() {
             {/* Sección izquierda: Nombre, ID, Tramo, Estado */}
             <div className="min-w-0 flex-1 flex flex-col gap-2 md:gap-3 items-start justify-start w-fit">
               <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
-                <NftAvatar size="sm" />
+                <NftAvatar size="sm" rounded={true} />
                 <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
                   {project.name}
                 </h1>

@@ -1,6 +1,7 @@
 import NftAvatar from "@/components/señal/NftAvatar";
 import ProgressBar from "@/components/ProgressBar";
 import { project } from "@/lib/mock-data";
+import TourButton from "@/components/tutoriales/TourButton";
 
 export default function IdentidadPage() {
   
@@ -10,6 +11,7 @@ export default function IdentidadPage() {
 
   return (
     <main className="min-h-screen glass-effect border-glass rounded-2xl">
+      <TourButton tourName="dashboard-tour" /> 
       {/* Header */}
       <div className="text-center lg:p-4">
         <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--text-primary)' }}>
@@ -24,8 +26,8 @@ export default function IdentidadPage() {
       <div className="p-1 lg:p-4">
         <div className="mx-auto w-full space-y-6">
           <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
-            <div className="glass-effect border-glass  rounded-3xl p-6 xl:col-span-5">
-              <div className="mb-5 flex flex-col items-center justify-between ">
+            <div id="nft" className="glass-effect border-glass  rounded-3xl p-6 xl:col-span-5">
+              <div  className="mb-5 flex flex-col items-center justify-between ">
                 
                   <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-secondary)' }}>
                     Identidad reputacional
@@ -47,9 +49,9 @@ export default function IdentidadPage() {
             </div>
 
             <div className="space-y-6 xl:col-span-7">
-              <div className="glass-effect border-glass rounded-3xl p-6">
-                <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                  <div>
+              <div id="ic" className="glass-effect border-glass rounded-3xl p-6">
+                <div  className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                  <div >
                     <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-secondary)' }}>
                       Señal reputacional actual
                     </div>
@@ -155,7 +157,7 @@ export default function IdentidadPage() {
 
               
             </div>
-            <div className="glass-effect border-glass rounded-3xl p-6 xl:col-span-12">
+            <div id="contexto" className="glass-effect border-glass rounded-3xl p-6 xl:col-span-12">
                 <div className="mb-3 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-secondary)' }}>
                   Contexto estructural del tramo
                 </div>
