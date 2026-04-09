@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../node_modules/onborda/dist";
+@import "onborda/dist/styles.css";
 
 html {
   background: #09111d;
@@ -221,6 +221,9 @@ code, kbd, pre {
   }
 }
 
+/* div{
+  color: var(--color-cream);
+} */
 
 html {
   height: 100%;
@@ -345,10 +348,8 @@ a {
       #78D9B4 70%,
       #009975 100%
     );
-    background-size: 200% 100%;
-
+    background-size: 200% 100%; 
   }
-  
 
 /* ============================================================
    SISTEMA TIPOGRÁFICO — CLASES SEMÁNTICAS (OPTIMIZADO PARA MAYORES)
