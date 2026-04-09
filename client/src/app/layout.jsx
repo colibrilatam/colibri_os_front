@@ -1,6 +1,6 @@
 
 import "./globals.css";
-
+import OnbordaWrapper from "@/lib/tutorial/layout";
 
 export default function RootLayout({ children }) {
   
@@ -9,7 +9,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body>
-        {children}
+        <OnbordaWrapper>
+          {children}
+        </OnbordaWrapper>
       </body>
     </html>
   );
