@@ -95,6 +95,7 @@ html {
   --text-2xl:  2rem;       /* 32px — títulos de sección */
   --text-3xl:  2.5rem;     /* 40px — títulos de página */
   --text-4xl:  3.25rem;    /* 52px — métricas / KPIs / scores */
+  --text-5xl:  4rem;       /* 64px — títulos de proyecto */
  
   --font-regular:  400;
   --font-medium:   500;
@@ -106,10 +107,15 @@ html {
   --leading-normal: 1.65;
   --leading-loose:  1.85;
  
-  --tracking-tight:  -0.01em;
-  --tracking-normal:  0em;
-  --tracking-wide:    0.03em;
-  --tracking-wider:   0.06em;
+  /* Espaciado de letras - variables comunes */
+  --tracking-tightest: -0.01em;
+  --tracking-tight:    -0.01em;
+  --tracking-normal:    0em;
+  --tracking-wide:      0.03em;
+  --tracking-wider:     0.06em;
+  --tracking-widest:    0.18em;     /* labels de cards */
+  --tracking-superwide: 0.22em;     /* section headers/overlines */
+  --tracking-ultrawide: 0.24em;     /* header overlines premium */
  
   /* ------------------------------------------------------------
      4. TRANSICIONES
@@ -214,9 +220,6 @@ code, kbd, pre {
   }
 }
 
-div{
-  color: var(--color-cream);
-}
 
 html {
   height: 100%;
@@ -256,32 +259,38 @@ a {
 
 /* ============================================================
    EFECTO GLASS MORPHISM PARA CARDS/DIV
+   Opacidad aumentada para mejor contraste manteniendo el fondo visible
    ============================================================ */
 
 /* Clase base: sin bordes */
 .glass-effect {
-  background: rgba(10, 15, 26, 0.2);
+  background: rgba(10, 15, 26, 0.45);
   backdrop-filter: blur(12px);
 }
 
 /* Variación más oscura */
 .glass-effect-dark {
-  background: rgba(10, 15, 26, 0.4);
+  background: rgba(10, 15, 26, 0.6);
   backdrop-filter: blur(16px);
 }
 
 .glass-effect-white {
-  background-image: linear-gradient(#ffffff0a, #ffffff05);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
 }
 
 .glass-effect-red {
-  background: rgba(121, 0, 0, 0.205);
+  background: rgba(200, 50, 50, 0.25);
   backdrop-filter: blur(12px);
 }
 
 .glass-effect-green {
-  background: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.glass-effect-cyan {
+  background: rgba(0, 207, 207, 0.25);
   backdrop-filter: blur(12px);
 }
 
@@ -336,14 +345,293 @@ a {
       #009975 100%
     );
     background-size: 200% 100%;
-    animation: flowGradient 4s linear infinite;
+
   }
   
-  @keyframes flowGradient {
-    0% {
-      background-position: 0% 0%;
-    }
-    100% {
-      background-position: 200% 0%;
-    }
+
+/* ============================================================
+   SISTEMA TIPOGRÁFICO — CLASES SEMÁNTICAS (OPTIMIZADO PARA MAYORES)
+   Basado en estilos de los mockups, escalado hacia arriba para legibilidad
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   OVERLINES / LABELS UPPERCASE (section headers)
+   Ej: "Estado actual del proyecto", "Señal reputacional actual"
+   ---------------------------------------------------------- */
+
+.text-overline {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-superwide);  /* 0.22em */
+  line-height: var(--leading-normal);
+  color: #94a3b8; /* slate-400 */
+}
+
+.text-overline--header {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-ultrawide);  /* 0.24em */
+  line-height: var(--leading-normal);
+  color: #94a3b8; /* slate-400 */
+}
+
+/* ----------------------------------------------------------
+   MICRO-LABELS (card labels, table headers)
+   Ej: "Índice Colibrí", "Última actualización", "PAC actual"
+   Optimizados a 14px mínimo
+   ---------------------------------------------------------- */
+
+.text-micro-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-widest);    /* 0.18em */
+  line-height: var(--leading-normal);
+  color: #64748b; /* slate-500 */
+}
+
+.text-micro-label--dimmed {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  line-height: var(--leading-normal);
+  color: #64748b; /* slate-500 */
+}
+
+/* ----------------------------------------------------------
+   TÍTULOS PRINCIPALES H1
+   Ej: nombre del proyecto "Aurora Labs"
+   ---------------------------------------------------------- */
+
+.text-h1 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  color: #f8fafc; /* slate-50 */
+}
+
+@media (min-width: 768px) {
+  .text-h1 {
+    font-size: var(--text-4xl);
   }
+}
+
+/* ----------------------------------------------------------
+   TÍTULOS DE SECCIÓN H2
+   Ej: "NFT Colibrí dinámico", "Radar reputacional"
+   ---------------------------------------------------------- */
+
+.text-h2 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  color: #f8fafc; /* slate-50 */
+}
+
+@media (min-width: 768px) {
+  .text-h2 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* ----------------------------------------------------------
+   SUBTÍTULOS H3
+   Ej: "Timeline estructural del tramo", "Radar reputacional actual"
+   ---------------------------------------------------------- */
+
+.text-h3 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-normal);
+  color: #f8fafc; /* slate-50 */
+}
+
+@media (min-width: 768px) {
+  .text-h3 {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* ----------------------------------------------------------
+   NÚMERO / VALOR HERO (IC grande, números destacados)
+   Ej: "2.43", "5" (evidencias)
+   ---------------------------------------------------------- */
+
+.text-value-hero {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  color: #f8fafc; /* slate-50 */
+}
+
+.text-value-hero--lg {
+  font-size: var(--text-5xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  color: #f8fafc; /* slate-50 */
+}
+
+/* ----------------------------------------------------------
+   VALOR GRANDE (métricas secundarias)
+   Ej: "T2-C6", "5 de 7"
+   ---------------------------------------------------------- */
+
+.text-value-lg {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-tight);
+  color: #f8fafc; /* slate-50 */
+}
+
+/* ----------------------------------------------------------
+   VALOR DE CARD (valor principal en MetricCard)
+   Ej: "T2-C6", "5 de 7", "15"
+   ---------------------------------------------------------- */
+
+.text-value-card {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+  color: #f1f5f9; /* slate-100 */
+}
+
+.text-value-card--large {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-normal);
+  color: #f8fafc; /* slate-50 */
+}
+
+/* ----------------------------------------------------------
+   TEXTO NARRATIVO / BODY DESTACADO
+   Ej: "T2 en tránsito a T3", "Tendencia ascendente breve"
+   ---------------------------------------------------------- */
+
+.text-body-lg {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-loose);
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* ----------------------------------------------------------
+   TEXTO BODY ESTÁNDAR / PÁRRAFOS
+   Ej: descripciones, información secundaria
+   ---------------------------------------------------------- */
+
+.text-body {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #cbd5e1; /* slate-300 */
+}
+
+.text-body--muted {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #94a3b8; /* slate-400 */
+}
+
+/* ----------------------------------------------------------
+   TEXTO HELPER / AUXILIAR
+   Ej: "Contexto metodológico del tramo", "Actividad visible"
+   ---------------------------------------------------------- */
+
+.text-helper {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #94a3b8; /* slate-400 */
+}
+
+/* ----------------------------------------------------------
+   TEXTO DE DATOS / TABLAS
+   Ej: filas de tabla de evidencias, contenido tabulado
+   ---------------------------------------------------------- */
+
+.text-data {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #cbd5e1; /* slate-300 */
+}
+
+.text-data--label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-normal);
+  color: #f1f5f9; /* slate-100 */
+}
+
+/* ----------------------------------------------------------
+   COMPLEMENTO / UNIDAD / SUFIJO
+   Ej: "/ 6.00" junto al IC grande
+   ---------------------------------------------------------- */
+
+.text-suffix {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #94a3b8; /* slate-400 */
+}
+
+/* ----------------------------------------------------------
+   FECHA / TIMESTAMP
+   Ej: "2026-04-03"
+   ---------------------------------------------------------- */
+
+.text-date {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* ----------------------------------------------------------
+   LEGENDA / METADATA PEQUEÑA
+   Ej: "Microtendencia reciente", "● completado · ◉ actual · ○ pendiente"
+   ---------------------------------------------------------- */
+
+.text-legend {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #64748b; /* slate-500 */
+}
+
+/* ----------------------------------------------------------
+   ID / BADGE TEXT (en píldoras/chips)
+   Ej: "ID COL-AR-00231", "T2 · Validación temprana"
+   ---------------------------------------------------------- */
+
+.text-badge {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-normal);
+  color: #cbd5e1; /* slate-300 */
+}
+
+/* ----------------------------------------------------------
+   TEXTOS DE COLOR SEMÁNTICO
+   (acento cian, esmeralda, ámbar, rojo)
+   ---------------------------------------------------------- */
+
+.text-accent-cyan {
+  color: #67e8f9; /* cyan-300 */
+}
+
+.text-accent-emerald {
+  color: #6ee7b7; /* emerald-300 */
+}
+
+.text-accent-amber {
+  color: #fcd34d; /* amber-300 */
+}
+
+.text-accent-red {
+  color: #f87171; /* red-400 */
+}

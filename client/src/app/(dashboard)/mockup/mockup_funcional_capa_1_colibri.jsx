@@ -1,7 +1,70 @@
-'use client';
+type Project = {
+  name: string;
+  id: string;
+  nftTramo: string;
+  ic: number;
+  icMax: number;
+  icNarrative: string;
+  variationLabel: string;
+  variationValue: number;
+  snapshotDate: string;
+  algorithmVersion: string;
+  dimensions: Array<{
+    key: string;
+    label: string;
+    raw: number;
+    weight: number;
+    weighted: number;
+  }>;
+  events: Array<{
+    date: string;
+    title: string;
+    impact: string;
+    description: string;
+  }>;
+};
 
-export default function ReputacionPage() {
-  const project = {
+type DimensionRowProps = {
+  label: string;
+  raw: number;
+  weight: number;
+  weighted: number;
+  max?: number;
+};
+
+type ExecutiveInsightProps = {
+  label: string;
+  value: string;
+  helper: string;
+};
+
+type EventItemProps = {
+  date: string;
+  title: string;
+  impact: string;
+  description: string;
+};
+
+type RadarChartProps = {
+  values: Array<{
+    label: string;
+    value: number;
+  }>;
+  size?: number;
+  levels?: number;
+  max?: number;
+};
+
+type RadarSummaryItemProps = {
+  label: string;
+  value: string;
+  helper: string;
+  tone?: "neutral" | "positive" | "warning";
+};
+
+
+export default function MockupFuncionalCapa1Colibri(): JSX.Element {
+  const project: Project = {
     name: "Aurora Labs",
     id: "COL-AR-00231",
     nftTramo: "T2",
@@ -71,11 +134,17 @@ export default function ReputacionPage() {
   }));
 
   return (
-    <div className="min-h-screen text-slate-100">
-      <div className="mx-auto space-y-6">
+    <div className="min-h-screen bg-slate-950 p-6 text-slate-100 md:p-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <header className="rounded-3xl border border-slate-800 bg-slate-900/90 px-6 py-5 shadow-2xl">
+          <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
+            
+          </div>
+        </header>
+
         <section className="grid grid-cols-1 gap-6 xl:grid-cols-12">
-          <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl xl:col-span-5">
-            <div className="mb-5 flex flex-col lg:flex-row items-start justify-between gap-4">
+          <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl xl:col-span-5">
+            <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
                   Composición sintética
@@ -90,9 +159,9 @@ export default function ReputacionPage() {
               </span>
             </div>
 
-            <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass p-6">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(34,211,238,0.15),transparent_50%)]" />
-              <RadarChart values={radarValues} max={5} />
+            <div className="relative flex h-[320px] items-center justify-center overflow-hidden rounded-[28px] border border-slate-800 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.14),transparent_30%),radial-gradient(circle_at_50%_55%,rgba(16,185,129,0.10),transparent_34%)]" />
+              <RadarChart values={radarValues} size={320} levels={4} max={5} />
             </div>
 
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
@@ -101,52 +170,103 @@ export default function ReputacionPage() {
 
             <div className="mt-6 space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="rounded-2xl glass-effect-green border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Sostiene hoy</div>
-                  <div className="text-lg font-medium text-slate-100">{strongestTwo}</div>
-                  <div className="mt-2 text-sm text-slate-400">Dimensiones con mayor aporte reputacional actual.</div>
-                </div>
-                <div className="rounded-2xl glass-effect-red border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Frena hoy</div>
-                  <div className="text-lg font-medium text-slate-100">{weakestTwo}</div>
-                  <div className="mt-2 text-sm text-slate-400">Dimensiones con menor contribución relativa hoy.</div>
-                </div>
+                <RadarSummaryItem
+                  label="Sostiene hoy"
+                  value={strongestTwo}
+                  helper="Dimensiones con mayor aporte reputacional actual."
+                  tone="positive"
+                />
+                <RadarSummaryItem
+                  label="Frena hoy"
+                  value={weakestTwo}
+                  helper="Dimensiones con menor contribución relativa hoy."
+                  tone="warning"
+                />
               </div>
             </div>
 
-            {<div className="mt-6 rounded-3xl glass-effect-dark border-glass p-5">
+            <div className="mt-6 rounded-3xl border border-slate-800 bg-slate-950/35 p-5">
               <div className="mb-4 text-xs uppercase tracking-[0.22em] text-slate-400">
                 Lectura reputacional ejecutiva
               </div>
               <div className="grid grid-cols-1 gap-4">
-                <div className="rounded-2xl glass-effect-green border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Dimensión líder</div>
-                  <div className="text-lg font-medium text-slate-100">{leader.label}</div>
-                  <div className="mt-2 text-sm text-slate-400">Sostiene el mayor aporte reputacional visible hoy.</div>
-                </div>
-                <div className="rounded-2xl glass-effect-red border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Dimensión más débil</div>
-                  <div className="text-lg font-medium text-slate-100">{weakest.label}</div>
-                  <div className="mt-2 text-sm text-slate-400">Su contribución actual se mantiene por debajo del resto.</div>
-                </div>
-                <div className="rounded-2xl glass-effect-cyan border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Mejora reciente</div>
-                  <div className="text-lg font-medium text-slate-100">{recentImprovement.label}</div>
-                  <div className="mt-2 text-sm text-slate-400">Registra continuidad verificable en las últimas semanas.</div>
-                </div>
-                <div className="rounded-2xl glass-effect-cyan border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Principal rezago</div>
-                  <div className="text-lg font-medium text-slate-100">{mainLag.label}</div>
-                  <div className="mt-2 text-sm text-slate-400">Todavía no convierte continuidad en solidez estructural.</div>
-                </div>
+                <ExecutiveInsight
+                  label="Dimensión líder"
+                  value={leader.label}
+                  helper="Sostiene el mayor aporte reputacional visible hoy."
+                />
+                <ExecutiveInsight
+                  label="Dimensión más débil"
+                  value={weakest.label}
+                  helper="Su contribución actual se mantiene por debajo del resto."
+                />
+                <ExecutiveInsight
+                  label="Mejora reciente"
+                  value={recentImprovement.label}
+                  helper="Registra continuidad verificable en las últimas semanas."
+                />
+                <ExecutiveInsight
+                  label="Principal rezago"
+                  value={mainLag.label}
+                  helper="Todavía no convierte continuidad en solidez estructural."
+                />
               </div>
-            </div>}
+            </div>
           </div>
 
           <div className="space-y-6 xl:col-span-7">
-            
+            <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+              <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
+                    Señal reputacional actual
+                  </div>
+                  <div className="flex items-end gap-3">
+                    <div className="text-5xl font-semibold text-slate-50">
+                      {project.ic.toFixed(2)}
+                    </div>
+                    <div className="mb-1 text-lg text-slate-400">/ {project.icMax.toFixed(2)}</div>
+                  </div>
+                  <div className="mt-3 text-lg text-slate-200">{project.icNarrative}</div>
+                  <div
+                    className={[
+                      "mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm",
+                      variationIsPositive
+                        ? "border-emerald-800/60 bg-emerald-950/50 text-emerald-300"
+                        : "border-rose-800/60 bg-rose-950/50 text-rose-300",
+                    ].join(" ")}
+                  >
+                    <span>{variationIsPositive ? "▲" : "▼"}</span>
+                    <span>{project.variationLabel}</span>
+                  </div>
+                </div>
 
-            <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
+                <div className="w-full md:max-w-xs">
+                  <div className="mb-2 flex items-center justify-between text-sm text-slate-400">
+                    <span>Lectura sobre escala completa</span>
+                    <span>{Math.round(icPct)}%</span>
+                  </div>
+                  <div className="h-3 overflow-hidden rounded-full border border-slate-700 bg-slate-800">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-cyan-500 via-emerald-500 to-amber-400"
+                      style={{ width: `${icPct}%` }}
+                    />
+                  </div>
+                  <div className="mt-4 flex h-12 items-end gap-1">
+                    {[24, 28, 33, 36, 42, 46, 52].map((value: number, index: number) => (
+                      <div
+                        key={index}
+                        className="flex-1 rounded-t-md border border-slate-600 bg-slate-700/80"
+                        style={{ height: `${value}%` }}
+                      />
+                    ))}
+                  </div>
+                  <div className="mt-2 text-xs text-slate-500">Microtendencia reciente</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
               <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
@@ -174,7 +294,7 @@ export default function ReputacionPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-6">
-              <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
+              <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
                 <div className="mb-4 text-xs uppercase tracking-[0.22em] text-slate-400">
                   Eventos recientes que alteran reputación
                 </div>
@@ -192,7 +312,7 @@ export default function ReputacionPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
+            <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
               <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
                 Nota metodológica
               </div>
@@ -210,11 +330,11 @@ export default function ReputacionPage() {
   );
 }
 
-function DimensionRow({ label, raw, weight, weighted, max = 5 }) {
+function DimensionRow({ label, raw, weight, weighted, max = 5 }: DimensionRowProps): JSX.Element {
   const pct = (raw / max) * 100;
 
   return (
-    <div className="rounded-2xl glass-effect-dark border-glass p-4">
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div className="w-full lg:max-w-[180px]">
           <div className="text-sm font-medium text-slate-100">{label}</div>
@@ -253,9 +373,19 @@ function DimensionRow({ label, raw, weight, weighted, max = 5 }) {
   );
 }
 
-function EventItem({ date, title, impact, description }) {
+function ExecutiveInsight({ label, value, helper }: ExecutiveInsightProps): JSX.Element {
   return (
-    <div className="rounded-2xl glass-effect-dark border-glass p-4">
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+      <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">{label}</div>
+      <div className="text-lg font-medium text-slate-100">{value}</div>
+      <div className="mt-2 text-sm text-slate-400">{helper}</div>
+    </div>
+  );
+}
+
+function EventItem({ date, title, impact, description }: EventItemProps): JSX.Element {
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="text-sm font-medium text-slate-100">{title}</div>
@@ -270,18 +400,33 @@ function EventItem({ date, title, impact, description }) {
   );
 }
 
-function RadarChart({ values, max = 5 }) {
-  const size = 320;
+function RadarSummaryItem({
+  label,
+  value,
+  helper,
+  tone = "neutral",
+}: RadarSummaryItemProps): JSX.Element {
+  const toneClasses =
+    tone === "positive"
+      ? "border-emerald-800/40 bg-emerald-950/20"
+      : tone === "warning"
+        ? "border-amber-800/40 bg-amber-950/20"
+        : "border-slate-800 bg-slate-950/50";
+
+  return (
+    <div className={`rounded-2xl border p-4 ${toneClasses}`}>
+      <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">{label}</div>
+      <div className="text-lg font-medium text-slate-100">{value}</div>
+      <div className="mt-2 text-sm text-slate-400">{helper}</div>
+    </div>
+  );
+}
+
+function RadarChart({ values, size = 280, levels = 4, max = 5 }: RadarChartProps): JSX.Element {
   const center = size / 2;
   const radius = size * 0.34;
-  const labelRadius = radius + 32;
+  const labelRadius = radius + 26;
   const angleStep = (Math.PI * 2) / values.length;
-  const levels = 4;
-
-  // Get initials for labels
-  const getInitials = (label) => {
-    return label.split(' ').map(word => word[0]).join('').toUpperCase();
-  };
 
   const levelPolygons = Array.from({ length: levels }, (_, index) => {
     const levelRadius = ((index + 1) / levels) * radius;
@@ -306,8 +451,8 @@ function RadarChart({ values, max = 5 }) {
     .join(" ");
 
   return (
-    <div className="relative w-full flex flex-col items-center">
-      <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-sm mx-auto overflow-visible" style={{ aspectRatio: '1' }}>
+    <div className="flex items-center justify-center">
+      <svg viewBox={`0 0 ${size} ${size}`} className="h-[280px] w-[280px] overflow-visible">
         {levelPolygons.map((points, index) => (
           <polygon
             key={`level-${index}`}
@@ -324,7 +469,6 @@ function RadarChart({ values, max = 5 }) {
           const y = center + Math.sin(angle) * radius;
           const labelX = center + Math.cos(angle) * labelRadius;
           const labelY = center + Math.sin(angle) * labelRadius;
-          const initials = getInitials(item.label);
 
           return (
             <g key={item.label}>
@@ -341,12 +485,10 @@ function RadarChart({ values, max = 5 }) {
                 y={labelY}
                 textAnchor={labelX < center - 4 ? "end" : labelX > center + 4 ? "start" : "middle"}
                 dominantBaseline="middle"
-                fill="rgb(0, 207, 207)"
-                fontSize="18"
-                fontWeight="700"
-                letterSpacing="1"
+                fill="rgba(203,213,225,0.9)"
+                fontSize="11"
               >
-                {initials}
+                {item.label}
               </text>
             </g>
           );
@@ -359,51 +501,22 @@ function RadarChart({ values, max = 5 }) {
           strokeWidth="2"
         />
 
-          {values.map((item, index) => {
+        {values.map((item, index) => {
           const angle = -Math.PI / 2 + index * angleStep;
           const pointRadius = (item.value / max) * radius;
           const x = center + Math.cos(angle) * pointRadius;
           const y = center + Math.sin(angle) * pointRadius;
 
-          return (
-            <circle
-              key={`${item.label}-point`}
-              cx={x}
-              cy={y}
-              r="4"
-              fill="rgb(34,211,238)"
-              filter="drop-shadow(0 0 4px rgba(34,211,238,0.5))"
-            />
-          );
+          return <circle key={`${item.label}-point`} cx={x} cy={y} r="3.5" fill="rgb(34,211,238)" />;
         })}
 
-          <circle cx={center} cy={center} r="3" fill="rgba(148,163,184,0.8)" />
-        </svg>
-
-      <div className="mt-6 w-full space-y-3 px-4">
-        {values.map((item) => {
-          const pct = (item.value / max) * 100;
-          return (
-            <div key={item.label} className="flex flex-col gap-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="font-medium">{item.label}</span>
-                <span>{item.value.toFixed(1)}/{max}</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full border border-slate-700 bg-slate-800">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-yellow-500 via-cyan-500 to-emerald-500"
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+        <circle cx={center} cy={center} r="2.5" fill="rgba(148,163,184,0.8)" />
+      </svg>
     </div>
   );
 }
 
-function NftAvatar({ size = "sm" }) {
+function NftAvatar({ size = "sm" }: { size?: "sm" | "lg" }): JSX.Element {
   const isLarge = size === "lg";
 
   return (
