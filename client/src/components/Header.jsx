@@ -29,7 +29,7 @@ export default function Header() {
             {/* Sección izquierda: Nombre, ID, Tramo, Estado */}
             <div className="min-w-0 flex-1 flex flex-col gap-2 md:gap-3 items-start justify-start w-fit">
               <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
-                <NftAvatar size="sm" />
+                <NftAvatar size="sm" rounded={true} />
                 <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
                   {project.name}
                 </h1>
