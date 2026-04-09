@@ -62,7 +62,7 @@ export default function DashboardLayout({ children }) {
       </header>
 
       <div className="flex flex-1">
-        {/* Contenido - siempre deja espacio al sidebar contraído */}
+        {/* Contenido - siempre deja espacio al sidebar contraído AAAAAAAAAAA*/}
         <main className="text-black flex-1 p-4 lg:ml-24 w-full max-w-[100vw] overflow-x-hidden">
           {children}
         </main>
