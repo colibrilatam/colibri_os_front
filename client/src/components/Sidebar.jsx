@@ -37,7 +37,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     { href: '/tramo', label: 'Tramo', icon: Map },
     { href: '/trayectoria', label: 'Trayectoria', icon: AlertCircle },
     { href: '/evidencia', label: 'Evidencia', icon: Link2 },
-    { href: '/proyectos', label: 'Proyectos', icon: Folder },
+    /*{ href: '/proyectos', label: 'Proyectos', icon: Folder },*/
   ];
 
   const handleNavClick = () => {
