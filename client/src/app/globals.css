@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../node_modules/onborda/dist";
+@import "onborda/dist/styles.css";
 
 html {
   background: #09111d;
