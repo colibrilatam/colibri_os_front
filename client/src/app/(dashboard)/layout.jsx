@@ -57,7 +57,7 @@ export default function DashboardLayout({ children }) {
       </button>
 
       {/* Header - siempre deja espacio al sidebar contraído */}
-      <header className="lg:ml-24">
+      <header className="lg:ml-24 p-1 lg:p-0">
         <Header />
       </header>
 
