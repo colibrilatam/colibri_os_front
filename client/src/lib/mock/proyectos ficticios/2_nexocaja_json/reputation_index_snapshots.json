@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ric_proj_nexocaja_ar_001_2026_04_02",
+    "projectId": "proj_nexocaja_ar_001",
+    "icPublic": 1.54,
+    "icRaw": 1.58,
+    "actionScore": 57,
+    "evidenceScore": 49,
+    "consistencyScore": 55,
+    "collaborationScore": 41,
+    "sustainabilityScore": 34,
+    "algorithmVersionId": "alg_ic_v1_3",
+    "calculatedAt": "2026-04-02T18:40:00-03:00",
+    "structuralReading": "T1 en tránsito a T2"
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "eval_evi_t2_c1_01_proj_rutanomina_co_001",
+    "projectId": "proj_rutanomina_co_001",
+    "evidenceId": "evi_t2_c1_01_proj_rutanomina_co_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia demuestra coordinación operativa suficiente para sostener pruebas reales. Cumple criterio de habilitación del PAC.",
+    "evaluatedAt": "2026-01-24T16:20:00-05:00"
+  },
+  {
+    "id": "eval_evi_t2_c2_01_proj_rutanomina_co_001",
+    "projectId": "proj_rutanomina_co_001",
+    "evidenceId": "evi_t2_c2_01_proj_rutanomina_co_001",
+    "evaluatorUserId": "usr_evaluadora_vmontalvo_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia permite distinguir un problema operativo recurrente y verificable. La lectura es suficiente para T2.",
+    "evaluatedAt": "2026-02-11T18:00:00-05:00"
+  },
+  {
+    "id": "eval_evi_t2_c3_01_proj_rutanomina_co_001",
+    "projectId": "proj_rutanomina_co_001",
+    "evidenceId": "evi_t2_c3_01_proj_rutanomina_co_001",
+    "evaluatorUserId": "usr_evaluador_darancibia_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "El MVP muestra utilidad inicial y genera feedback funcional concreto. Corresponde seguir profundizando adopción y disposición de pago.",
+    "evaluatedAt": "2026-02-28T17:10:00-05:00"
+  },
+  {
+    "id": "eval_evi_t2_c4_01_proj_rutanomina_co_001",
+    "projectId": "proj_rutanomina_co_001",
+    "evidenceId": "evi_t2_c4_01_proj_rutanomina_co_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia articula razonablemente costo de implementación, ticket esperado y continuidad del experimento comercial. Adecuada para el tramo.",
+    "evaluatedAt": "2026-03-17T16:40:00-05:00"
+  }
+]
