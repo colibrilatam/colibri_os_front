@@ -28,46 +28,43 @@ export default function EvidenciaSection() {
       <div className="grid md:grid-cols-2 gap-6">
         {/* ESTADO */}
         <Card>
-          <p className="label">Estado actual de prueba</p>
+          <p className="text-overline">Estado actual de prueba</p>
 
           <div className="flex items-center gap-4 mt-3">
-            <span className="text-4xl font-bold leading-none">
+            <span className="text-value-hero">
               {evidenciaData.summary.total}
             </span>
-            <span className="text-sm text-[var(--text-secondary)]">
-              evidencias aprobadas
-            </span>
+
+            <span className="text-body--muted">evidencias aprobadas</span>
           </div>
 
           <div
             className="mt-4 inline-flex px-4 py-2 rounded-full 
             bg-[rgba(0,207,207,0.12)] 
             border border-[rgba(0,207,207,0.3)]
-            text-[var(--status-info)] text-sm"
+            text-accent-cyan"
           >
             {evidenciaData.summary.status}
           </div>
 
           <div className="mt-4">
-            <p className="text-sm">
+            <p className="text-body">
               Última evidencia: {evidenciaData.summary.lastEvidence.title}
             </p>
 
-            <p className="text-xs text-[var(--text-secondary)] mt-1">
+            <p className="text-helper mt-1">
               Aprobada: {evidenciaData.summary.lastEvidence.date}
             </p>
           </div>
 
           <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-[10px] uppercase text-[var(--text-secondary)] mb-1">
-              Próximo requisito crítico
-            </p>
+            <p className="text-micro-label mb-1">Próximo requisito crítico</p>
 
-            <p className="text-sm font-medium">
+            <p className="text-body-lg">
               {evidenciaData.summary.nextRequirement}
             </p>
 
-            <p className="text-xs text-[var(--text-secondary)] mt-2">
+            <p className="text-helper mt-2">
               PAC actual: {evidenciaData.summary.currentPac}
             </p>
           </div>
@@ -75,60 +72,40 @@ export default function EvidenciaSection() {
 
         {/* VALIDACIÓN */}
         <Card>
-          <p className="label">Validación asociada</p>
+          <p className="text-overline">Validación asociada</p>
 
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-1">
-              Aprobado por
-            </p>
-
-            <p className="text-[15px] font-semibold leading-tight">
+            <p className="text-micro-label mb-1">Aprobado por</p>
+            <p className="text-body-lg">
               {evidenciaData.validation.approvedBy}
             </p>
-
-            <p className="text-[12px] text-[var(--text-secondary)] mt-1">
-              {evidenciaData.validation.role}
-            </p>
+            <p className="text-helper mt-1">{evidenciaData.validation.role}</p>
           </div>
 
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-1">
-              Resultado
-            </p>
-
-            <p className="text-[14px] font-medium">
-              {evidenciaData.validation.result}
-            </p>
+            <p className="text-micro-label mb-1">Resultado</p>
+            <p className="text-body">{evidenciaData.validation.result}</p>
           </div>
 
           <div>
-            <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-1">
-              Fecha
-            </p>
-
-            <p className="text-[13px]">{evidenciaData.validation.date}</p>
+            <p className="text-micro-label mb-1">Fecha</p>
+            <p className="text-date">{evidenciaData.validation.date}</p>
           </div>
 
-          <div className="bg-[rgba(255,255,255,0.04)] border border-white/10 rounded-xl p-4">
-            <p className="text-[13px] leading-relaxed text-[var(--text-primary)]">
-              {evidenciaData.validation.comment}
-            </p>
+          <div className="glass-effect border-glass rounded-xl p-4">
+            <p className="text-body">{evidenciaData.validation.comment}</p>
           </div>
         </Card>
       </div>
 
       {/* 🔽 FILA INFERIOR */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* EVIDENCIA TRAZABLE (INTACTA) */}
+        {/* EVIDENCIA */}
         <Card>
-          <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-1">
-            Evidencia trazable
-          </p>
+          <p className="text-overline mb-1">Evidencia trazable</p>
 
           <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h3 className="text-lg font-semibold">
-              Base probatoria verificable
-            </h3>
+            <h3 className="text-h3">Base probatoria verificable</h3>
 
             <div className="flex gap-2 flex-wrap">
               <FilterBtn label="Todas" onClick={() => setFilter('all')} />
@@ -159,25 +136,21 @@ export default function EvidenciaSection() {
           </div>
         </Card>
 
-        {/* DETALLE DE TRAZABILIDAD (INTACTO PERO DINÁMICO) */}
+        {/* TRAZABILIDAD */}
         <Card>
           <div className="flex justify-between items-start">
             <div>
-              <p className="label">Detalle de trazabilidad</p>
+              <p className="text-overline">Detalle de trazabilidad</p>
 
-              <h3 className="text-[16px] font-semibold mt-1 leading-snug max-w-xs">
-                {trace.title}
-              </h3>
+              <h3 className="text-h3 mt-1 max-w-xs">{trace.title}</h3>
             </div>
 
-            <span className="text-[10px] px-2 py-1 rounded-full border border-white/20 text-[var(--text-secondary)]">
+            <span className="text-badge px-2 py-1 rounded-full border border-white/20">
               {trace.version}
             </span>
           </div>
 
-          <p className="text-sm text-[var(--text-secondary)] mt-3">
-            {trace.description}
-          </p>
+          <p className="text-body--muted mt-3">{trace.description}</p>
 
           <div className="grid grid-cols-2 gap-3 mt-4">
             <MiniBlock label="PAC asociado" value={trace.pac} />
@@ -187,22 +160,18 @@ export default function EvidenciaSection() {
           </div>
 
           <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-[10px] uppercase text-[var(--text-secondary)] mb-2">
-              Evaluación asociada
-            </p>
+            <p className="text-micro-label mb-2">Evaluación asociada</p>
 
-            <p className="text-sm mb-2">{trace.evaluation.text}</p>
+            <p className="text-body mb-2">{trace.evaluation.text}</p>
 
-            <p className="text-xs text-[var(--text-secondary)]">
+            <p className="text-helper">
               {trace.evaluation.author} · {trace.evaluation.role} ·{' '}
               {trace.evaluation.date}
             </p>
           </div>
 
           <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-[10px] uppercase text-[var(--text-secondary)] mb-3">
-              Historial de versiones
-            </p>
+            <p className="text-micro-label mb-3">Historial de versiones</p>
 
             <div className="flex flex-col gap-2">
               {trace.history.map((h, i) => (
@@ -211,13 +180,11 @@ export default function EvidenciaSection() {
                   className="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-3 py-2"
                 >
                   <div>
-                    <p className="text-sm">{h.label}</p>
-                    <p className="text-xs text-[var(--text-secondary)]">
-                      {h.date}
-                    </p>
+                    <p className="text-body">{h.label}</p>
+                    <p className="text-helper">{h.date}</p>
                   </div>
 
-                  <span className="text-[10px] px-2 py-1 rounded-full border border-white/20 text-[var(--text-secondary)]">
+                  <span className="text-badge px-2 py-1 rounded-full border border-white/20">
                     {h.version}
                   </span>
                 </div>
@@ -225,39 +192,32 @@ export default function EvidenciaSection() {
             </div>
           </div>
 
-          <button className="mt-4 w-full text-sm py-2 rounded-xl border border-[var(--color-turquoise)] text-[var(--color-turquoise)] hover:bg-[rgba(0,207,207,0.1)] transition">
+          <button className="mt-4 w-full text-body py-2 rounded-xl border border-[var(--color-turquoise)] text-[var(--color-turquoise)] hover:bg-[rgba(0,207,207,0.1)] transition">
             Abrir documento fuente · Bitácora estructurada
           </button>
         </Card>
       </div>
+
       {/* 🔽 TERCERA FILA */}
       <div className="grid md:grid-cols-3 gap-6">
-        {/* COMPETENCIAS */}
         <Card>
-          <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-4">
-            Competencias activadas
-          </p>
+          <p className="text-overline mb-4">Competencias activadas</p>
+
           {evidenciaData.metrics.competencies.map((c, i) => (
             <ProgressItem key={i} label={c.label} value={c.value} />
           ))}
         </Card>
 
-        {/* SKILLS */}
         <Card>
-          <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-4">
-            Skills activadas
-          </p>
+          <p className="text-overline mb-4">Skills activadas</p>
 
           {evidenciaData.metrics.skills.map((s, i) => (
             <SkillItem key={i} label={s.label} level={s.level} />
           ))}
         </Card>
 
-        {/* CONTEXTO */}
         <Card>
-          <p className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)] mb-4">
-            Contexto estructural activado
-          </p>
+          <p className="text-overline mb-4">Contexto estructural activado</p>
 
           <div className="flex gap-2 mb-4">
             {evidenciaData.metrics.context.tags.map((tag, i) => (
@@ -266,18 +226,16 @@ export default function EvidenciaSection() {
           </div>
 
           <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-sm mb-2">
-              <span className="text-[var(--text-secondary)]">
-                PAC asociado principal:
-              </span>{' '}
-              <span className="font-medium">
+            <p className="text-body mb-2">
+              <span className="text-helper">PAC asociado principal:</span>{' '}
+              <span className="text-body-lg">
                 {evidenciaData.metrics.context.pac}
               </span>
             </p>
 
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className="text-body--muted">
               Lectura:{' '}
-              <span className="text-[var(--text-primary)]">
+              <span className="text-body">
                 {evidenciaData.metrics.context.description}
               </span>
             </p>
@@ -292,7 +250,7 @@ export default function EvidenciaSection() {
 
 const ProgressItem = ({ label, value }) => (
   <div className="mb-4">
-    <div className="flex justify-between text-sm mb-1">
+    <div className="flex justify-between mb-1 text-body">
       <span>{label}</span>
       <span>{value}%</span>
     </div>
@@ -308,23 +266,21 @@ const ProgressItem = ({ label, value }) => (
 
 const SkillItem = ({ label, level }) => (
   <div className="flex justify-between items-center px-4 py-3 rounded-xl border border-white/10 bg-white/5 mb-3">
-    <span className="text-sm">{label}</span>
-    <span className="text-sm text-[var(--text-secondary)]">{level}</span>
+    <span className="text-body">{label}</span>
+    <span className="text-helper">{level}</span>
   </div>
 );
 
 const Tag = ({ children }) => (
-  <span className="px-3 py-1 text-xs rounded-full border border-white/20">
+  <span className="text-badge px-3 py-1 rounded-full border border-white/20">
     {children}
   </span>
 );
 
 const MiniBlock = ({ label, value }) => (
   <div className="glass-effect border-glass rounded-xl p-3">
-    <p className="text-[10px] uppercase text-[var(--text-secondary)] mb-1">
-      {label}
-    </p>
-    <p className="text-sm font-medium">{value}</p>
+    <p className="text-micro-label mb-1">{label}</p>
+    <p className="text-body-lg">{value}</p>
   </div>
 );
 
@@ -335,7 +291,7 @@ const Card = ({ children }) => (
 const FilterBtn = ({ label, onClick }) => (
   <button
     onClick={onClick}
-    className="px-3 py-1 text-xs rounded-full border border-glass hover:bg-white/10 transition"
+    className="text-badge px-3 py-1 rounded-full border border-glass hover:bg-white/10 transition"
   >
     {label}
   </button>
@@ -345,15 +301,18 @@ const EvidenceItem = ({ e, onClick, active }) => {
   const statusMap = {
     approved: {
       label: 'Aprobada',
-      class: 'bg-green-500/10 text-green-400 border-green-500/20',
+      class:
+        'bg-[rgba(0,153,117,0.15)] text-[var(--status-success)] border-glass-green',
     },
     review: {
       label: 'En revisión',
-      class: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
+      class:
+        'bg-[rgba(255,209,102,0.15)] text-[var(--status-warning)] border-glass',
     },
     observed: {
       label: 'Observada',
-      class: 'bg-red-500/10 text-red-400 border-red-500/20',
+      class:
+        'bg-[rgba(255,77,109,0.15)] text-[var(--status-danger)] border-glass-red',
     },
   };
 
@@ -366,32 +325,27 @@ const EvidenceItem = ({ e, onClick, active }) => {
         ${active ? 'ring-2 ring-[var(--color-turquoise)] bg-white/5' : 'hover:bg-white/5'}
       `}
     >
-      {/* EVIDENCIA */}
       <Block label="Evidencia">
-        <p className="font-medium">{e.title}</p>
+        <p className="text-body-lg">{e.title}</p>
       </Block>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <Block label="PAC">{e.pac}</Block>
-
         <Block label="Categoría">{e.category}</Block>
 
         <Block label="Estado">
           <span
-            className={`text-xs px-2 py-1 rounded-full border ${status.class}`}
+            className={`text-badge px-2 py-1 rounded-full border ${status.class}`}
           >
             {status.label}
           </span>
         </Block>
 
         <Block label="Fecha">{e.date}</Block>
-
         <Block label="Mentor">{e.mentor}</Block>
 
         <Block label="Fuente">
-          <button className="text-[var(--color-turquoise)] text-sm hover:underline">
-            Ver
-          </button>
+          <button className="text-accent-cyan hover:underline">Ver</button>
         </Block>
       </div>
     </div>
@@ -400,9 +354,7 @@ const EvidenceItem = ({ e, onClick, active }) => {
 
 const Block = ({ label, children }) => (
   <div>
-    <p className="text-[10px] uppercase text-[var(--text-secondary)] mb-1">
-      {label}
-    </p>
-    <div className="text-sm">{children}</div>
+    <p className="text-micro-label mb-1">{label}</p>
+    <div className="text-body">{children}</div>
   </div>
 );
