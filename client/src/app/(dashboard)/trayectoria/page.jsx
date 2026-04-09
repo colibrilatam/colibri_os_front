@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { trayectoriaData } from '@/lib/mock/trayectoriaData';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '@/lib/hooks/useIsMobile';
 
 // SWIPER
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -14,6 +15,8 @@ import 'swiper/css/navigation';
 export default function TrayectoriaSection() {
   const { tramo, metrics, pacs, milestones } = trayectoriaData;
   const [selectedPac, setSelectedPac] = useState(pacs[0]);
+
+  const isMobile = useIsMobile();
 
   return (
     <div className="space-y-6">
@@ -55,13 +58,13 @@ export default function TrayectoriaSection() {
 
         {/* SWIPER */}
         <Swiper
-          modules={[Navigation]}
-          navigation
+          modules={isMobile ? [] : [Navigation]}
+          navigation={!isMobile}
           spaceBetween={16}
           slidesPerView={3}
           breakpoints={{
             320: {
-              slidesPerView: 1.2, // 👈 1 card + preview
+              slidesPerView: 1.05,
             },
             640: {
               slidesPerView: 2,

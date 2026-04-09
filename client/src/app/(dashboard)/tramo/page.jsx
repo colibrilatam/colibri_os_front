@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { tramoData } from '@/lib/mock/tramoData';
 import ProgressBar from '@/components/ProgressBar';
+import { useIsMobile } from '@/lib/hooks/useIsMobile';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -12,7 +13,8 @@ const fadeUp = {
 
 export default function TramoDashboard() {
   const pacs = tramoData.pacs;
-
+  const isMobile = useIsMobile();
+  console.log(isMobile);
   return (
     <div className="min-h-screen max-w-[1400px] mx-auto overflow-x-hidden">
       {/* HEADER */}
@@ -130,11 +132,13 @@ export default function TramoDashboard() {
               label="Microacciones"
               value={tramoData.density.microactions + ' / 21'}
               sub="Actividad visible"
+              isMobile={isMobile}
             />
             <MetricBox
               label="Evidencias"
               value={tramoData.density.evidences + ' / 7'}
               sub="Soporte probatorio"
+              isMobile={isMobile}
             />
           </div>
 
@@ -222,7 +226,7 @@ const InfoBox = ({ label, value }) => (
   </div>
 );
 
-const MetricBox = ({ label, value, sub }) => (
+const MetricBox = ({ label, value, sub, isMobile }) => (
   <div className="glass-effect border-glass p-3 sm:p-4 rounded-xl text-center">
     <p className="text-micro-label">{label}</p>
     <p className="text-value-lg">{value}</p>
