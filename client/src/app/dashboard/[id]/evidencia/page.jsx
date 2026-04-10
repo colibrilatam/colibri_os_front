@@ -1,26 +1,56 @@
 'use client';
 
-import { useState } from 'react';
-import { evidenciaData } from '@/lib/mock/evidenciaData';
+import { useState, useContext } from 'react';
+import { ProjectContext } from '../layout';
 
 /* ================= COMPONENT ================= */
 
 export default function EvidenciaSection() {
-  const [filter, setFilter] = useState('all');
-  const [selectedEvidence, setSelectedEvidence] = useState(
-    evidenciaData.evidences[2].title,
-  );
+  const data = useContext(ProjectContext);
 
-  const filtered = evidenciaData.evidences.filter((e) => {
-    if (filter === 'all') return true;
-    if (filter === 'approved') return e.status === 'approved';
-    if (filter === 'review') return e.status === 'review';
-    if (filter === 'observed') return e.status === 'observed';
+  const { evidence, evaluations, pacProgress, currentState } = data;
+
+  /* =========================
+     🔗 DATA MAPPING REAL
+  ========================= */
+
+  const evidences = evidence.map((e) => {
+    const pac = pacProgress.find((p) => p.id === e.pacId);
+    const evalData = evaluations.find((ev) => ev.evidenceId === e.id);
+
+    return {
+      title: e.title,
+      status: e.status === 'approved' ? 'approved' : 'review',
+      pac: e.pacCode,
+      category: pac?.categoryName || '-',
+      date: e.validatedAt ? new Date(e.validatedAt).toLocaleDateString() : '-',
+      mentor: evalData?.evaluatorUserId || '-',
+    };
   });
 
-  const trace =
-    evidenciaData.traceabilityMap[selectedEvidence] ||
-    evidenciaData.traceabilityMap[evidenciaData.evidences[0].title];
+  const [filter, setFilter] = useState('all');
+  const [selectedEvidence, setSelectedEvidence] = useState(evidences[0]?.title);
+
+  const filtered = evidences.filter((e) => {
+    if (filter === 'all') return true;
+    return e.status === filter;
+  });
+
+  const selected = evidence.find((e) => e.title === selectedEvidence);
+  const selectedEval = evaluations.find((ev) => ev.evidenceId === selected?.id);
+  const selectedPac = pacProgress.find((p) => p.id === selected?.pacId);
+
+  /* =========================
+     📊 SUMMARY
+  ========================= */
+
+  const approvedCount = evidence.filter((e) => e.status === 'approved').length;
+
+  const lastEvidence = [...evidence]
+    .filter((e) => e.validatedAt)
+    .sort((a, b) => new Date(b.validatedAt) - new Date(a.validatedAt))[0];
+
+  /* ========================= */
 
   return (
     <div className="space-y-6">
@@ -31,9 +61,7 @@ export default function EvidenciaSection() {
           <p className="text-overline">Estado actual de prueba</p>
 
           <div className="flex items-center gap-4 mt-3">
-            <span className="text-value-hero">
-              {evidenciaData.summary.total}
-            </span>
+            <span className="text-value-hero">{approvedCount}</span>
 
             <span className="text-body--muted">evidencias aprobadas</span>
           </div>
@@ -44,28 +72,27 @@ export default function EvidenciaSection() {
             border border-[rgba(0,207,207,0.3)]
             text-accent-cyan"
           >
-            {evidenciaData.summary.status}
+            {currentState.trajectoryStatus}
           </div>
 
           <div className="mt-4">
-            <p className="text-body">
-              Última evidencia: {evidenciaData.summary.lastEvidence.title}
-            </p>
+            <p className="text-body">Última evidencia: {lastEvidence?.title}</p>
 
             <p className="text-helper mt-1">
-              Aprobada: {evidenciaData.summary.lastEvidence.date}
+              Aprobada:{' '}
+              {lastEvidence?.validatedAt
+                ? new Date(lastEvidence.validatedAt).toLocaleDateString()
+                : '-'}
             </p>
           </div>
 
           <div className="mt-4 glass-effect border-glass rounded-xl p-4">
             <p className="text-micro-label mb-1">Próximo requisito crítico</p>
 
-            <p className="text-body-lg">
-              {evidenciaData.summary.nextRequirement}
-            </p>
+            <p className="text-body-lg">{currentState.nextMilestone}</p>
 
             <p className="text-helper mt-2">
-              PAC actual: {evidenciaData.summary.currentPac}
+              PAC actual: {currentState.currentPacCode}
             </p>
           </div>
         </Card>
@@ -77,23 +104,29 @@ export default function EvidenciaSection() {
           <div>
             <p className="text-micro-label mb-1">Aprobado por</p>
             <p className="text-body-lg">
-              {evidenciaData.validation.approvedBy}
+              {selectedEval?.evaluatorUserId || '-'}
             </p>
-            <p className="text-helper mt-1">{evidenciaData.validation.role}</p>
+            <p className="text-helper mt-1">Evaluador</p>
           </div>
 
           <div>
             <p className="text-micro-label mb-1">Resultado</p>
-            <p className="text-body">{evidenciaData.validation.result}</p>
+            <p className="text-body">{selectedEval?.decision || '-'}</p>
           </div>
 
           <div>
             <p className="text-micro-label mb-1">Fecha</p>
-            <p className="text-date">{evidenciaData.validation.date}</p>
+            <p className="text-date">
+              {selectedEval?.evaluatedAt
+                ? new Date(selectedEval.evaluatedAt).toLocaleDateString()
+                : '-'}
+            </p>
           </div>
 
           <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-body">{evidenciaData.validation.comment}</p>
+            <p className="text-body">
+              {selectedEval?.comment || 'Sin comentario'}
+            </p>
           </div>
         </Card>
       </div>
@@ -142,31 +175,36 @@ export default function EvidenciaSection() {
             <div>
               <p className="text-overline">Detalle de trazabilidad</p>
 
-              <h3 className="text-h3 mt-1 max-w-xs">{trace.title}</h3>
+              <h3 className="text-h3 mt-1 max-w-xs">{selected?.title}</h3>
             </div>
 
             <span className="text-badge px-2 py-1 rounded-full border border-white/20">
-              {trace.version}
+              v1
             </span>
           </div>
 
-          <p className="text-body--muted mt-3">{trace.description}</p>
+          <p className="text-body--muted mt-3">{selected?.summary}</p>
 
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <MiniBlock label="PAC asociado" value={trace.pac} />
-            <MiniBlock label="Categoría troncal" value={trace.category} />
-            <MiniBlock label="Resultado" value={trace.result} />
-            <MiniBlock label="Score" value={trace.score} />
+            <MiniBlock label="PAC asociado" value={selected?.pacCode} />
+            <MiniBlock
+              label="Categoría troncal"
+              value={selectedPac?.categoryName}
+            />
+            <MiniBlock label="Resultado" value={selectedEval?.decision} />
+            <MiniBlock label="Score" value="-" />
           </div>
 
           <div className="mt-4 glass-effect border-glass rounded-xl p-4">
             <p className="text-micro-label mb-2">Evaluación asociada</p>
 
-            <p className="text-body mb-2">{trace.evaluation.text}</p>
+            <p className="text-body mb-2">{selectedEval?.comment}</p>
 
             <p className="text-helper">
-              {trace.evaluation.author} · {trace.evaluation.role} ·{' '}
-              {trace.evaluation.date}
+              {selectedEval?.evaluatorUserId} · Evaluador ·{' '}
+              {selectedEval?.evaluatedAt
+                ? new Date(selectedEval.evaluatedAt).toLocaleDateString()
+                : '-'}
             </p>
           </div>
 
@@ -174,21 +212,20 @@ export default function EvidenciaSection() {
             <p className="text-micro-label mb-3">Historial de versiones</p>
 
             <div className="flex flex-col gap-2">
-              {trace.history.map((h, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-3 py-2"
-                >
-                  <div>
-                    <p className="text-body">{h.label}</p>
-                    <p className="text-helper">{h.date}</p>
-                  </div>
-
-                  <span className="text-badge px-2 py-1 rounded-full border border-white/20">
-                    {h.version}
-                  </span>
+              <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-3 py-2">
+                <div>
+                  <p className="text-body">Versión actual</p>
+                  <p className="text-helper">
+                    {selected?.validatedAt
+                      ? new Date(selected.validatedAt).toLocaleDateString()
+                      : '-'}
+                  </p>
                 </div>
-              ))}
+
+                <span className="text-badge px-2 py-1 rounded-full border border-white/20">
+                  v1
+                </span>
+              </div>
             </div>
           </div>
 
@@ -203,79 +240,28 @@ export default function EvidenciaSection() {
         <Card>
           <p className="text-overline mb-4">Competencias activadas</p>
 
-          {evidenciaData.metrics.competencies.map((c, i) => (
-            <ProgressItem key={i} label={c.label} value={c.value} />
-          ))}
+          {/* ⚠️ NO EXISTE EN DATA */}
+          <p className="text-helper">No disponible en backend</p>
         </Card>
 
         <Card>
           <p className="text-overline mb-4">Skills activadas</p>
 
-          {evidenciaData.metrics.skills.map((s, i) => (
-            <SkillItem key={i} label={s.label} level={s.level} />
-          ))}
+          {/* ⚠️ NO EXISTE EN DATA */}
+          <p className="text-helper">No disponible en backend</p>
         </Card>
 
         <Card>
           <p className="text-overline mb-4">Contexto estructural activado</p>
 
-          <div className="flex gap-2 mb-4">
-            {evidenciaData.metrics.context.tags.map((tag, i) => (
-              <Tag key={i}>{tag}</Tag>
-            ))}
-          </div>
-
-          <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-body mb-2">
-              <span className="text-helper">PAC asociado principal:</span>{' '}
-              <span className="text-body-lg">
-                {evidenciaData.metrics.context.pac}
-              </span>
-            </p>
-
-            <p className="text-body--muted">
-              Lectura:{' '}
-              <span className="text-body">
-                {evidenciaData.metrics.context.description}
-              </span>
-            </p>
-          </div>
+          <p className="text-helper">No disponible en backend</p>
         </Card>
       </div>
     </div>
   );
 }
 
-/* ================= UI ================= */
-
-const ProgressItem = ({ label, value }) => (
-  <div className="mb-4">
-    <div className="flex justify-between mb-1 text-body">
-      <span>{label}</span>
-      <span>{value}%</span>
-    </div>
-
-    <div className="w-full h-2 rounded-full bg-white/10 border border-white/10 overflow-hidden">
-      <div
-        className="h-full bg-white/70 rounded-full"
-        style={{ width: `${value}%` }}
-      />
-    </div>
-  </div>
-);
-
-const SkillItem = ({ label, level }) => (
-  <div className="flex justify-between items-center px-4 py-3 rounded-xl border border-white/10 bg-white/5 mb-3">
-    <span className="text-body">{label}</span>
-    <span className="text-helper">{level}</span>
-  </div>
-);
-
-const Tag = ({ children }) => (
-  <span className="text-badge px-3 py-1 rounded-full border border-white/20">
-    {children}
-  </span>
-);
+/* ================= UI (SIN CAMBIOS) ================= */
 
 const MiniBlock = ({ label, value }) => (
   <div className="glass-effect border-glass rounded-xl p-3">
@@ -296,6 +282,8 @@ const FilterBtn = ({ label, onClick }) => (
     {label}
   </button>
 );
+
+// EvidenceItem y Block SIN CAMBIOS
 
 const EvidenceItem = ({ e, onClick, active }) => {
   const statusMap = {
@@ -358,3 +346,56 @@ const Block = ({ label, children }) => (
     <div className="text-body">{children}</div>
   </div>
 );
+
+const Blockkkkk = ({ label, children }) => (
+  <div>
+    <p className="text-micro-label mb-1">{label}</p>
+    <div className="text-body">{children}</div>
+  </div>
+);
+
+{
+  /* <div className="grid md:grid-cols-3 gap-6">
+        <Card>
+          <p className="text-overline mb-4">Competencias activadas</p>
+
+          {evidenciaData.metrics.competencies.map((c, i) => (
+            <ProgressItem key={i} label={c.label} value={c.value} />
+          ))}
+        </Card>
+
+        <Card>
+          <p className="text-overline mb-4">Skills activadas</p>
+
+          {evidenciaData.metrics.skills.map((s, i) => (
+            <SkillItem key={i} label={s.label} level={s.level} />
+          ))}
+        </Card>
+
+        <Card>
+          <p className="text-overline mb-4">Contexto estructural activado</p>
+
+          <div className="flex gap-2 mb-4">
+            {evidenciaData.metrics.context.tags.map((tag, i) => (
+              <Tag key={i}>{tag}</Tag>
+            ))}
+          </div>
+
+          <div className="glass-effect border-glass rounded-xl p-4">
+            <p className="text-body mb-2">
+              <span className="text-helper">PAC asociado principal:</span>{' '}
+              <span className="text-body-lg">
+                {evidenciaData.metrics.context.pac}
+              </span>
+            </p>
+
+            <p className="text-body--muted">
+              Lectura:{' '}
+              <span className="text-body">
+                {evidenciaData.metrics.context.description}
+              </span>
+            </p>
+          </div>
+        </Card>
+      </div> */
+}
