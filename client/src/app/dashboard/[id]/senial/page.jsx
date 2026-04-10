@@ -1,10 +1,7 @@
 "use client";
 import NftAvatar from "@/components/señal/NftAvatar";
 import ProgressBar from "@/components/ProgressBar";
-import { project } from "@/lib/mock-data";
 import TourButton from "@/components/tutoriales/TourButton";
-import { usePathname } from "next/navigation";
-import { getProjectById } from '@/lib/mock/proyectos ficticios/getProyectById';
 
 // contexto
 import { useContext } from "react";
@@ -14,9 +11,7 @@ export default function IdentidadPage() {
 
   // contexto
   const project = useContext(ProjectContext);
-  console.log("Datos del proyecto desde el contexto:", project);
  
-  
   const progressPct = (project.approvedPacs / project.totalPacs) * 100;
   const icPct = (project.ic / project.icMax) * 100;
 
