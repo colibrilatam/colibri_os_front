@@ -30,6 +30,7 @@ export default function HomePage() {
 
         const backendProjects = await response.json();
         setProjects(backendProjects);
+        console.log("Proyectos cargados:", backendProjects);
       } catch (error) {
         setProjectsError(
           error.message || "Ocurrió un error al cargar los proyectos"
