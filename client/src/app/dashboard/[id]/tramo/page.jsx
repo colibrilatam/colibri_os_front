@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
-import { tramoData } from '@/lib/mock/tramoData';
 import ProgressBar from '@/components/ProgressBar';
+import { useIsMobile } from '@/lib/hooks/useIsMobile';
+import { ProjectContext } from "../layout";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -11,7 +12,111 @@ const fadeUp = {
 };
 
 export default function TramoDashboard() {
-  const pacs = tramoData.pacs;
+  const isMobile = useIsMobile();
+  const data = useContext(ProjectContext);
+
+  const { project, currentState, pacProgress } = data;
+
+  /* =========================
+     🔗 DATA MAPPING REAL
+  ========================= */
+
+  const tramo = {
+    code: currentState.currentTramoCode,
+    name: currentState.currentTramoName,
+  };
+
+  const pacs = pacProgress;
+
+  const currentPacCode = currentState.currentPacCode;
+
+  const currentPac = pacs.find(
+    (p) => p.pacCode === currentPacCode
+  );
+
+  const totalPacs = pacs.length;
+
+  const closedPacs = currentState.pacsApprovedInCurrentTramo;
+
+  const percentage = Math.round(
+    (closedPacs / totalPacs) * 100
+  );
+
+  const totalMicro = pacs.reduce(
+    (acc, p) => acc + p.requiredMicroactions,
+    0
+  );
+
+  const completedMicro =
+    currentState.microactionsCompletedCount;
+
+  const totalEvidence = pacs.reduce(
+    (acc, p) => acc + p.requiredEvidence,
+    0
+  );
+
+  const validatedEvidence =
+    currentState.validatedEvidenceCount;
+
+  const categories = pacs.map((p) => {
+    let status = 'next';
+
+    if (p.status === 'approved') status = 'done';
+    else if (p.pacCode === currentPacCode) status = 'current';
+
+    return {
+      code: p.categoryCode,
+      label: p.categoryName,
+      status,
+    };
+  });
+
+  const signals = [
+    {
+      type: 'success',
+      text: `${closedPacs} PACs cerrados con evidencia validada`,
+    },
+    ...(currentPac?.status !== 'approved'
+      ? [
+          {
+            type: 'warning',
+            text: `PAC actual ${currentPacCode} aún requiere evidencia`,
+          },
+        ]
+      : []),
+  ];
+
+  const blockers = pacs
+    .filter(
+      (p) =>
+        p.status === 'in_progress' &&
+        !p.closureRuleSatisfied
+    )
+    .map(
+      (p) =>
+        `Bloqueo en ${p.pacCode}: faltan ${
+          p.requiredMicroactions - p.completedMicroactions
+        } microacciones o ${
+          p.requiredEvidence - p.validatedEvidence
+        } evidencias`
+    );
+
+  const mapStatus = {
+    approved: 'closed',
+    in_progress: 'current',
+    pending: 'pending',
+  };
+
+  // ⚠️ FALLBACKS (hasta que estén en modelo)
+  const incertidumbre = "No disponible";
+  const riesgo = "No disponible";
+
+  const ventana =
+    currentState.trajectoryStatus === 'in_progress'
+      ? 'Tramo en ejecución'
+      : 'Sin actividad';
+
+  /* ========================= */
 
   return (
     <div className="min-h-screen max-w-[1400px] mx-auto overflow-x-hidden">
@@ -27,22 +132,24 @@ export default function TramoDashboard() {
             <p className="text-overline">Cabecera analítica del tramo</p>
 
             <h1 className="text-h1">
-              {tramoData.id} · {tramoData.name}
+              {tramo.code} · {tramo.name}
             </h1>
 
-            <p className="text-body-lg mt-1">{tramoData.strategicQuestion}</p>
+            <p className="text-body-lg mt-1">
+              {project.tagline}
+            </p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
             <InfoBox
               label="Incertidumbre dominante"
-              value={tramoData.header.uncertainty}
+              value={incertidumbre}
             />
             <InfoBox
               label="Riesgo principal"
-              value={tramoData.header.mainRisk}
+              value={riesgo}
             />
-            <InfoBox label="Ventana" value={tramoData.header.window} />
+            <InfoBox label="Ventana" value={ventana} />
           </div>
         </div>
       </motion.div>
@@ -52,11 +159,11 @@ export default function TramoDashboard() {
         <AnimatedCard title="Avance por PAC">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 gap-3">
             <div>
-              <h2 className="text-h3">{tramoData.progress.currentPac.code}</h2>
+              <h2 className="text-h3">{currentPacCode}</h2>
 
               <p className="text-body--muted">
-                PAC actual · {tramoData.progress.currentPac.category} ·{' '}
-                {tramoData.progress.currentPac.name}
+                PAC actual · {currentPac?.categoryName} ·{' '}
+                {currentPac?.title}
               </p>
             </div>
 
@@ -64,14 +171,13 @@ export default function TramoDashboard() {
               <p className="text-micro-label">PACs cerrados</p>
 
               <p className="text-value-lg">
-                {tramoData.progress.closedPacs} de{' '}
-                {tramoData.progress.totalPacs}
+                {closedPacs} de {totalPacs}
               </p>
             </Block>
           </div>
 
           <ProgressBar
-            progreso={tramoData.progress.percentage}
+            progreso={percentage}
             color="multicolor"
             tamaño="md"
             label="Progreso estructural del tramo"
@@ -101,21 +207,23 @@ export default function TramoDashboard() {
                 pending: '○',
               };
 
+              const uiStatus = mapStatus[p.status];
+
               return (
                 <motion.div
-                  key={p.code}
+                  key={p.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className={`px-3 py-2 rounded-xl border flex flex-col items-center ${statusStyles[p.status]}`}
+                  className={`px-3 py-2 rounded-xl border flex flex-col items-center ${statusStyles[uiStatus]}`}
                 >
                   <div className="flex items-center gap-1 text-sm font-medium">
-                    {p.code}
-                    <span>{statusIcon[p.status]}</span>
+                    {p.pacCode}
+                    <span>{statusIcon[uiStatus]}</span>
                   </div>
 
                   <span className="text-xs opacity-80">
-                    {statusLabel[p.status]}
+                    {statusLabel[uiStatus]}
                   </span>
                 </motion.div>
               );
@@ -128,25 +236,27 @@ export default function TramoDashboard() {
           <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
             <MetricBox
               label="Microacciones"
-              value={tramoData.density.microactions + ' / 21'}
+              value={`${completedMicro} / ${totalMicro}`}
               sub="Actividad visible"
             />
             <MetricBox
               label="Evidencias"
-              value={tramoData.density.evidences + ' / 7'}
+              value={`${validatedEvidence} / ${totalEvidence}`}
               sub="Soporte probatorio"
             />
           </div>
 
           <Block>
-            <p className="text-body">{tramoData.density.message}</p>
+            <p className="text-body">
+              {currentState.nextMilestone}
+            </p>
           </Block>
         </AnimatedCard>
 
         {/* CATEGORÍAS */}
         <AnimatedCard title="Categorías activadas">
           <div className="flex flex-wrap gap-2 sm:gap-3">
-            {tramoData.categories.map((c) => {
+            {categories.map((c) => {
               const isDone = c.status === 'done';
               const isCurrent = c.status === 'current';
               const isNext = c.status === 'next';
@@ -159,8 +269,8 @@ export default function TramoDashboard() {
                       isDone
                         ? 'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald'
                         : isCurrent
-                          ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
-                          : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
+                        ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
+                        : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
                     }
                   `}
                 >
@@ -180,7 +290,7 @@ export default function TramoDashboard() {
         {/* SEÑALES */}
         <AnimatedCard title="Señales de avance">
           <div className="space-y-3">
-            {tramoData.signals.map((s, i) => (
+            {signals.map((s, i) => (
               <Signal key={i} ok={s.type === 'success'}>
                 {s.text}
               </Signal>
@@ -190,11 +300,17 @@ export default function TramoDashboard() {
 
         {/* BLOQUEOS */}
         <AnimatedCard title="Bloqueos">
-          {tramoData.blockers.map((b, i) => (
-            <Block key={i}>
-              <p className="text-body">{b}</p>
+          {blockers.length === 0 ? (
+            <Block>
+              <p className="text-body">Sin bloqueos activos</p>
             </Block>
-          ))}
+          ) : (
+            blockers.map((b, i) => (
+              <Block key={i}>
+                <p className="text-body">{b}</p>
+              </Block>
+            ))
+          )}
         </AnimatedCard>
       </div>
     </div>

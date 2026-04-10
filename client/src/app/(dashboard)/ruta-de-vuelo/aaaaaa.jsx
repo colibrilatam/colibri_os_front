@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState, useContext } from 'react';
+import { useState } from 'react';
+import { trayectoriaData } from '@/lib/mock/trayectoriaData';
 import { motion } from 'framer-motion';
-import { useIsMobile } from '@/lib/hooks/useIsMobile';
-import { ProjectContext } from "../layout";
 
 // SWIPER
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -13,84 +12,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 export default function TrayectoriaSection() {
-  const data = useContext(ProjectContext);
-
-  const isMobile = useIsMobile();
-
-  /* =========================
-     🔗 DATA MAPPING REAL
-  ========================= */
-
-  const {
-    project,
-    currentState,
-    pacProgress,
-    evidence,
-    microactionInstances,
-  } = data;
-
-  const mapStatus = {
-    approved: 'done',
-    in_progress: 'current',
-    pending: 'pending',
-  };
-
-  const tramo = {
-    id: currentState.currentTramoCode,
-    name: currentState.currentTramoName,
-    description: project.shortDescription,
-  };
-
-  const pacs = pacProgress.map((p) => {
-    const pacEvidence = evidence.find((e) => e.pacId === p.id);
-
-    const microactions = microactionInstances
-      .filter((m) => m.pacId === p.id && m.status === 'completed')
-      .map((m) => m.title);
-
-    return {
-      code: p.pacCode,
-      category: p.categoryName,
-      area: p.categoryName, // fallback (no existe campo explícito)
-      title: p.title,
-      status: mapStatus[p.status],
-
-      detail: {
-        objective: p.title, // fallback
-        evidence: {
-          title: pacEvidence?.title || 'Sin evidencia aún',
-          description: pacEvidence?.summary || '',
-        },
-        microactions,
-        timeline: {
-          start: p.startedAt
-            ? new Date(p.startedAt).toLocaleDateString()
-            : '-',
-          end: p.closedAt
-            ? new Date(p.closedAt).toLocaleDateString()
-            : 'En curso',
-        },
-      },
-    };
-  });
-
-  const metrics = {
-    currentPac: currentState.currentPacCode,
-    totalPacs: pacProgress.length,
-    microactions: currentState.microactionsCompletedCount,
-    evidences: currentState.validatedEvidenceCount,
-  };
-
-  const milestones = pacProgress
-    .filter((p) => p.status === 'approved')
-    .map((p) => ({
-      text: `${p.pacCode} completado`,
-      date: new Date(p.closedAt).toLocaleDateString(),
-    }));
-
+  const { tramo, metrics, pacs, milestones } = trayectoriaData;
   const [selectedPac, setSelectedPac] = useState(pacs[0]);
-
-  /* ========================= */
 
   return (
     <div className="space-y-6">
@@ -111,10 +34,7 @@ export default function TrayectoriaSection() {
             label="Microacciones"
             value={metrics.microactions + ' / 21'}
           />
-          <Metric
-            label="Evidencias"
-            value={metrics.evidences + ' / 7'}
-          />
+          <Metric label="Evidencias" value={metrics.evidences + ' / 7'} />
         </div>
       </div>
 
@@ -133,14 +53,15 @@ export default function TrayectoriaSection() {
           </div>
         </div>
 
+        {/* SWIPER */}
         <Swiper
-          modules={isMobile ? [] : [Navigation]}
-          navigation={!isMobile}
+          modules={[Navigation]}
+          navigation
           spaceBetween={16}
           slidesPerView={3}
           breakpoints={{
             320: {
-              slidesPerView: 1.05,
+              slidesPerView: 1.2, // 👈 1 card + preview
             },
             640: {
               slidesPerView: 2,
@@ -169,6 +90,23 @@ export default function TrayectoriaSection() {
 
       {/* LOWER GRID */}
       <div className="grid md:grid-cols-3 gap-6">
+        {/* HITOS */}
+        <div className="glass-effect border-glass rounded-2xl p-6">
+          <h4 className="text-micro-label mb-4">
+            Hitos principales del recorrido
+          </h4>
+
+          {milestones.map((m, i) => (
+            <div key={i} className="flex items-start gap-3 mb-3">
+              <div className="w-2 h-2 bg-[var(--status-info)] rounded-full mt-2" />
+              <div>
+                <p className="text-body">{m.text}</p>
+                <p className="text-date">{m.date}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {/* DETALLE PAC */}
         <div className="md:col-span-2 glass-effect border-glass rounded-2xl p-6">
           <p className="text-overline mb-2">Detalle del PAC seleccionado</p>
@@ -182,25 +120,20 @@ export default function TrayectoriaSection() {
             </div>
 
             <span
-              className={`
-                inline-flex items-center justify-center
-                w-fit h-fit self-start
-                whitespace-nowrap
-                text-badge px-3 py-1 rounded-full
-                ${
-                  selectedPac.status === 'done'
-                    ? 'bg-[rgba(0,153,117,0.2)] text-[var(--status-success)]'
-                    : selectedPac.status === 'current'
+              className={`text-badge px-3 py-1 rounded-full
+              ${
+                selectedPac.status === 'done'
+                  ? 'bg-[rgba(0,153,117,0.2)] text-[var(--status-success)]'
+                  : selectedPac.status === 'current'
                     ? 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]'
                     : 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]'
-                }
-              `}
+              }`}
             >
               {selectedPac.status === 'done'
                 ? 'Completado'
                 : selectedPac.status === 'current'
-                ? 'En tránsito'
-                : 'Pendiente'}
+                  ? 'En tránsito'
+                  : 'Pendiente'}
             </span>
           </div>
 
@@ -213,20 +146,14 @@ export default function TrayectoriaSection() {
 
               <p className="text-micro-label mb-2">Objetivo estructural</p>
 
-              <p className="text-body">
-                {selectedPac.detail.objective}
-              </p>
+              <p className="text-body">{selectedPac.detail.objective}</p>
             </div>
 
             {/* EVIDENCIA */}
             <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2">
-                Señal probatoria visible
-              </p>
+              <p className="text-micro-label mb-2">Señal probatoria visible</p>
 
-              <p className="text-body">
-                {selectedPac.detail.evidence.title}
-              </p>
+              <p className="text-body">{selectedPac.detail.evidence.title}</p>
 
               <p className="text-helper mt-1">
                 {selectedPac.detail.evidence.description}
@@ -235,9 +162,7 @@ export default function TrayectoriaSection() {
 
             {/* MICROACCIONES */}
             <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-3">
-                Microacciones ejecutadas
-              </p>
+              <p className="text-micro-label mb-3">Microacciones ejecutadas</p>
 
               <div className="space-y-2">
                 {selectedPac.detail.microactions.map((m, i) => (
@@ -277,29 +202,12 @@ export default function TrayectoriaSection() {
             </div>
           </div>
         </div>
-
-        {/* HITOS */}
-        <div className="glass-effect border-glass rounded-2xl p-6">
-          <h4 className="text-micro-label mb-4">
-            Hitos principales del recorrido
-          </h4>
-
-          {milestones.map((m, i) => (
-            <div key={i} className="flex items-start gap-3 mb-3">
-              <div className="w-2 h-2 bg-[var(--status-info)] rounded-full mt-2" />
-              <div>
-                <p className="text-body">{m.text}</p>
-                <p className="text-date">{m.date}</p>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
 }
 
-/* COMPONENTES (SIN CAMBIOS) */
+/* COMPONENTES */
 
 const Metric = ({ label, value }) => (
   <div className="glass-effect border-glass px-4 py-2 rounded-xl">
@@ -307,8 +215,6 @@ const Metric = ({ label, value }) => (
     <p className="text-value-card">{value}</p>
   </div>
 );
-
-// resto igual...
 
 const PacCard = ({ pac, isSelected, onClick, index }) => {
   const isDone = pac.status === 'done';
