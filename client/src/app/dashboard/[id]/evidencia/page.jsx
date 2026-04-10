@@ -347,6 +347,13 @@ const Block = ({ label, children }) => (
   </div>
 );
 
+const Blockkkkk = ({ label, children }) => (
+  <div>
+    <p className="text-micro-label mb-1">{label}</p>
+    <div className="text-body">{children}</div>
+  </div>
+);
+
 {
   /* <div className="grid md:grid-cols-3 gap-6">
         <Card>
