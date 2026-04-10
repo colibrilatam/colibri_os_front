@@ -1,12 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
-import RiegoPulso from '@/lib/mock/proyectos-R-Lap-Demo/RiegoPulso.json';
 import ProgressBar from '@/components/ProgressBar';
 import { useIsMobile } from '@/lib/hooks/useIsMobile';
-import { useContext } from "react";
 import { ProjectContext } from "../layout";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
@@ -14,44 +13,60 @@ const fadeUp = {
 
 export default function TramoDashboard() {
   const isMobile = useIsMobile();
+  const data = useContext(ProjectContext);
+
+  const { project, currentState, pacProgress } = data;
 
   /* =========================
      🔗 DATA MAPPING REAL
   ========================= */
 
-  const tramo = RiegoPulso.state.currentTramo;
-  const pacs = RiegoPulso.tramoProgress.pacs;
-  const currentPacCode = RiegoPulso.state.currentPac.code;
+  const tramo = {
+    code: currentState.currentTramoCode,
+    name: currentState.currentTramoName,
+  };
+
+  const pacs = pacProgress;
+
+  const currentPacCode = currentState.currentPacCode;
+
+  const currentPac = pacs.find(
+    (p) => p.pacCode === currentPacCode
+  );
 
   const totalPacs = pacs.length;
-  const closedPacs = pacs.filter((p) => p.status === 'approved').length;
-  const percentage = Math.round((closedPacs / totalPacs) * 100);
 
-  const currentPac = pacs.find((p) => p.code === currentPacCode);
+  const closedPacs = currentState.pacsApprovedInCurrentTramo;
+
+  const percentage = Math.round(
+    (closedPacs / totalPacs) * 100
+  );
 
   const totalMicro = pacs.reduce(
-    (acc, p) => acc + p.progress.microactions.required,
+    (acc, p) => acc + p.requiredMicroactions,
     0
   );
 
-  const completedMicro = RiegoPulso.state.metrics.microactionsCompleted;
+  const completedMicro =
+    currentState.microactionsCompletedCount;
 
   const totalEvidence = pacs.reduce(
-    (acc, p) => acc + p.progress.evidence.required,
+    (acc, p) => acc + p.requiredEvidence,
     0
   );
 
-  const validatedEvidence = RiegoPulso.state.metrics.validatedEvidence;
+  const validatedEvidence =
+    currentState.validatedEvidenceCount;
 
   const categories = pacs.map((p) => {
     let status = 'next';
 
     if (p.status === 'approved') status = 'done';
-    else if (p.code === currentPacCode) status = 'current';
+    else if (p.pacCode === currentPacCode) status = 'current';
 
     return {
-      code: p.category.code,
-      label: p.category.name,
+      code: p.categoryCode,
+      label: p.categoryName,
       status,
     };
   });
@@ -61,17 +76,29 @@ export default function TramoDashboard() {
       type: 'success',
       text: `${closedPacs} PACs cerrados con evidencia validada`,
     },
-    {
-      type: 'warning',
-      text: `PAC actual ${currentPacCode} aún requiere evidencia`,
-    },
+    ...(currentPac?.status !== 'approved'
+      ? [
+          {
+            type: 'warning',
+            text: `PAC actual ${currentPacCode} aún requiere evidencia`,
+          },
+        ]
+      : []),
   ];
 
   const blockers = pacs
-    .filter((p) => p.status === 'in_progress' && !p.progress.closure)
+    .filter(
+      (p) =>
+        p.status === 'in_progress' &&
+        !p.closureRuleSatisfied
+    )
     .map(
       (p) =>
-        `Bloqueo en ${p.code}: falta evidencia o microacciones completas`
+        `Bloqueo en ${p.pacCode}: faltan ${
+          p.requiredMicroactions - p.completedMicroactions
+        } microacciones o ${
+          p.requiredEvidence - p.validatedEvidence
+        } evidencias`
     );
 
   const mapStatus = {
@@ -79,6 +106,15 @@ export default function TramoDashboard() {
     in_progress: 'current',
     pending: 'pending',
   };
+
+  // ⚠️ FALLBACKS (hasta que estén en modelo)
+  const incertidumbre = "No disponible";
+  const riesgo = "No disponible";
+
+  const ventana =
+    currentState.trajectoryStatus === 'in_progress'
+      ? 'Tramo en ejecución'
+      : 'Sin actividad';
 
   /* ========================= */
 
@@ -100,20 +136,20 @@ export default function TramoDashboard() {
             </h1>
 
             <p className="text-body-lg mt-1">
-              {RiegoPulso.project.tagline}
+              {project.tagline}
             </p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
             <InfoBox
               label="Incertidumbre dominante"
-              value="Operativa en campo"
+              value={incertidumbre}
             />
             <InfoBox
               label="Riesgo principal"
-              value="Continuidad de uso"
+              value={riesgo}
             />
-            <InfoBox label="Ventana" value="Tramo en ejecución" />
+            <InfoBox label="Ventana" value={ventana} />
           </div>
         </div>
       </motion.div>
@@ -123,11 +159,11 @@ export default function TramoDashboard() {
         <AnimatedCard title="Avance por PAC">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 gap-3">
             <div>
-              <h2 className="text-h3">{currentPac.code}</h2>
+              <h2 className="text-h3">{currentPacCode}</h2>
 
               <p className="text-body--muted">
-                PAC actual · {currentPac.category.name} ·{' '}
-                {currentPac.title}
+                PAC actual · {currentPac?.categoryName} ·{' '}
+                {currentPac?.title}
               </p>
             </div>
 
@@ -175,14 +211,14 @@ export default function TramoDashboard() {
 
               return (
                 <motion.div
-                  key={p.code}
+                  key={p.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                   className={`px-3 py-2 rounded-xl border flex flex-col items-center ${statusStyles[uiStatus]}`}
                 >
                   <div className="flex items-center gap-1 text-sm font-medium">
-                    {p.code}
+                    {p.pacCode}
                     <span>{statusIcon[uiStatus]}</span>
                   </div>
 
@@ -202,19 +238,17 @@ export default function TramoDashboard() {
               label="Microacciones"
               value={`${completedMicro} / ${totalMicro}`}
               sub="Actividad visible"
-              isMobile={isMobile}
             />
             <MetricBox
               label="Evidencias"
               value={`${validatedEvidence} / ${totalEvidence}`}
               sub="Soporte probatorio"
-              isMobile={isMobile}
             />
           </div>
 
           <Block>
             <p className="text-body">
-              {RiegoPulso.state.nextMilestone}
+              {currentState.nextMilestone}
             </p>
           </Block>
         </AnimatedCard>
@@ -266,11 +300,17 @@ export default function TramoDashboard() {
 
         {/* BLOQUEOS */}
         <AnimatedCard title="Bloqueos">
-          {blockers.map((b, i) => (
-            <Block key={i}>
-              <p className="text-body">{b}</p>
+          {blockers.length === 0 ? (
+            <Block>
+              <p className="text-body">Sin bloqueos activos</p>
             </Block>
-          ))}
+          ) : (
+            blockers.map((b, i) => (
+              <Block key={i}>
+                <p className="text-body">{b}</p>
+              </Block>
+            ))
+          )}
         </AnimatedCard>
       </div>
     </div>
