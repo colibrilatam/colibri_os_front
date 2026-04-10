@@ -1,0 +1,100 @@
+{
+  "projects": [
+    {
+      "name": "AulaPuente",
+      "id": "proj_aulapuente_ve_001",
+      "shortId": "AP3KV71",
+      "industry": "Edtech",
+      "country": "Venezuela",
+      "currentTramo": "T1",
+      "projectStatus": "activo",
+      "description": "Proyecto edtech en etapa fundacional que explora una solución simple para organizar actividades, seguimiento y alertas básicas de continuidad académica en educación media venezolana.",
+      "ownerId": "usr_andrea_rojas_001",
+      "lastUpdate": "2026-04-03T18:20:00-04:00"
+    },
+    {
+      "name": "NexoCaja",
+      "id": "proj_nexocaja_ar_001",
+      "shortId": "NC8X2QR",
+      "industry": "Fintech",
+      "country": "Argentina",
+      "currentTramo": "T1",
+      "projectStatus": "activo",
+      "description": "Proyecto fintech en etapa fundacional que explora una solución simple para gestionar el flujo de caja de pequeños comercios en Argentina.",
+      "ownerId": "usr_lucia_ferreyra_001",
+      "lastUpdate": "2026-04-02T18:40:00-03:00"
+    },
+    {
+      "name": "SaludNexo",
+      "id": "proj_saludnexo_pa_001",
+      "shortId": "SN04FTB",
+      "industry": "Healthtech",
+      "country": "Panamá",
+      "currentTramo": "T2",
+      "projectStatus": "inactivo",
+      "description": "Plataforma ligera para clínicas y médicos independientes que centraliza agenda, historial básico y seguimiento de pacientes en contextos de atención primaria.",
+      "ownerId": "usr_lucia_morales_001",
+      "lastUpdate": "2026-04-05T16:40:00Z"
+    },
+    {
+      "name": "RutaNómina",
+      "id": "proj_rutanomina_co_001",
+      "shortId": "RN7YD53",
+      "industry": "SaaS",
+      "country": "Colombia",
+      "currentTramo": "T2",
+      "projectStatus": "inactivo",
+      "description": "Proyecto SaaS en validación temprana que simplifica la liquidación y trazabilidad de nómina para pequeñas empresas colombianas.",
+      "ownerId": "usr_catalina_mejia_001",
+      "lastUpdate": "2026-04-04T17:35:00-05:00"
+    },
+    {
+      "name": "TrayectoClaro",
+      "id": "proj_trayectoclaro_cl_001",
+      "shortId": "TC2MZ9E",
+      "industry": "Edtech",
+      "country": "Chile",
+      "currentTramo": "T3",
+      "projectStatus": "cerrado",
+      "description": "Proyecto edtech en etapa de prototipo visible que organiza el seguimiento de trayectorias formativas para estudiantes de educación técnica en Chile.",
+      "ownerId": "usr_valentina_rojas_001",
+      "lastUpdate": "2026-04-04T18:10:00-03:00"
+    },
+    {
+      "name": "FlujoClave",
+      "id": "proj_flujoclave_co_001",
+      "shortId": "FK6WA1P",
+      "industry": "Fintech",
+      "country": "Colombia",
+      "currentTramo": "T3",
+      "projectStatus": "cerrado",
+      "description": "Proyecto fintech en etapa de prototipo visible que automatiza la conciliación y visibilidad de flujos financieros para medianas empresas.",
+      "ownerId": "usr_santiago_mejia_001",
+      "lastUpdate": "2026-04-04T17:55:00-05:00"
+    },
+    {
+      "name": "RiegoPulso",
+      "id": "proj_riegopulso_bo_001",
+      "shortId": "RP5HJ8N",
+      "industry": "AgroTech",
+      "country": "Bolivia",
+      "currentTramo": "T4",
+      "projectStatus": "suspendido",
+      "description": "Proyecto agrotech en tracción temprana que optimiza el riego y monitoreo de cultivos mediante sensores de bajo costo para pequeños productores bolivianos.",
+      "ownerId": "usr_mariela_quispe_001",
+      "lastUpdate": "2026-04-05T17:50:00-04:00"
+    },
+    {
+      "name": "TurnoBase",
+      "id": "proj_turnobase_cl_001",
+      "shortId": "TB9LQ4C",
+      "industry": "HR Tech",
+      "country": "Chile",
+      "currentTramo": "T4",
+      "projectStatus": "suspendido",
+      "description": "Proyecto HR Tech en tracción temprana que simplifica la gestión y cobertura de turnos para empresas con dotación variable en sectores de operación continua.",
+      "ownerId": "usr_camila_fuentes_001",
+      "lastUpdate": "2026-04-05T18:05:00-03:00"
+    }
+  ]
+}
