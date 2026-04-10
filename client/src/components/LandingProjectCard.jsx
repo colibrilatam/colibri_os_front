@@ -61,9 +61,9 @@ export function ProjectCard({ project, index }) {
 
         <button
           onClick={() => router.push(`/dashboard/${project.id}/senial`)}
-          className="group/btn flex items-center gap-1 text-xs font-medium text-cyan-400 transition-all duration-150 hover:text-cyan-300 active:scale-95"
+          className="group/btn border border-cyan-400 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg p-2 font-bold flex items-center gap-1 text-xs  text-white transition-all duration-150  active:scale-95"
         >
-          Ver detalle
+          Ver en R-Lab
           <svg
             className="h-3 w-3 translate-x-0 transition-transform duration-150 group-hover/btn:translate-x-0.5"
             fill="none"
