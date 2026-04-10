@@ -27,7 +27,7 @@ export default function DataLayout({ children }) {
   const id = segments[2];
 
   const project = getProjectById(id);
-  console.log("Proyecto obtenido por ID:", project);
+ 
   
 
   return (

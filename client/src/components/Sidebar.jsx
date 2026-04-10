@@ -18,15 +18,18 @@ import Button from './Button';
 
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
-  const pathname = usePathname();
   const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
   const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
 
   // obtencion del id por parametro 
-  const  id  = usePathname().split("/").pop(); // Extrae el ID de la URL
-  
+  const pathname = usePathname(); 
+
+  // 1. Dividimos por "/" -> ["", "dashboard", "1", "senial"]
+  // 2. El "1" está en la posición 2 del array
+  const segments = pathname.split('/');
+  const id = segments[2];
 
   const isActive = (href) => {
     if (href === '/') {

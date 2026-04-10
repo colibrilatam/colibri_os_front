@@ -10,14 +10,19 @@ import { ProjectContext } from "../layout";
 export default function IdentidadPage() {
 
   // contexto
-  const project = useContext(ProjectContext);
- 
-  const progressPct = (project.approvedPacs / project.totalPacs) * 100;
-  const icPct = (project.ic / project.icMax) * 100;
+  const data = useContext(ProjectContext);
+  const {project, currentState, reputationSnapshot, pacProgress} = data;
+
+  // Cantidad de PACs aprobados respeto al maximo de PACs por tramo (7) para calcular el progreso del tramo
+  //const progressPct = (currentState.pacsApprovedInCurrentTramo / 7) * 100;
+
+  // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
+  const PacProgress = Math.round((reputationSnapshot.icPublic % 1) * 100);
+  console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)
 
   return (
     <main className="min-h-screen glass-effect border-glass rounded-2xl">
-      <TourButton tourName="dashboard-tour" /> 
+      {/*<TourButton tourName="dashboard-tour" /> */}
       {/* Header */}
       <div className="text-center lg:p-4">
         <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 'var(--font-bold)', color: 'var(--text-primary)' }}>
@@ -42,7 +47,7 @@ export default function IdentidadPage() {
                     NFT Colibrí dinámico
                   </h2>
                   <span className="m-2 rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-turquoise)' }}>
-                  Estado visual {data.currentState.currentTramoCode}
+                  Estado visual {currentState.currentTramoCode}
                 </span>
                 
                 
@@ -63,29 +68,32 @@ export default function IdentidadPage() {
                     </div>
                     <div className="flex items-end gap-3">
                       <div style={{ fontSize: 'var(--text-4xl)', fontWeight: 'var(--font-semibold)', color: 'var(--text-primary)' }}>
-                        {project.ic.toFixed(2)}
+                        {reputationSnapshot.icPublic}
                       </div>
-                      <div style={{ fontSize: 'var(--text-lg)', color: 'var(--text-secondary)' }}>/ {project.icMax.toFixed(2)}</div>
+                      <div style={{ fontSize: 'var(--text-lg)', color: 'var(--text-secondary)' }}>/ {6.00}</div>
                     </div>
-                    <div className="mt-3" style={{ fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
-                      {project.icNarrative}
+                     <div className="mt-3" style={{ fontSize: 'var(--text-lg)', color: 'var(--text-primary)' }}>
+                      {reputationSnapshot.structuralReading}
                     </div>
+                    
+                    {/*
                     <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-800/60 bg-emerald-950/50 px-3 py-1.5" style={{ fontSize: 'var(--text-sm)', color: 'var(--color-emerald)' }}>
                       <span>▲</span>
-                      <span>{project.trendLabel}</span>
+                      <span>{reputationSnapshot.trendLabel}</span>
                     </div>
+                    */}
                   </div>
 
                   <div className="w-full md:max-w-xs">
                     <ProgressBar 
-                      progreso={icPct}
+                      progreso={PacProgress}
                       color="multicolor"
                       tamaño="md"
                       label="Lectura sobre escala completa"
                       mostrarPorcentaje={true}
                     />
                     <div className="mt-4 flex h-12 items-end gap-1">
-                      {[22, 28, 31, 31, 31, 40, 52].map((value, index) => (
+                      {[5, 18, 25, 34, 39, 40, 52].map((value, index) => (
                         <div
                           key={index}
                           className="flex-1 rounded-t-md border border-slate-600 bg-emerald-700"
@@ -112,7 +120,7 @@ export default function IdentidadPage() {
                           PAC actual
                         </div>
                         <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
-                          {project.currentPac}
+                          {currentState.currentPacCode}
                         </div>
                       </div>
                       <div className="glass-effect-dark border-glass rounded-2xl p-4">
@@ -120,7 +128,7 @@ export default function IdentidadPage() {
                           PACs aprobados
                         </div>
                         <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
-                          {project.approvedPacs} de {project.totalPacs}
+                          {currentState.pacsApprovedInCurrentTramo} de 7
                         </div>
                       </div>
                       <div className="glass-effect-dark border-glass rounded-2xl p-4">
@@ -128,7 +136,7 @@ export default function IdentidadPage() {
                           Microacciones acumuladas
                         </div>
                         <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
-                          {project.microActions} / 21
+                          {currentState.microactionsCompletedCount} / 21
                         </div>
                       </div>
                       <div className="glass-effect-dark border-glass rounded-2xl p-4">
@@ -136,7 +144,7 @@ export default function IdentidadPage() {
                           Evidencias aprobadas
                         </div>
                         <div style={{ fontSize: 'var(--text-lg)', fontWeight: 'var(--font-medium)', color: 'var(--text-primary)' }}>
-                          {project.evidences} / 7
+                          {currentState.validatedEvidenceCount} / 7
                         </div>
                       </div>
                     </div>
@@ -151,7 +159,7 @@ export default function IdentidadPage() {
                     </div>
                     
                     <ProgressBar 
-                      progreso={Math.round(progressPct)}
+                      progreso={PacProgress}
                       color="emerald"
                       tamaño="md"
                       mostrarPorcentaje={true}
@@ -163,7 +171,7 @@ export default function IdentidadPage() {
 
               
             </div>
-            <div id="contexto" className="glass-effect border-glass rounded-3xl p-6 xl:col-span-12">
+            {/*<div id="contexto" className="glass-effect border-glass rounded-3xl p-6 xl:col-span-12">
                 <div className="mb-3 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-secondary)' }}>
                   Contexto estructural del tramo
                 </div>
@@ -202,7 +210,7 @@ export default function IdentidadPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>*/}
           </section>
         </div>
       </div>
