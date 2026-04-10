@@ -20,7 +20,6 @@ export default function DataLayout({ children }) {
     );
     const router = useRouter();
 
-
 // obtencion del id por parametro 
   const pathname = usePathname(); // "/dashboard/1/senial"
 
