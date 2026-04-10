@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import RiegoPulso from '@/lib/mock/proyectos-R-Lap-Demo/RiegoPulso.json';
 import ProgressBar from '@/components/ProgressBar';
 import { useIsMobile } from '@/lib/hooks/useIsMobile';
-
+import { useContext } from "react";
+import { ProjectContext } from "../layout";
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
