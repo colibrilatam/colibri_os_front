@@ -5,6 +5,8 @@ import { createContext } from "react";
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import { useUserStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
 
 // contexto
 export const ProjectContext = createContext();
@@ -16,6 +18,7 @@ export default function DataLayout({ children }) {
     const setSidebarMobileOpen = useUserStore(
       (state) => state.setSidebarMobileOpen,
     );
+    const router = useRouter();
 
 
 // obtencion del id por parametro 
@@ -28,7 +31,9 @@ export default function DataLayout({ children }) {
 
   const project = getProjectById(id);
  
-  
+  if(!project) return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">Proyecto no encontrado
+    <Button onClick={() => router.back()} content="Volver"></Button>
+  </div>;
 
   return (
     <ProjectContext.Provider value={project}>

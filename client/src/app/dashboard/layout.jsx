@@ -8,18 +8,18 @@ import LoadingScreen from '@/components/LoadingScreen';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Verificar autenticación
     if (!isAuthenticated()) {
       router.push('/login');
     } else {
       setIsLoading(false);
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router]);*/
 
   if (isLoading) {
     return <LoadingScreen />;

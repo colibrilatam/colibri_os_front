@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/Badge";
+import { useRouter } from "next/navigation";
 
 function formatProjectDate(dateString) {
   const parsedDate = new Date(dateString);
-
   return parsedDate.toLocaleDateString("es-AR", {
     day: "numeric",
     month: "short",
@@ -10,30 +10,23 @@ function formatProjectDate(dateString) {
   });
 }
 
-export function ProjectCard({ project }) {
-  const projectTrancheLabel = project.currentTramo?.code || "Sin tramo";
-  const projectTrancheImage = project.currentTramo?.nftImageUrl || null;
+export function ProjectCard({ project, index }) {
+  const router = useRouter();
 
   return (
     <article className="group relative flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.07] hover:shadow-[0_16px_40px_rgba(6,182,212,0.08)]">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
-            {project.id.slice(0, 8).toUpperCase()}
+            {project.shortId}
           </div>
-
-          <div className="flex items-center gap-2">
-            {projectTrancheImage ? (
-              <img
-                src={projectTrancheImage}
-                alt={projectTrancheLabel}
-                className="h-8 w-8 rounded-md object-cover shrink-0"
-              />
-            ) : null}
-
-            <h3 className="truncate text-lg font-semibold leading-tight text-white">
-              {project.projectName || "Proyecto sin nombre"}
-            </h3>
+<div className="flex flex-row gap-4 items-center">
+  <img className="h-14 w-14 rounded-full"
+  src={`/${project.id}.png`}
+          alt="NFT Avatar"></img>
+          <h3 className="truncate text-lg font-semibold leading-tight text-white">
+            {project.name || "Proyecto sin nombre"}
+          </h3>
           </div>
 
           <div className="mt-1 text-sm text-slate-400">
@@ -43,32 +36,33 @@ export function ProjectCard({ project }) {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge value={projectTrancheLabel} variant="tranche" />
-        <Badge value={project.status} variant="status" />
+        <Badge value={project.currentTramo} variant="tranche" />
+        <Badge value={project.projectStatus} variant="status" />
       </div>
 
       <div className="mb-3 flex-1 text-sm leading-6 text-slate-300">
-        {project.shortDescription ||
-          project.tagline ||
-          "Sin descripción disponible"}
+        {project.description || "Sin descripción disponible"}
       </div>
 
       <div className="mb-5 text-xs text-slate-500">
         Responsable:{" "}
         <span className="text-slate-300">
-          {project.owner?.fullName || "Sin responsable"}
+          {project.ownerId || "Sin responsable"}
         </span>
       </div>
 
       <div className="mt-auto flex items-center justify-between border-t border-white/8 pt-4">
         <span className="text-[11px] text-slate-500">
           Actualizado{" "}
-          <time dateTime={project.updatedAt} className="text-slate-400">
-            {formatProjectDate(project.updatedAt)}
+          <time dateTime={project.lastUpdate} className="text-slate-400">
+            {formatProjectDate(project.lastUpdate)}
           </time>
         </span>
 
-        <button className="group/btn flex items-center gap-1 text-xs font-medium text-cyan-400 transition-all duration-150 hover:text-cyan-300 active:scale-95">
+        <button
+          onClick={() => router.push(`/dashboard/${project.id}/senial`)}
+          className="group/btn flex items-center gap-1 text-xs font-medium text-cyan-400 transition-all duration-150 hover:text-cyan-300 active:scale-95"
+        >
           Ver detalle
           <svg
             className="h-3 w-3 translate-x-0 transition-transform duration-150 group-hover/btn:translate-x-0.5"
