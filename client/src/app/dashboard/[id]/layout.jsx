@@ -19,7 +19,7 @@ export default function DataLayout({ children }) {
       (state) => state.setSidebarMobileOpen,
     );
     const router = useRouter();
-
+//a
 
 // obtencion del id por parametro 
   const pathname = usePathname(); // "/dashboard/1/senial"
