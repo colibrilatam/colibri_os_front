@@ -1,11 +1,22 @@
+"use client";
 import NftAvatar from "@/components/señal/NftAvatar";
 import ProgressBar from "@/components/ProgressBar";
 import { project } from "@/lib/mock-data";
 import TourButton from "@/components/tutoriales/TourButton";
+import { usePathname } from "next/navigation";
+import { getProjectById } from '@/lib/mock/proyectos ficticios/getProyectById';
+
+// contexto
+import { useContext } from "react";
+import { ProjectContext } from "../layout";
 
 export default function IdentidadPage() {
-  
 
+  // contexto
+  const project = useContext(ProjectContext);
+  console.log("Datos del proyecto desde el contexto:", project);
+ 
+  
   const progressPct = (project.approvedPacs / project.totalPacs) * 100;
   const icPct = (project.ic / project.icMax) * 100;
 
@@ -36,7 +47,7 @@ export default function IdentidadPage() {
                     NFT Colibrí dinámico
                   </h2>
                   <span className="m-2 rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1" style={{ fontSize: 'var(--text-xs)', color: 'var(--color-turquoise)' }}>
-                  Estado visual {project.nftState}
+                  Estado visual {data.currentState.currentTramoCode}
                 </span>
                 
                 

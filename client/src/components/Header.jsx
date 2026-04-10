@@ -1,11 +1,6 @@
 'use client';
-
-import { useState } from 'react';
-
-import { useRouter } from 'next/navigation';
-import Button from './Button';
 import NftAvatar from './señal/NftAvatar';
-import { project } from '@/lib/mock-data';
+
 export default function Header() {
   /*
   const { token, isGuest, logout } = useUserStore();
@@ -15,6 +10,7 @@ export default function Header() {
   
   const router = useRouter();
   */
+const data = {}
 
 
   return (
@@ -31,20 +27,20 @@ export default function Header() {
               <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
                 <NftAvatar size="sm" rounded={true} />
                 <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
-                  {project.name}
+                  {data.project.name}
                 </h1>
                
               </div>
 
               <div className="hidden mt-2 md:mt-3 lg:flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-300">
                  <span className="rounded-full border border-slate-700 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-slate-300">
-                  ID {project.id}
+                  ID {data.project.id}
                 </span>
                 <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
-                  {project.tramoCode} · {project.tramoName}
+                  {data.currentState.currentTramoCode} - {data.currentState.currentTramoName}
                 </span>
                 <span className="rounded-full border border-emerald-800/60 bg-emerald-950/60 px-2 sm:px-3 py-0.5 sm:py-1 text-emerald-300">
-                  {project.status}
+                  {data.currentState.trajectoryStatus}
                 </span>
               </div>
             </div>
@@ -57,10 +53,10 @@ export default function Header() {
                 </div>
                 <div className="mt-1 flex items-end gap-2">
                   <div className="text-lg md:text-2xl font-semibold text-slate-50">
-                    {project.ic.toFixed(2)}
+                    {data.reputationSnapshot.icPublic.toFixed(2)}
                   </div>
                   <div className="pb-0.5 text-xs md:text-sm text-slate-400">
-                    / {project.icMax.toFixed(2)}
+                    / 6.00
                   </div>
                 </div>
               </div>
@@ -69,7 +65,7 @@ export default function Header() {
                 <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
                   Última actualización
                 </div>
-                <div className="mt-1 text-sm md:text-base text-slate-200">{project.updatedAt}</div>
+                <div className="mt-1 text-sm md:text-base text-slate-200">{data.reputationSnapshot.calculatedAt.split('T')[0]}</div>
               </div>
             </div>
           </div>

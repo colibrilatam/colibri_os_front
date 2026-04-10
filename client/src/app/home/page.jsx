@@ -30,6 +30,7 @@ export default function HomePage() {
 
         const backendProjects = await response.json();
         setProjects(backendProjects);
+        console.log("Proyectos cargados:", backendProjects);
       } catch (error) {
         setProjectsError(
           error.message || "Ocurrió un error al cargar los proyectos"
@@ -48,7 +49,7 @@ export default function HomePage() {
     const activeProjects = projects.length;
 
     const tramosEnCurso = projects.filter(
-      (project) => project.currentTramoId !== null
+      (project) => project.currentTramo !== null
     ).length;
 
     const paisesActivos = new Set(
@@ -70,11 +71,35 @@ export default function HomePage() {
   }, [projects]);
 
   const allTranches = useMemo(() => {
-    return [
-      ...new Set(
-        projects.map((project) => project.currentTramoId || "Sin tramo")
-      ),
-    ];
+    const trancheMap = new Map();
+
+    projects.forEach((project) => {
+      if (project.currentTramo?.code && project.currentTramo?.name) {
+        trancheMap.set(project.currentTramo.code, {
+          value: project.currentTramo.code,
+          label: project.currentTramo.code,
+          sortOrder: project.currentTramo.sortOrder ?? 999,
+        });
+      }
+    });
+
+    const tranches = Array.from(trancheMap.values()).sort(
+      (a, b) => a.sortOrder - b.sortOrder
+    );
+
+    const hasProjectsWithoutTranche = projects.some(
+      (project) => !project.currentTramo
+    );
+
+    if (hasProjectsWithoutTranche) {
+      tranches.push({
+        value: "SIN_TRAMO",
+        label: "Sin tramo",
+        sortOrder: 9999,
+      });
+    }
+
+    return tranches;
   }, [projects]);
 
   const allStatuses = useMemo(() => {
@@ -85,7 +110,7 @@ export default function HomePage() {
     const normalizedSearch = search.toLowerCase().trim();
 
     return projects.filter((project) => {
-      const projectTranche = project.currentTramoId || "Sin tramo";
+      const projectTranche = project.currentTramo?.code || "SIN_TRAMO";
 
       const matchesSearch =
         !normalizedSearch ||

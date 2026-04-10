@@ -11,9 +11,8 @@ function formatProjectDate(dateString) {
 }
 
 export function ProjectCard({ project }) {
-  const projectTrancheLabel = project.currentTramoId
-    ? "Tramo activo"
-    : "Sin tramo";
+  const projectTrancheLabel = project.currentTramo?.code || "Sin tramo";
+  const projectTrancheImage = project.currentTramo?.nftImageUrl || null;
 
   return (
     <article className="group relative flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.07] hover:shadow-[0_16px_40px_rgba(6,182,212,0.08)]">
@@ -23,9 +22,19 @@ export function ProjectCard({ project }) {
             {project.id.slice(0, 8).toUpperCase()}
           </div>
 
-          <h3 className="truncate text-lg font-semibold leading-tight text-white">
-            {project.projectName || "Proyecto sin nombre"}
-          </h3>
+          <div className="flex items-center gap-2">
+            {projectTrancheImage ? (
+              <img
+                src={projectTrancheImage}
+                alt={projectTrancheLabel}
+                className="h-8 w-8 rounded-md object-cover shrink-0"
+              />
+            ) : null}
+
+            <h3 className="truncate text-lg font-semibold leading-tight text-white">
+              {project.projectName || "Proyecto sin nombre"}
+            </h3>
+          </div>
 
           <div className="mt-1 text-sm text-slate-400">
             {[project.industry, project.country].filter(Boolean).join(" · ")}

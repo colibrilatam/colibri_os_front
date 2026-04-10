@@ -1,24 +1,25 @@
 const trancheStyleMap = {
-  "Tramo activo": "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
+  T1: "bg-blue-500/20 text-blue-300 border-blue-400/60",
+  T2: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+  T3: "bg-teal-500/15 text-teal-300 border-teal-500/30",
+  T4: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30",
   "Sin tramo": "bg-slate-500/15 text-slate-300 border-slate-500/30",
 };
 
 const statusStyleMap = {
   active: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  solid: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-  risk: "bg-red-500/15 text-red-300 border-red-500/30",
-  paused: "bg-slate-500/15 text-slate-400 border-slate-500/30",
-  completed: "bg-violet-500/15 text-violet-300 border-violet-500/30",
+  inactive: "bg-slate-500/15 text-slate-300 border-slate-500/30",
+  closed: "bg-red-500/15 text-red-300 border-red-500/30",
+  suspended: "bg-violet-500/15 text-violet-300 border-violet-500/30",
 };
 
 function getBadgeLabel(value, variant) {
   if (variant === "status") {
     const statusLabelMap = {
       active: "Activo",
-      solid: "Sólido",
-      risk: "En riesgo",
-      paused: "Pausado",
-      completed: "Completado",
+      inactive: "Inactivo",
+      closed: "Cerrado",
+      suspended: "Suspendido",
     };
 
     return statusLabelMap[value] || value || "Sin estado";

@@ -16,12 +16,17 @@ import {
 } from 'lucide-react';
 import Button from './Button';
 
+
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const pathname = usePathname();
   const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
   const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
+
+  // obtencion del id por parametro 
+  const  id  = usePathname().split("/").pop(); // Extrae el ID de la URL
+  
 
   const isActive = (href) => {
     if (href === '/') {
@@ -31,12 +36,12 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   };
 
   const links = [
-    { href: '/', label: 'Inicio', icon: Home },
-    { href: '/senial', label: 'Señal', icon: User },
-    { href: '/reputacion', label: 'Reputacion', icon: Layers },
-    { href: '/tramo', label: 'Tramo', icon: Map },
-    { href: '/trayectoria', label: 'Trayectoria', icon: AlertCircle },
-    { href: '/evidencia', label: 'Evidencia', icon: Link2 },
+    { href: `/home`, label: 'Inicio', icon: Home },
+    { href: `/dashboard/${id}/senial`, label: 'Señal', icon: User },
+    { href: `/dashboard/${id}/reputacion`, label: 'Reputacion', icon: Layers },
+    { href: `/dashboard/${id}/tramo`, label: 'Tramo', icon: Map },
+    { href: `/dashboard/${id}/trayectoria`, label: 'Trayectoria', icon: AlertCircle },
+    { href: `/dashboard/${id}/evidencia`, label: 'Evidencia', icon: Link2 },
     /*{ href: '/proyectos', label: 'Proyectos', icon: Folder },*/
   ];
 
