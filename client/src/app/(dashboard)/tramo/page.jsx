@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { tramoData } from '@/lib/mock/tramoData';
+import RiegoPulso from '@/lib/mock/proyectos-R-Lap-Demo/RiegoPulso.json';
 import ProgressBar from '@/components/ProgressBar';
 import { useIsMobile } from '@/lib/hooks/useIsMobile';
 
@@ -12,9 +12,75 @@ const fadeUp = {
 };
 
 export default function TramoDashboard() {
-  const pacs = tramoData.pacs;
   const isMobile = useIsMobile();
-  console.log(isMobile);
+
+  /* =========================
+     🔗 DATA MAPPING REAL
+  ========================= */
+
+  const tramo = RiegoPulso.state.currentTramo;
+  const pacs = RiegoPulso.tramoProgress.pacs;
+  const currentPacCode = RiegoPulso.state.currentPac.code;
+
+  const totalPacs = pacs.length;
+  const closedPacs = pacs.filter((p) => p.status === 'approved').length;
+  const percentage = Math.round((closedPacs / totalPacs) * 100);
+
+  const currentPac = pacs.find((p) => p.code === currentPacCode);
+
+  const totalMicro = pacs.reduce(
+    (acc, p) => acc + p.progress.microactions.required,
+    0
+  );
+
+  const completedMicro = RiegoPulso.state.metrics.microactionsCompleted;
+
+  const totalEvidence = pacs.reduce(
+    (acc, p) => acc + p.progress.evidence.required,
+    0
+  );
+
+  const validatedEvidence = RiegoPulso.state.metrics.validatedEvidence;
+
+  const categories = pacs.map((p) => {
+    let status = 'next';
+
+    if (p.status === 'approved') status = 'done';
+    else if (p.code === currentPacCode) status = 'current';
+
+    return {
+      code: p.category.code,
+      label: p.category.name,
+      status,
+    };
+  });
+
+  const signals = [
+    {
+      type: 'success',
+      text: `${closedPacs} PACs cerrados con evidencia validada`,
+    },
+    {
+      type: 'warning',
+      text: `PAC actual ${currentPacCode} aún requiere evidencia`,
+    },
+  ];
+
+  const blockers = pacs
+    .filter((p) => p.status === 'in_progress' && !p.progress.closure)
+    .map(
+      (p) =>
+        `Bloqueo en ${p.code}: falta evidencia o microacciones completas`
+    );
+
+  const mapStatus = {
+    approved: 'closed',
+    in_progress: 'current',
+    pending: 'pending',
+  };
+
+  /* ========================= */
+
   return (
     <div className="min-h-screen max-w-[1400px] mx-auto overflow-x-hidden">
       {/* HEADER */}
@@ -29,22 +95,24 @@ export default function TramoDashboard() {
             <p className="text-overline">Cabecera analítica del tramo</p>
 
             <h1 className="text-h1">
-              {tramoData.id} · {tramoData.name}
+              {tramo.code} · {tramo.name}
             </h1>
 
-            <p className="text-body-lg mt-1">{tramoData.strategicQuestion}</p>
+            <p className="text-body-lg mt-1">
+              {RiegoPulso.project.tagline}
+            </p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
             <InfoBox
               label="Incertidumbre dominante"
-              value={tramoData.header.uncertainty}
+              value="Operativa en campo"
             />
             <InfoBox
               label="Riesgo principal"
-              value={tramoData.header.mainRisk}
+              value="Continuidad de uso"
             />
-            <InfoBox label="Ventana" value={tramoData.header.window} />
+            <InfoBox label="Ventana" value="Tramo en ejecución" />
           </div>
         </div>
       </motion.div>
@@ -54,11 +122,11 @@ export default function TramoDashboard() {
         <AnimatedCard title="Avance por PAC">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 gap-3">
             <div>
-              <h2 className="text-h3">{tramoData.progress.currentPac.code}</h2>
+              <h2 className="text-h3">{currentPac.code}</h2>
 
               <p className="text-body--muted">
-                PAC actual · {tramoData.progress.currentPac.category} ·{' '}
-                {tramoData.progress.currentPac.name}
+                PAC actual · {currentPac.category.name} ·{' '}
+                {currentPac.title}
               </p>
             </div>
 
@@ -66,14 +134,13 @@ export default function TramoDashboard() {
               <p className="text-micro-label">PACs cerrados</p>
 
               <p className="text-value-lg">
-                {tramoData.progress.closedPacs} de{' '}
-                {tramoData.progress.totalPacs}
+                {closedPacs} de {totalPacs}
               </p>
             </Block>
           </div>
 
           <ProgressBar
-            progreso={tramoData.progress.percentage}
+            progreso={percentage}
             color="multicolor"
             tamaño="md"
             label="Progreso estructural del tramo"
@@ -103,21 +170,23 @@ export default function TramoDashboard() {
                 pending: '○',
               };
 
+              const uiStatus = mapStatus[p.status];
+
               return (
                 <motion.div
                   key={p.code}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className={`px-3 py-2 rounded-xl border flex flex-col items-center ${statusStyles[p.status]}`}
+                  className={`px-3 py-2 rounded-xl border flex flex-col items-center ${statusStyles[uiStatus]}`}
                 >
                   <div className="flex items-center gap-1 text-sm font-medium">
                     {p.code}
-                    <span>{statusIcon[p.status]}</span>
+                    <span>{statusIcon[uiStatus]}</span>
                   </div>
 
                   <span className="text-xs opacity-80">
-                    {statusLabel[p.status]}
+                    {statusLabel[uiStatus]}
                   </span>
                 </motion.div>
               );
@@ -130,27 +199,29 @@ export default function TramoDashboard() {
           <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
             <MetricBox
               label="Microacciones"
-              value={tramoData.density.microactions + ' / 21'}
+              value={`${completedMicro} / ${totalMicro}`}
               sub="Actividad visible"
               isMobile={isMobile}
             />
             <MetricBox
               label="Evidencias"
-              value={tramoData.density.evidences + ' / 7'}
+              value={`${validatedEvidence} / ${totalEvidence}`}
               sub="Soporte probatorio"
               isMobile={isMobile}
             />
           </div>
 
           <Block>
-            <p className="text-body">{tramoData.density.message}</p>
+            <p className="text-body">
+              {RiegoPulso.state.nextMilestone}
+            </p>
           </Block>
         </AnimatedCard>
 
         {/* CATEGORÍAS */}
         <AnimatedCard title="Categorías activadas">
           <div className="flex flex-wrap gap-2 sm:gap-3">
-            {tramoData.categories.map((c) => {
+            {categories.map((c) => {
               const isDone = c.status === 'done';
               const isCurrent = c.status === 'current';
               const isNext = c.status === 'next';
@@ -163,8 +234,8 @@ export default function TramoDashboard() {
                       isDone
                         ? 'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald'
                         : isCurrent
-                          ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
-                          : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
+                        ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
+                        : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
                     }
                   `}
                 >
@@ -184,7 +255,7 @@ export default function TramoDashboard() {
         {/* SEÑALES */}
         <AnimatedCard title="Señales de avance">
           <div className="space-y-3">
-            {tramoData.signals.map((s, i) => (
+            {signals.map((s, i) => (
               <Signal key={i} ok={s.type === 'success'}>
                 {s.text}
               </Signal>
@@ -194,7 +265,7 @@ export default function TramoDashboard() {
 
         {/* BLOQUEOS */}
         <AnimatedCard title="Bloqueos">
-          {tramoData.blockers.map((b, i) => (
+          {blockers.map((b, i) => (
             <Block key={i}>
               <p className="text-body">{b}</p>
             </Block>
@@ -226,7 +297,7 @@ const InfoBox = ({ label, value }) => (
   </div>
 );
 
-const MetricBox = ({ label, value, sub, isMobile }) => (
+const MetricBox = ({ label, value, sub }) => (
   <div className="glass-effect border-glass p-3 sm:p-4 rounded-xl text-center">
     <p className="text-micro-label">{label}</p>
     <p className="text-value-lg">{value}</p>

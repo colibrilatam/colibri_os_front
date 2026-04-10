@@ -1,0 +1,203 @@
+{
+    "projectData": {
+      "project": {
+        "id": "proj_flujoclave_co_001",
+        "name": "FlujoClave",
+        "tagline": "Ordena conciliación, cobros y visibilidad de caja en operación real.",
+        "shortDescription": "Proyecto fintech en etapa de prototipo vivo que ayuda a comercios colombianos a consolidar cobros, conciliaciones y alertas de caja.",
+        "industry": "Fintech",
+        "country": "Colombia",
+        "ownerUserId": "usr_santiago_mejia_001",
+        "currentTramoId": "tramo_t3",
+        "createdAt": "2025-11-25T08:50:00-05:00",
+        "updatedAt": "2026-04-04T17:55:00-05:00"
+      },
+  
+      "projectState": {
+        "id": "projstate_flujoclave_co_001",
+        "projectId": "proj_flujoclave_co_001",
+        "currentTramoCode": "T3",
+        "currentTramoName": "Prototipo Vivo",
+        "trajectoryStatus": "in_progress",
+        "currentPacCode": "T3-C6",
+        "pacsApprovedInCurrentTramo": 5,
+        "microactionsCompletedCount": 17,
+        "validatedEvidenceCount": 5,
+        "currentPacCompletedMicroactions": 2,
+        "nextMilestone": "Cerrar T3-C6 con evidencia suficiente sobre restricciones exógenas."
+      },
+  
+      "pacProgress": [
+        {
+          "pacCode": "T3-C1",
+          "categoryName": "Equipo Emprendedor",
+          "title": "Coordinación del equipo",
+          "status": "approved",
+          "completedMicroactions": 3,
+          "validatedEvidence": 1
+        },
+        {
+          "pacCode": "T3-C2",
+          "categoryName": "Problema",
+          "title": "Confirmación de fricciones",
+          "status": "approved",
+          "completedMicroactions": 3,
+          "validatedEvidence": 1
+        },
+        {
+          "pacCode": "T3-C3",
+          "categoryName": "Modelo",
+          "title": "Validación del prototipo",
+          "status": "approved",
+          "completedMicroactions": 3,
+          "validatedEvidence": 1
+        },
+        {
+          "pacCode": "T3-C4",
+          "categoryName": "Financiamiento",
+          "title": "Costo operativo",
+          "status": "approved",
+          "completedMicroactions": 3,
+          "validatedEvidence": 1
+        },
+        {
+          "pacCode": "T3-C5",
+          "categoryName": "Estrategia",
+          "title": "Entrada comercial",
+          "status": "approved",
+          "completedMicroactions": 3,
+          "validatedEvidence": 1
+        },
+        {
+          "pacCode": "T3-C6",
+          "categoryName": "Factores Exógenos",
+          "title": "Restricciones operativas",
+          "status": "in_progress",
+          "completedMicroactions": 2,
+          "validatedEvidence": 0
+        }
+      ],
+  
+      "microactions": [
+        {
+          "id": "mai_t3_c1_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C1",
+          "title": "Definir responsables del piloto",
+          "status": "completed"
+        },
+        {
+          "id": "mai_t3_c2_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C2",
+          "title": "Entrevistas con comercios",
+          "status": "completed"
+        },
+        {
+          "id": "mai_t3_c3_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C3",
+          "title": "Configurar prototipo",
+          "status": "completed"
+        },
+        {
+          "id": "mai_t3_c4_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C4",
+          "title": "Estimar costos",
+          "status": "completed"
+        },
+        {
+          "id": "mai_t3_c5_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C5",
+          "title": "Comparar canales",
+          "status": "completed"
+        },
+        {
+          "id": "mai_t3_c6_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C6",
+          "title": "Levantar restricciones",
+          "status": "completed"
+        }
+      ],
+  
+      "evidence": [
+        {
+          "id": "evi_t3_c1_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C1",
+          "title": "Protocolo operativo",
+          "status": "approved"
+        },
+        {
+          "id": "evi_t3_c2_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C2",
+          "title": "Síntesis problema",
+          "status": "approved"
+        },
+        {
+          "id": "evi_t3_c3_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C3",
+          "title": "Resultado prototipo",
+          "status": "approved"
+        },
+        {
+          "id": "evi_t3_c4_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C4",
+          "title": "Costos piloto",
+          "status": "approved"
+        },
+        {
+          "id": "evi_t3_c5_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C5",
+          "title": "Estrategia entrada",
+          "status": "approved"
+        },
+        {
+          "id": "evi_t3_c6_01_proj_flujoclave_co_001",
+          "pacCode": "T3-C6",
+          "title": "Restricciones exógenas",
+          "status": "submitted"
+        }
+      ],
+  
+      "evaluations": [
+        {
+          "id": "eval_evi_t3_c1_01_proj_flujoclave_co_001",
+          "evidenceId": "evi_t3_c1_01_proj_flujoclave_co_001",
+          "decision": "approved"
+        },
+        {
+          "id": "eval_evi_t3_c2_01_proj_flujoclave_co_001",
+          "evidenceId": "evi_t3_c2_01_proj_flujoclave_co_001",
+          "decision": "approved"
+        },
+        {
+          "id": "eval_evi_t3_c3_01_proj_flujoclave_co_001",
+          "evidenceId": "evi_t3_c3_01_proj_flujoclave_co_001",
+          "decision": "approved"
+        },
+        {
+          "id": "eval_evi_t3_c4_01_proj_flujoclave_co_001",
+          "evidenceId": "evi_t3_c4_01_proj_flujoclave_co_001",
+          "decision": "approved"
+        },
+        {
+          "id": "eval_evi_t3_c5_01_proj_flujoclave_co_001",
+          "evidenceId": "evi_t3_c5_01_proj_flujoclave_co_001",
+          "decision": "approved"
+        },
+        {
+          "id": "eval_evi_t3_c6_01_proj_flujoclave_co_001",
+          "evidenceId": "evi_t3_c6_01_proj_flujoclave_co_001",
+          "decision": "needs_changes"
+        }
+      ],
+  
+      "reputation": {
+        "icPublic": 3.31,
+        "icRaw": 3.36,
+        "actionScore": 70,
+        "evidenceScore": 65,
+        "consistencyScore": 68,
+        "collaborationScore": 55,
+        "sustainabilityScore": 51,
+        "structuralReading": "T3 en tránsito a T4"
+      }
+    }
+  }

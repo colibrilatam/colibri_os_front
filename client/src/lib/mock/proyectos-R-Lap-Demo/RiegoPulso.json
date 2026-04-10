@@ -1,0 +1,148 @@
+{
+    "project": {
+      "id": "proj_riegopulso_bo_001",
+      "name": "RiegoPulso",
+      "tagline": "Hace visible el pulso hídrico y operativo de los cultivos en campo.",
+      "description": "Proyecto agrotech en tracción temprana que ayuda a productores y asociaciones bolivianas a registrar riego, alertas de campo y ejecución operativa para mejorar continuidad y decisiones de manejo.",
+      "industry": "AgroTech",
+      "country": "Bolivia",
+      "ownerUserId": "usr_mariela_quispe_001"
+    },
+  
+    "state": {
+      "currentTramo": {
+        "id": "tramo_t4",
+        "code": "T4",
+        "name": "Tracción Temprana",
+        "status": "in_progress"
+      },
+      "currentPac": {
+        "id": "pac_t4_c6_proj_riegopulso_bo_001",
+        "code": "T4-C6"
+      },
+      "metrics": {
+        "pacsApproved": 5,
+        "microactionsCompleted": 17,
+        "validatedEvidence": 5
+      },
+      "nextMilestone": "Cerrar T4-C6 con evidencia suficiente sobre restricciones regulatorias, climáticas y logísticas que afectan despliegue y continuidad comercial."
+    },
+  
+    "reputation": {
+      "icPublic": 4.27,
+      "icRaw": 4.31,
+      "scores": {
+        "action": 76,
+        "evidence": 71,
+        "consistency": 73,
+        "collaboration": 61,
+        "sustainability": 58
+      },
+      "reading": "T4 en tránsito a T5",
+      "calculatedAt": "2026-04-05T17:50:00-04:00"
+    },
+  
+    "tramoProgress": {
+      "tramoCode": "T4",
+      "pacs": [
+        {
+          "id": "pac_t4_c1_proj_riegopulso_bo_001",
+          "code": "T4-C1",
+          "title": "Coordinación operativa del equipo para despliegue en campo y soporte temprano",
+          "category": {
+            "id": "cat_c1",
+            "code": "C1",
+            "name": "Equipo Emprendedor"
+          },
+          "status": "approved",
+          "progress": {
+            "microactions": {
+              "completed": 3,
+              "required": 3
+            },
+            "evidence": {
+              "validated": 1,
+              "required": 1
+            },
+            "closure": true
+          },
+          "microactions": [
+            {
+              "id": "mai_t4_c1_01_proj_riegopulso_bo_001",
+              "title": "Definir responsables de instalación...",
+              "status": "completed"
+            },
+            {
+              "id": "mai_t4_c1_02_proj_riegopulso_bo_001",
+              "title": "Simular ciclo semanal...",
+              "status": "completed"
+            },
+            {
+              "id": "mai_t4_c1_03_proj_riegopulso_bo_001",
+              "title": "Formalizar protocolo...",
+              "status": "completed"
+            }
+          ],
+          "evidence": [
+            {
+              "id": "evi_t4_c1_01_proj_riegopulso_bo_001",
+              "title": "Protocolo operativo del equipo...",
+              "status": "approved",
+              "summary": "Documento que organiza responsabilidades...",
+              "evaluation": {
+                "decision": "approved",
+                "comment": "La evidencia demuestra coordinación operativa suficiente..."
+              }
+            }
+          ]
+        },
+  
+        {
+          "id": "pac_t4_c6_proj_riegopulso_bo_001",
+          "code": "T4-C6",
+          "title": "Restricciones exógenas de clima, conectividad y logística rural",
+          "category": {
+            "id": "cat_c6",
+            "code": "C6",
+            "name": "Factores Exógenos"
+          },
+          "status": "in_progress",
+          "progress": {
+            "microactions": {
+              "completed": 2,
+              "required": 3
+            },
+            "evidence": {
+              "validated": 0,
+              "required": 1
+            },
+            "closure": false
+          },
+          "microactions": [
+            {
+              "id": "mai_t4_c6_01_proj_riegopulso_bo_001",
+              "title": "Levantar restricciones de conectividad...",
+              "status": "completed"
+            },
+            {
+              "id": "mai_t4_c6_02_proj_riegopulso_bo_001",
+              "title": "Documentar dependencias externas...",
+              "status": "completed"
+            }
+          ],
+          "evidence": [
+            {
+              "id": "evi_t4_c6_01_proj_riegopulso_bo_001",
+              "title": "Mapa preliminar de restricciones...",
+              "status": "submitted",
+              "summary": "Primer consolidado de restricciones externas...",
+              "evaluation": {
+                "decision": "needs_changes",
+                "comment": "Requiere mayor contraste entre zonas piloto..."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
