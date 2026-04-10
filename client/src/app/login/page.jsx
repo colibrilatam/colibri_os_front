@@ -140,7 +140,7 @@ export default function LoginRegisterPage() {
       const result = await handleLogin(formData);
       if(result.success){
         alert('¡Has iniciado sesión correctamente! Bienvenido a Colibri OS');
-        router.push('/'); // Redirige al dashboard u otra página protegida
+        router.push('/home'); // Redirige al dashboard u otra página protegida
       } else {
         alert(result.error) // o mostrarlo en un estado de error en el componente
       }
@@ -177,7 +177,7 @@ export default function LoginRegisterPage() {
   // Handle Popup Close and redirect to dashboard
   const handlePopupClose = () => {
     setIsPopupOpen(false);
-    router.push('/'); // Redirige al dashboard después de cerrar el popup
+    router.push('/home'); // Redirige al dashboard después de cerrar el popup
   };
 
   // Switch between views

@@ -1,36 +1,43 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client"
+import { getProjectById } from "@/lib/mock/proyectos ficticios/getProyectById";
+import { usePathname } from "next/navigation";
+import { createContext } from "react";
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import { useUserStore } from '@/lib/store';
-import LoadingScreen from '@/components/LoadingScreen';
+import { useUserStore } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import Button from "@/components/Button";
 
-export default function DashboardLayout({ children }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
-  const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
-  const setSidebarMobileOpen = useUserStore(
-    (state) => state.setSidebarMobileOpen,
-  );
+// contexto
+export const ProjectContext = createContext();
 
-  useEffect(() => {
-    // Verificar autenticación
-    if (!isAuthenticated()) {
-      router.push('/login');
-    } else {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated, router]);
+export default function DataLayout({ children }) {
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  }
+  // estado del sidebar
+    const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
+    const setSidebarMobileOpen = useUserStore(
+      (state) => state.setSidebarMobileOpen,
+    );
+    const router = useRouter();
+
+
+// obtencion del id por parametro 
+  const pathname = usePathname(); // "/dashboard/1/senial"
+
+  // 1. Dividimos por "/" -> ["", "dashboard", "1", "senial"]
+  // 2. El "1" está en la posición 2 del array
+  const segments = pathname.split('/');
+  const id = segments[2];
+
+  const project = getProjectById(id);
+ 
+  if(!project) return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">Proyecto no encontrado
+    <Button onClick={() => router.back()} content="Volver"></Button>
+  </div>;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <ProjectContext.Provider value={project}>
+          <div className="min-h-screen flex flex-col">
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarMobileOpen}
@@ -68,5 +75,6 @@ export default function DashboardLayout({ children }) {
         </main>
       </div>
     </div>
+    </ProjectContext.Provider>
   );
 }
