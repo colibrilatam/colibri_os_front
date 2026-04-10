@@ -1,74 +1,62 @@
 'use client';
+// contexto
+import { useContext } from "react";
+import { ProjectContext } from "../layout";
 
 export default function ReputacionPage() {
-  const project = {
-    name: "Aurora Labs",
-    id: "COL-AR-00231",
-    nftTramo: "T2",
-    ic: 2.43,
-    icMax: 6.0,
-    icNarrative: "T2 en tránsito a T3",
-    variationLabel: "+0.18 en los últimos 30 días",
-    variationValue: 0.18,
-    snapshotDate: "2026-04-03",
-    algorithmVersion: "v1.3",
-    dimensions: [
-      { key: "action", label: "Acción", raw: 3.8, weight: 0.22, weighted: 0.84 },
-      { key: "evidence", label: "Evidencia", raw: 4.1, weight: 0.26, weighted: 1.07 },
-      { key: "consistency", label: "Constancia", raw: 2.9, weight: 0.2, weighted: 0.58 },
-      { key: "collaboration", label: "Colaboración", raw: 2.1, weight: 0.16, weighted: 0.34 },
-      { key: "sustainability", label: "Sostenibilidad", raw: 2.5, weight: 0.16, weighted: 0.4 },
-    ],
-    events: [
-      {
-        date: "2026-04-02",
-        title: "Evidencia validada",
-        impact: "Impacta Evidencia",
-        description: "Se aprobó evidencia asociada al PAC T2-C6.",
-      },
-      {
-        date: "2026-03-29",
-        title: "Constancia reciente",
-        impact: "Impacta Constancia",
-        description: "Se sostuvieron microacciones verificables en 3 cortes seguidos.",
-      },
-      {
-        date: "2026-03-25",
-        title: "Colaboración verificable",
-        impact: "Impacta Colaboración",
-        description: "Se registró interacción validada con agente externo relevante.",
-      },
-    ],
-  };
 
-  const icPct = (project.ic / project.icMax) * 100;
-  const variationIsPositive = project.variationValue >= 0;
+  // contexto
+  const data = useContext(ProjectContext);
+  const { project, reputationSnapshot, pacProgress } = data;
 
-  const leader = project.dimensions.reduce((max, item) =>
-    item.weighted > max.weighted ? item : max,
-  );
-  const weakest = project.dimensions.reduce((min, item) =>
-    item.weighted < min.weighted ? item : min,
-  );
-  const recentImprovement = project.dimensions.find((item) => item.key === "consistency") ?? leader;
-  const mainLag = project.dimensions.find((item) => item.key === "sustainability") ?? weakest;
+  // Construir array de dimensiones a partir de los scores del reputationSnapshot
+  const dimensions = [
+    { key: "action",        label: "Acción",          raw: reputationSnapshot.actionScore,        weight: 0.25 },
+    { key: "evidence",      label: "Evidencia",        raw: reputationSnapshot.evidenceScore,      weight: 0.25 },
+    { key: "consistency",   label: "Consistencia",     raw: reputationSnapshot.consistencyScore,   weight: 0.20 },
+    { key: "collaboration", label: "Colaboración",     raw: reputationSnapshot.collaborationScore, weight: 0.15 },
+    { key: "sustainability",label: "Sostenibilidad",   raw: reputationSnapshot.sustainabilityScore,weight: 0.15 },
+  ].map((d) => ({ ...d, weighted: parseFloat(((d.raw / 100) * d.weight * 10).toFixed(2)) }));
 
-  const strongestTwo = [...project.dimensions]
+  // Construir "eventos reputacionales" a partir de los PACs con actividad
+  const events = pacProgress
+    .filter((pac) => pac.status === "approved" || pac.status === "in_progress")
+    .map((pac) => ({
+      date: pac.closedAt
+        ? new Date(pac.closedAt).toLocaleDateString("es-VE", { day: "2-digit", month: "short", year: "numeric" })
+        : new Date(pac.updatedAt).toLocaleDateString("es-VE", { day: "2-digit", month: "short", year: "numeric" }),
+      title: pac.title,
+      impact: pac.status === "approved" ? "PAC aprobado" : "En progreso",
+      description: `${pac.categoryName} · ${pac.completedMicroactions}/${pac.requiredMicroactions} microacciones completadas`,
+    }));
+
+  const icPct = (reputationSnapshot.icPublic / 10) * 100;
+  const variationIsPositive = true; // sin dato histórico previo en el JSON, asumimos positivo
+
+  const leader = dimensions.reduce((max, item) => item.weighted > max.weighted ? item : max);
+  const weakest = dimensions.reduce((min, item) => item.weighted < min.weighted ? item : min);
+  const recentImprovement = dimensions.find((item) => item.key === "consistency") ?? leader;
+  const mainLag = dimensions.find((item) => item.key === "sustainability") ?? weakest;
+
+  const strongestTwo = [...dimensions]
     .sort((a, b) => b.weighted - a.weighted)
     .slice(0, 2)
     .map((item) => item.label)
     .join(", ");
 
-  const weakestTwo = [...project.dimensions]
+  const weakestTwo = [...dimensions]
     .sort((a, b) => a.weighted - b.weighted)
     .slice(0, 2)
     .map((item) => item.label)
     .join(", ");
 
-  const radarValues = project.dimensions.map((item) => ({
-    label: item.label,
-    value: item.raw,
-  }));
+  const radarValues = [
+    reputationSnapshot.actionScore,
+    reputationSnapshot.evidenceScore,
+    reputationSnapshot.consistencyScore,
+    reputationSnapshot.collaborationScore,
+    reputationSnapshot.sustainabilityScore,
+  ];
 
   return (
     <div className="min-h-screen text-slate-100">
@@ -92,7 +80,7 @@ export default function ReputacionPage() {
 
             <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass p-6">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(34,211,238,0.15),transparent_50%)]" />
-              <RadarChart values={radarValues} max={5} />
+              <RadarChart values={radarValues} max={100} />
             </div>
 
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
@@ -144,7 +132,6 @@ export default function ReputacionPage() {
           </div>
 
           <div className="space-y-6 xl:col-span-7">
-            
 
             <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
               <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -160,14 +147,14 @@ export default function ReputacionPage() {
               </div>
 
               <div className="space-y-4">
-                {project.dimensions.map((dimension) => (
+                {dimensions.map((dimension) => (
                   <DimensionRow
                     key={dimension.key}
                     label={dimension.label}
                     raw={dimension.raw}
                     weight={dimension.weight}
                     weighted={dimension.weighted}
-                    max={5}
+                    max={100}
                   />
                 ))}
               </div>
@@ -179,7 +166,7 @@ export default function ReputacionPage() {
                   Eventos recientes que alteran reputación
                 </div>
                 <div className="space-y-4">
-                  {project.events.map((event) => (
+                  {events.map((event) => (
                     <EventItem
                       key={`${event.date}-${event.title}`}
                       date={event.date}
@@ -197,10 +184,15 @@ export default function ReputacionPage() {
                 Nota metodológica
               </div>
               <div className="text-lg font-medium text-slate-100">
-                Algoritmo IC vigente: {project.algorithmVersion}
+                Algoritmo IC vigente: {reputationSnapshot.algorithmVersionId}
               </div>
               <div className="mt-2 text-sm text-slate-400">
-                Ponderación reputacional activa para snapshot {project.snapshotDate}.
+                Ponderación reputacional activa para snapshot{" "}
+                {new Date(reputationSnapshot.calculatedAt).toLocaleDateString("es-VE", {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                })}.
               </div>
             </div>
           </div>
@@ -210,7 +202,7 @@ export default function ReputacionPage() {
   );
 }
 
-function DimensionRow({ label, raw, weight, weighted, max = 5 }) {
+function DimensionRow({ label, raw, weight, weighted, max = 100 }) {
   const pct = (raw / max) * 100;
 
   return (
@@ -263,25 +255,22 @@ function EventItem({ date, title, impact, description }) {
         </div>
         <div className="shrink-0 text-left md:text-right">
           <div className="text-sm text-slate-300">{date}</div>
-          <div className="mt-1 text-xs uppercase tracking-[0.18em] text-cyan-300">{impact}</div>
+          <div className={`mt-1 text-xs uppercase tracking-[0.18em]   ${impact === "PAC aprobado" ? "text-green-300" : "text-cyan-300"}`}>{impact}</div>
         </div>
       </div>
     </div>
   );
 }
 
-function RadarChart({ values, max = 5 }) {
+function RadarChart({ values, max = 100 }) {
   const size = 320;
   const center = size / 2;
   const radius = size * 0.34;
   const labelRadius = radius + 32;
   const angleStep = (Math.PI * 2) / values.length;
-  const levels = 4;
+  const levels = 10;
 
-  // Get initials for labels
-  const getInitials = (label) => {
-    return label.split(' ').map(word => word[0]).join('').toUpperCase();
-  };
+  const getInitials = ["A", "E", "CON", "COL", "S"];
 
   const levelPolygons = Array.from({ length: levels }, (_, index) => {
     const levelRadius = ((index + 1) / levels) * radius;
@@ -296,9 +285,9 @@ function RadarChart({ values, max = 5 }) {
   });
 
   const dataPolygon = values
-    .map((item, index) => {
+    .map((value, index) => {
       const angle = -Math.PI / 2 + index * angleStep;
-      const pointRadius = (item.value / max) * radius;
+      const pointRadius = (value / max) * radius;
       const x = center + Math.cos(angle) * pointRadius;
       const y = center + Math.sin(angle) * pointRadius;
       return `${x},${y}`;
@@ -324,10 +313,10 @@ function RadarChart({ values, max = 5 }) {
           const y = center + Math.sin(angle) * radius;
           const labelX = center + Math.cos(angle) * labelRadius;
           const labelY = center + Math.sin(angle) * labelRadius;
-          const initials = getInitials(item.label);
+          const initials = getInitials[index];
 
           return (
-            <g key={item.label}>
+            <g key={getInitials[index]}>
               <line
                 x1={center}
                 y1={center}
@@ -359,15 +348,15 @@ function RadarChart({ values, max = 5 }) {
           strokeWidth="2"
         />
 
-          {values.map((item, index) => {
+        {values.map((value, index) => {
           const angle = -Math.PI / 2 + index * angleStep;
-          const pointRadius = (item.value / max) * radius;
+          const pointRadius = (value / max) * radius;
           const x = center + Math.cos(angle) * pointRadius;
           const y = center + Math.sin(angle) * pointRadius;
 
           return (
             <circle
-              key={`${item.label}-point`}
+              key={`${getInitials[index]}-point`}
               cx={x}
               cy={y}
               r="4"
@@ -377,17 +366,17 @@ function RadarChart({ values, max = 5 }) {
           );
         })}
 
-          <circle cx={center} cy={center} r="3" fill="rgba(148,163,184,0.8)" />
-        </svg>
+        <circle cx={center} cy={center} r="3" fill="rgba(148,163,184,0.8)" />
+      </svg>
 
       <div className="mt-6 w-full space-y-3 px-4">
-        {values.map((item) => {
-          const pct = (item.value / max) * 100;
+        {values.map((item, index) => {
+          const pct = (item / max) * 100;
           return (
-            <div key={item.label} className="flex flex-col gap-2">
+            <div key={getInitials[index]} className="flex flex-col gap-2">
               <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="font-medium">{item.label}</span>
-                <span>{item.value.toFixed(1)}/{max}</span>
+                <span className="font-medium">{getInitials[index]}</span>
+                <span>{item.toFixed(1)}/{max}</span>
               </div>
               <div className="h-2 overflow-hidden rounded-full border border-slate-700 bg-slate-800">
                 <div
@@ -398,41 +387,6 @@ function RadarChart({ values, max = 5 }) {
             </div>
           );
         })}
-      </div>
-    </div>
-  );
-}
-
-function NftAvatar({ size = "sm" }) {
-  const isLarge = size === "lg";
-
-  return (
-    <div
-      className={[
-        "relative flex items-center justify-center rounded-full border bg-slate-950",
-        isLarge
-          ? "h-64 w-64 border-cyan-800/50 shadow-[0_0_80px_rgba(34,211,238,0.18)]"
-          : "h-12 w-12 border-cyan-800/50 shadow-[0_0_24px_rgba(34,211,238,0.14)]",
-      ].join(" ")}
-    >
-      <div className="absolute inset-[10%] rounded-full border border-cyan-700/30" />
-      <div className="absolute inset-[22%] rounded-full bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.28),transparent_42%),radial-gradient(circle_at_50%_65%,rgba(16,185,129,0.22),transparent_44%)]" />
-      <div className={isLarge ? "scale-[1.25]" : "scale-100"}>
-        <svg
-          width={isLarge ? "120" : "28"}
-          height={isLarge ? "120" : "28"}
-          viewBox="0 0 120 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M74 29C58 34 46 47 42 65C49 60 56 59 64 61C54 67 48 76 46 88C59 79 66 71 72 58C74 68 80 76 92 81C90 67 84 57 74 50C84 49 92 45 98 37C88 35 81 33 74 29Z"
-            className="fill-cyan-300"
-          />
-          <circle cx="78" cy="43" r="3.2" className="fill-slate-950" />
-          <path d="M23 82C37 83 46 79 55 70" stroke="rgb(16 185 129)" strokeWidth="6" strokeLinecap="round" />
-        </svg>
       </div>
     </div>
   );
