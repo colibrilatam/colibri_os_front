@@ -12,13 +12,24 @@ import {
   AlertCircle,
   Link2,
   Folder,
+  Layers
 } from 'lucide-react';
+import Button from './Button';
+
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
-  const pathname = usePathname();
+  const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
   const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
   const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
+
+  // obtencion del id por parametro 
+  const pathname = usePathname(); 
+
+  // 1. Dividimos por "/" -> ["", "dashboard", "1", "senial"]
+  // 2. El "1" está en la posición 2 del array
+  const segments = pathname.split('/');
+  const id = segments[2];
 
   const isActive = (href) => {
     if (href === '/') {
@@ -28,13 +39,13 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   };
 
   const links = [
-    { href: '/', label: 'Inicio', icon: Home },
-    { href: '/identidad', label: 'Identidad', icon: User },
-    { href: '/ruta-de-vuelo', label: 'Ruta de Vuelo', icon: Map },
-    { href: '/competencias', label: 'Competencias', icon: Zap },
-    { href: '/incertidumbre', label: 'Incertidumbre', icon: AlertCircle },
-    { href: '/trazabilidad', label: 'Trazabilidad', icon: Link2 },
-    { href: '/proyectos', label: 'Proyectos', icon: Folder },
+    { href: `/home`, label: 'Inicio', icon: Home },
+    { href: `/dashboard/${id}/senial`, label: 'Señal', icon: User },
+    { href: `/dashboard/${id}/reputacion`, label: 'Reputacion', icon: Layers },
+    { href: `/dashboard/${id}/tramo`, label: 'Tramo', icon: Map },
+    { href: `/dashboard/${id}/trayectoria`, label: 'Trayectoria', icon: AlertCircle },
+    { href: `/dashboard/${id}/evidencia`, label: 'Evidencia', icon: Link2 },
+    /*{ href: '/proyectos', label: 'Proyectos', icon: Folder },*/
   ];
 
   const handleNavClick = () => {
@@ -42,6 +53,12 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       onClose();
     }
   };
+
+  function handleLogout() {
+    logout();
+    router.push('/login')
+  }
+
 
   return (
     <>
@@ -129,6 +146,9 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             );
           })}
         </nav>
+        {sidebarDesktopExpanded && (
+          <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
+        )}
       </aside>
     </>
   );
