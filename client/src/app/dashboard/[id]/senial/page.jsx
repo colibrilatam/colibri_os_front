@@ -21,7 +21,7 @@ export default function IdentidadPage() {
   //console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)
 
   return (
-    <main className="min-h-screen glass-effect border-glass rounded-2xl">
+    <main className="h-fit glass-effect border-glass rounded-2xl">
       {/*<TourButton tourName="dashboard-tour" /> */}
       {/* Header */}
       <div className="text-center lg:p-4">
