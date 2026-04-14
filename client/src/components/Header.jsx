@@ -39,14 +39,20 @@ export default function Header() {
               </div>
 
               <div className="hidden mt-2 md:mt-3 lg:flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-300">
-                 <span className="rounded-full border border-slate-700 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-slate-300">
+                {/*  <span className="rounded-full border border-slate-700 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-slate-300">
                   ID {project.id}
-                </span>
+                </span> */}
                 <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
                   {currentState.currentTramoCode} - {currentState.currentTramoName}
                 </span>
                 <span className="rounded-full border border-emerald-800/60 bg-emerald-950/60 px-2 sm:px-3 py-0.5 sm:py-1 text-emerald-300">
                   {currentState.trajectoryStatus}
+                </span>
+                <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
+                  {project.industry}
+                </span>
+                <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
+                {project.country}
                 </span>
               </div>
             </div>
