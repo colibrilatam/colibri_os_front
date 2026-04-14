@@ -47,29 +47,28 @@ export default function IdentidadPage() {
             </span>
             , mientras reduce el Riesgo{' '}
             <span className="text-accent-amber font-medium">
-              {project.primaryRisk || 'Riesgo'}
+              {project.primaryRisk || '[Riesgo]'}
             </span>{' '}
             y las siguientes incertidumbres:{' '}
             <span className="text-accent-amber font-medium">
-              {project.uncertainty || 'Tn+1'}
+              {project.uncertainty || '[Riesgo]'}
             </span>
-            {project.secondaryUncertainty && (
-              <>
-                ,{' '}
-                <span className="text-accent-amber font-medium">
-                  {project.secondaryUncertainty || 'Tn+1'}
-                </span>
-              </>
+            {/* {project.secondaryUncertainty && (
+              <>*/}
+            ,{' '}
+            <span className="text-accent-amber font-medium">
+              {project.secondaryUncertainty || '[Riesgo]'}
+            </span>
+            {/* </>
             )}
             {project.thirdUncertainty && (
-              <>
-                {' '}
-                y{' '}
-                <span className="text-accent-amber font-medium">
-                  {project.thirdUncertainty || 'Tn+1'}
-                </span>
-              </>
-            )}{' '}
+              <>*/}{' '}
+            y{' '}
+            <span className="text-accent-amber font-medium">
+              {project.thirdUncertainty || '[Riesgo]'}
+            </span>
+            {/*  </>
+            )}*/}{' '}
             mientras avanza con señales verificables propias del tramo.
           </p>
         </div>
@@ -110,10 +109,36 @@ export default function IdentidadPage() {
                 </span>
               </div>
 
-              <div className="relative flex h-[320px] items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_50%_55%,rgba(16,185,129,0.14),transparent_32%)]" />
-                <NftAvatar size="lg" />
-              </div>
+              <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass p-6">
+  {/* BACKGROUND */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_50%_55%,rgba(16,185,129,0.14),transparent_32%)]" />
+
+  {/* CONTENIDO */}
+  <div className="z-10 flex flex-col items-center gap-6">
+    
+    {/* NFT */}
+    <div className="flex items-center justify-center">
+      <NftAvatar size="lg" />
+    </div>
+
+    {/* TEXTO */}
+    <div className="flex flex-col items-center gap-2 text-center">
+      <div className="text-sm text-[var(--text-secondary)]">
+        <span className="text-[var(--text-primary)] font-medium">
+          {currentState.currentTramoCode} ·{' '}
+          {currentState.currentTramoName || 'Nombre del tramo'}
+        </span>
+      </div>
+
+      <div className="text-xs text-[var(--text-tertiary)]">
+        <span className="text-[var(--text-secondary)]">
+          {project.nftId || 'NFT-0001'}
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
             </div>
 
             <div className="space-y-6 xl:col-span-7">
@@ -296,21 +321,21 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm">
+                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
                         {project.primaryRisk || 'Riesgo 1'}
                       </div>
 
-                      {project.secondaryRisk && (
-                        <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm">
-                          {project.secondaryRisk}
-                        </div>
-                      )}
+                      {/* {project.secondaryRisk && ( */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
+                        {project.secondaryRisk || 'Riesgo 2'}
+                      </div>
+                      {/* )} */}
 
-                      {project.thirdRisk && (
-                        <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm">
-                          {project.thirdRisk}
-                        </div>
-                      )}
+                      {/* {project.thirdRisk && ( */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
+                        {project.thirdRisk || 'Riesgo 3'}
+                      </div>
+                      {/* )} */}
                     </div>
                   </div>
                 </div>
