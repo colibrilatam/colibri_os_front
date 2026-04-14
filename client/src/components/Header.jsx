@@ -27,7 +27,7 @@ export default function Header() {
       <div className=" flex items-center gap-0 lg:items-center lg:gap-4 content-center  w-full ">
         {/* Botón Hamburguesa */}
         
-          <div className="flex flex-col-reverse md:flex-row gap-3 md:gap-5 items-start md:items-center justify-around w-full px-2 lg:px-10">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-5 items-start md:items-center justify-around w-full px-2 lg:px-10">
             {/* Sección izquierda: Nombre, ID, Tramo, Estado */}
             <div className="min-w-0 flex-1 flex flex-col gap-2 md:gap-3 items-start justify-start w-fit">
               <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
@@ -59,25 +59,7 @@ export default function Header() {
 
             {/* Sección derecha: Índice Colibrí y Última actualización */}
             <div className="md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
-            <button
-            
-            className=" z-50  top-0 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
-           
-          >
-            <svg
-              className="w-6 h-6 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
+        
               <div className="w-fit rounded-2xl border border-slate-800 bg-slate-950/60 px-3 md:px-4 py-2 md:py-3">
                 <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
                   Índice Colibrí
