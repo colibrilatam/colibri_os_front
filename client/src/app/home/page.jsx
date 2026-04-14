@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { HeroSection } from "@/components/home/HeroSection";
 import { FiltersBar } from "@/components/home/FiltersBar";
 import { ProjectGrid } from "@/components/home/ProjectGrid";
+import { useRequest } from "@/hooks/useRequest";
+import { projectsService } from "@/services/project";
 
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
@@ -13,31 +15,19 @@ export default function HomePage() {
   const [selectedStatuses, setSelectedStatuses] = useState([]);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
   const [projectsError, setProjectsError] = useState("");
+  
+  // Hook personalizado para manejar la solicitud de proyectos
+  const { execute, loading, error } = useRequest(projectsService.getAll); 
 
   // Cargar proyectos desde el backend al montar el componente
   useEffect(() => {
     async function loadProjects() {
-      try {
-        setIsLoadingProjects(true);
-        setProjectsError("");
+      const { data, error } = await execute();
 
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/projects`
-        );
-
-        if (!response.ok) {
-          throw new Error("No se pudieron obtener los proyectos");
-        }
-
-        const backendProjects = await response.json();
-        setProjects(backendProjects);
-        console.log("Proyectos cargados:", backendProjects);
-      } catch (error) {
-        setProjectsError(
-          error.message || "Ocurrió un error al cargar los proyectos"
-        );
-      } finally {
-        setIsLoadingProjects(false);
+      if (error) {
+        setProjectsError(error);
+      } else {
+        setProjects(data);
       }
     }
 
@@ -195,7 +185,7 @@ export default function HomePage() {
 
         <div className="mx-6 mb-2 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
-        {isLoadingProjects ? (
+        {loading ? (
           <div className="px-6 py-10 text-sm text-slate-400">
             Cargando proyectos...
           </div>
