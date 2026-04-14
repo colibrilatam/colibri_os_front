@@ -3,7 +3,7 @@
 import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
-import { useIsMobile } from '@/lib/hooks/useIsMobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { ProjectContext } from "../layout";
 
 const fadeUp = {
