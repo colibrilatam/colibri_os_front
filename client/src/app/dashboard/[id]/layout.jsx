@@ -51,17 +51,9 @@ export default function DataLayout({ children }) {
           
           <Header />
         </div>
-
-        <div className="mt-40 flex flex-1">
-          {/* Contenido - siempre deja espacio al sidebar contraído AAAAAAAAAAA*/}
-          <main className="text-black flex-1 p-1 lg:p-4 lg:pl-26 h-fit w-full max-w-[100vw] overflow-hidden">
-            {children}
-            {children}
-          </main>
-        </div>
         <button
             onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
-            className="fixed z-50  bottom-2 right-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
+            className="fixed z-49  top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
             title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
           >
             <svg
@@ -78,6 +70,14 @@ export default function DataLayout({ children }) {
               />
             </svg>
           </button>
+
+        <div className="mt-40 flex flex-1">
+          {/* Contenido - siempre deja espacio al sidebar contraído AAAAAAAAAAA*/}
+          <main className="text-black flex-1 p-1 lg:p-4 lg:pl-26 h-fit w-full max-w-[100vw] overflow-hidden">
+            {children}
+          </main>
+        </div>
+        
       </div>
     </ProjectContext.Provider>
   );
