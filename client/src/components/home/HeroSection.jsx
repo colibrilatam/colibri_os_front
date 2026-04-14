@@ -10,11 +10,11 @@ export function HeroSection({ stats }) {
     <section className="relative overflow-hidden px-6 py-20 md:py-28">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -top-32 left-1/2 h-100 w-175 -translate-x-1/2 rounded-full bg-cyan-500/10 blur-3xl"
+        className="pointer-events-none absolute -top-32 left-1/2 h-100 w-175 -translate-x-1/2 rounded-full  blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-10 -left-20 h-72 w-72 rounded-full bg-blue-600/10 blur-3xl"
+        className="pointer-events-none absolute top-10 -left-20 h-72 w-72 rounded-full  blur-3xl"
       />
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-10 md:flex-row md:gap-16">
