@@ -1,4 +1,4 @@
-import RadarCompetencias from './components/RadarCompetencias';
+/* import RadarCompetencias from './components/RadarCompetencias';
 import MultivariateLineChart from './components/MultivariateLineChart';
 
 import {
@@ -11,7 +11,7 @@ export default function CompetenciasPage() {
   return (
     <main className="min-h-screen bg-zinc-950 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
+  
         <div>
           <h1 className="text-3xl text-white font-semibold">Competencias</h1>
           <p className="text-lg text-zinc-400">
@@ -19,10 +19,10 @@ export default function CompetenciasPage() {
           </p>
         </div>
 
-        {/* 🟢 Radar (estado actual) */}
+      
         <RadarCompetencias data={radarCompetenciasMock} />
 
-        {/* 🔵 EntreComp */}
+        
         <MultivariateLineChart
           data={entrecompMock}
           title="EntreComp Plus"
@@ -30,7 +30,7 @@ export default function CompetenciasPage() {
           lines={[{ key: 'equipo' }, { key: 'problema' }, { key: 'negocio' }]}
         />
 
-        {/* 🟣 WEF Skills */}
+        
         <MultivariateLineChart
           data={wefSkillsMock}
           title="WEF Skills"
@@ -45,3 +45,4 @@ export default function CompetenciasPage() {
     </main>
   );
 }
+ */
