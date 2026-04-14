@@ -18,7 +18,7 @@ export default function IdentidadPage() {
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
   const PacProgress = Math.round((reputationSnapshot.icPublic % 1) * 100);
-  console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)
+  //console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)
 
   return (
     <main className="min-h-screen glass-effect border-glass rounded-2xl">
