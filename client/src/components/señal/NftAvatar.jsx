@@ -1,4 +1,3 @@
-import { project } from "@/lib/mock-data";
 import { usePathname } from "next/navigation";
 
 export default function NftAvatar({ size = "sm", rounded = false }) {
