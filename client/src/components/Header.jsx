@@ -4,6 +4,7 @@ import NftAvatar from './señal/NftAvatar';
 // contexto
 import { useContext } from "react";
 import { ProjectContext } from '@/app/dashboard/[id]/layout';
+import { formatDateSafe } from '@/lib/hooks/date';
 
 export default function Header() {
   /*
@@ -77,7 +78,7 @@ export default function Header() {
                 <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
                   Última actualización
                 </div>
-                <div className="mt-1 text-sm md:text-base text-slate-200">{reputationSnapshot.calculatedAt.split('T')[0]}</div>
+                <div className="mt-1 text-sm md:text-base text-slate-200">{formatDateSafe(reputationSnapshot.calculatedAt)}</div>
               </div>
             </div>
           </div>

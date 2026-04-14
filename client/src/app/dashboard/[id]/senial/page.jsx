@@ -47,29 +47,29 @@ export default function IdentidadPage() {
             </span>
             , mientras reduce el Riesgo{' '}
             <span className="text-accent-amber font-medium">
-              {project.primaryRisk || 'Riesgo'}
+              {project.primaryRisk || '[Riesgo]'}
             </span>{' '}
             y las siguientes incertidumbres:{' '}
             <span className="text-accent-amber font-medium">
-              {project.uncertainty || 'Tn+1'}
+              {project.uncertainty || '[Riesgo]'}
             </span>
-            {project.secondaryUncertainty && (
-              <>
-                ,{' '}
+            {/* {project.secondaryUncertainty && (
+              <>*/}
+                ,{' '} 
                 <span className="text-accent-amber font-medium">
-                  {project.secondaryUncertainty || 'Tn+1'}
+                  {project.secondaryUncertainty || '[Riesgo]'}
                 </span>
-              </>
+              {/* </>
             )}
             {project.thirdUncertainty && (
-              <>
+              <>*/}
                 {' '}
-                y{' '}
+                y{' '} 
                 <span className="text-accent-amber font-medium">
-                  {project.thirdUncertainty || 'Tn+1'}
+                  {project.thirdUncertainty || '[Riesgo]'}
                 </span>
-              </>
-            )}{' '}
+             {/*  </>
+            )}*/}{' '} 
             mientras avanza con señales verificables propias del tramo.
           </p>
         </div>
@@ -296,21 +296,21 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm">
+                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
                         {project.primaryRisk || 'Riesgo 1'}
                       </div>
 
-                      {project.secondaryRisk && (
-                        <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm">
-                          {project.secondaryRisk}
-                        </div>
-                      )}
+                      {/* {project.secondaryRisk && ( */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
+                        {project.secondaryRisk || 'Riesgo 2'}
+                      </div>
+                      {/* )} */}
 
-                      {project.thirdRisk && (
-                        <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm">
-                          {project.thirdRisk}
-                        </div>
-                      )}
+                      {/* {project.thirdRisk && ( */}
+                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
+                        {project.thirdRisk || 'Riesgo 3'}
+                      </div>
+                      {/* )} */}
                     </div>
                   </div>
                 </div>
