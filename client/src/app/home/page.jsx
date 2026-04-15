@@ -14,7 +14,6 @@ export default function HomePage() {
   const [selectedTranche, setSelectedTranche] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
-  //const [projectsError, setProjectsError] = useState('');
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
@@ -26,6 +25,7 @@ export default function HomePage() {
   // Cargar proyectos desde el backend al montar el componente
   useEffect(() => {
     async function loadProjects() {
+      setIsLoadingProjects(false)
       const { data, error } = await execute();
 
       if (error) {
@@ -33,6 +33,7 @@ export default function HomePage() {
       } else {
         setProjects(data);
       }
+      setIsLoadingProjects(true)
     }
 
     loadProjects();
