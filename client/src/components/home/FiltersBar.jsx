@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
 const trancheChipStyles = {
-  T1: "data-[active=true]:border-blue-400/60 data-[active=true]:bg-blue-500/20 data-[active=true]:text-blue-300 data-[active=true]:shadow-[0_0_0_1px_rgba(96,165,250,0.15)]",
-  T2: "data-[active=true]:border-cyan-400/60 data-[active=true]:bg-cyan-500/20 data-[active=true]:text-cyan-300 data-[active=true]:shadow-[0_0_0_1px_rgba(34,211,238,0.15)]",
-  T3: "data-[active=true]:border-teal-400/60 data-[active=true]:bg-teal-500/20 data-[active=true]:text-teal-300 data-[active=true]:shadow-[0_0_0_1px_rgba(45,212,191,0.15)]",
-  T4: "data-[active=true]:border-indigo-400/60 data-[active=true]:bg-indigo-500/20 data-[active=true]:text-indigo-300 data-[active=true]:shadow-[0_0_0_1px_rgba(129,140,248,0.15)]",
+  T1: 'data-[active=true]:border-blue-400/60 data-[active=true]:bg-blue-500/20 data-[active=true]:text-blue-300 data-[active=true]:shadow-[0_0_0_1px_rgba(96,165,250,0.15)]',
+  T2: 'data-[active=true]:border-cyan-400/60 data-[active=true]:bg-cyan-500/20 data-[active=true]:text-cyan-300 data-[active=true]:shadow-[0_0_0_1px_rgba(34,211,238,0.15)]',
+  T3: 'data-[active=true]:border-teal-400/60 data-[active=true]:bg-teal-500/20 data-[active=true]:text-teal-300 data-[active=true]:shadow-[0_0_0_1px_rgba(45,212,191,0.15)]',
+  T4: 'data-[active=true]:border-indigo-400/60 data-[active=true]:bg-indigo-500/20 data-[active=true]:text-indigo-300 data-[active=true]:shadow-[0_0_0_1px_rgba(129,140,248,0.15)]',
   SIN_TRAMO:
-    "data-[active=true]:border-slate-400/60 data-[active=true]:bg-slate-500/20 data-[active=true]:text-slate-300 data-[active=true]:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]",
+    'data-[active=true]:border-slate-400/60 data-[active=true]:bg-slate-500/20 data-[active=true]:text-slate-300 data-[active=true]:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]',
 };
 
 const statusChipStyles = {
   active:
-    "data-[active=true]:border-amber-400/60 data-[active=true]:bg-amber-500/20 data-[active=true]:text-amber-300 data-[active=true]:shadow-[0_0_0_1px_rgba(251,191,36,0.14)]",
+    'data-[active=true]:border-amber-400/60 data-[active=true]:bg-amber-500/20 data-[active=true]:text-amber-300 data-[active=true]:shadow-[0_0_0_1px_rgba(251,191,36,0.14)]',
   inactive:
-    "data-[active=true]:border-slate-400/60 data-[active=true]:bg-slate-500/20 data-[active=true]:text-slate-300 data-[active=true]:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]",
+    'data-[active=true]:border-slate-400/60 data-[active=true]:bg-slate-500/20 data-[active=true]:text-slate-300 data-[active=true]:shadow-[0_0_0_1px_rgba(148,163,184,0.12)]',
   closed:
-    "data-[active=true]:border-red-400/60 data-[active=true]:bg-red-500/20 data-[active=true]:text-red-300 data-[active=true]:shadow-[0_0_0_1px_rgba(248,113,113,0.14)]",
+    'data-[active=true]:border-red-400/60 data-[active=true]:bg-red-500/20 data-[active=true]:text-red-300 data-[active=true]:shadow-[0_0_0_1px_rgba(248,113,113,0.14)]',
   suspended:
-    "data-[active=true]:border-violet-400/60 data-[active=true]:bg-violet-500/20 data-[active=true]:text-violet-300 data-[active=true]:shadow-[0_0_0_1px_rgba(167,139,250,0.14)]",
+    'data-[active=true]:border-violet-400/60 data-[active=true]:bg-violet-500/20 data-[active=true]:text-violet-300 data-[active=true]:shadow-[0_0_0_1px_rgba(167,139,250,0.14)]',
 };
 
 const baseChipClasses =
-  "inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-400 transition-all duration-150 hover:border-white/20 hover:bg-white/[0.07] hover:text-slate-200 cursor-pointer select-none";
+  'inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-400 transition-all duration-150 hover:border-white/20 hover:bg-white/[0.07] hover:text-slate-200 cursor-pointer select-none';
 
 function getStatusLabel(statusValue) {
   const statusLabelMap = {
-    active: "Activo",
-    inactive: "Inactivo",
-    closed: "Cerrado",
-    suspended: "Suspendido",
+    active: 'Activo',
+    inactive: 'Inactivo',
+    closed: 'Cerrado',
+    suspended: 'Suspendido',
   };
 
   return statusLabelMap[statusValue] || statusValue;
@@ -37,13 +37,19 @@ function getStatusLabel(statusValue) {
 export function FiltersBar({
   search,
   onSearchChange,
-  selectedTranches,
+  selectedTranche,
   onTrancheToggle,
-  selectedStatuses,
+  selectedStatus,
   onStatusToggle,
   resultCount,
   allTranches,
   allStatuses,
+  allIndustries,
+  allCountries,
+  selectedCountry,
+  selectedIndustry,
+  onCountryChange,
+  onIndustryChange,
 }) {
   return (
     <section className="px-6 py-5">
@@ -75,9 +81,71 @@ export function FiltersBar({
             </div>
 
             <div className="shrink-0 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-xs text-slate-400">
-              Mostrando{" "}
-              <span className="font-semibold text-slate-200">{resultCount}</span>{" "}
-              {resultCount === 1 ? "proyecto" : "proyectos"}
+              Mostrando{' '}
+              <span className="font-semibold text-slate-200">
+                {resultCount}
+              </span>{' '}
+              {resultCount === 1 ? 'proyecto' : 'proyectos'}
+            </div>
+          </div>
+
+          <div className="px-6 mt-4 space-y-4">
+            {/* INDUSTRIA */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-slate-400 mr-2">INDUSTRIA:</span>
+
+              {allIndustries.map((industry) => {
+                const isActive = selectedIndustry === industry;
+
+                return (
+                  <button
+                    key={industry}
+                    onClick={() => onIndustryChange(isActive ? null : industry)}
+                    className={`px-3 py-1.5 rounded-full text-xs transition-all
+            ${
+              isActive
+                ? 'bg-orange-500 text-white'
+                : 'bg-white/10 text-slate-300 hover:bg-white/20'
+            }`}
+                  >
+                    {industry}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* PAÍS */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-slate-400 mr-2">PAÍS:</span>
+              <button
+                onClick={() => onCountryChange(null)}
+                className={`px-3 py-1.5 rounded-full text-xs ${
+                  !selectedCountry
+                    ? 'bg-cyan-500 text-white'
+                    : 'bg-white/10 text-slate-300'
+                }`}
+              >
+                Todos
+              </button>
+
+              {allCountries.map((country) => {
+                const isActive = selectedCountry === country;
+
+                return (
+                  <button
+                    key={country}
+                    onClick={() => onCountryChange(isActive ? null : country)}
+                    className={`px-3 py-1.5 rounded-full text-xs transition-all
+            ${
+              isActive
+                ? 'bg-cyan-500 text-white'
+                : 'bg-white/10 text-slate-300 hover:bg-white/20'
+            }`}
+                  >
+                    {country}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -91,10 +159,10 @@ export function FiltersBar({
                 <button
                   key={tranche.value}
                   type="button"
-                  data-active={selectedTranches.includes(tranche.value)}
+                  data-active={selectedTranche === tranche.value}
                   onClick={() => onTrancheToggle(tranche.value)}
                   className={`${baseChipClasses} ${
-                    trancheChipStyles[tranche.value] || ""
+                    trancheChipStyles[tranche.value] || ''
                   }`}
                 >
                   {tranche.label}
@@ -113,10 +181,10 @@ export function FiltersBar({
                 <button
                   key={status}
                   type="button"
-                  data-active={selectedStatuses.includes(status)}
+                  data-active={selectedStatus === status}
                   onClick={() => onStatusToggle(status)}
                   className={`${baseChipClasses} ${
-                    statusChipStyles[status] || ""
+                    statusChipStyles[status] || ''
                   }`}
                 >
                   {getStatusLabel(status)}
