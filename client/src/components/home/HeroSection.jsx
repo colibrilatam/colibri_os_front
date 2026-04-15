@@ -1,9 +1,9 @@
 export function HeroSection({ stats }) {
   const summaryStats = [
-    { label: "Proyectos activos", value: stats.activeProjects },
-    { label: "Tramos en curso", value: stats.tramosEnCurso },
-    { label: "Países activos", value: stats.paisesActivos },
-    { label: "Actualizaciones hoy", value: stats.actualizacionesHoy },
+    { label: 'Proyectos activos', value: stats.activeProjects },
+    { label: 'Tramos en curso', value: stats.tramosEnCurso },
+    { label: 'Países activos', value: stats.paisesActivos },
+    { label: 'Actualizaciones hoy', value: stats.actualizacionesHoy },
   ];
 
   return (
@@ -25,7 +25,7 @@ export function HeroSection({ stats }) {
           </span>
 
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
-            Descubre proyectos{" "}
+            Descubre proyectos{' '}
             <span className="bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               en evolución
             </span>
