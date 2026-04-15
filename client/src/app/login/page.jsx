@@ -22,6 +22,8 @@ export default function LoginRegisterPage() {
   const { handleRegister } = useRegister();
   const { handleLogin } = useLogin();
   const { handleGuestLogin } = useGuestLogin();
+//asd
+  // Form fields
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -149,7 +151,7 @@ export default function LoginRegisterPage() {
   };
 
   const handleGoogleClick = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google` // CAMBIAR VARIABLE DE ENTORNO
   };
 
   const handleGuestLoginClick = () => {
