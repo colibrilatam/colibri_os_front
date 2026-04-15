@@ -3,7 +3,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { ProjectContext } from "../layout";
+import { useProject } from '@/lib/projectContext';
 
 // SWIPER
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -13,7 +13,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 export default function TrayectoriaSection() {
-  const data = useContext(ProjectContext);
+  const { tramoData, dbProject, mockProject } = useProject();
 
   const isMobile = useIsMobile();
 
@@ -27,7 +27,7 @@ export default function TrayectoriaSection() {
     pacProgress,
     evidence,
     microactionInstances,
-  } = data;
+  } = mockProject;
 
   const mapStatus = {
     approved: 'done',
