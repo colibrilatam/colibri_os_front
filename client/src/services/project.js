@@ -16,4 +16,7 @@ export const projectsService = {
 
   delete: (id) =>
     fetcher(`/projects/${id}`, { method: 'DELETE' }),
+
+  currentTramo: (id) => 
+    fetcher(`/tramos/${id}`),
 };

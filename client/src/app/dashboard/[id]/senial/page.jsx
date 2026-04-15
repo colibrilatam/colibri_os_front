@@ -4,18 +4,20 @@ import ProgressBar from '@/components/ProgressBar';
 import TourButton from '@/components/tutoriales/TourButton';
 import { getNextTramoCode } from '@/lib/hooks/tramo';
 
+
 // contexto
-import { useContext } from 'react';
-import { ProjectContext } from '../layout';
+import { useProject } from '@/lib/projectContext';
+
+
 
 export default function IdentidadPage() {
   // contexto
-  const data = useContext(ProjectContext);
-  const { project, currentState, reputationSnapshot, pacProgress } = data;
+  const { dbProject, mockProject } = useProject();
+  const { project, currentState, reputationSnapshot, pacProgress } = mockProject;
 
   // Cantidad de PACs aprobados respeto al maximo de PACs por tramo (7) para calcular el progreso del tramo
   //const progressPct = (currentState.pacsApprovedInCurrentTramo / 7) * 100;
-
+  //console.log(dbProject, mockProject)
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
   const PacProgress = Math.round((reputationSnapshot.icPublic % 1) * 100);
   //console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)

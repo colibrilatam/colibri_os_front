@@ -1,13 +1,14 @@
 'use client';
 // contexto
 import { useContext } from "react";
-import { ProjectContext } from "../layout";
+import { useProject } from '@/lib/projectContext';
+
 
 export default function ReputacionPage() {
 
   // contexto
-  const data = useContext(ProjectContext);
-  const { project, reputationSnapshot, pacProgress } = data;
+    const { tramoData, dbProject, mockProject } = useProject();
+  const { project, reputationSnapshot, pacProgress } = mockProject;
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
