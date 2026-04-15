@@ -1,40 +1,43 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { HeroSection } from "@/components/home/HeroSection";
-import { FiltersBar } from "@/components/home/FiltersBar";
-import { ProjectGrid } from "@/components/home/ProjectGrid";
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import { HeroSection } from '@/components/home/HeroSection';
+import { FiltersBar } from '@/components/home/FiltersBar';
+import { ProjectGrid } from '@/components/home/ProjectGrid';
 
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
-  const [search, setSearch] = useState("");
-  const [selectedTranches, setSelectedTranches] = useState([]);
-  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [search, setSearch] = useState('');
+  const [selectedTranche, setSelectedTranche] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState(null);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
-  const [projectsError, setProjectsError] = useState("");
+  const [projectsError, setProjectsError] = useState('');
+
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedIndustry, setSelectedIndustry] = useState(null);
 
   // Cargar proyectos desde el backend al montar el componente
   useEffect(() => {
     async function loadProjects() {
       try {
         setIsLoadingProjects(true);
-        setProjectsError("");
+        setProjectsError('');
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/projects`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/projects`,
         );
 
         if (!response.ok) {
-          throw new Error("No se pudieron obtener los proyectos");
+          throw new Error('No se pudieron obtener los proyectos');
         }
 
         const backendProjects = await response.json();
         setProjects(backendProjects);
-        console.log("Proyectos cargados:", backendProjects);
+        console.log('Proyectos cargados:', backendProjects);
       } catch (error) {
         setProjectsError(
-          error.message || "Ocurrió un error al cargar los proyectos"
+          error.message || 'Ocurrió un error al cargar los proyectos',
         );
       } finally {
         setIsLoadingProjects(false);
@@ -48,20 +51,23 @@ export default function HomePage() {
   const heroStats = useMemo(() => {
     const today = new Date().toDateString();
 
-    const activeProjects = projects.length;
+    const activeProjects = projects.filter(
+      (project) => project.status === 'active',
+    ).length;
 
     const tramosEnCurso = projects.filter(
-      (project) => project.currentTramo !== null
+      (project) => project.currentTramo?.code,
     ).length;
 
     const paisesActivos = new Set(
       projects
-        .map((project) => project.country?.trim())
-        .filter(Boolean)
+        .filter((p) => p.status === 'active')
+        .map((p) => p.country?.trim())
+        .filter(Boolean),
     ).size;
 
     const actualizacionesHoy = projects.filter(
-      (project) => new Date(project.updatedAt).toDateString() === today
+      (project) => new Date(project.updatedAt).toDateString() === today,
     ).length;
 
     return {
@@ -87,17 +93,17 @@ export default function HomePage() {
     });
 
     const tranches = Array.from(trancheMap.values()).sort(
-      (a, b) => a.sortOrder - b.sortOrder
+      (a, b) => a.sortOrder - b.sortOrder,
     );
 
     const hasProjectsWithoutTranche = projects.some(
-      (project) => !project.currentTramo
+      (project) => !project.currentTramo,
     );
 
     if (hasProjectsWithoutTranche) {
       tranches.push({
-        value: "SIN_TRAMO",
-        label: "Sin tramo",
+        value: 'SIN_TRAMO',
+        label: 'Sin tramo',
         sortOrder: 9999,
       });
     }
@@ -110,12 +116,27 @@ export default function HomePage() {
     return [...new Set(projects.map((project) => project.status))];
   }, [projects]);
 
+  const allCountries = useMemo(() => {
+    return Array.from(
+      new Set(projects.map((p) => p.country?.trim()).filter(Boolean)),
+    );
+  }, [projects]);
+
+  const allIndustries = useMemo(() => {
+    return [
+      'Todas',
+      ...Array.from(
+        new Set(projects.map((p) => p.industry?.trim()).filter(Boolean)),
+      ),
+    ];
+  }, [projects]);
+
   // Filtrar proyectos según búsqueda y filtros seleccionados
   const filteredProjects = useMemo(() => {
     const normalizedSearch = search.toLowerCase().trim();
 
     return projects.filter((project) => {
-      const projectTranche = project.currentTramo?.code || "SIN_TRAMO";
+      const projectTranche = project.currentTramo?.code || 'SIN_TRAMO';
 
       const matchesSearch =
         !normalizedSearch ||
@@ -127,37 +148,46 @@ export default function HomePage() {
         project.owner?.fullName?.toLowerCase().includes(normalizedSearch);
 
       const matchesTranche =
-        selectedTranches.length === 0 ||
-        selectedTranches.includes(projectTranche);
+        !selectedTranche || projectTranche === selectedTranche;
 
       const matchesStatus =
-        selectedStatuses.length === 0 ||
-        selectedStatuses.includes(project.status);
+        !selectedStatus || project.status === selectedStatus;
 
-      return matchesSearch && matchesTranche && matchesStatus;
+      const matchesCountry =
+        !selectedCountry ||
+        selectedCountry === 'Todos' ||
+        project.country === selectedCountry;
+
+      const matchesIndustry =
+        !selectedIndustry ||
+        selectedIndustry === 'Todas' ||
+        project.industry === selectedIndustry;
+
+      return (
+        matchesSearch &&
+        matchesTranche &&
+        matchesStatus &&
+        matchesCountry &&
+        matchesIndustry
+      );
     });
-  }, [projects, search, selectedTranches, selectedStatuses]);
+  }, [
+    projects,
+    search,
+    selectedTranche,
+    selectedStatus,
+    selectedCountry,
+    selectedIndustry,
+  ]);
 
   // Funciones para manejar toggles de filtros
   function toggleTranche(tranche) {
-    setSelectedTranches((previousTranches) =>
-      previousTranches.includes(tranche)
-        ? previousTranches.filter(
-          (existingTranche) => existingTranche !== tranche
-        )
-        : [...previousTranches, tranche]
-    );
+    setSelectedTranche((prev) => (prev === tranche ? null : tranche));
   }
-  
+
   // Funciones para manejar toggles de filtros
   function toggleStatus(status) {
-    setSelectedStatuses((previousStatuses) =>
-      previousStatuses.includes(status)
-        ? previousStatuses.filter(
-          (existingStatus) => existingStatus !== status
-        )
-        : [...previousStatuses, status]
-    );
+    setSelectedStatus((prev) => (prev === status ? null : status));
   }
 
   return (
@@ -200,28 +230,31 @@ export default function HomePage() {
             Cargando proyectos...
           </div>
         ) : projectsError ? (
-          <div className="px-6 py-10 text-sm text-red-400">
-            {projectsError}
-          </div>
+          <div className="px-6 py-10 text-sm text-red-400">{projectsError}</div>
         ) : (
           <>
             <FiltersBar
               search={search}
               onSearchChange={setSearch}
-              selectedTranches={selectedTranches}
+              selectedTranche={selectedTranche}
               onTrancheToggle={toggleTranche}
-              selectedStatuses={selectedStatuses}
+              selectedStatus={selectedStatus}
               onStatusToggle={toggleStatus}
               resultCount={filteredProjects.length}
               allTranches={allTranches}
               allStatuses={allStatuses}
+              allIndustries={allIndustries}
+              allCountries={allCountries}
+              selectedCountry={selectedCountry}
+              selectedIndustry={selectedIndustry}
+              onCountryChange={setSelectedCountry}
+              onIndustryChange={setSelectedIndustry}
             />
-
             <ProjectGrid projects={filteredProjects} />
           </>
         )}
       </div>
-
+      {/* <pre>{JSON.stringify(projects, null, 2)}</pre> */}
       <footer className="border-t border-white/8 px-6 py-6">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
           <p className="text-xs text-slate-600">
