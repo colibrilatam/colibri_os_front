@@ -22,7 +22,6 @@ export default function LoginRegisterPage() {
   const { handleRegister } = useRegister();
   const { handleLogin } = useLogin();
   const { handleGuestLogin } = useGuestLogin();
-
   const [formData, setFormData] = useState({
     username: '',
     email: '',

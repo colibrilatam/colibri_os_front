@@ -104,7 +104,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
       {/* Desktop */}
       <aside
-        className={` border-right hidden lg:flex flex-col glass-effect-dark text-white h-screen overflow-y-auto fixed left-0 top-0 z-45 transition-all duration-300 ${
+        className={` border-right hidden lg:flex flex-col glass-effect-dark text-white h-screen overflow-y-auto fixed left-0 top-0 z-50 transition-all duration-300 ${
           sidebarDesktopExpanded ? 'w-64 p-4' : 'w-24 p-3'
         }`}
       >
