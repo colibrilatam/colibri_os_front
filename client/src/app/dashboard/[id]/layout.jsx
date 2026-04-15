@@ -1,5 +1,5 @@
-import { getProjectById } from "@/lib/mock/proyectos ficticios/getProyectById";
 //import { usePathname } from "next/navigation";
+import mockDataProject from "@/lib/mock/proyectos ficticios/dataProjects.json";
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -34,7 +34,6 @@ export default async function DataLayout({ children, params }) {
   const { data: tramoData, error: tramoError } = await handleRequest(
     () => projectsService.currentTramo(projectData.currentTramoId)
   );
-  const mockData = getProjectById(id);
 
   if(error || tramoError) {
     return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">Error al cargar el proyecto: {JSON.stringify(error) || JSON.stringify(tramoError)}</div>;
@@ -55,7 +54,7 @@ export default async function DataLayout({ children, params }) {
 */
   return (
     
-      <LayoutShell projectInfo={{dbProject: projectData, mockProject: mockData, tramoData: tramoData}}>
+      <LayoutShell projectInfo={{dbProject: projectData, mockProject: mockDataProject, tramoData: tramoData}}>
         {children}
       </LayoutShell>
     
