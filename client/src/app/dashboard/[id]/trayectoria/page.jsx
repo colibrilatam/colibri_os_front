@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext } from 'react';
 import { motion } from 'framer-motion';
-import { useIsMobile } from '@/lib/hooks/useIsMobile';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { ProjectContext } from "../layout";
 
 // SWIPER
