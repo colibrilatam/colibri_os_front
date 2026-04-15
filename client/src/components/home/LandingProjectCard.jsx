@@ -11,6 +11,8 @@ function formatProjectDate(dateString) {
 }
 
 export function ProjectCard({ project, index }) {
+  const projectTrancheLabel = project.currentTramo?.code || "Sin tramo";
+  const projectTrancheImage = project.currentTramo?.nftImageUrl || null;
   const router = useRouter();
 
   return (
@@ -18,15 +20,21 @@ export function ProjectCard({ project, index }) {
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
-            {project.shortId}
+            {project.id.slice(0, 8).toUpperCase()}
           </div>
-<div className="flex flex-row gap-4 items-center">
-  <img className="h-14 w-14 rounded-full"
-  src={`/${project.id}.png`}
-          alt="NFT Avatar"></img>
-          <h3 className="truncate text-lg font-semibold leading-tight text-white">
-            {project.name || "Proyecto sin nombre"}
-          </h3>
+
+          <div className="flex items-center gap-2">
+            {projectTrancheImage ? (
+              <img
+                src={projectTrancheImage}
+                alt={projectTrancheLabel}
+                className="h-8 w-8 rounded-md object-cover shrink-0"
+              />
+            ) : null}
+
+            <h3 className="truncate text-lg font-semibold leading-tight text-white">
+              {project.projectName || "Proyecto sin nombre"}
+            </h3>
           </div>
 
           <div className="mt-1 text-sm text-slate-400">
@@ -36,33 +44,33 @@ export function ProjectCard({ project, index }) {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge value={project.currentTramo} variant="tranche" />
-        <Badge value={project.projectStatus} variant="status" />
+        <Badge value={projectTrancheLabel} variant="tranche" />
+        <Badge value={project.status} variant="status" />
       </div>
 
       <div className="mb-3 flex-1 text-sm leading-6 text-slate-300">
-        {project.description || "Sin descripción disponible"}
+        {project.shortDescription ||
+          project.tagline ||
+          "Sin descripción disponible"}
       </div>
 
       <div className="mb-5 text-xs text-slate-500">
         Responsable:{" "}
         <span className="text-slate-300">
-          {project.ownerId || "Sin responsable"}
+          {project.owner?.fullName || "Sin responsable"}
         </span>
       </div>
 
       <div className="mt-auto flex items-center justify-between border-t border-white/8 pt-4">
         <span className="text-[11px] text-slate-500">
           Actualizado{" "}
-          <time dateTime={project.lastUpdate} className="text-slate-400">
-            {formatProjectDate(project.lastUpdate)}
+          <time dateTime={project.updatedAt} className="text-slate-400">
+            {formatProjectDate(project.updatedAt)}
           </time>
         </span>
 
-        <button
-          onClick={() => router.push(`/dashboard/${project.id}/senial`)}
-          className="group/btn border border-cyan-400 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg p-2 font-bold flex items-center gap-1 text-xs  text-white transition-all duration-150  active:scale-95"
-        >
+        <button onClick={() => router.push(`/dashboard/${project.id}/senial`)}
+        className="bg-linear-to-r from-cyan-500 to-blue-500  border border-cyan-700 rounded-2xl p-2 group/btn flex items-center gap-1 text-xs font-bold text-white transition-all duration-150 hover:text-cyan-200 cursor-pointer active:scale-95">
           Ver en R-Lab
           <svg
             className="h-3 w-3 translate-x-0 transition-transform duration-150 group-hover/btn:translate-x-0.5"
