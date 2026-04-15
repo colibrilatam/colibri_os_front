@@ -14,6 +14,7 @@ import 'swiper/css/navigation';
 
 export default function TrayectoriaSection() {
   const data = useContext(ProjectContext);
+  const { dbProject, mockProject } = data;
 
   const isMobile = useIsMobile();
 
@@ -27,7 +28,7 @@ export default function TrayectoriaSection() {
     pacProgress,
     evidence,
     microactionInstances,
-  } = data;
+  } = mockProject;
 
   const mapStatus = {
     approved: 'done',

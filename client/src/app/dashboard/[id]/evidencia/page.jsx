@@ -7,8 +7,9 @@ import { ProjectContext } from '../layout';
 
 export default function EvidenciaSection() {
   const data = useContext(ProjectContext);
+  const { dbProject, mockProject } = data;
 
-  const { evidence, evaluations, pacProgress, currentState } = data;
+  const { evidence, evaluations, pacProgress, currentState } = mockProject;
 
   /* =========================
      🔗 DATA MAPPING REAL

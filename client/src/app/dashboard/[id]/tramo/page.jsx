@@ -14,8 +14,8 @@ const fadeUp = {
 export default function TramoDashboard() {
   const isMobile = useIsMobile();
   const data = useContext(ProjectContext);
-
-  const { project, currentState, pacProgress } = data;
+  const { dbProject, mockProject } = data;
+  const { project, currentState, pacProgress } = mockProject;
 
   /* =========================
      🔗 DATA MAPPING REAL

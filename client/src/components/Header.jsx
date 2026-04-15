@@ -2,9 +2,10 @@
 import NftAvatar from './señal/NftAvatar';
 
 // contexto
-import { useContext } from "react";
-import { ProjectContext } from '@/app/dashboard/[id]/layout';
 import { formatDateSafe } from '@/lib/hooks/date';
+import { useProject } from '@/lib/projectContext';
+
+import { projectStatus } from '@/lib/types/projectStatus';
 
 export default function Header() {
   /*
@@ -18,9 +19,12 @@ export default function Header() {
 
 
   // contexto
-  const data = useContext(ProjectContext);
   //console.log("Datos del proyecto desde el contexto en Header:", data);
-  const {project, currentState, reputationSnapshot} = data;
+  const { dbProject, mockProject } = useProject();
+  console.log("Datos del proyecto desde el contexto en Header:", dbProject, mockProject);
+  const {project, currentState, reputationSnapshot} = mockProject;
+
+  console.log(projectStatus[dbProject.status])
 
 
   return (
@@ -47,13 +51,13 @@ export default function Header() {
                   {currentState.currentTramoCode} - {currentState.currentTramoName}
                 </span>
                 <span className="rounded-full border border-emerald-800/60 bg-emerald-950/60 px-2 sm:px-3 py-0.5 sm:py-1 text-emerald-300">
-                  {currentState.trajectoryStatus}
+                  {projectStatus[dbProject.status]}
                 </span>
                 <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
-                  {project.industry}
+                  {dbProject.industry}
                 </span>
                 <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
-                {project.country}
+                  {dbProject.country}
                 </span>
               </div>
             </div>

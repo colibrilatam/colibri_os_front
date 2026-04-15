@@ -7,7 +7,8 @@ export default function ReputacionPage() {
 
   // contexto
   const data = useContext(ProjectContext);
-  const { project, reputationSnapshot, pacProgress } = data;
+  const { dbProject, mockProject } = data;
+  const { project, reputationSnapshot, pacProgress } = mockProject;
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [

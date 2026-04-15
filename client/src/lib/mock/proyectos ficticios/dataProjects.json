@@ -2,7 +2,7 @@
   "projectsData": [
     {
       "project": {
-        "id": "proj_aulapuente_ve_001",
+        "id": "bd55a792-4165-4814-975a-c80bfe4ede32",
         "name": "AulaPuente",
         "tagline": "Ordena seguimiento escolar cuando la continuidad pedag\u00f3gica se fragmenta.",
         "shortDescription": "Proyecto edtech en etapa fundacional que explora una soluci\u00f3n simple para organizar actividades, seguimiento y alertas b\u00e1sicas de continuidad acad\u00e9mica en educaci\u00f3n media venezolana.",
@@ -406,7 +406,7 @@
     {
  
       "project": {
-        "id": "proj_nexocaja_ar_001",
+        "id": "00f25e24-99c8-4fa2-abdd-919da81dd7b9",
         "name": "NexoCaja",
         "tagline": "Ordena cobros cotidianos y anticipa baches de caja en comercios barriales.",
         "shortDescription": "Proyecto fintech en etapa fundacional que explora una soluci\u00f3n simple para registrar cobros, ventas fiadas y movimientos de caja en peque\u00f1os comercios argentinos.",
@@ -850,7 +850,7 @@
     },
     {
   "project": {
-    "id": "proj_saludnexo_pa_001",
+    "id": "32815b70-f36b-434f-8aea-55b84fd45e40",
     "name": "SaludNexo",
     "tagline": "Seguimiento ambulatorio simple para sostener la adherencia del paciente crónico.",
     "shortDescription": "Plataforma ligera para clínicas y médicos en Panamá que organiza recordatorios, seguimiento postconsulta y alertas tempranas de continuidad terapéutica en pacientes con hipertensión y diabetes.",
@@ -1397,7 +1397,7 @@
     },
     {
   "project": {
-    "id": "proj_rutanomina_co_001",
+    "id": "32815b70-f36b-434f-8aea-55b84fd45e40",
     "name": "RutaNómina",
     "tagline": "Centraliza incidencias laborales y reduce fricción en el cierre de nómina.",
     "shortDescription": "Proyecto SaaS en validación temprana que ofrece una herramienta liviana para registrar novedades de personal, consolidarlas y disminuir errores operativos en empresas colombianas de servicios.",
@@ -1872,7 +1872,7 @@
     },
     {
   "project": {
-    "id": "proj_trayectoclaro_cl_001",
+    "id": "32815b70-f36b-434f-8aea-55b84fd45e40",
     "name": "TrayectoClaro",
     "tagline": "Hace visible la continuidad y el avance en trayectos híbridos.",
     "shortDescription": "Proyecto edtech en etapa de prototipo vivo que ayuda a instituciones chilenas a seguir participación, continuidad y avance de estudiantes en experiencias híbridas de formación.",
@@ -2413,7 +2413,7 @@
     },
     {
   "project": {
-    "id": "proj_flujoclave_co_001",
+    "id": "32815b70-f36b-434f-8aea-55b84fd45e40",
     "name": "FlujoClave",
     "tagline": "Ordena conciliación, cobros y visibilidad de caja en operación real.",
     "shortDescription": "Proyecto fintech en etapa de prototipo vivo que ayuda a comercios colombianos a consolidar cobros, conciliaciones y alertas de caja cuando operan con múltiples medios de pago.",
@@ -2989,7 +2989,7 @@
     },
     {
   "project": {
-    "id": "proj_riegopulso_bo_001",
+    "id": "32815b70-f36b-434f-8aea-55b84fd45e40",
     "name": "RiegoPulso",
     "tagline": "Hace visible el pulso hídrico y operativo de los cultivos en campo.",
     "shortDescription": "Proyecto agrotech en tracción temprana que ayuda a productores y asociaciones bolivianas a registrar riego, alertas de campo y ejecución operativa para mejorar continuidad y decisiones de manejo.",
@@ -3571,7 +3571,7 @@
     },
     {
   "project": {
-    "id": "proj_turnobase_cl_001",
+    "id": "32815b70-f36b-434f-8aea-55b84fd45e40",
     "name": "TurnoBase",
     "tagline": "Ordena turnos, ausencias y cobertura operativa sin fricción manual.",
     "shortDescription": "Proyecto HR Tech en tracción temprana que ayuda a empresas chilenas con operación por turnos a registrar cambios, ausencias y coberturas para mejorar continuidad operativa y trazabilidad interna.",
