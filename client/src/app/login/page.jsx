@@ -160,7 +160,7 @@ export default function LoginRegisterPage() {
 
   // Handle Google button click
   const handleGoogleClick = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/auth/google` // CAMBIAR VARIABLE DE ENTORNO
+    window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google` // CAMBIAR VARIABLE DE ENTORNO
   };
 
   // Handle Guest Login
