@@ -20,8 +20,8 @@ export default function Header() {
 
   // contexto
   //console.log("Datos del proyecto desde el contexto en Header:", data);
-  const { dbProject, mockProject } = useProject();
-  console.log("Datos del proyecto desde el contexto en Header:", dbProject, mockProject);
+  const { tramoData, dbProject, mockProject } = useProject();
+  console.log("Datos del proyecto desde el contexto en Header:", tramoData, dbProject, mockProject);
   const {project, currentState, reputationSnapshot} = mockProject;
 
   console.log(projectStatus[dbProject.status])

@@ -2,12 +2,12 @@
 
 import { useState, useContext } from 'react';
 import { ProjectContext } from '../layout';
+import { useProject } from '@/lib/projectContext';
 
 /* ================= COMPONENT ================= */
 
 export default function EvidenciaSection() {
-  const data = useContext(ProjectContext);
-  const { dbProject, mockProject } = data;
+  const { tramoData, dbProject, mockProject } = useProject();
 
   const { evidence, evaluations, pacProgress, currentState } = mockProject;
 

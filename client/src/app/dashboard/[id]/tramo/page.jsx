@@ -4,7 +4,9 @@ import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { ProjectContext } from "../layout";
+
+import { useProject } from '@/lib/projectContext';
+
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -13,8 +15,9 @@ const fadeUp = {
 
 export default function TramoDashboard() {
   const isMobile = useIsMobile();
-  const data = useContext(ProjectContext);
-  const { dbProject, mockProject } = data;
+
+  // contexto
+  const { tramoData, dbProject, mockProject } = useProject();
   const { project, currentState, pacProgress } = mockProject;
 
   /* =========================

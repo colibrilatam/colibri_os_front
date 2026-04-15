@@ -31,10 +31,13 @@ export default async function DataLayout({ children, params }) {
   const { data: projectData, error } = await handleRequest(
     () => projectsService.getById(id)
   );
+  const { data: tramoData, error: tramoError } = await handleRequest(
+    () => projectsService.currentTramo(projectData.currentTramoId)
+  );
   const mockData = getProjectById(id);
 
-  if(error) {
-    return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">Error al cargar el proyecto: {error}</div>;
+  if(error || tramoError) {
+    return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">Error al cargar el proyecto: {JSON.stringify(error) || JSON.stringify(tramoError)}</div>;
   }
   if(!projectData) {
     notFound();
@@ -52,7 +55,7 @@ export default async function DataLayout({ children, params }) {
 */
   return (
     
-      <LayoutShell projectInfo={{dbProject: projectData, mockProject: mockData}}>
+      <LayoutShell projectInfo={{dbProject: projectData, mockProject: mockData, tramoData: tramoData}}>
         {children}
       </LayoutShell>
     
