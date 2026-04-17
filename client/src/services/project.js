@@ -19,4 +19,18 @@ export const projectsService = {
 
   currentTramo: (id) => 
     fetcher(`/tramos/${id}`),
+
+  projectTramoData: (id) => 
+    fetcher(`/tramos/project/${id}`),
+
+  nft: (id) =>
+    fetcher(`/nft-projects/by-project/${id}`),
+
+  evidences: (id) => 
+    fetcher(`/evidence/project/${id}`, ),
+
+  microActionInstance: (id) => 
+    fetcher(`/micro-action-instances/project/${id}`),
+
+
 };
