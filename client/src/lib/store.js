@@ -21,6 +21,9 @@ export const useUserStore = create(
             deleteCookie('token')
           }
         }
+        // Si se establece un token, desactivar modo invitado
+        set({ isGuest: false }) 
+        deleteCookie('isGuest')
       },
       getToken: () => get().token,
 
@@ -37,6 +40,7 @@ export const useUserStore = create(
         }
       },
 
+      // Logout
       logout: () => {
         if (typeof window !== 'undefined') {
           deleteCookie('token')
@@ -46,13 +50,16 @@ export const useUserStore = create(
       },
 
       // Verificar si hay token y si es válido, o si es invitado
-      isAuthenticated: () => {
+      isAuthenticated: (guest = false) => {
   const token = get().token
   const isGuest = get().isGuest
   
   // Si es invitado, está autenticado sin token
-  if (isGuest) {
-    return true
+  // El parámetro 'guest' permite verificar explícitamente el modo invitado
+  if (guest){
+    if (isGuest) {
+      return true
+    }
   }
 
   // Si no es invitado, validar token
