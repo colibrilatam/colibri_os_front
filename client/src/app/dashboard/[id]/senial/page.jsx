@@ -158,8 +158,8 @@ export default function IdentidadPage() {
                 id="ic"
                 className="glass-effect border-glass rounded-3xl p-6"
               >
-                <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                  <div>
+                <div className="flex flex-col content-center items-center gap-6 md:flex-row  md:justify-between">
+                  <div className='w-full'>
                     <div
                       className="mb-2 text-xs uppercase tracking-[0.22em]"
                       style={{ color: 'var(--text-secondary)' }}
@@ -209,32 +209,15 @@ export default function IdentidadPage() {
                     </div>
                   </div>
 
-                  <div className="w-full md:max-w-xs">
+                  <div className=" w-full h-full">
                     <ProgressBar
                       progreso={PacProgress}
                       color="multicolor"
-                      tamaño="md"
+                      tamaño="lg"
                       label="Lectura sobre escala completa"
                       mostrarPorcentaje={true}
                     />
-                    <div className="mt-4 flex h-12 items-end gap-1">
-                      {[5, 18, 25, 34, 39, 40, 52].map((value, index) => (
-                        <div
-                          key={index}
-                          className="flex-1 rounded-t-md border border-slate-600 bg-emerald-700"
-                          style={{ height: `${value}%` }}
-                        />
-                      ))}
-                    </div>
-                    <div
-                      className="mt-2"
-                      style={{
-                        fontSize: 'var(--text-xs)',
-                        color: 'var(--text-tertiary)',
-                      }}
-                    >
-                      Microtendencia reciente
-                    </div>
+                   
                   </div>
                 </div>
               </div>
