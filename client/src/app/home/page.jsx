@@ -7,6 +7,7 @@ import { FiltersBar } from "@/components/home/FiltersBar";
 import { ProjectGrid } from "@/components/home/ProjectGrid";
 import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
+import Header from "@/components/Header";
 
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
@@ -58,6 +59,7 @@ export default function HomePage() {
         .filter(Boolean),
     ).size;
 
+    // Actualizaciones hoy
     const actualizacionesHoy = projects.filter(
       (project) => new Date(project.updatedAt).toDateString() === today,
     ).length;
@@ -184,6 +186,8 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen  backdrop-blur-xl">
+      <Header isHome={true} />
+      {/**
       <nav className="sticky top-0 z-50 border-b border-white/8 bg-[#080d1a]/80 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -211,6 +215,7 @@ export default function HomePage() {
           </div>
         </div>
       </nav>
+       */}
 
       <div className="mx-auto max-w-7xl">
         <HeroSection stats={heroStats} />

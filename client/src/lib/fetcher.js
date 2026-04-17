@@ -1,3 +1,5 @@
+import { useUserStore } from "@/lib/store";
+
 export class ApiError extends Error {
   constructor(message, status, data) {
     super(message);
@@ -9,9 +11,13 @@ export class ApiError extends Error {
 export async function fetcher(endpoint, options = {}) {
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
+  // Obtener token desde Zustand fuera de un componente
+  const token = useUserStore.getState().token;
+
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` }),
       ...options.headers,
     },
     ...options,
@@ -21,6 +27,12 @@ export async function fetcher(endpoint, options = {}) {
     const res = await fetch(`${baseUrl}${endpoint}`, config);
 
     if (!res.ok) {
+      // Token expirado o inválido — redirigir al login
+  if (res.status === 401) {
+    useUserStore.getState().logout(); // limpiar el store
+    window.location.href = '/login';
+  }
+
       const errorData = await res.json().catch(() => ({}));
       throw new ApiError(
         errorData.message || 'Error en la solicitud',
