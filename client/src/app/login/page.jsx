@@ -8,6 +8,7 @@ import SelectRole from '@/components/login/SelectRole';
 import GoogleButton from '@/components/login/GoogleButton';
 import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
+import NftLink from '@/components/login/NftLink';
 
 export default function LoginRegisterPage() {
   const [view, setView] = useState('login'); // login | selectRole | register | nftLink
@@ -23,10 +24,10 @@ export default function LoginRegisterPage() {
   const isLogin = view === 'login';
   const isSelectRole = view === 'selectRole';
 
-  // handlers
+  // cambio de rol
   const handleSelectRole = (role) => {
     setSelectedRole(role);
-    setView('register');
+    setView('nftLink');
   };
 
   // google auth
@@ -45,6 +46,8 @@ export default function LoginRegisterPage() {
     setIsPopupOpen(false);
     router.push('/home');
   };
+
+
 
   if (loading) return <LoadingScreen />;
 
@@ -74,11 +77,12 @@ export default function LoginRegisterPage() {
             ? 'Ingresá a Colibrí OS'
             : isSelectRole
               ? 'Elegí cómo querés participar'
-              : 'Registrate para comenzar'}
+              : 'Elige tu rol, verifica tu NFT y entra al panel del Reputation Lab'}
         </p>
 
         {/* Vistas */}
         {isSelectRole && <SelectRole onSelectRole={handleSelectRole} />}
+        {view === 'nftLink' && <NftLink role={selectedRole} onBack={() => setView('selectRole')} onSuccess={() => setView('register')}/>}
        
         {isLogin && (
           <>
@@ -96,7 +100,7 @@ export default function LoginRegisterPage() {
         {view === 'register' && (
           <Register
             selectedRole={selectedRole}
-            onSuccess={() => setView('login')}
+            onSuccess={selectedRole === 'emprendedor' ? () => router.push('/proyecto') : () => router.push('/home')}
             onBack={() => setView('selectRole')}
             onLoadingChange={setLoading}
           />

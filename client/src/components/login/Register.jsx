@@ -6,11 +6,14 @@ import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/valida
 export default function Register({ selectedRole, onSuccess, onBack, onLoadingChange }) {
   const { handleRegister } = useRegister();
 
+  // DEMO
+  const isDemo = true;
+
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    username: 'demoUser',
+    email: 'demoemail@demo.com',
+    password: 'Password1425!',
+    confirmPassword: 'Password1425!',
   });
 
   const [errors, setErrors] = useState({
@@ -82,9 +85,22 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     !errors.confirmPassword &&
     passwordValidation.isValid;
 
+    const handleSubmitDemo = (e) => {
+      e.preventDefault();
+      alert("Demostración de registro");
+      onSuccess();
+    }
+
     // enviar formulario
   const handleSubmit = async (e) => {
+    if(isDemo) {
+      alert("Demostración de registro");
+      return onSuccess();
+      
+    }
     e.preventDefault();
+    const validation = await validatePassword(formData.password);
+     setPasswordValidation(validation);
 
     if (!isFormValid()) {
       return alert('Por favor, corrige los errores en el formulario antes de continuar.');
@@ -103,7 +119,7 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={isDemo ? handleSubmitDemo : handleSubmit} className="space-y-5">
       <div>
         <label className="text-micro-label block mb-2">Nombre completo</label>
         <input
@@ -156,12 +172,7 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
 
       <button
         type="submit"
-        disabled={!isFormValid()}
-        className={`w-full py-3 rounded-lg font-semibold transition ${
-          isFormValid()
-            ? 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer'
-            : 'bg-gray-500 cursor-not-allowed opacity-60'
-        }`}
+        className={`w-full py-3 rounded-lg font-semibold transitionbg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer bg-gray-500`}
       >
         Registrarse
       </button>

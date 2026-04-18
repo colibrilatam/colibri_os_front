@@ -79,12 +79,7 @@ export default function Login({ onLoadingChange }) {
 
       <button
         type="submit"
-        disabled={!isFormValid()}
-        className={`w-full py-3 rounded-lg font-semibold transition ${
-          isFormValid()
-            ? 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer'
-            : 'bg-gray-500 cursor-not-allowed opacity-60'
-        }`}
+        className={`w-full py-3 rounded-lg font-semibold transition  'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer bg-gray-500 `}
       >
         Iniciar sesión
       </button>

@@ -17,7 +17,7 @@ export default function Header({ isHome = false}) {
       <div className=" flex items-center gap-0 lg:items-center justify-between lg:gap-4 content-center  w-full ">
 
       
-          <div className="flex items-center justify-around w-full">
+          <div className="flex items-center justify-between px-4 w-full">
           <div className="flex items-center gap-4">
             <img src="/colibri-logo.png" alt="Colibrí Logo" className="rounded-full h-16 w-16" />
             <span className="text-lg font-bold text-slate-50">Colibrí OS</span>
