@@ -1,6 +1,27 @@
+"use client"
+import { useUserStore } from "@/lib/store";
+import { HelpCircle } from "lucide-react";
+import NotificationPopup from "../NotificationPopup";
+
 export default function SelectRole({ onSelectRole }) {
+
+  const { isDemo, setIsDemo } = useUserStore();
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="flex flex-col gap-6 items-center">
+      <div className="gap-4 flex flex-row items-center border border-green-700 glass-effect-green p-2 rounded-full">
+        <HelpCircle className="cursor-pointer"></HelpCircle>
+      <label className="text-lg">Activar Demo</label>
+      <input 
+        checked={isDemo}
+        onChange={(e) => setIsDemo(e.target.checked)}
+        type="checkbox"
+        className="w-6 h-6 bg-green-800"
+      ></input>
+      
+      {/* <button className="text-xl border border-gray-600 p-1 px-2 rounded-full" >!</button> <button className="text-xl border border-gray-600 p-1 px-2 rounded-full" >!</button>*/}
+      </div>
+      <div className="flex flex-col md:flex-row gap-6" >
       {/* EMPRENDEDOR */}
       <div className="rounded-2xl border border-white/10 bg-white/5 p-6 flex flex-col justify-between hover:bg-white/10 hover:scale-[1.02] transition-all duration-200">
         <div>
@@ -33,6 +54,7 @@ export default function SelectRole({ onSelectRole }) {
         >
           Continuar como Mecenas
         </button>
+      </div>
       </div>
     </div>
   );

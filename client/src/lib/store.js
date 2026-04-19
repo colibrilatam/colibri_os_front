@@ -6,6 +6,10 @@ import { setCookie, deleteCookie } from './cookies';
 export const useUserStore = create(
   persist(
     (set, get) => ({
+      // Demo
+      isDemo: false,
+      setIsDemo: (isDemo) => set({ isDemo }),
+
       // Estado existente
       rol: 'CEO',
       setRol: (newRol) => set({ rol: newRol }),
