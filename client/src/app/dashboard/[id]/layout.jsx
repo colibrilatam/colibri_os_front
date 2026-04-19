@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import LayoutShell from "./LayoutShell";
 import { projectsService } from "@/services/project";
 import { handleRequest } from "@/lib/handleRequest";
+import ErrorScreen from "@/components/ErrorScreen";
 
 export default async function DataLayout({ children, params }) {
 
@@ -13,10 +14,6 @@ export default async function DataLayout({ children, params }) {
   const { data: projectData, error } = await handleRequest(
     () => projectsService.getById(id)
   );
-
-
-
-
 
   const { data: tramoData, error: tramoError } = await handleRequest(
     () => projectsService.currentTramo(projectData.currentTramoId)
@@ -36,24 +33,21 @@ export default async function DataLayout({ children, params }) {
   const { data: microActionInstanceData, error: microActionInstanceError } = await handleRequest(
     () => projectsService.microActionInstance(id)
   );
-  console.log("projectData:", projectData,
-     "tramoData:", tramoData,
-      "ProjectTramoData:", ProjectTramoData,
-       "projectNftData:", projectNftData,
-        "evidenceData:", evidenceData,
-         "microActionInstanceData:", microActionInstanceData);
+  console.log("projectData:", projectData, error,
+     "tramoData:", tramoData, tramoError,
+      "ProjectTramoData:", ProjectTramoData, ProjectTramoError,
+      "nft", projectNftData, projectNftError,
+    );
 
   // Manejo de errores
-  if( error || tramoError || ProjectTramoError ) {
-    return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">
-              Error al cargar el proyecto: 
-                {
-                  JSON.stringify(error) 
-                  || JSON.stringify(tramoError) 
-                  || JSON.stringify(ProjectTramoError)
-                  
-                }
-            </div>;
+  if (error || tramoError || ProjectTramoError || projectNftError) {
+    return <ErrorScreen error={
+      error
+      || tramoError
+      || ProjectTramoError
+      || projectNftError} 
+      back="/home"
+    />;
   }
 
   // Si no se encuentra el proyecto, mostrar página de error

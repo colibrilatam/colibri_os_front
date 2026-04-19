@@ -15,7 +15,7 @@ export default function CreateProject() {
     if(error){
         alert(error);
     }
-    const projectId = data.find((p) => p.projectName === 'AulaPuente').id;
+    const projectId = data.find((p) => p.projectName === 'EcoTech').id;
     //console.log(data)
     alert('Demostración de registro');
     router.push(`/dashboard/${projectId}/senial`);
