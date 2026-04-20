@@ -2,18 +2,19 @@
 import { useState } from 'react';
 import { useRegister } from '@/hooks/useRegister';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
+import { useUserStore } from '@/lib/store';
 
 export default function Register({ selectedRole, onSuccess, onBack, onLoadingChange }) {
   const { handleRegister } = useRegister();
 
   // DEMO
-  const isDemo = true;
+  const isDemo = useUserStore((state) => state.isDemo);
 
   const [formData, setFormData] = useState({
-    username: 'demoUser',
-    email: 'demoemail@demo.com',
-    password: 'Password1425!',
-    confirmPassword: 'Password1425!',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
 
   const [errors, setErrors] = useState({

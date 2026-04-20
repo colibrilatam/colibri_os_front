@@ -114,7 +114,7 @@ export default function ReputacionPage() {
              <p className="mt-4 text-sm leading-relaxed text-slate-400">
               El radar opera como síntesis visual. No sustituye el desglose auditable por dimensión.
             </p>
-            <div className="mt-6 space-y-4">
+            {/*<div className="mt-6 space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="rounded-2xl glass-effect-green border-glass p-4">
                   <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Sostiene hoy</div>
@@ -128,6 +128,7 @@ export default function ReputacionPage() {
                 </div>
               </div>
             </div>
+            */}
             </div>
 
            

@@ -6,6 +6,10 @@ import { setCookie, deleteCookie } from './cookies';
 export const useUserStore = create(
   persist(
     (set, get) => ({
+      // Demo
+      isDemo: false,
+      setIsDemo: (isDemo) => set({ isDemo }),
+
       // Estado existente
       rol: 'CEO',
       setRol: (newRol) => set({ rol: newRol }),
@@ -56,6 +60,7 @@ export const useUserStore = create(
   
   // Si es invitado, está autenticado sin token
   // El parámetro 'guest' permite verificar explícitamente el modo invitado
+  // no se bien por que lo puse pero creo que no tiene sentido
   if (guest){
     if (isGuest) {
       return true
