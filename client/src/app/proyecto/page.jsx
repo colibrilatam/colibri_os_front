@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
+import { useUserStore } from '@/lib/store';
 
 export default function CreateProject() {
   const router = useRouter();
@@ -15,24 +16,24 @@ export default function CreateProject() {
     if(error){
         alert(error);
     }
-    const projectId = data.find((p) => p.projectName === 'AulaPuente').id;
+    const projectId = data.find((p) => p.projectName === 'EcoTech').id;
     //console.log(data)
     alert('Demostración de registro');
     router.push(`/dashboard/${projectId}/senial`);
   };
 
   // DEMO
-  const isDemo = true;
+  const isDemo = useUserStore((state) => state.isDemo);
 
 
     const [formData, setFormData] = useState({
-      projectName: 'Demo Project',
-      country: 'Colombia',
-      industry: 'Tecnología',
-      tagline: 'Demo Tagline',
-      shortDescription: 'Demo Short Description',
-      startupLinkedinUrl: 'https://www.linkedin.com',
-      websiteUrl: 'https://www.colibrios.com',
+      projectName: '',
+      country: '',
+      industry: '',
+      tagline: '',
+      shortDescription: '',
+      startupLinkedinUrl: '',
+      websiteUrl: '',
       //rlabProfileUrl: 'https://www.colibrios.com',
     })
  /*
