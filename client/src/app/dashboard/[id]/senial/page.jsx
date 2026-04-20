@@ -1,9 +1,6 @@
 'use client';
 import NftAvatar from '@/components/señal/NftAvatar';
 import ProgressBar from '@/components/ProgressBar';
-import TourButton from '@/components/tutoriales/TourButton';
-import { getNextTramoCode } from '@/lib/hooks/tramo';
-
 
 // contexto
 import { useProject } from '@/lib/projectContext';
@@ -11,13 +8,22 @@ import { useProject } from '@/lib/projectContext';
 
 
 export default function IdentidadPage() {
+
   // contexto
-  const { dbProject, mockProject } = useProject();
+  const { 
+    microActionInstanceData , 
+    tramoData, 
+    dbProject, 
+    mockProject, 
+    projectNftData, 
+    evidenceData } = useProject();
+ 
+ 
+ 
   const { project, currentState, reputationSnapshot, pacProgress } = mockProject;
 
-  // Cantidad de PACs aprobados respeto al maximo de PACs por tramo (7) para calcular el progreso del tramo
-  //const progressPct = (currentState.pacsApprovedInCurrentTramo / 7) * 100;
-  //console.log(dbProject, mockProject)
+  // información de tramo actual
+
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
   const PacProgress = Math.round((reputationSnapshot.icPublic % 1) * 100);
   //console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)
@@ -31,18 +37,22 @@ export default function IdentidadPage() {
           <h1 className="text-h3 mb-3">Estado actual del Proyecto</h1>
 
           <p className="text-body leading-relaxed">
-            <span className="text-accent-cyan font-medium">{project.name}</span>{' '}
+            <span className="text-accent-cyan font-medium">{dbProject.projectName}</span>{' '}
             transita actualmente{' '}
+            { tramoData.code === "T4" ? <span className="text-accent-emerald font-medium">T4</span> : (
+              <>
             <span className="text-accent-emerald font-medium">
-              {currentState.currentTramoCode}
+              {tramoData.code}
             </span>{' '}
             hacia{' '}
             <span className="text-accent-emerald font-medium">
               {`T${
-                parseInt(currentState.currentTramoCode?.replace('T', ''), 10) +
+                parseInt(tramoData.code?.replace('T', ''), 10) +
                 1
               }` || 'Tn+1'}
             </span>
+            </>
+            )}
             , con una señal reputacional de{' '}
             <span className="text-accent-cyan font-medium">
               {reputationSnapshot.icPublic.toFixed(2)} / 6.00
@@ -107,7 +117,7 @@ export default function IdentidadPage() {
                     color: 'var(--color-turquoise)',
                   }}
                 >
-                  Estado visual {currentState.currentTramoCode}
+                  Estado visual {tramoData.code}
                 </span>
               </div>
 
@@ -127,14 +137,14 @@ export default function IdentidadPage() {
     <div className="flex flex-col items-center gap-2 text-center">
       <div className="text-sm text-[var(--text-secondary)]">
         <span className="text-[var(--text-primary)] font-medium">
-          {currentState.currentTramoCode} ·{' '}
-          {currentState.currentTramoName || 'Nombre del tramo'}
+          {tramoData.code} ·{' '}
+          {tramoData.name || 'Nombre del tramo'}
         </span>
       </div>
 
-      <div className="text-xs text-[var(--text-tertiary)]">
-        <span className="text-[var(--text-secondary)]">
-          {project.nftId || 'NFT-0001'}
+      <div className="text-xs text-[var(--text-tertiary)] p-2 border-gray-500 border bg-gray-400/20  rounded-full"  >
+        <span className="text-(var(--text-secondary))">
+          {projectNftData.nftHash}
         </span>
       </div>
     </div>
@@ -148,8 +158,8 @@ export default function IdentidadPage() {
                 id="ic"
                 className="glass-effect border-glass rounded-3xl p-6"
               >
-                <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                  <div>
+                <div className="flex flex-col content-center items-center gap-6 md:flex-row  md:justify-between">
+                  <div className='w-full'>
                     <div
                       className="mb-2 text-xs uppercase tracking-[0.22em]"
                       style={{ color: 'var(--text-secondary)' }}
@@ -182,36 +192,32 @@ export default function IdentidadPage() {
                         color: 'var(--text-primary)',
                       }}
                     >
-                      {reputationSnapshot.structuralReading}
+                      { tramoData.code === "T4" ? <span className="text-accent-emerald font-medium">T4</span> : (
+              <>
+            <span className="text-accent-emerald font-medium">
+              {tramoData.code}
+            </span>{' '}
+            en tránsito hacia{' '}
+            <span className="text-accent-emerald font-medium">
+              {`T${
+                parseInt(tramoData.code?.replace('T', ''), 10) +
+                1
+              }` || 'Tn+1'}
+            </span>
+            </>
+            )}
                     </div>
                   </div>
 
-                  <div className="w-full md:max-w-xs">
+                  <div className=" w-full h-full">
                     <ProgressBar
                       progreso={PacProgress}
                       color="multicolor"
-                      tamaño="md"
+                      tamaño="lg"
                       label="Lectura sobre escala completa"
                       mostrarPorcentaje={true}
                     />
-                    <div className="mt-4 flex h-12 items-end gap-1">
-                      {[5, 18, 25, 34, 39, 40, 52].map((value, index) => (
-                        <div
-                          key={index}
-                          className="flex-1 rounded-t-md border border-slate-600 bg-emerald-700"
-                          style={{ height: `${value}%` }}
-                        />
-                      ))}
-                    </div>
-                    <div
-                      className="mt-2"
-                      style={{
-                        fontSize: 'var(--text-xs)',
-                        color: 'var(--text-tertiary)',
-                      }}
-                    >
-                      Microtendencia reciente
-                    </div>
+                   
                   </div>
                 </div>
               </div>
@@ -263,6 +269,8 @@ export default function IdentidadPage() {
                       </div>
                     </div>
 
+                    {microActionInstanceData && (
+
                     <div className="glass-effect-dark border-glass rounded-2xl p-4">
                       <div
                         className="mb-2 text-xs uppercase tracking-[0.18em]"
@@ -280,7 +288,9 @@ export default function IdentidadPage() {
                         {currentState.microactionsCompletedCount} / 21
                       </div>
                     </div>
+                    )}
 
+                        {evidenceData &&(
                     <div className="glass-effect-dark border-glass rounded-2xl p-4">
                       <div
                         className="mb-2 text-xs uppercase tracking-[0.18em]"
@@ -298,6 +308,7 @@ export default function IdentidadPage() {
                         {currentState.validatedEvidenceCount} / 7
                       </div>
                     </div>
+                    )}
                   </div>
                 </div>
 
