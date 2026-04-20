@@ -47,11 +47,11 @@ export default function IdentidadPage() {
             <span className="text-accent-cyan font-medium">
               {reputationSnapshot.icPublic.toFixed(2)} / 6.00
             </span>
-            , mientras reduce el Riesgo{' '}
+            , mientras reduce la incertidumbre {' '}
             <span className="text-accent-amber font-medium">
-              {project.primaryRisk || '[Riesgo]'}
+              {project.primaryRisk || '[INCERTIDUMBRE DEL TRAMO]'}
             </span>{' '}
-            y las siguientes incertidumbres:{' '}
+            y los siguientes riesgos:{' '}
             <span className="text-accent-amber font-medium">
               {project.uncertainty || '[Riesgo]'}
             </span>
@@ -71,7 +71,7 @@ export default function IdentidadPage() {
             </span>
             {/*  </>
             )}*/}{' '}
-            mientras avanza con señales verificables propias del tramo.
+            mientras y avanza con señales verificables propias del tramo.
           </p>
         </div>
       </div>
