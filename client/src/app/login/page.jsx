@@ -9,6 +9,7 @@ import GoogleButton from '@/components/login/GoogleButton';
 import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
 import NftLink from '@/components/login/NftLink';
+import Button from '@/components/Button';
 
 export default function LoginRegisterPage() {
   const [view, setView] = useState('login'); // login | selectRole | register | nftLink
@@ -52,7 +53,8 @@ export default function LoginRegisterPage() {
   if (loading) return <LoadingScreen />;
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 py-6">
+    <div className="relative flex items-center justify-center min-h-screen px-4 py-6">
+      <Button className="absolute top-4 left-4" color='green' content="Volver" redirect="home"></Button>
 
       {/* Popup */}
       {isPopupOpen && (

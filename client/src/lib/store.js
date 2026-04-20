@@ -60,6 +60,7 @@ export const useUserStore = create(
   
   // Si es invitado, está autenticado sin token
   // El parámetro 'guest' permite verificar explícitamente el modo invitado
+  // no se bien por que lo puse pero creo que no tiene sentido
   if (guest){
     if (isGuest) {
       return true
