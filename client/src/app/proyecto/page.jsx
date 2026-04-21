@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
@@ -34,20 +34,21 @@ export default function CreateProject() {
       shortDescription: '',
       startupLinkedinUrl: '',
       websiteUrl: '',
-      //rlabProfileUrl: 'https://www.colibrios.com',
     })
- /*
-  const [formData, setFormData] = useState({
-    projectName: '',
-    country: '',
-    industry: '',
-    tagline: '',
-    shortDescription: '',
-    startupLinkedinUrl: '',
-    websiteUrl: '',
-    //rlabProfileUrl: '',
-  });
-*/
+
+useEffect(() => {
+  if (isDemo) {
+    setFormData({
+      projectName: 'AulaPuente',
+      country: 'Venezuela',
+      industry: 'EdTech',
+      tagline: 'Tecnología para una educación mejor',
+      shortDescription: 'Proyecto edtech en etapa fundacional que explora una solución simple para organizar actividades, seguimiento y alertas básicas de continuidad académica en educación media venezolana.',
+      startupLinkedinUrl: 'https://linkedin.com/company/mi-startup',
+      websiteUrl: 'https://mi-startup.com',
+    });
+  }
+}, [isDemo])
 
   const [errors, setErrors] = useState({
     projectName: '',
@@ -57,7 +58,6 @@ export default function CreateProject() {
     shortDescription: '',
     startupLinkedinUrl: '',
     websiteUrl: '',
-    //rlabProfileUrl: '',
   });
 
 
@@ -87,7 +87,7 @@ export default function CreateProject() {
       shortDescription: 'La descripción corta es requerida',
       startupLinkedinUrl: 'La URL de LinkedIn es requerida',
       websiteUrl: 'La URL del sitio web es requerida',
-      //rlabProfileUrl: 'La URL del perfil R Lab es requerida',
+    
     };
 
     const urlFields = ['startupLinkedinUrl', 'websiteUrl', 'rlabProfileUrl'];
@@ -149,7 +149,7 @@ export default function CreateProject() {
     { name: 'shortDescription',   label: 'Descripción corta',    type: 'textarea' },
     { name: 'startupLinkedinUrl', label: 'LinkedIn de la startup', type: 'text' },
     { name: 'websiteUrl',         label: 'Sitio web',            type: 'text' },
-    //{ name: 'rlabProfileUrl',     label: 'Perfil R Lab',         type: 'text' },
+    
   ];
 
   return (

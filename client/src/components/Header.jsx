@@ -19,7 +19,7 @@ export default function Header({ isHome = false }) {
     setAuth(isAuthenticated());
   },[])
 
-  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
+  const {isAuthenticated , logout} = useUserStore();
 
 
   if (isHome) {
@@ -40,7 +40,7 @@ export default function Header({ isHome = false }) {
                 <div className="border border-cyan-500 dropdown-content ">
                   <a id="top" href="#">Mi proyecto</a>
                   <a id="middle" href="#">NFTs</a>
-                  <a id="bottom" className='bg-red-800'  href="#">Cerrar sesión</a>
+                  <a id="bottom" className='bg-red-800' onClick={logout}  href="/login">Cerrar sesión</a>
                 </div>
               </div>
             ) : (

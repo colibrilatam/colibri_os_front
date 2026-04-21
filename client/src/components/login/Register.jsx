@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRegister } from '@/hooks/useRegister';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
@@ -9,6 +9,8 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
 
   // DEMO
   const isDemo = useUserStore((state) => state.isDemo);
+
+  
 
   const [formData, setFormData] = useState({
     username: '',
@@ -23,6 +25,15 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     password: '',
     confirmPassword: '',
   });
+
+  useEffect(() => {
+    setFormData({
+      username: 'Emprendedor Demo',
+      email: 'emprendedor@demo.com',
+      password: 'Test@1234',
+      confirmPassword: 'Test@1234',
+    })
+  }, [isDemo]);
 
   // validación de contraseña
   const [passwordValidation, setPasswordValidation] = useState({
@@ -88,17 +99,12 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
 
     const handleSubmitDemo = (e) => {
       e.preventDefault();
-      alert("Demostración de registro");
+      alert("Registro exitoso");
       onSuccess();
     }
 
     // enviar formulario
   const handleSubmit = async (e) => {
-    if(isDemo) {
-      alert("Demostración de registro");
-      return onSuccess();
-      
-    }
     e.preventDefault();
     const validation = await validatePassword(formData.password);
      setPasswordValidation(validation);
