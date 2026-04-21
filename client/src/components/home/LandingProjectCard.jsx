@@ -1,20 +1,22 @@
-import { Badge } from "@/components/ui/Badge";
-import { useRouter } from "next/navigation";
+import { Badge } from '@/components/ui/Badge';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import logoAvatar from '../../../public/logos/logo-avatar.jpg';
 
 function formatProjectDate(dateString) {
   const parsedDate = new Date(dateString);
-  return parsedDate.toLocaleDateString("es-AR", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
+  return parsedDate.toLocaleDateString('es-AR', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
   });
 }
 
-export function ProjectCard({ project, index }) {
-  const projectTrancheLabel = project.currentTramo?.code || "Sin tramo";
+export function ProjectCard({ project, index, image }) {
+  const projectTrancheLabel = project.currentTramo?.code || 'Sin tramo';
   const projectTrancheImage = project.currentTramo?.nftImageUrl || null;
   const router = useRouter();
-
+console.log(project)
   return (
     <article className="group relative flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.07] hover:shadow-[0_16px_40px_rgba(6,182,212,0.08)]">
       <div className="mb-4 flex items-start justify-between gap-3">
@@ -24,21 +26,26 @@ export function ProjectCard({ project, index }) {
           </div>
 
           <div className="flex items-center gap-2">
-            {projectTrancheImage ? (
-              <img
-                src={projectTrancheImage}
-                alt={projectTrancheLabel}
-                className="h-8 w-8 rounded-md object-cover shrink-0"
-              />
-            ) : null}
+            <Image
+              src={image || logoAvatar}
+              alt={project.projectName}
+              className="h-8 w-8 rounded-md object-cover shrink-0"
+            />
 
             <h3 className="truncate text-lg font-semibold leading-tight text-white">
-              {project.projectName || "Proyecto sin nombre"}
+              {project.projectName || 'Proyecto sin nombre'}
             </h3>
+            
+              <div className="absolute top-4 right-5 z-10">
+                <div className="bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold px-2 py-0.5 rounded-md backdrop-blur-sm">
+                1.47
+                </div>
+              </div>
+            
           </div>
 
           <div className="mt-1 text-sm text-slate-400">
-            {[project.industry, project.country].filter(Boolean).join(" · ")}
+            {[project.industry, project.country].filter(Boolean).join(' · ')}
           </div>
         </div>
       </div>
@@ -51,26 +58,28 @@ export function ProjectCard({ project, index }) {
       <div className="mb-3 flex-1 text-sm leading-6 text-slate-300">
         {project.shortDescription ||
           project.tagline ||
-          "Sin descripción disponible"}
+          'Sin descripción disponible'}
       </div>
 
       <div className="mb-5 text-xs text-slate-500">
-        Responsable:{" "}
+        Responsable:{' '}
         <span className="text-slate-300">
-          {project.owner?.fullName || "Sin responsable"}
+          {project.owner?.fullName || 'Sin responsable'}
         </span>
       </div>
 
       <div className="mt-auto flex items-center justify-between border-t border-white/8 pt-4">
         <span className="text-[11px] text-slate-500">
-          Actualizado{" "}
+          Actualizado{' '}
           <time dateTime={project.updatedAt} className="text-slate-400">
             {formatProjectDate(project.updatedAt)}
           </time>
         </span>
 
-        <button onClick={() => router.push(`/dashboard/${project.id}/senial`)}
-        className="bg-linear-to-r from-cyan-500 to-blue-500  border border-cyan-700 rounded-2xl p-2 group/btn flex items-center gap-1 text-xs font-bold text-white transition-all duration-150 hover:text-cyan-200 cursor-pointer active:scale-95">
+        <button
+          onClick={() => router.push(`/dashboard/${project.id}/senial`)}
+          className="bg-linear-to-r from-cyan-500 to-blue-500  border border-cyan-700 rounded-2xl p-2 group/btn flex items-center gap-1 text-xs font-bold text-white transition-all duration-150 hover:text-cyan-200 cursor-pointer active:scale-95"
+        >
           Ver en R-Lab
           <svg
             className="h-3 w-3 translate-x-0 transition-transform duration-150 group-hover/btn:translate-x-0.5"
