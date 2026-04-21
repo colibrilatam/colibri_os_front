@@ -38,7 +38,7 @@ console.log(project)
             
               <div className="absolute top-4 right-5 z-10">
                 <div className="bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-semibold px-2 py-0.5 rounded-md backdrop-blur-sm">
-                NFT-0001
+                1.47
                 </div>
               </div>
             
