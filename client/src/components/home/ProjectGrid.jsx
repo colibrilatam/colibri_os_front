@@ -1,5 +1,5 @@
 import { ProjectCard } from './LandingProjectCard';
-import { getProjectImage  } from '@/lib/hooks/createImageMap';
+import { getProjectImage } from '@/lib/hooks/createImageMap';
 
 export function ProjectGrid({ projects }) {
   if (projects.length === 0) {
@@ -39,7 +39,7 @@ export function ProjectGrid({ projects }) {
             key={project.id}
             project={project}
             index={index}
-            image={getProjectImage(project.id)}
+            image={getProjectImage(project.projectName)}
           />
         ))}
       </div>
