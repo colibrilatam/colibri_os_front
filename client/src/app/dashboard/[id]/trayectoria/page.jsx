@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useContext } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProject } from '@/lib/projectContext';
@@ -12,6 +12,8 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
+import { pacConfig } from './components/pacConfig';
+
 export default function TrayectoriaSection() {
   const { tramoData, dbProject, mockProject } = useProject();
 
@@ -21,13 +23,8 @@ export default function TrayectoriaSection() {
      🔗 DATA MAPPING REAL
   ========================= */
 
-  const {
-    project,
-    currentState,
-    pacProgress,
-    evidence,
-    microactionInstances,
-  } = mockProject;
+  const { project, currentState, pacProgress, evidence, microactionInstances } =
+    mockProject;
 
   const mapStatus = {
     approved: 'done',
@@ -63,9 +60,7 @@ export default function TrayectoriaSection() {
         },
         microactions,
         timeline: {
-          start: p.startedAt
-            ? new Date(p.startedAt).toLocaleDateString()
-            : '-',
+          start: p.startedAt ? new Date(p.startedAt).toLocaleDateString() : '-',
           end: p.closedAt
             ? new Date(p.closedAt).toLocaleDateString()
             : 'En curso',
@@ -111,10 +106,7 @@ export default function TrayectoriaSection() {
             label="Microacciones"
             value={metrics.microactions + ' / 21'}
           />
-          <Metric
-            label="Evidencias"
-            value={metrics.evidences + ' / 7'}
-          />
+          <Metric label="Evidencias" value={metrics.evidences + ' / 7'} />
         </div>
       </div>
 
@@ -168,20 +160,20 @@ export default function TrayectoriaSection() {
       </div>
 
       {/* LOWER GRID */}
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {/* DETALLE PAC */}
-        <div className="md:col-span-2 glass-effect border-glass rounded-2xl p-6">
+        <div className="glass-effect border-glass rounded-2xl p-6">
           <p className="text-overline mb-2">Detalle del PAC seleccionado</p>
 
           <div className="flex justify-between mb-6">
-            <div>
+            {/* <div>
               <h3 className="text-h3">
                 {selectedPac.code} · {selectedPac.category}
               </h3>
               <p className="text-helper">{selectedPac.area}</p>
-            </div>
+            </div> */}
 
-            <span
+            {/* <span
               className={`
                 inline-flex items-center justify-center
                 w-fit h-fit self-start
@@ -191,20 +183,20 @@ export default function TrayectoriaSection() {
                   selectedPac.status === 'done'
                     ? 'bg-[rgba(0,153,117,0.2)] text-[var(--status-success)]'
                     : selectedPac.status === 'current'
-                    ? 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]'
-                    : 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]'
+                      ? 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]'
+                      : 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]'
                 }
               `}
             >
               {selectedPac.status === 'done'
                 ? 'Completado'
                 : selectedPac.status === 'current'
-                ? 'En tránsito'
-                : 'Pendiente'}
-            </span>
+                  ? 'En tránsito'
+                  : 'Pendiente'}
+            </span> */}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid gap-4">
             {/* TITULO */}
             <div className="glass-effect border-glass p-4 rounded-xl">
               <p className="text-micro-label mb-2">Título del PAC</p>
@@ -213,31 +205,36 @@ export default function TrayectoriaSection() {
 
               <p className="text-micro-label mb-2">Objetivo estructural</p>
 
-              <p className="text-body">
-                {selectedPac.detail.objective}
-              </p>
+              <p className="text-body">{selectedPac.detail.objective}</p>
+            </div>
+            <div className="glass-effect border-glass p-4 rounded-xl">
+              <p className="text-micro-label mb-2">Corte temporal</p>
+
+              <div className="flex justify-between text-body">
+                <span>Inicio</span>
+                <span>{selectedPac.detail.timeline.start}</span>
+              </div>
+
+              <div className="flex justify-between text-body">
+                <span>Cierre</span>
+                <span>{selectedPac.detail.timeline.end}</span>
+              </div>
             </div>
 
             {/* EVIDENCIA */}
-            <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2">
-                Señal probatoria visible
-              </p>
+            {/* <div className="glass-effect border-glass p-4 rounded-xl">
+              <p className="text-micro-label mb-2">Señal probatoria visible</p>
 
-              <p className="text-body">
-                {selectedPac.detail.evidence.title}
-              </p>
+              <p className="text-body">{selectedPac.detail.evidence.title}</p>
 
               <p className="text-helper mt-1">
                 {selectedPac.detail.evidence.description}
               </p>
-            </div>
+            </div> */}
 
             {/* MICROACCIONES */}
-            <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-3">
-                Microacciones ejecutadas
-              </p>
+            {/* <div className="glass-effect border-glass p-4 rounded-xl">
+              <p className="text-micro-label mb-3">Microacciones ejecutadas</p>
 
               <div className="space-y-2">
                 {selectedPac.detail.microactions.map((m, i) => (
@@ -247,25 +244,11 @@ export default function TrayectoriaSection() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* DERECHA */}
             <div className="flex flex-col gap-4">
-              <div className="glass-effect border-glass p-4 rounded-xl">
-                <p className="text-micro-label mb-2">Corte temporal</p>
-
-                <div className="flex justify-between text-body">
-                  <span>Inicio</span>
-                  <span>{selectedPac.detail.timeline.start}</span>
-                </div>
-
-                <div className="flex justify-between text-body">
-                  <span>Cierre</span>
-                  <span>{selectedPac.detail.timeline.end}</span>
-                </div>
-              </div>
-
-              <div className="glass-effect border-glass p-4 rounded-xl">
+              {/* <div className="glass-effect border-glass p-4 rounded-xl">
                 <p className="text-micro-label mb-2">Lectura de diseño</p>
 
                 <p className="text-body--muted">
@@ -273,26 +256,16 @@ export default function TrayectoriaSection() {
                   operativa seleccionada. El timeline organiza la trayectoria;
                   el panel lateral sostiene la verificabilidad.
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
 
         {/* HITOS */}
         <div className="glass-effect border-glass rounded-2xl p-6">
-          <h4 className="text-micro-label mb-4">
-            Hitos principales del recorrido
-          </h4>
+          <h4 className="text-micro-label mb-4">Carga operativa del PAC</h4>
 
-          {milestones.map((m, i) => (
-            <div key={i} className="flex items-start gap-3 mb-3">
-              <div className="w-2 h-2 bg-[var(--status-info)] rounded-full mt-2" />
-              <div>
-                <p className="text-body">{m.text}</p>
-                <p className="text-date">{m.date}</p>
-              </div>
-            </div>
-          ))}
+          <CargaPac pac={selectedPac} />
         </div>
       </div>
     </div>
@@ -300,6 +273,133 @@ export default function TrayectoriaSection() {
 }
 
 /* COMPONENTES (SIN CAMBIOS) */
+const CargaPac = ({ pac }) => {
+  const isDone = pac.status === 'done';
+  const isCurrent = pac.status === 'current';
+  const isPending = pac.status === 'pending';
+
+  const config = pacConfig[pac.code] || pacConfig[pac.area];
+
+  const inputs = config?.inputs || [];
+  const evidenceText = config?.evidence;
+
+  return (
+    <div className="space-y-4">
+      {inputs.map((item, i) => (
+        <div
+          key={i}
+          className={`
+            rounded-xl border p-4 transition
+            ${isDone && 'bg-[rgba(0,153,117,0.08)] border-glass-green'}
+            ${isCurrent && 'bg-[rgba(0,207,207,0.08)] border-glass'}
+            ${isPending && 'bg-white/5 border-glass-dark'}
+          `}
+        >
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <p className="text-body-lg">{item.title}</p>
+              <p className="text-helper">{item.desc}</p>
+            </div>
+
+            <StatusBadge status={pac.status} />
+          </div>
+
+          {/* INPUT */}
+          {!isDone && (
+            <input
+              type="file"
+              className="
+              w-full
+              text-sm text-white
+              border border-glass
+              rounded-xl
+              p-3
+              bg-white/5 backdrop-blur
+              cursor-pointer
+          
+              file:mr-4
+              file:py-2
+              file:px-4
+              file:rounded-lg
+              file:border-0
+              file:text-sm
+              file:font-medium
+              file:bg-[rgba(0,207,207,0.15)]
+              file:text-[var(--status-info)]
+          
+              hover:border-[var(--color-turquoise)]
+              hover:bg-[rgba(0,207,207,0.08)]
+          
+              focus:outline-none
+              focus:ring-2
+              focus:ring-[var(--color-turquoise)]
+              transition
+            "
+            />
+          )}
+
+          {/* ESTADOS */}
+          {isDone && (
+            <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
+              ✔ Documento validado
+            </div>
+          )}
+
+          {isCurrent && (
+            <div className="mt-3 text-[var(--status-info)] text-body flex items-center gap-2">
+              ⏳ Archivo en revisión / proceso
+            </div>
+          )}
+
+          {isPending && (
+            <div className="mt-3 text-[var(--status-warning)] text-body flex items-center gap-2">
+              ⚠️ Pendiente de carga
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* BLOQUE FINAL (tipo tus imágenes) */}
+      <div
+        className={`
+          mt-4 rounded-xl p-4 border-dashed border
+          ${isDone && 'border-[var(--status-success)] bg-[rgba(0,153,117,0.05)]'}
+          ${isCurrent && 'border-[var(--status-info)] bg-[rgba(0,207,207,0.05)]'}
+          ${isPending && 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]'}
+        `}
+      >
+        {isDone && <p>{evidenceText.done}</p>}
+        {isCurrent && <p>{evidenceText.current}</p>}
+        {isPending && <p>{evidenceText.pending}</p>}
+      </div>
+    </div>
+  );
+};
+
+const StatusBadge = ({ status }) => {
+  const map = {
+    done: 'bg-[rgba(0,153,117,0.2)] text-[var(--status-success)]',
+    current: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
+    pending: 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]',
+  };
+
+  const label = {
+    done: 'Completado',
+    current: 'En tránsito',
+    pending: 'Pendiente',
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center justify-center
+    w-fit h-fit self-start
+    whitespace-nowrap
+    text-badge px-3 py-1 rounded-full ${map[status]}`}
+    >
+      {label[status]}
+    </span>
+  );
+};
 
 const Metric = ({ label, value }) => (
   <div className="glass-effect border-glass px-4 py-2 rounded-xl">
@@ -342,14 +442,15 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
         <div className="flex justify-between items-start mb-3">
           <div>
             <p className="text-value-card">{pac.code}</p>
-            <p className="text-micro-label">{pac.category}</p>
+            {/* <p className="text-micro-label">{pac.category}</p> */}
+            <p className="text-body-lg mb-2">{pac.category}</p>
           </div>
 
           <StatusDot status={pac.status} />
         </div>
 
-        <p className="text-body-lg mb-2">{pac.title}</p>
-        <p className="text-helper mb-4">{pac.area}</p>
+        {/* <p className="text-body-lg mb-2">{pac.title}</p>
+        <p className="text-helper mb-4">{pac.area}</p> */}
       </div>
 
       <p className="text-legend">
