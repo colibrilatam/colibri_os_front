@@ -7,7 +7,7 @@ export const useUserStore = create(
   persist(
     (set, get) => ({
       // Demo
-      isDemo: false,
+      isDemo: true,
       setIsDemo: (isDemo) => set({ isDemo }),
 
       // Estado existente
