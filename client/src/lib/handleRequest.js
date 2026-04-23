@@ -6,12 +6,10 @@ export async function handleRequest(fn) {
     return { data, error: null };
   } catch (error) {
     if (error instanceof ApiError) {
+      //console.log(error);
       return {
         data: null,
-        error: {
-          message: error.message,
-          status: error.status,
-        },
+        error: error
       };
     }
     return { data: null, error: { message: 'Error inesperado', status: 500 } };
