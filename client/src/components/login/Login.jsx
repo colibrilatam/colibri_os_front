@@ -1,12 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLogin } from '@/hooks/useLogin';
+import { useLogin  } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
+import { useUserStore } from '@/lib/store';
 
 export default function Login({ onLoadingChange }) {
   const router = useRouter();
-  const { handleLogin } = useLogin();
+  const { handleLogin, userData } = useLogin();
+  const setRol = useUserStore((state) => state.setRol);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
@@ -40,14 +42,32 @@ export default function Login({ onLoadingChange }) {
     e.preventDefault();
     onLoadingChange(true);
     const result = await handleLogin(formData);
-    onLoadingChange(false);
 
+    const userResult = await userData();
+    
+    
+    onLoadingChange(false);
     if (result.success) {
       alert('¡Has iniciado sesión correctamente! Bienvenido a Colibri OS');
-      router.push('/home');
     } else {
       alert(result.error);
     }
+    if(userResult.error){
+      alert("error obteniendo información del usuario: " + userResult.error + ". Por favor, vuelva a iniciar sesión."); 
+      return;
+    }
+    setRol(userResult.data.role);
+    if(userResult.data.role === "mecenas_semilla"){
+      router.push("/user/nft")
+      return;
+    }
+    if(userResult.data.role === "entrepreneur"){
+      router.push("/proyecto")
+      return;
+    }
+    router.push("/home")
+
+    
   };
 
   return (

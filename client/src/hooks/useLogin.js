@@ -1,6 +1,8 @@
 import { login } from '@/services/authService'
 import { useUserStore } from '@/lib/store'
 import { setCookie } from '@/lib/cookies'
+import { userService } from '@/services/user'
+import { handleRequest } from '@/lib/handleRequest'
 
 export const useLogin = () => {
     const setToken = useUserStore((state) => state.setToken)
@@ -11,10 +13,9 @@ export const useLogin = () => {
         email: formData.email,
         password: formData.password,
       })
-
-      localStorage.setItem('token', data.token)
       setCookie('token', data.token)
       setToken(data.token)
+
       return { success: true, data }
 
     } catch (err) {
@@ -24,5 +25,12 @@ export const useLogin = () => {
     }
   }
 
-  return { handleLogin }
+  const userData = async() => {
+    const { data, error } = await handleRequest(() => userService.profile())
+    return { data, error }
+  }
+
+  
+  return { handleLogin, userData }
 }
+

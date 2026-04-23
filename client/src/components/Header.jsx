@@ -20,13 +20,13 @@ export default function Header({ isHome = false }) {
     setAuth(isAuthenticated());
   },[])
 
-  const {isAuthenticated , logout} = useUserStore();
+  const {isAuthenticated , logout, rol} = useUserStore();
   const router = useRouter();
 
 
   if (isHome) {
     return (
-      <header className=" lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-around  min-h-16 lg:min-h-auto content-center items-center" >
+      <header className="z-49 lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-around  min-h-16 lg:min-h-auto content-center items-center" >
         <div className=" flex items-center gap-0 lg:items-center justify-between lg:gap-4 content-center  w-full ">
 
 
@@ -37,13 +37,21 @@ export default function Header({ isHome = false }) {
             </div>
             {/* Menú desplegable */}
             {auth ? (
-              <div className="dropdown-container mr-20 text-(--text-primary) text-md font-bold border-blue-800 ">
-                <button className="dropdown-button bg-linear-to-r from-cyan-500 to-blue-500 overflow-hidden">Mi cuenta &nbsp; ▼</button>
-                <div className="border border-cyan-500 dropdown-content ">
-                  <a id="top" href="#">Mi proyecto</a>
-                  <a id="middle" href="/user/nft">NFTs</a>
-                  <a id="bottom" className='bg-red-800' onClick={logout}  href="/login">Cerrar sesión</a>
-                </div>
+              <div className="flex gap-4">
+                { rol === "mecenas_semilla" && (
+                  <Link className="hover:text-gray-200" href="/login">
+                  <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
+                  >
+                    NFTs
+                  </button>
+                </Link>
+                )}
+                <Link className="hover:text-gray-200" href="/login">
+                  <button onClick={() => logout()} className="rounded-xl bg-linear-to-r from-red-600 to-red-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
+                  >
+                    Cerrar sesión
+                  </button>
+                </Link>
               </div>
             ) : (
               <div>

@@ -1,6 +1,6 @@
 export default function LoadingScreen() {
   return (
-    <div className="p-4 flex items-center justify-center w-full h-full bg-linear-to-br from-slate-50/5 to-slate-100/5">
+    <div className="overflow-hidden absolute z-2 p-4 flex items-center justify-center w-full h-full min-w-lvw min-h-lvh bg-slate-900/40 rounded-2xl">
       <div className="flex flex-col items-center gap-4">
         {/* Spinner */}
         <div className="relative w-16 h-16">
