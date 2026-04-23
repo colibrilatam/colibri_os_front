@@ -30,7 +30,7 @@ export async function fetcher(endpoint, options = {}) {
       // Token expirado o inválido — redirigir al login
   if (res.status === 401) {
     useUserStore.getState().logout(); // limpiar el store
-    window.location.href = '/login';
+    //window.location.href = '/login';
   }
 
       const errorData = await res.json().catch(() => ({}));
@@ -49,7 +49,7 @@ export async function fetcher(endpoint, options = {}) {
   } catch (error) {
     // Re-lanza ApiError tal cual
     if (error instanceof ApiError) throw error;
-
+console.log("ERROR EN FETCHER OBTENIENDO INFO",error);
     // Error de red, timeout, etc.
     throw new ApiError('Error de conexión con el servidor', 0, null);
   }
