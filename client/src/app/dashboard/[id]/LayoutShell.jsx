@@ -9,9 +9,7 @@ export default function LayoutShell({ children, projectInfo }) {
     
     // estado del sidebar
     const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
-    const setSidebarMobileOpen = useUserStore(
-      (state) => state.setSidebarMobileOpen,
-    );
+    const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
     return (
         <ProjectContext.Provider value={projectInfo}>
