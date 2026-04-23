@@ -10,6 +10,7 @@ import { useProject } from '@/lib/projectContext';
 import { useUserStore } from '@/lib/store';
 
 import { projectStatus } from '@/lib/types/projectStatus';
+import { useRouter } from 'next/navigation';
 
 export default function Header({ isHome = false }) {
 
@@ -20,6 +21,7 @@ export default function Header({ isHome = false }) {
   },[])
 
   const {isAuthenticated , logout} = useUserStore();
+  const router = useRouter();
 
 
   if (isHome) {
@@ -29,7 +31,7 @@ export default function Header({ isHome = false }) {
 
 
           <div className="flex items-center justify-between px-4 w-full">
-            <div className="flex items-center gap-4">
+            <div onClick={() => router.push("/home")} className="cursor-pointer flex items-center gap-4">
               <img src="/colibri-logo.png" alt="Colibrí Logo" className="rounded-full h-16 w-16" />
               <span className="text-lg font-bold text-slate-50">Colibrí OS</span>
             </div>
@@ -39,7 +41,7 @@ export default function Header({ isHome = false }) {
                 <button className="dropdown-button bg-linear-to-r from-cyan-500 to-blue-500 overflow-hidden">Mi cuenta &nbsp; ▼</button>
                 <div className="border border-cyan-500 dropdown-content ">
                   <a id="top" href="#">Mi proyecto</a>
-                  <a id="middle" href="#">NFTs</a>
+                  <a id="middle" href="/user/nft">NFTs</a>
                   <a id="bottom" className='bg-red-800' onClick={logout}  href="/login">Cerrar sesión</a>
                 </div>
               </div>
