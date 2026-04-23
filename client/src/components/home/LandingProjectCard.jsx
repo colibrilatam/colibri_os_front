@@ -12,11 +12,13 @@ function formatProjectDate(dateString) {
   });
 }
 
+// FUNCION QUE VERIFICA AUTENTTICACION DE USUARIO Y REDIRIGE A LOGIN O A RLAB
+
 export function ProjectCard({ project, index, image }) {
   const projectTrancheLabel = project.currentTramo?.code || 'Sin tramo';
   const projectTrancheImage = project.currentTramo?.nftImageUrl || null;
   const router = useRouter();
-  console.log(project);
+
   return (
     <article className="group relative flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.07] hover:shadow-[0_16px_40px_rgba(6,182,212,0.08)]">
       <div className="mb-4 flex items-start justify-between gap-3">
@@ -74,7 +76,7 @@ export function ProjectCard({ project, index, image }) {
             {formatProjectDate(project.updatedAt)}
           </time>
         </span>
-
+          {/** CAMBIAR LOGICA DEPENDIENDO DE AUTENTICACIÖN */}
         <button
           onClick={() => router.push(`/dashboard/${project.id}/senial`)}
           className="bg-linear-to-r from-cyan-500 to-blue-500  border border-cyan-700 rounded-2xl p-2 group/btn flex items-center gap-1 text-xs font-bold text-white transition-all duration-150 hover:text-cyan-200 cursor-pointer active:scale-95"

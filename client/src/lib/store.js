@@ -56,16 +56,11 @@ export const useUserStore = create(
       // Verificar si hay token y si es válido, o si es invitado
       isAuthenticated: (guest = false) => {
   const token = get().token
-  const isGuest = get().isGuest
+  //const isGuest = get().isGuest
   
   // Si es invitado, está autenticado sin token
   // El parámetro 'guest' permite verificar explícitamente el modo invitado
   // no se bien por que lo puse pero creo que no tiene sentido
-  if (guest){
-    if (isGuest) {
-      return true
-    }
-  }
 
   // Si no es invitado, validar token
   if (isTokenExpired(token)) {
