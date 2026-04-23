@@ -1,4 +1,3 @@
-import { useUserStore } from "@/lib/store";
 
 export class ApiError extends Error {
   constructor(message, status, data) {
@@ -8,11 +7,27 @@ export class ApiError extends Error {
   }
 }
 
+async function getToken() {
+  // SERVIDOR: usa next/headers dinámicamente para no romper el bundle del cliente
+  if (typeof window === 'undefined') {
+    const { cookies } = await import('next/headers');
+    const cookieStore = await cookies();
+    return cookieStore.get('token')?.value ?? null;
+  }
+
+  // CLIENTE: lee la cookie directamente del navegador
+  const match = document.cookie
+    .split('; ')
+    .find((row) => row.startsWith('token='));
+  return match ? match.split('=')[1] : null;
+}
+
 export async function fetcher(endpoint, options = {}) {
   const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   // Obtener token desde Zustand fuera de un componente
-  const token = useUserStore.getState().token;
+  const token = await getToken();
+
 
   const config = {
     headers: {
@@ -29,8 +44,8 @@ export async function fetcher(endpoint, options = {}) {
     if (!res.ok) {
       // Token expirado o inválido — redirigir al login
   if (res.status === 401) {
-    useUserStore.getState().logout(); // limpiar el store
-    //window.location.href = '/login';
+    await useUserStore.getState().logout(); // limpiar el store
+    console.log("token expirado o invalido");
   }
 
       const errorData = await res.json().catch(() => ({}));
@@ -49,7 +64,8 @@ export async function fetcher(endpoint, options = {}) {
   } catch (error) {
     // Re-lanza ApiError tal cual
     if (error instanceof ApiError) throw error;
-console.log("ERROR EN FETCHER OBTENIENDO INFO",error);
+
+
     // Error de red, timeout, etc.
     throw new ApiError('Error de conexión con el servidor', 0, null);
   }
