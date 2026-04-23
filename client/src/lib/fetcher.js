@@ -30,7 +30,7 @@ export async function fetcher(endpoint, options = {}) {
       // Token expirado o inválido — redirigir al login
   if (res.status === 401) {
     useUserStore.getState().logout(); // limpiar el store
-    window.location.href = '/login';
+    //window.location.href = '/login';
   }
 
       const errorData = await res.json().catch(() => ({}));
