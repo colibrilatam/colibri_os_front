@@ -151,8 +151,8 @@ export function FiltersBar({
 
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-6">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
-                Tramo
+              <span className="text-xs text-slate-400 mr-2">
+                TRAMO
               </span>
 
               {allTranches.map((tranche) => (
@@ -173,8 +173,8 @@ export function FiltersBar({
             <div className="hidden h-8 w-px bg-white/10 xl:block" />
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-xs font-medium uppercase tracking-[0.12em] text-slate-500">
-                Estado
+              <span className="text-xs text-slate-400 mr-2">
+                ESTADO
               </span>
 
               {allStatuses.map((status) => (
