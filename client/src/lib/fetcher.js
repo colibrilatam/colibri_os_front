@@ -45,7 +45,7 @@ export async function fetcher(endpoint, options = {}) {
       // Token expirado o inválido — redirigir al login
   if (res.status === 401) {
     await useUserStore.getState().logout(); // limpiar el store
-    console.log("token expirado o invalido");
+    throw new ApiError('Sesión/Token expirada o inválido, inicie sesión para continuar', res.status);
   }
 
       const errorData = await res.json().catch(() => ({}));
