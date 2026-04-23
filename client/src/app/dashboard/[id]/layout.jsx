@@ -33,11 +33,11 @@ export default async function DataLayout({ children, params }) {
   const { data: microActionInstanceData, error: microActionInstanceError } = await handleRequest(
     () => projectsService.microActionInstance(id)
   );
-  console.log("projectData:", projectData, error,
+  /*console.log("projectData:", projectData, error,
      "tramoData:", tramoData, tramoError,
       "ProjectTramoData:", ProjectTramoData, ProjectTramoError,
       "nft", projectNftData, projectNftError,
-    );
+    );*/
 
   // Manejo de errores
   if (error || tramoError || ProjectTramoError || projectNftError) {

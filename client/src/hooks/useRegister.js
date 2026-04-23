@@ -15,7 +15,7 @@ export const useRegister = () => {
       return { success: true, data }
 
     } catch (err) {
-        console.log(err)
+     
       const message = err.response?.data?.message || 'Error al registrarse'
       return { success: false, error: message }
     }
