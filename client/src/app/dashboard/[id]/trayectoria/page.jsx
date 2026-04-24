@@ -26,9 +26,9 @@ export default function TrayectoriaSection() {
   const { project, currentState, pacProgress, evidence, microactionInstances } =
     mockProject;
 
-    if (!mockProject) {
-      return <div>Cargando...</div>;
-    }
+  if (!mockProject) {
+    return <div>Cargando...</div>;
+  }
 
   const mapStatus = {
     approved: 'done',
@@ -79,8 +79,6 @@ export default function TrayectoriaSection() {
     microactions: currentState.microactionsCompletedCount,
     evidences: currentState.validatedEvidenceCount,
   };
-
-  
 
   const milestones = pacProgress
     .filter((p) => p.status === 'approved')
@@ -507,8 +505,3 @@ const LegendDot = ({ color, label }) => {
     </div>
   );
 };
-
-
-
-
-
