@@ -28,10 +28,6 @@ export default function IdentidadPage() {
  
  
   const { project, currentState, reputationSnapshot, pacProgress } = mockProject;
-
-  const { project, currentState, reputationSnapshot, pacProgress } =
-    mockProject;
- console.log(dbProject)
   // información de tramo actual
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
