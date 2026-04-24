@@ -85,7 +85,7 @@ export default function HomePage() {
     const trancheMap = new Map();
 
     projects.forEach((project) => {
-      const tramoMatch = tramos.find((t) => t.id === project.currentTramoId);
+      const tramoMatch = tramos?.find((t) => t.id === project.currentTramoId);
 
       if (tramoMatch?.code) {
         trancheMap.set(tramoMatch.code, {
@@ -101,7 +101,7 @@ export default function HomePage() {
     );
 
     const hasProjectsWithoutTranche = projects.some((project) => {
-      const tramoMatch = tramos.find((t) => t.id === project.currentTramoId);
+      const tramoMatch = tramos?.find((t) => t.id === project.currentTramoId);
       return !tramoMatch;
     });
 
@@ -142,7 +142,7 @@ export default function HomePage() {
   
     // 1️⃣ Primero enriquecer proyectos
     const enrichedProjects = projects.map((project) => {
-      const tramoMatch = tramos.find(
+      const tramoMatch = tramos?.find(
         (t) => String(t.id) === String(project.currentTramoId)
       );
   
