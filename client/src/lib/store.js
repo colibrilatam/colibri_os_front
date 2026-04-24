@@ -7,7 +7,7 @@ export const useUserStore = create(
   persist(
     (set, get) => ({
       // Demo
-      isDemo: false,
+      isDemo: true,
       setIsDemo: (isDemo) => set({ isDemo }),
 
       // Estado existente
@@ -50,7 +50,7 @@ export const useUserStore = create(
           deleteCookie('token')
           deleteCookie('isGuest')
         }
-        set({ token: null, rol: null, isGuest: false })
+        set({ token: null, rol: null, isGuest: false, sidebarDesktopExpanded: false })
       },
 
       // Verificar si hay token y si es válido, o si es invitado

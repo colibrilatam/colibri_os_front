@@ -12,7 +12,7 @@ export const useGuestLogin = () => {
       setCookie('isGuest', 'true')
       return { success: true }
     } catch (err) {
-      console.log(err)
+     
       return { success: false, error: 'Error al entrar como invitado' }
     }
   }

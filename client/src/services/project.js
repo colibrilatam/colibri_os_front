@@ -32,5 +32,8 @@ export const projectsService = {
   microActionInstance: (id) => 
     fetcher(`/micro-action-instances/project/${id}`),
 
+  getAllTramos: () => 
+    fetcher(`/tramos`),
+
 
 };

@@ -20,8 +20,14 @@ export default function UserLayout({ children }) {
 */  
   return (
     <div>
-        <Header isHome={true}></Header>
+        
+        <div className="  z-49 p-1 w-svw ">
+        
+        
+                            <Header isHome={true}></Header>
+                        </div>
         {children}
+      
     </div>
   );
 }

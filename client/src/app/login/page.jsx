@@ -10,6 +10,7 @@ import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
 import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
+import { useLogin } from '@/hooks';
 
 export default function LoginRegisterPage() {
   const [view, setView] = useState('login'); // login | selectRole | register | nftLink
@@ -18,6 +19,7 @@ export default function LoginRegisterPage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const router = useRouter();
+  const { handleDemoLogin } = useLogin();
 
   const { handleGuestLogin } = useGuestLogin();
 
@@ -32,13 +34,17 @@ export default function LoginRegisterPage() {
   };
 
   // google auth
-  const handleGuestLoginClick = () => {
-    const result = handleGuestLogin();
-    if (result.success) {
+  const handleGuestLoginClick = async () => {
+    setLoading(true);
+    const { data, error } = await handleDemoLogin("mentor");
+    if (data) {
+      setLoading(false);
       setPopupMessage('¡Iniciaste sesión como invitado! Tu acceso será limitado.');
       setIsPopupOpen(true);
     } else {
-      alert(result.error);
+      console.log(data, error);
+      alert(result);
+      setLoading(false);
     }
   };
 

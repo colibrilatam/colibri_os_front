@@ -15,6 +15,7 @@ import {
   Layers
 } from 'lucide-react';
 import Button from './Button';
+import { useRouter } from 'next/navigation';
 
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
@@ -22,6 +23,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const rol = useUserStore((state) => state.rol);
   const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
   const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
+  const router = useRouter();
 
   // obtencion del id por parametro 
   const pathname = usePathname(); 
@@ -39,14 +41,18 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   };
 
   const links = [
-    { href: `/home`, label: 'Inicio', icon: Home },
-    { href: `/dashboard/${id}/senial`, label: 'Señal', icon: User },
-    { href: `/dashboard/${id}/reputacion`, label: 'Reputacion', icon: Layers },
-    { href: `/dashboard/${id}/tramo`, label: 'Tramo', icon: Map },
-    { href: `/dashboard/${id}/trayectoria`, label: 'Trayectoria', icon: AlertCircle },
-    { href: `/dashboard/${id}/evidencia`, label: 'Evidencia', icon: Link2 },
-    /*{ href: '/proyectos', label: 'Proyectos', icon: Folder },*/
-  ];
+  { href: `/home`, label: 'Inicio', icon: Home, excludeRoles: ['mecenas_semilla', 'entrepreneur'] },
+  { href: `/dashboard/${id}/senial`, label: 'Señal', icon: User, excludeRoles: null },
+  { href: `/dashboard/${id}/reputacion`, label: 'Reputacion', icon: Layers, excludeRoles: null },
+  { href: `/dashboard/${id}/tramo`, label: 'Tramo', icon: Map, excludeRoles: null },
+  { href: `/dashboard/${id}/trayectoria`, label: 'Trayectoria', icon: AlertCircle, excludeRoles: null },
+  { href: `/dashboard/${id}/evidencia`, label: 'Evidencia', icon: Link2, excludeRoles: null },
+  { href: '/user/nft', label: 'NFTs', icon: Folder, roles: ['mecenas_semilla'] },
+].filter(link => {
+  if (link.excludeRoles) return !link.excludeRoles.includes(rol); // excluir si el rol está en la lista
+  if (link.roles) return link.roles.includes(rol);                // incluir solo si el rol está en la lista
+  return true;                                                     // visible para todos
+});
 
   const handleNavClick = () => {
     if (!sidebarDesktopExpanded) {
@@ -81,6 +87,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
           <nav className="flex flex-col gap-2">
             {links.map((link) => {
+              if (!link) return null;
               const Icon = link.icon;
               return (
                 <Link
