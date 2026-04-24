@@ -1,7 +1,9 @@
 import { ProjectCard } from './LandingProjectCard';
-import { getProjectImage } from '@/lib/hooks/createImageMap';
+import { getProjectIC } from '@/lib/hooks/createIcMap';
 
 export function ProjectGrid({ projects }) {
+
+  //console.log("TTTTTTTT",projects)
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-24 text-center">
@@ -39,7 +41,7 @@ export function ProjectGrid({ projects }) {
             key={project.id}
             project={project}
             index={index}
-            image={getProjectImage(project.projectName)}
+            ic={getProjectIC(project.industry)}
           />
         ))}
       </div>
