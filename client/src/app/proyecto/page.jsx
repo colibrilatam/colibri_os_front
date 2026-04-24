@@ -12,14 +12,15 @@ export default function CreateProject() {
 
   const demoHandleSubmit = async (e) => {
     e.preventDefault();
+    /*
     const { data } = await execute();
     if(error){
         alert(error);
     }
-    const projectId = data.find((p) => p.projectName === 'EcoTech').id;
-
+    const projectId = data?.find((p) => p.projectName === 'EcoTech').id || [];
+*/
     alert('Demostración de registro');
-    router.push(`/dashboard/${projectId}/senial`);
+    //router.push(`/dashboard/${projectId}/senial`);
   };
 
   // DEMO
