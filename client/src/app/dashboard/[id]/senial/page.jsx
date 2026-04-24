@@ -17,6 +17,15 @@ export default function IdentidadPage() {
     mockProject, 
     projectNftData, 
     evidenceData } = useProject();
+
+
+    const uncertaintyType = {
+  market: 'Mercado',
+  technical: 'Técnica',
+  financial: 'Financiera',
+  operational: 'Operativa',
+  regulatory: 'Regulatoria',
+}
  
  
  
@@ -58,28 +67,17 @@ export default function IdentidadPage() {
             </span>
             , mientras reduce la incertidumbre {' '}
             <span className="text-accent-amber font-medium">
-              {project.primaryRisk || '[INCERTIDUMBRE DEL TRAMO]'}
+              {uncertaintyType[tramoData.uncertaintyType] || '[INCERTIDUMBRE DEL TRAMO]'}
             </span>{' '}
             y los siguientes riesgos:{' '}
-            <span className="text-accent-amber font-medium">
-              {project.uncertainty || '[Riesgo]'}
-            </span>
-            {/* {project.secondaryUncertainty && (
-              <>*/}
-            ,{' '}
-            <span className="text-accent-amber font-medium">
-              {project.secondaryUncertainty || '[Riesgo]'}
-            </span>
-            {/* </>
-            )}
-            {project.thirdUncertainty && (
-              <>*/}{' '}
-            y{' '}
-            <span className="text-accent-amber font-medium">
-              {project.thirdUncertainty || '[Riesgo]'}
-            </span>
-            {/*  </>
-            )}*/}{' '}
+            {tramoData.associatedRisks.map((risk) => {
+              return (
+                <span key={risk} className="text-accent-amber font-medium">
+                  {risk}{', '}
+                </span> 
+              );
+            })}
+            {' '}
             mientras y avanza con señales verificables propias del tramo.
           </p>
         </div>
@@ -321,8 +319,8 @@ export default function IdentidadPage() {
                       Incertidumbre dominante
                     </div>
 
-                    <div className="mb-4 rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-center text-sm font-medium text-white">
-                      {project.uncertainty || 'No definida'}
+                    <div className="mb-4 rounded-xl bg-red-600/30 border border-white/20 px-4 py-2 text-center text-sm font-medium text-white">
+                      {uncertaintyType[tramoData.uncertaintyType] || 'No definida'}
                     </div>
 
                     <div
@@ -333,21 +331,14 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
-                        {project.primaryRisk || 'Riesgo 1'}
+                      {tramoData.associatedRisks.map((risk, index) => {
+              return (
+                <div key={risk} className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm text-white">
+                        {risk || 'Riesgo ' + (index + 1)}
                       </div>
-
-                      {/* {project.secondaryRisk && ( */}
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
-                        {project.secondaryRisk || 'Riesgo 2'}
-                      </div>
-                      {/* )} */}
-
-                      {/* {project.thirdRisk && ( */}
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
-                        {project.thirdRisk || 'Riesgo 3'}
-                      </div>
-                      {/* )} */}
+              );
+            })}
+                     
                     </div>
                   </div>
                 </div>
