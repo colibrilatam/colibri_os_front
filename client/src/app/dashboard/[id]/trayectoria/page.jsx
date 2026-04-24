@@ -73,20 +73,6 @@ export default function TrayectoriaSection() {
     };
   });
 
-  const metrics = {
-    currentPac: currentState.currentPacCode,
-    totalPacs: pacProgress.length,
-    microactions: currentState.microactionsCompletedCount,
-    evidences: currentState.validatedEvidenceCount,
-  };
-
-  const milestones = pacProgress
-    .filter((p) => p.status === 'approved')
-    .map((p) => ({
-      text: `${p.pacCode} completado`,
-      date: new Date(p.closedAt).toLocaleDateString(),
-    }));
-
   const [selectedPac, setSelectedPac] = useState(pacs[0]);
 
   /* ========================= */

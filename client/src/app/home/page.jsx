@@ -1,16 +1,18 @@
 'use client';
 
-import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { HeroSection } from "@/components/home/HeroSection";
-import { FiltersBar } from "@/components/home/FiltersBar";
-import { ProjectGrid } from "@/components/home/ProjectGrid";
-import { useRequest } from "@/hooks/useRequest";
-import { projectsService } from "@/services/project";
-import Header from "@/components/Header";
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+import { HeroSection } from '@/components/home/HeroSection';
+import { FiltersBar } from '@/components/home/FiltersBar';
+import { ProjectGrid } from '@/components/home/ProjectGrid';
+import { useRequest } from '@/hooks/useRequest';
+import { projectsService } from '@/services/project';
+import Header from '@/components/Header';
 
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
+  const [tramos, setTramos] = useState([]);
+
   const [search, setSearch] = useState('');
   const [selectedTranche, setSelectedTranche] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
@@ -18,27 +20,33 @@ export default function HomePage() {
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
-  const [projectsError, setProjectsError] = useState("");
-  
-  // Hook personalizado para manejar la solicitud de proyectos
-  const { execute, loading, error } = useRequest(projectsService.getAll); 
+  const [projectsError, setProjectsError] = useState('');
 
+  // Hook personalizado para manejar la solicitud de proyectos
+  const { execute, loading, error } = useRequest(projectsService.getAll);
+  const { execute: getAllTramosData } = useRequest(
+    projectsService.getAllTramos,
+  );
+
+  //console.log('TRAMO-----', tramos);
   // Cargar proyectos desde el backend al montar el componente
   useEffect(() => {
     async function loadProjects() {
-      setIsLoadingProjects(false)
+      setIsLoadingProjects(false);
       const { data, error } = await execute();
-
+      const { data: allTramos } = await getAllTramosData();
       if (error) {
         setProjectsError(error);
       } else {
         setProjects(data);
+        setTramos(allTramos);
       }
-      setIsLoadingProjects(true)
+      setIsLoadingProjects(true);
     }
 
     loadProjects();
   }, []);
+  //console.log(projects);
 
   // Calcular estadísticas para la sección Hero
   const heroStats = useMemo(() => {
@@ -77,11 +85,13 @@ export default function HomePage() {
     const trancheMap = new Map();
 
     projects.forEach((project) => {
-      if (project.currentTramo?.code && project.currentTramo?.name) {
-        trancheMap.set(project.currentTramo.code, {
-          value: project.currentTramo.code,
-          label: project.currentTramo.code,
-          sortOrder: project.currentTramo.sortOrder ?? 999,
+      const tramoMatch = tramos.find((t) => t.id === project.currentTramoId);
+
+      if (tramoMatch?.code) {
+        trancheMap.set(tramoMatch.code, {
+          value: tramoMatch.code,
+          label: tramoMatch.code,
+          sortOrder: tramoMatch.sortOrder ?? 999,
         });
       }
     });
@@ -90,9 +100,10 @@ export default function HomePage() {
       (a, b) => a.sortOrder - b.sortOrder,
     );
 
-    const hasProjectsWithoutTranche = projects.some(
-      (project) => !project.currentTramo,
-    );
+    const hasProjectsWithoutTranche = projects.some((project) => {
+      const tramoMatch = tramos.find((t) => t.id === project.currentTramoId);
+      return !tramoMatch;
+    });
 
     if (hasProjectsWithoutTranche) {
       tranches.push({
@@ -103,7 +114,7 @@ export default function HomePage() {
     }
 
     return tranches;
-  }, [projects]);
+  }, [projects, tramos]);
 
   // Obtener lista de estados
   const allStatuses = useMemo(() => {
@@ -128,10 +139,25 @@ export default function HomePage() {
   // Filtrar proyectos según búsqueda y filtros seleccionados
   const filteredProjects = useMemo(() => {
     const normalizedSearch = search.toLowerCase().trim();
-
-    return projects.filter((project) => {
-      const projectTranche = project.currentTramo?.code || 'SIN_TRAMO';
-
+  
+    // 1️⃣ Primero enriquecer proyectos
+    const enrichedProjects = projects.map((project) => {
+      const tramoMatch = tramos.find(
+        (t) => String(t.id) === String(project.currentTramoId)
+      );
+  
+      const projectTranche = tramoMatch
+        ? tramoMatch.code
+        : 'SIN_TRAMO';
+  
+      return {
+        ...project,
+        projectTranche, // 👈 acá lo agregás
+      };
+    });
+  
+    // 2️⃣ Después filtrar
+    return enrichedProjects.filter((project) => {
       const matchesSearch =
         !normalizedSearch ||
         project.projectName?.toLowerCase().includes(normalizedSearch) ||
@@ -140,23 +166,23 @@ export default function HomePage() {
         project.country?.toLowerCase().includes(normalizedSearch) ||
         project.industry?.toLowerCase().includes(normalizedSearch) ||
         project.owner?.fullName?.toLowerCase().includes(normalizedSearch);
-
+  
       const matchesTranche =
-        !selectedTranche || projectTranche === selectedTranche;
-
+        !selectedTranche || project.projectTranche === selectedTranche;
+  
       const matchesStatus =
         !selectedStatus || project.status === selectedStatus;
-
+  
       const matchesCountry =
         !selectedCountry ||
         selectedCountry === 'Todos' ||
         project.country === selectedCountry;
-
+  
       const matchesIndustry =
         !selectedIndustry ||
         selectedIndustry === 'Todas' ||
         project.industry === selectedIndustry;
-
+  
       return (
         matchesSearch &&
         matchesTranche &&
@@ -167,12 +193,14 @@ export default function HomePage() {
     });
   }, [
     projects,
+    tramos,
     search,
     selectedTranche,
     selectedStatus,
     selectedCountry,
     selectedIndustry,
   ]);
+  console.log('filteredProjects------', filteredProjects);
 
   // Funciones para manejar toggles de filtros
   function toggleTranche(tranche) {
@@ -187,36 +215,6 @@ export default function HomePage() {
   return (
     <main className="min-h-screen  backdrop-blur-xl">
       <Header isHome={true} />
-      {/**
-      <nav className="sticky top-0 z-50 border-b border-white/8 bg-[#080d1a]/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-linear-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-              <svg
-                className="w-4 h-4 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" />
-              </svg>
-            </div>
-            <span className="text-sm font-semibold text-white tracking-tight">
-              Colibrí
-            </span>
-          </div>
-
-          <div className="flex items-center">
-            <Link
-              href="/login"
-              className="px-3 py-1.5 rounded-lg border border-white/15 bg-white/5 text-xs text-slate-300 hover:bg-white/10 transition-all duration-150"
-            >
-              Acceder
-            </Link>
-          </div>
-        </div>
-      </nav>
-       */}
-
       <div className="mx-auto max-w-7xl">
         <HeroSection stats={heroStats} />
 
