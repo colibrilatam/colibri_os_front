@@ -26,6 +26,10 @@ export default function TrayectoriaSection() {
   const { project, currentState, pacProgress, evidence, microactionInstances } =
     mockProject;
 
+    if (!mockProject) {
+      return <div>Cargando...</div>;
+    }
+
   const mapStatus = {
     approved: 'done',
     in_progress: 'current',
