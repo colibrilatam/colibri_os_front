@@ -1,6 +1,6 @@
 'use client';
 
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProject } from '@/lib/projectContext';
@@ -15,7 +15,6 @@ import 'swiper/css/navigation';
 import { pacConfig } from './components/pacConfig';
 import { useRef } from 'react';
 
-
 export default function TrayectoriaSection() {
   const swiperRef = useRef(null);
   const { mockProject } = useProject();
@@ -26,8 +25,13 @@ export default function TrayectoriaSection() {
      🔗 DATA MAPPING REAL
   ========================= */
 
-  const { project, currentState, pacProgress, evidence, microactionInstances } =
-    mockProject;
+  const {
+    project = {},
+    currentState = {},
+    pacProgress = [],
+    evidence = [],
+    microactionInstances = [],
+  } = mockProject || {};
 
   const mapStatus = {
     approved: 'done',
@@ -79,8 +83,6 @@ export default function TrayectoriaSection() {
     evidences: currentState.validatedEvidenceCount,
   };
 
-
-
   const milestones = pacProgress
     .filter((p) => p.status === 'approved')
     .map((p) => ({
@@ -88,24 +90,26 @@ export default function TrayectoriaSection() {
       date: new Date(p.closedAt).toLocaleDateString(),
     }));
 
-  const getDefaultPac = () => {
-  return (
-    pacs.find((p) => p.status === 'current') ||
-    pacs.find((p) => p.status === 'pending') ||
-    pacs[0]
-  );
-};
-
-const [selectedPac, setSelectedPac] = useState(getDefaultPac);
-const selectedIndex = pacs.findIndex(
-  (p) => p.code === selectedPac.code
-);
-useEffect(() => {
-  if (swiperRef.current && selectedIndex >= 0) {
-    swiperRef.current.slideTo(selectedIndex);
-  }
-}, [selectedIndex]);
-
+  const [selectedPac, setSelectedPac] = useState(null);
+  const selectedIndex = selectedPac
+  ? pacs.findIndex((p) => p.code === selectedPac.code)
+  : -1;
+  useEffect(() => {
+    if (!pacs.length) return;
+  
+    const current =
+      pacs.find((p) => p.status === 'current') ||
+      pacs.find((p) => p.status === 'pending') ||
+      pacs[0];
+  
+    setSelectedPac(current);
+  }, [pacs]);
+  useEffect(() => {
+    if (swiperRef.current && selectedIndex >= 0) {
+      swiperRef.current.slideTo(selectedIndex);
+    }
+  }, [selectedIndex]);
+  if (!pacs.length || !selectedPac) return null;
   /* ========================= */
 
   return (
