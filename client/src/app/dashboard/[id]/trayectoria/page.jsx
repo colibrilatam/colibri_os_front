@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProject } from '@/lib/projectContext';
@@ -13,10 +13,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { pacConfig } from './components/pacConfig';
-import { useRef } from 'react';
 
 export default function TrayectoriaSection() {
-  const swiperRef = useRef(null);
   const { mockProject } = useProject();
 
   const isMobile = useIsMobile();
@@ -25,13 +23,8 @@ export default function TrayectoriaSection() {
      🔗 DATA MAPPING REAL
   ========================= */
 
-  const {
-    project = {},
-    currentState = {},
-    pacProgress = [],
-    evidence = [],
-    microactionInstances = [],
-  } = mockProject || {};
+  const { project, currentState, pacProgress, evidence, microactionInstances } =
+    mockProject;
 
   const mapStatus = {
     approved: 'done',
@@ -83,6 +76,8 @@ export default function TrayectoriaSection() {
     evidences: currentState.validatedEvidenceCount,
   };
 
+  
+
   const milestones = pacProgress
     .filter((p) => p.status === 'approved')
     .map((p) => ({
@@ -90,38 +85,8 @@ export default function TrayectoriaSection() {
       date: new Date(p.closedAt).toLocaleDateString(),
     }));
 
-  const [selectedPac, setSelectedPac] = useState(() => {
-    if (!pacs.length) return null;
+  const [selectedPac, setSelectedPac] = useState(pacs[0]);
 
-    return (
-      pacs.find((p) => p.status === 'current') ||
-      pacs.find((p) => p.status === 'pending') ||
-      pacs[0]
-    );
-  });
-  const selectedIndex = selectedPac
-    ? pacs.findIndex((p) => p.code === selectedPac.code)
-    : -1;
-  useEffect(() => {
-    if (!pacs.length) return;
-
-    const exists = pacs.find((p) => p.code === selectedPac?.code);
-
-    if (!exists) {
-      const fallback =
-        pacs.find((p) => p.status === 'current') ||
-        pacs.find((p) => p.status === 'pending') ||
-        pacs[0];
-
-      setSelectedPac(fallback);
-    }
-  }, [pacs]);
-  useEffect(() => {
-    if (swiperRef.current && selectedIndex >= 0) {
-      swiperRef.current.slideTo(selectedIndex);
-    }
-  }, [selectedIndex]);
-  if (!pacs.length || !selectedPac) return null;
   /* ========================= */
 
   return (
@@ -167,7 +132,6 @@ export default function TrayectoriaSection() {
           navigation={!isMobile}
           spaceBetween={16}
           slidesPerView={3}
-          onSwiper={(swiper) => (swiperRef.current = swiper)}
           breakpoints={{
             320: {
               slidesPerView: 1.05,
