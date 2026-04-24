@@ -90,19 +90,31 @@ export default function TrayectoriaSection() {
       date: new Date(p.closedAt).toLocaleDateString(),
     }));
 
-  const [selectedPac, setSelectedPac] = useState(null);
-  const selectedIndex = selectedPac
-  ? pacs.findIndex((p) => p.code === selectedPac.code)
-  : -1;
-  useEffect(() => {
-    if (!pacs.length) return;
-  
-    const current =
+  const [selectedPac, setSelectedPac] = useState(() => {
+    if (!pacs.length) return null;
+
+    return (
       pacs.find((p) => p.status === 'current') ||
       pacs.find((p) => p.status === 'pending') ||
-      pacs[0];
-  
-    setSelectedPac(current);
+      pacs[0]
+    );
+  });
+  const selectedIndex = selectedPac
+    ? pacs.findIndex((p) => p.code === selectedPac.code)
+    : -1;
+  useEffect(() => {
+    if (!pacs.length) return;
+
+    const exists = pacs.find((p) => p.code === selectedPac?.code);
+
+    if (!exists) {
+      const fallback =
+        pacs.find((p) => p.status === 'current') ||
+        pacs.find((p) => p.status === 'pending') ||
+        pacs[0];
+
+      setSelectedPac(fallback);
+    }
   }, [pacs]);
   useEffect(() => {
     if (swiperRef.current && selectedIndex >= 0) {
