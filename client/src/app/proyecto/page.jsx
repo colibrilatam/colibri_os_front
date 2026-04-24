@@ -4,23 +4,26 @@ import { useRouter } from 'next/navigation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 import { useUserStore } from '@/lib/store';
+import { userService } from '@/services/user';
 
 export default function CreateProject() {
   const router = useRouter();
 
   const { execute, error } = useRequest(projectsService.getAll);
+  const { execute: getUser } = useRequest(() => userService.profile());
 
   const demoHandleSubmit = async (e) => {
     e.preventDefault();
-    /*
+    
     const { data } = await execute();
     if(error){
         alert(error);
     }
-    const projectId = data?.find((p) => p.projectName === 'EcoTech').id || [];
-*/
+    const { data: userData } = await getUser();
+    const projectId = data?.find((p) => p.projectName === "AulaPuente").id || [];
+
     alert('Demostración de registro');
-    //router.push(`/dashboard/${projectId}/senial`);
+    router.push(`/dashboard/${projectId}/senial`);
   };
 
   // DEMO
