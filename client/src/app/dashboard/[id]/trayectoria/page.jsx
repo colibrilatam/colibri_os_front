@@ -77,6 +77,13 @@ export default function TrayectoriaSection() {
 
   /* ========================= */
 
+  const metrics = {
+    currentPac: currentState.currentPacCode,
+    totalPacs: pacProgress.length,
+    microactions: currentState.microactionsCompletedCount,
+    evidences: currentState.validatedEvidenceCount,
+  };
+
   return (
     <div className="space-y-6">
       {/* HEADER */}
