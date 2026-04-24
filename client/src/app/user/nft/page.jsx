@@ -130,14 +130,14 @@ setProjectsInfo([[...projectsInfo],projectsData[i] ])
       setUser(data);
       const { data: nftStats, error: nftStatsError } = await getNfts(data.sub);
       if(nftStatsError) setError(nftStatsError);
-      console.log(nftStats)
+   
       if(nftStats.totalNfts < 10) createNfts(data.sub);
     }
 
   const createNfts = async (userId) => {
     const { data: nftResponse } = await createNft({ quantity: 10}, userId);
     if(createNftError) setError(createNftError);
-    console.log(nftResponse);
+    
   }*/
 
     const stats = [
@@ -164,10 +164,10 @@ setProjectsInfo([[...projectsInfo],projectsData[i] ])
 ];
 
  /*const createNftHandler = async () => {
-  console.log(user)
+
   const { data: nftResponse } = await createNft({ quantity: 1}, user.sub);
   if(createNftError) setError(createNftError);
-  console.log(nftResponse); 
+  
  }*/
 
 

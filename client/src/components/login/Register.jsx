@@ -3,12 +3,15 @@ import { useState, useEffect } from 'react';
 import { useRegister } from '@/hooks/useRegister';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
+import { useLogin } from '@/hooks';
 
 export default function Register({ selectedRole, onSuccess, onBack, onLoadingChange }) {
   const { handleRegister } = useRegister();
 
   // DEMO
   const isDemo = useUserStore((state) => state.isDemo);
+
+  const { handleDemoLogin } = useLogin();
 
   
 
@@ -28,8 +31,8 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
 
   useEffect(() => {
     setFormData({
-      username: 'Emprendedor Demo',
-      email: 'emprendedor@demo.com',
+      username: selectedRole === 'emprendedor' ? 'Lucas Emprendedor' : 'Sofia Mecenas',
+      email: selectedRole === 'emprendedor' ? 'lucas@colibri.com' : 'mecenas@colibri.com',
       password: 'Test@1234',
       confirmPassword: 'Test@1234',
     })
@@ -97,9 +100,11 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     !errors.confirmPassword &&
     passwordValidation.isValid;
 
-    const handleSubmitDemo = (e) => {
+    const handleSubmitDemo = async (e) => {
       e.preventDefault();
+      const result = await handleDemoLogin(selectedRole);
       alert("Registro exitoso");
+     
       onSuccess();
     }
 
