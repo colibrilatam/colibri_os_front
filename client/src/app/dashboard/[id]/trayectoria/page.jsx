@@ -15,7 +15,7 @@ import 'swiper/css/navigation';
 import { pacConfig } from './components/pacConfig';
 
 export default function TrayectoriaSection() {
-  const { mockProject } = useProject();
+  const { tramoData, dbProject, mockProject } = useProject();
 
   const isMobile = useIsMobile();
 
@@ -25,10 +25,6 @@ export default function TrayectoriaSection() {
 
   const { project, currentState, pacProgress, evidence, microactionInstances } =
     mockProject;
-
-  if (!mockProject) {
-    return <div>Cargando...</div>;
-  }
 
   const mapStatus = {
     approved: 'done',
@@ -77,32 +73,59 @@ export default function TrayectoriaSection() {
     });
   };
 
-  const pacs = pacProgress.map((p) => {
-    const pacEvidence = evidence?.find((e) => e.pacId === p.id);
+  // Función para completar evidencia
+  const completeEvidence = (file) => {
+    setDynamicProgress((prev) => {
+      const allMicroDone = prev.microactionsCompleted.every(Boolean);
+      const allDone = allMicroDone && true;
+      const newProgress = {
+        ...prev,
+        evidenceCompleted: true,
+        pacCompleted: allDone,
+      };
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
+      }
+      return newProgress;
+    });
+  };
 
-    const microactions = microactionInstances
-      .filter((m) => m.pacId === p.id && m.status === 'completed')
-      .map((m) => m.title);
+  // Calcular métricas dinámicas
+  const completedMicroactionsCount =
+    18 + dynamicProgress.microactionsCompleted.filter(Boolean).length;
+  const completedEvidencesCount =
+    6 + (dynamicProgress.evidenceCompleted ? 1 : 0);
+  const currentPacCompletedMicroactions =
+    dynamicProgress.microactionsCompleted.filter(Boolean).length;
 
-    return {
-      code: p.pacCode,
-      category: p.categoryName,
-      area: p.categoryName, // fallback (no existe campo explícito)
-      title: p.title,
-      status: mapStatus[p.status],
-
-      detail: {
-        objective: p.title, // fallback
-        evidence: {
-          title: pacEvidence?.title || 'Sin evidencia aún',
-          description: pacEvidence?.summary || '',
-        },
-        microactions,
-        timeline: {
-          start: p.startedAt ? new Date(p.startedAt).toLocaleDateString() : '-',
-          end: p.closedAt
-            ? new Date(p.closedAt).toLocaleDateString()
-            : 'En curso',
+  // Construir array de PACs con estado actualizado para T1-C7
+  const buildPacs = () => {
+    const basePacs = pacProgress.map((p) => {
+      const pacEvidence = evidence.find((e) => e.pacId === p.id);
+      const microactions = microactionInstances
+        .filter((m) => m.pacId === p.id && m.status === 'completed')
+        .map((m) => m.title);
+      return {
+        code: p.pacCode,
+        category: p.categoryName,
+        area: p.categoryName,
+        title: p.title,
+        status: p.pacCode === 'T1-C7' && dynamicProgress.pacCompleted
+          ? 'done'
+          : mapStatus[p.status],
+        detail: {
+          objective: p.title,
+          evidence: {
+            title: pacEvidence?.title || 'Sin evidencia aún',
+            description: pacEvidence?.summary || '',
+          },
+          microactions,
+          timeline: {
+            start: p.startedAt ? new Date(p.startedAt).toLocaleDateString() : '-',
+            end: p.closedAt
+              ? new Date(p.closedAt).toLocaleDateString()
+              : 'En curso',
+          },
         },
       };
     });
@@ -110,6 +133,23 @@ export default function TrayectoriaSection() {
   };
 
   const pacs = buildPacs();
+
+  const metrics = {
+    currentPac: currentState.currentPacCode,
+    totalPacs: pacProgress.length,
+    microactions: `${completedMicroactionsCount} / 21`,
+    evidences: `${completedEvidencesCount} / 7`,
+  };
+
+  const milestones = pacProgress
+    .filter((p) => p.status === 'approved')
+    .map((p) => ({
+      text: `${p.pacCode} completado`,
+      date: new Date(p.closedAt).toLocaleDateString(),
+    }));
+  if (dynamicProgress.pacCompleted) {
+    milestones.push({ text: 'T1-C7 completado', date: new Date().toLocaleDateString() });
+  }
 
   const [selectedPac, setSelectedPac] = useState(pacs[0]);
 
