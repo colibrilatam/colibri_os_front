@@ -15,7 +15,7 @@ import 'swiper/css/navigation';
 import { pacConfig } from './components/pacConfig';
 
 export default function TrayectoriaSection() {
-  const { tramoData, dbProject, mockProject } = useProject();
+  const { mockProject } = useProject();
 
   const isMobile = useIsMobile();
 
@@ -75,6 +75,8 @@ export default function TrayectoriaSection() {
     microactions: currentState.microactionsCompletedCount,
     evidences: currentState.validatedEvidenceCount,
   };
+
+  
 
   const milestones = pacProgress
     .filter((p) => p.status === 'approved')
