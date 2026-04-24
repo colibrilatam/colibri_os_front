@@ -43,7 +43,7 @@ export default function TrayectoriaSection() {
   };
 
   const pacs = pacProgress.map((p) => {
-    const pacEvidence = evidence.find((e) => e.pacId === p.id);
+    const pacEvidence = evidence?.find((e) => e.pacId === p.id);
 
     const microactions = microactionInstances
       .filter((m) => m.pacId === p.id && m.status === 'completed')
@@ -507,3 +507,8 @@ const LegendDot = ({ color, label }) => {
     </div>
   );
 };
+
+
+
+
+
