@@ -1,0 +1,62 @@
+[
+  {
+    "id": "eval_evi_t4_c1_01_proj_turnobase_cl_001",
+    "projectId": "proj_turnobase_cl_001",
+    "evidenceId": "evi_t4_c1_01_proj_turnobase_cl_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia demuestra coordinación operativa suficiente para sostener implementación y soporte temprano. Cumple criterio del PAC.",
+    "evaluatedAt": "2026-01-21T17:10:00-03:00"
+  },
+  {
+    "id": "eval_evi_t4_c2_01_proj_turnobase_cl_001",
+    "projectId": "proj_turnobase_cl_001",
+    "evidenceId": "evi_t4_c2_01_proj_turnobase_cl_001",
+    "evaluatorUserId": "usr_evaluadora_vmontalvo_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia confirma persistencia del problema y permite sostener la lectura de tracción temprana en el tramo actual.",
+    "evaluatedAt": "2026-02-09T17:50:00-03:00"
+  },
+  {
+    "id": "eval_evi_t4_c3_01_proj_turnobase_cl_001",
+    "projectId": "proj_turnobase_cl_001",
+    "evidenceId": "evi_t4_c3_01_proj_turnobase_cl_001",
+    "evaluatorUserId": "usr_evaluador_darancibia_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "El servicio muestra continuidad de uso y aprendizaje comercial concreto. Corresponde seguir profundizando recurrencia y expansión temprana.",
+    "evaluatedAt": "2026-02-28T18:00:00-03:00"
+  },
+  {
+    "id": "eval_evi_t4_c4_01_proj_turnobase_cl_001",
+    "projectId": "proj_turnobase_cl_001",
+    "evidenceId": "evi_t4_c4_01_proj_turnobase_cl_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia relaciona adecuadamente costo operativo y continuidad del experimento comercial. Es consistente con T4.",
+    "evaluatedAt": "2026-03-18T17:20:00-03:00"
+  },
+  {
+    "id": "eval_evi_t4_c5_01_proj_turnobase_cl_001",
+    "projectId": "proj_turnobase_cl_001",
+    "evidenceId": "evi_t4_c5_01_proj_turnobase_cl_001",
+    "evaluatorUserId": "usr_evaluador_darancibia_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia entrega una ruta comercial priorizada y una lectura útil del timing por industria. Adecuada para el tramo.",
+    "evaluatedAt": "2026-04-01T18:00:00-03:00"
+  },
+  {
+    "id": "eval_evi_t4_c6_01_proj_turnobase_cl_001",
+    "projectId": "proj_turnobase_cl_001",
+    "evidenceId": "evi_t4_c6_01_proj_turnobase_cl_001",
+    "evaluatorUserId": "usr_evaluadora_vmontalvo_001",
+    "evaluationStatus": "needs_changes",
+    "decision": "needs_changes",
+    "comment": "El corte es pertinente, pero requiere mayor contraste entre cuentas piloto y una relación más precisa entre restricción exógena y decisión operativa priorizada.",
+    "evaluatedAt": "2026-04-05T17:20:00-03:00"
+  }
+]

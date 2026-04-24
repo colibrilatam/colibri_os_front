@@ -41,7 +41,7 @@ export function ProjectGrid({ projects }) {
             key={project.id}
             project={project}
             index={index}
-            ic={getProjectIC(project.industry)}
+            ic={getProjectIC(project.projectName)}
           />
         ))}
       </div>

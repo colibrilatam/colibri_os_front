@@ -1,0 +1,62 @@
+[
+  {
+    "id": "evi_t1_c1_01_proj_aulapuente_ve_001",
+    "projectId": "proj_aulapuente_ve_001",
+    "pacId": "pac_t1_c1_proj_aulapuente_ve_001",
+    "pacCode": "T1-C1",
+    "categoryId": "cat_c1",
+    "authorUserId": "usr_andrea_rojas_001",
+    "title": "Acta fundacional de roles, dedicación y criterio de coordinación del equipo",
+    "status": "approved",
+    "submittedAt": "2026-02-17T17:10:00-04:00",
+    "validatedAt": "2026-02-18T17:00:00-04:00",
+    "evidenceHash": "hash_evi_t1_c1_01_aulapuente",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t1_c1_01_proj_aulapuente_ve_001",
+      "mai_t1_c1_02_proj_aulapuente_ve_001",
+      "mai_t1_c1_03_proj_aulapuente_ve_001"
+    ],
+    "summary": "Documento breve con distribución de roles, disponibilidad real y reglas básicas de coordinación para sostener el tramo fundacional."
+  },
+  {
+    "id": "evi_t1_c2_01_proj_aulapuente_ve_001",
+    "projectId": "proj_aulapuente_ve_001",
+    "pacId": "pac_t1_c2_proj_aulapuente_ve_001",
+    "pacCode": "T1-C2",
+    "categoryId": "cat_c2",
+    "authorUserId": "usr_andrea_rojas_001",
+    "title": "Síntesis de entrevistas y patrones de dolor en seguimiento escolar fragmentado",
+    "status": "approved",
+    "submittedAt": "2026-03-08T18:15:00-04:00",
+    "validatedAt": "2026-03-09T18:05:00-04:00",
+    "evidenceHash": "hash_evi_t1_c2_01_aulapuente",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t1_c2_01_proj_aulapuente_ve_001",
+      "mai_t1_c2_02_proj_aulapuente_ve_001",
+      "mai_t1_c2_03_proj_aulapuente_ve_001"
+    ],
+    "summary": "Consolidado de entrevistas, frases textuales y tipologías de fricción asociadas a seguimiento manual, mensajería dispersa y alertas tardías."
+  },
+  {
+    "id": "evi_t1_c3_01_proj_aulapuente_ve_001",
+    "projectId": "proj_aulapuente_ve_001",
+    "pacId": "pac_t1_c3_proj_aulapuente_ve_001",
+    "pacCode": "T1-C3",
+    "categoryId": "cat_c3",
+    "authorUserId": "usr_andrea_rojas_001",
+    "title": "Versión inicial de propuesta de valor y segmento escolar prioritario",
+    "status": "approved",
+    "submittedAt": "2026-03-26T17:05:00-04:00",
+    "validatedAt": "2026-03-27T16:40:00-04:00",
+    "evidenceHash": "hash_evi_t1_c3_01_aulapuente",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t1_c3_01_proj_aulapuente_ve_001",
+      "mai_t1_c3_02_proj_aulapuente_ve_001",
+      "mai_t1_c3_03_proj_aulapuente_ve_001"
+    ],
+    "summary": "Artefacto de una página con propuesta de valor inicial, segmento prioritario y principales objeciones detectadas al contrastarla."
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "ric_proj_rutanomina_co_001_2026_04_04",
+    "projectId": "proj_rutanomina_co_001",
+    "icPublic": 2.46,
+    "icRaw": 2.51,
+    "actionScore": 64,
+    "evidenceScore": 58,
+    "consistencyScore": 61,
+    "collaborationScore": 47,
+    "sustainabilityScore": 44,
+    "algorithmVersionId": "alg_ic_v1_3",
+    "calculatedAt": "2026-04-04T17:35:00-05:00",
+    "structuralReading": "T2 en tránsito a T3"
+  }
+]

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "eval_evi_t3_c1_01_proj_trayectoclaro_cl_001",
+    "projectId": "proj_trayectoclaro_cl_001",
+    "evidenceId": "evi_t3_c1_01_proj_trayectoclaro_cl_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia demuestra coordinación suficiente para sostener el piloto institucional. Cumple criterio del PAC.",
+    "evaluatedAt": "2026-01-21T17:00:00-03:00"
+  },
+  {
+    "id": "eval_evi_t3_c2_01_proj_trayectoclaro_cl_001",
+    "projectId": "proj_trayectoclaro_cl_001",
+    "evidenceId": "evi_t3_c2_01_proj_trayectoclaro_cl_001",
+    "evaluatorUserId": "usr_evaluadora_vmontalvo_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia confirma persistencia del problema y justifica la continuidad del prototipo vivo en T3.",
+    "evaluatedAt": "2026-02-07T18:00:00-03:00"
+  },
+  {
+    "id": "eval_evi_t3_c3_01_proj_trayectoclaro_cl_001",
+    "projectId": "proj_trayectoclaro_cl_001",
+    "evidenceId": "evi_t3_c3_01_proj_trayectoclaro_cl_001",
+    "evaluatorUserId": "usr_evaluador_darancibia_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "El prototipo muestra uso real y aprendizaje operativo visible. Corresponde seguir profundizando recurrencia y adopción.",
+    "evaluatedAt": "2026-02-26T17:20:00-03:00"
+  },
+  {
+    "id": "eval_evi_t3_c4_01_proj_trayectoclaro_cl_001",
+    "projectId": "proj_trayectoclaro_cl_001",
+    "evidenceId": "evi_t3_c4_01_proj_trayectoclaro_cl_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia relaciona adecuadamente costo operativo y continuidad del experimento. Es consistente con el tramo.",
+    "evaluatedAt": "2026-03-15T17:10:00-03:00"
+  },
+  {
+    "id": "eval_evi_t3_c5_01_proj_trayectoclaro_cl_001",
+    "projectId": "proj_trayectoclaro_cl_001",
+    "evidenceId": "evi_t3_c5_01_proj_trayectoclaro_cl_001",
+    "evaluatorUserId": "usr_evaluador_darancibia_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia entrega una secuencia de entrada institucional razonada y suficiente para el tramo actual.",
+    "evaluatedAt": "2026-03-30T18:00:00-03:00"
+  }
+]

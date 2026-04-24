@@ -165,6 +165,13 @@ export default function TrayectoriaSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dynamicProgress]);
 
+  const metrics = {
+    currentPac: currentState.currentPacCode,
+    totalPacs: pacProgress.length,
+    microactions: currentState.microactionsCompletedCount,
+    evidences: currentState.validatedEvidenceCount,
+  };
+
   return (
     <div className="space-y-6">
       {/* HEADER */}

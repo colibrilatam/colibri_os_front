@@ -1,0 +1,14 @@
+[
+  {
+    "id": "proj_rutanomina_co_001",
+    "name": "RutaNómina",
+    "tagline": "Centraliza incidencias laborales y reduce fricción en el cierre de nómina.",
+    "shortDescription": "Proyecto SaaS en validación temprana que ofrece una herramienta liviana para registrar novedades de personal, consolidarlas y disminuir errores operativos en empresas colombianas de servicios.",
+    "industry": "SaaS",
+    "country": "Colombia",
+    "ownerUserId": "usr_catalina_mejia_001",
+    "currentTramoId": "tramo_t2",
+    "createdAt": "2026-01-09T08:45:00-05:00",
+    "updatedAt": "2026-04-04T17:35:00-05:00"
+  }
+]
