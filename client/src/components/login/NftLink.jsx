@@ -18,7 +18,7 @@ export default function NftLink({ onSuccess, onBack, role }){
             <button className="w-fit mb-2 p-3 rounded-lg font-semibold transition  'bg-[var(--action-primary)] hover:bg-(--action-primary-hover) cursor-pointer bg-gray-500" onClick={onBack}>
                 Volver
             </button>
-            {view === 'loading' && <LoadingScreen />}
+            {view === 'loading' && <div className="text-center w-full h-full text-2xl glass-effect-green p-4 border-glass rounded-2xl m-4"> Detectando NFT... </div>}
             {view === 'nftLink' && (
             <div className="text-center flex flex-col items-center gap-4 p-6 border glass-effect shadow-3xl rounded-lg ">
                 <Wallet size={64} strokeWidth={1.5} className="text-gray-400" />

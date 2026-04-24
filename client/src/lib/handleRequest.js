@@ -6,7 +6,7 @@ export async function handleRequest(fn) {
     return { data, error: null };
   } catch (error) {
     if (error instanceof ApiError) {
-      //console.log(error);
+      
       return {
         data: null,
         error: error
