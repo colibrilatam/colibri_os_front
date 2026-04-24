@@ -136,7 +136,7 @@ export default function TrayectoriaSection() {
 
   const metrics = {
     currentPac: currentState.currentPacCode,
-    totalPacs: pacProgress.length,
+    totalPacs:`${pacProgress.length} / 7`,
     microactions: `${completedMicroactionsCount} / 21`,
     evidences: `${completedEvidencesCount} / 7`,
   };
@@ -164,13 +164,6 @@ export default function TrayectoriaSection() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dynamicProgress]);
-
-  const metrics = {
-    currentPac: currentState.currentPacCode,
-    totalPacs: pacProgress.length,
-    microactions: currentState.microactionsCompletedCount,
-    evidences: currentState.validatedEvidenceCount,
-  };
 
   return (
     <div className="space-y-6">
