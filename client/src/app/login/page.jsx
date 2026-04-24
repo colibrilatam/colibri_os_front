@@ -108,7 +108,7 @@ export default function LoginRegisterPage() {
         {view === 'register' && (
           <Register
             selectedRole={selectedRole}
-            onSuccess={selectedRole === 'emprendedor' ? () => router.push('/proyecto') : () => router.push('/home')}
+            onSuccess={selectedRole === 'emprendedor' ? () => router.push('/proyecto') : () => router.push('/user/nft')}
             onBack={() => setView('selectRole')}
             onLoadingChange={setLoading}
           />
