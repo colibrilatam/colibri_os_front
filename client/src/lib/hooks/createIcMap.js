@@ -1,13 +1,12 @@
 const projectIC = [
-  { industry: 'agritech', ic: 1.47 },
-  { industry: 'edtech', ic: 2.13 },
-  { industry: 'fintech', ic: 3.21 },
-  { industry: 'cleantech', ic: 0.85 },
-  { industry: 'healthtech', ic: 4.32 },
-  { industry: 'productivity', ic: 2.67 },
-  { industry: 'hrtech', ic: 3.05 },
-  { industry: 'logistics', ic: 1.92 },
-  { industry: 'iot', ic: 4.88 },
+  { projectName: 'AulaPuente', ic: 1.47 },
+  { projectName: 'NexoCaja', ic: 1.54 },
+  { projectName: 'SaludNexo', ic: 2.34 },
+  { projectName: 'RutaNómina', ic: 2.46 },
+  { projectName: 'TrayectoClaro', ic: 3.29 },
+  { projectName: 'FlujoClave', ic: 3.31 },
+  { projectName: 'RiegoPulso', ic: 4.27 },
+  { projectName: 'TurnoBase', ic: 4.22 },
 ];
 
 function clampIC(value) {
@@ -16,7 +15,7 @@ function clampIC(value) {
 export function getProjectIC(industry) {
   const normalized = (industry || '').toLowerCase();
 
-  const match = projectIC.find((p) => p.industry === normalized);
+  const match = projectIC.find((p) => p.projectName.toLowerCase() === normalized);
 
   const value = match ? clampIC(match.ic) : 0.1;
 

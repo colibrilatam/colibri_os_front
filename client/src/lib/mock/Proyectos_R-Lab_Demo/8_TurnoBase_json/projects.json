@@ -1,0 +1,14 @@
+[
+  {
+    "id": "proj_turnobase_cl_001",
+    "name": "TurnoBase",
+    "tagline": "Ordena turnos, ausencias y cobertura operativa sin fricción manual.",
+    "shortDescription": "Proyecto HR Tech en tracción temprana que ayuda a empresas chilenas con operación por turnos a registrar cambios, ausencias y coberturas para mejorar continuidad operativa y trazabilidad interna.",
+    "industry": "HR Tech",
+    "country": "Chile",
+    "ownerUserId": "usr_camila_fuentes_001",
+    "currentTramoId": "tramo_t4",
+    "createdAt": "2025-10-28T08:50:00-03:00",
+    "updatedAt": "2026-04-05T18:05:00-03:00"
+  }
+]

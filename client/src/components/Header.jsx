@@ -1,8 +1,8 @@
 'use client';
 import NftAvatar from './señal/NftAvatar';
 import { useState } from 'react';
-import Link from "next/link";
-import {useEffect} from 'react'
+import Link from 'next/link';
+import { useEffect } from 'react';
 
 // contexto
 import { formatDateSafe } from '@/lib/hooks/date';
@@ -11,43 +11,51 @@ import { useUserStore } from '@/lib/store';
 
 import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { getProjectIC } from '@/lib/hooks/createIcMap';
 
 export default function Header({ isHome = false }) {
-
-  const [ auth, setAuth ] = useState(false);
+  const [auth, setAuth] = useState(false);
 
   useEffect(() => {
     setAuth(isAuthenticated());
-  },[])
+  }, []);
 
-  const {isAuthenticated , logout, rol} = useUserStore();
+  const { isAuthenticated, logout, rol } = useUserStore();
   const router = useRouter();
-
 
   if (isHome) {
     return (
-      <header className="z-49 lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-around  min-h-16 lg:min-h-auto content-center items-center" >
+      <header className="z-49 lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-around  min-h-16 lg:min-h-auto content-center items-center">
         <div className=" flex items-center gap-0 lg:items-center justify-between lg:gap-4 content-center  w-full ">
-
-
           <div className="flex items-center justify-between px-4 w-full">
-            <div onClick={() => router.push("/home")} className="cursor-pointer flex items-center gap-4">
-              <img src="/colibri-logo.png" alt="Colibrí Logo" className="rounded-full h-16 w-16" />
-              <span className="text-lg font-bold text-slate-50">Colibrí OS</span>
+            <div
+              onClick={() => router.push('/home')}
+              className="cursor-pointer flex items-center gap-4"
+            >
+              <img
+                src="/colibri-logo.png"
+                alt="Colibrí Logo"
+                className="rounded-full h-16 w-16"
+              />
+              <span className="text-lg font-bold text-slate-50">
+                Colibrí OS
+              </span>
             </div>
             {/* Menú desplegable */}
             {auth ? (
               <div className="flex gap-4">
-                { rol === "mecenas_semilla" && (
+                {rol === 'mecenas_semilla' && (
                   <Link className="hover:text-gray-200" href="/login">
-                  <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
-                  >
-                    NFTs
-                  </button>
-                </Link>
+                    <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
+                      NFTs
+                    </button>
+                  </Link>
                 )}
                 <Link className="hover:text-gray-200" href="/login">
-                  <button onClick={() => logout()} className="rounded-xl bg-linear-to-r from-red-600 to-red-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
+                  <button
+                    onClick={() => logout()}
+                    className="rounded-xl bg-linear-to-r from-red-600 to-red-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
                     Cerrar sesión
                   </button>
@@ -56,41 +64,49 @@ export default function Header({ isHome = false }) {
             ) : (
               <div>
                 <Link className="hover:text-gray-200" href="/login">
-                  <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
-                  >
+                  <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
                     Ingresar
                   </button>
                 </Link>
               </div>
             )}
-
-
           </div>
         </div>
       </header>
-    )
+    );
   }
 
-  // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios. 
-  const { tramoData, dbProject, projectNftData, projectTramoData, mockProject } = useProject();
+  // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios.
+  const {
+    tramoData,
+    dbProject,
+    projectNftData,
+    projectTramoData,
+    mockProject,
+  } = useProject();
   const { project, currentState, reputationSnapshot } = mockProject;
 
-
-
+  console.log(dbProject);
 
   return (
-    <header className=" lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-between  min-h-16 lg:min-h-auto content-center items-center" >
+    <header className=" lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-between  min-h-16 lg:min-h-auto content-center items-center">
       <div className=" flex items-center gap-0 lg:items-center lg:gap-4 content-center  w-full ">
-
         {isHome && (
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
-              <img src="/colibri-icon.png" alt="Colibrí Logo" className="h-6 w-6" />
-              <span className="text-sm font-semibold text-slate-50">Colibrí OS</span>
+              <img
+                src="/colibri-icon.png"
+                alt="Colibrí Logo"
+                className="h-6 w-6"
+              />
+              <span className="text-sm font-semibold text-slate-50">
+                Colibrí OS
+              </span>
             </div>
             <div>
-              <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95"
-              >Acceder</button>
+              <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95">
+                Acceder
+              </button>
             </div>
           </div>
         )}
@@ -100,11 +116,18 @@ export default function Header({ isHome = false }) {
           {/* Sección izquierda: Nombre, ID, Tramo, Estado */}
           <div className="min-w-0 flex-1 flex flex-col gap-2 md:gap-3 items-start justify-start w-fit">
             <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
-              <NftAvatar size="sm" rounded={true} />
+              {/* <NftAvatar size="sm" rounded={true} /> */}
+              <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                <Image
+                  src={dbProject.projectImageUrl}
+                  alt={dbProject.projectName}
+                  fill
+                  className="object-cover"
+                />
+              </div>
               <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
                 {dbProject.projectName}
               </h1>
-
             </div>
 
             <div className="hidden mt-2 md:mt-3 lg:flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-300">
@@ -128,14 +151,14 @@ export default function Header({ isHome = false }) {
 
           {/* Sección derecha: Índice Colibrí y Última actualización */}
           <div className="md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
-
             <div className="w-fit rounded-2xl border border-slate-800 bg-slate-950/60 px-3 md:px-4 py-2 md:py-3">
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
                 Índice Colibrí
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-slate-50">
-                  {reputationSnapshot.icPublic.toFixed(2)}
+                  {/* {reputationSnapshot.icPublic.toFixed(2)} */}
+                  {getProjectIC(dbProject.projectName)}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
                   / 6.00
@@ -147,11 +170,12 @@ export default function Header({ isHome = false }) {
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
                 Última actualización
               </div>
-              <div className="mt-1 text-sm md:text-base text-slate-200">{formatDateSafe(reputationSnapshot.calculatedAt)}</div>
+              <div className="mt-1 text-sm md:text-base text-slate-200">
+                {formatDateSafe(reputationSnapshot.calculatedAt)}
+              </div>
             </div>
           </div>
         </div>
-
       </div>
     </header>
   );
