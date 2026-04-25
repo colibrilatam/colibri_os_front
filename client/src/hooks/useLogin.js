@@ -38,7 +38,7 @@ export const useLogin = () => {
   const handleDemoLogin = async (rol) => {
 
     let email;
-    if(rol === "emprendedor") email = "lucas@colibri.com"
+    if(rol === "emprendedor") email = "ana@colibri.com"
     else if(rol === "mecenas") email = "mecenas@colibri.com"
     else if(rol === "mentor") email = "mentor@colibri.com"
 

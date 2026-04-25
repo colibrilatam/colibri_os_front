@@ -6,6 +6,10 @@ import { setCookie, deleteCookie } from './cookies';
 export const useUserStore = create(
   persist(
     (set, get) => ({
+      // Evolución de pac
+      isEvolved: false,
+      setIsEvolved: (isEvolved) => set({ isEvolved }),
+
       // Demo
       isDemo: true,
       setIsDemo: (isDemo) => set({ isDemo }),
