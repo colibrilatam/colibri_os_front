@@ -32,9 +32,9 @@ export function ProjectCard({ project, ic }) {
     <article className="group relative flex flex-col rounded-2xl border border-white/10 bg-white/5 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan-500/40 hover:bg-white/[0.07] hover:shadow-[0_16px_40px_rgba(6,182,212,0.08)]">
       <div className="mb-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <div className="mb-1 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
+          {/*<div className="mb-1 font-mono text-[11px] uppercase tracking-[0.14em] text-slate-500">
             {project.id.slice(0, 8).toUpperCase()}
-          </div>
+          </div>*/}
 
           <div className="flex items-center gap-2">
             <Image
