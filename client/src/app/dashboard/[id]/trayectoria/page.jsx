@@ -13,9 +13,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { pacConfig } from './components/pacConfig';
+import { useUserStore } from '@/lib/store';
 
 export default function TrayectoriaSection() {
   const { tramoData, dbProject, mockProject } = useProject();
+
+  const rol = useUserStore((state) => state.rol);
 
   const isMobile = useIsMobile();
 
@@ -44,7 +47,7 @@ export default function TrayectoriaSection() {
   // Cargar el progreso guardado SOLO en el cliente después del montaje
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('aulapuente_t1_c7_progress');
+      const saved = sessionStorage.getItem('aulapuente_t1_c7_progress');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -67,7 +70,7 @@ export default function TrayectoriaSection() {
         pacCompleted: allDone,
       };
       if (typeof window !== 'undefined') {
-        localStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
+        sessionStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
       }
       return newProgress;
     });
@@ -84,7 +87,7 @@ export default function TrayectoriaSection() {
         pacCompleted: allDone,
       };
       if (typeof window !== 'undefined') {
-        localStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
+        sessionStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
       }
       return newProgress;
     });
@@ -346,6 +349,7 @@ export default function TrayectoriaSection() {
               dynamicProgress={dynamicProgress}
               onCompleteMicroaction={completeMicroaction}
               onCompleteEvidence={completeEvidence}
+              rol={rol}
             />
           ) : (
             <CargaPac pac={selectedPac} />
@@ -357,7 +361,7 @@ export default function TrayectoriaSection() {
 }
 
 /* Componente dinámico para T1-C7 */
-const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onCompleteEvidence }) => {
+const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onCompleteEvidence, rol }) => {
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
@@ -399,7 +403,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
               <StatusBadge status={isCompleted ? 'done' : (isCurrent ? 'current' : 'pending')} />
             </div>
 
-            {!isCompleted && (
+            {!isCompleted && rol !== "mecenas_semilla" && (
               <input
                 type="file"
                 onChange={(e) => {
@@ -442,7 +446,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
       >
         {dynamicProgress.evidenceCompleted ? (
           <p className="text-[var(--status-success)]">✔ {evidenceText.done}</p>
-        ) : (
+        ) : rol !== "mecenas_semilla" ? (
           <>
             <p className="mb-2">{evidenceText.current}</p>
             <input
@@ -462,7 +466,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
               "
             />
           </>
-        )}
+        ) : <p>Evidencia pendiente</p>}
       </div>
     </div>
   );
