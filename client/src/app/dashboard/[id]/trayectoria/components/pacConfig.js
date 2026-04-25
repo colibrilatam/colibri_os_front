@@ -1,5 +1,5 @@
 export const pacConfig = {
-    'T1-C1': {
+    'T3-C1': {
       inputs: [
         {
           title: 'Diagnóstico personal',
@@ -21,7 +21,7 @@ export const pacConfig = {
       },
     },
   
-    'T1-C2': {
+    'T3-C2': {
       inputs: [
         {
           title: 'Observación de problemas',
@@ -43,7 +43,7 @@ export const pacConfig = {
       },
     },
   
-    'T1-C3': {
+    'T3-C3': {
       inputs: [
         {
           title: 'Mini canvas',
@@ -65,7 +65,7 @@ export const pacConfig = {
       },
     },
   
-    'T1-C4': {
+    'T3-C4': {
       inputs: [
         {
           title: 'Activos personales',
@@ -87,7 +87,7 @@ export const pacConfig = {
       },
     },
   
-    'T1-C5': {
+    'T3-C5': {
       inputs: [
         {
           title: 'Línea temporal',
@@ -109,7 +109,7 @@ export const pacConfig = {
       },
     },
   
-    'T1-C6': {
+    'T3-C6': {
       inputs: [
         {
           title: 'Mapa de oportunidades',
@@ -131,7 +131,7 @@ export const pacConfig = {
       },
     },
   
-    'T1-C7': {
+    'T3-C7': {
       inputs: [
         {
           title: 'Planificación de microacciones',

@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProject } from '@/lib/projectContext';
 
+import Evolution from './components/Evolution';
+import NotificationPopup from '@/components/NotificationPopup';
+
 // SWIPER
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -13,9 +16,14 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { pacConfig } from './components/pacConfig';
+import { useUserStore } from '@/lib/store';
 
 export default function TrayectoriaSection() {
   const { tramoData, dbProject, mockProject } = useProject();
+
+  const [ notification, setNotification ] = useState(false);
+
+  const rol = useUserStore((state) => state.rol);
 
   const isMobile = useIsMobile();
 
@@ -32,7 +40,7 @@ export default function TrayectoriaSection() {
     pending: 'pending',
   };
 
-  // Estado local para el progreso dinámico del PAC T1-C7
+  // Estado local para el progreso dinámico del PAC T3-C7
   // Inicializamos siempre con el estado por defecto (ninguna acción completada)
   // para que coincida en servidor y cliente durante la hidratación.
   const [dynamicProgress, setDynamicProgress] = useState({
@@ -44,7 +52,7 @@ export default function TrayectoriaSection() {
   // Cargar el progreso guardado SOLO en el cliente después del montaje
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('aulapuente_t1_c7_progress');
+      const saved = sessionStorage.getItem('aulapuente_t3_c7_progress');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
@@ -67,7 +75,7 @@ export default function TrayectoriaSection() {
         pacCompleted: allDone,
       };
       if (typeof window !== 'undefined') {
-        localStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
+        sessionStorage.setItem('aulapuente_t3_c7_progress', JSON.stringify(newProgress));
       }
       return newProgress;
     });
@@ -84,10 +92,12 @@ export default function TrayectoriaSection() {
         pacCompleted: allDone,
       };
       if (typeof window !== 'undefined') {
-        localStorage.setItem('aulapuente_t1_c7_progress', JSON.stringify(newProgress));
+        sessionStorage.setItem('aulapuente_t3_c7_progress', JSON.stringify(newProgress));
       }
+      
       return newProgress;
     });
+    setNotification(true);
   };
 
   // Calcular métricas dinámicas
@@ -98,7 +108,7 @@ export default function TrayectoriaSection() {
   const currentPacCompletedMicroactions =
     dynamicProgress.microactionsCompleted.filter(Boolean).length;
 
-  // Construir array de PACs con estado actualizado para T1-C7
+  // Construir array de PACs con estado actualizado para T3-C7
   const buildPacs = () => {
     const basePacs = pacProgress.map((p) => {
       const pacEvidence = evidence.find((e) => e.pacId === p.id);
@@ -110,7 +120,7 @@ export default function TrayectoriaSection() {
         category: p.categoryName,
         area: p.categoryName,
         title: p.title,
-        status: p.pacCode === 'T1-C7' && dynamicProgress.pacCompleted
+        status: p.pacCode === 'T3-C7' && dynamicProgress.pacCompleted
           ? 'done'
           : mapStatus[p.status],
         detail: {
@@ -148,16 +158,16 @@ export default function TrayectoriaSection() {
       date: new Date(p.closedAt).toLocaleDateString(),
     }));
   if (dynamicProgress.pacCompleted) {
-    milestones.push({ text: 'T1-C7 completado', date: new Date().toLocaleDateString() });
+    milestones.push({ text: 'T3-C7 completado', date: new Date().toLocaleDateString() });
   }
 
   const [selectedPac, setSelectedPac] = useState(pacs[0]);
 
-  // Actualizar selectedPac si cambia el progreso dinámico y el seleccionado es T1-C7
+  // Actualizar selectedPac si cambia el progreso dinámico y el seleccionado es T3-C7
   useEffect(() => {
-    if (selectedPac && selectedPac.code === 'T1-C7') {
+    if (selectedPac && selectedPac.code === 'T3-C7') {
       const updatedPacs = buildPacs();
-      const updatedLastPac = updatedPacs.find(p => p.code === 'T1-C7');
+      const updatedLastPac = updatedPacs.find(p => p.code === 'T3-C7');
       if (updatedLastPac && updatedLastPac.status !== selectedPac.status) {
         setSelectedPac(updatedLastPac);
       }
@@ -167,12 +177,19 @@ export default function TrayectoriaSection() {
 
   return (
     <div className="space-y-6">
+      {/*<button className='bg-red-500 p-10' onClick={() => { setNotification(true); console.log("activar", notification)}}>ACTIVAR</button>*/}
+      { notification && (
+        <NotificationPopup  message="¡Felicitaciones! Completaste el Tramo 3. Tu Colibrí ha evolucionado" isOpen={notification} onClose={() => setNotification(false)}>
+        <Evolution/>
+      </NotificationPopup>
+      )}
+      
       {/* HEADER */}
       <div className="glass-effect-dark border-glass rounded-2xl p-6">
         <p className="text-overline">Trayectoria operativa del tramo</p>
 
         <h2 className="text-h2">
-          T1 · Fase Fundacional
+          T3 · Fase Fundacional
         </h2>
 
         <p className="text-body mt-2 max-w-2xl">{project.shortDescription}</p>
@@ -336,16 +353,17 @@ export default function TrayectoriaSection() {
           </div>
         </div>
 
-        {/* CARGA OPERATIVA DEL PAC (interactivo para T1-C7) */}
+        {/* CARGA OPERATIVA DEL PAC (interactivo para T3-C7) */}
         <div className="glass-effect border-glass rounded-2xl p-6">
           <h4 className="text-micro-label mb-4">Carga operativa del PAC</h4>
 
-          {selectedPac.code === 'T1-C7' ? (
+          {selectedPac.code === 'T3-C7' ? (
             <DynamicCargaPac
               pac={selectedPac}
               dynamicProgress={dynamicProgress}
               onCompleteMicroaction={completeMicroaction}
               onCompleteEvidence={completeEvidence}
+              rol={rol}
             />
           ) : (
             <CargaPac pac={selectedPac} />
@@ -356,8 +374,8 @@ export default function TrayectoriaSection() {
   );
 }
 
-/* Componente dinámico para T1-C7 */
-const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onCompleteEvidence }) => {
+/* Componente dinámico para T3-C7 */
+const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onCompleteEvidence, rol }) => {
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
@@ -370,6 +388,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
   if (isDone) {
     return (
       <div className="space-y-4">
+
         <div className="rounded-xl p-4 border border-glass-green bg-[rgba(0,153,117,0.08)]">
           <p className="text-body text-[var(--status-success)]">
             ✅ PAC completado. ¡Felicidades! Has completado todas las microacciones y la evidencia.
@@ -399,7 +418,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
               <StatusBadge status={isCompleted ? 'done' : (isCurrent ? 'current' : 'pending')} />
             </div>
 
-            {!isCompleted && (
+            {!isCompleted && rol !== "mecenas_semilla" && (
               <input
                 type="file"
                 onChange={(e) => {
@@ -442,7 +461,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
       >
         {dynamicProgress.evidenceCompleted ? (
           <p className="text-[var(--status-success)]">✔ {evidenceText.done}</p>
-        ) : (
+        ) : rol !== "mecenas_semilla" ? (
           <>
             <p className="mb-2">{evidenceText.current}</p>
             <input
@@ -462,7 +481,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
               "
             />
           </>
-        )}
+        ) : <p>Evidencia pendiente</p>}
       </div>
     </div>
   );

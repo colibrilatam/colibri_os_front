@@ -31,8 +31,8 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
 
   useEffect(() => {
     setFormData({
-      username: selectedRole === 'emprendedor' ? 'Lucas Emprendedor' : 'Sofia Mecenas',
-      email: selectedRole === 'emprendedor' ? 'lucas@colibri.com' : 'mecenas@colibri.com',
+      username: selectedRole === 'emprendedor' ? 'Ana Startup' : 'Sofia Mecenas',
+      email: selectedRole === 'emprendedor' ? 'ana@colibri.com' : 'mecenas@colibri.com',
       password: 'Test@1234',
       confirmPassword: 'Test@1234',
     })
