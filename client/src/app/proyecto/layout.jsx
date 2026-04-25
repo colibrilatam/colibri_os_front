@@ -14,7 +14,7 @@ export default async function ProjectLayout({ children }){
     const isDemo = true
 
 
-    if(isDemo) {
+    if(user.email === 'ana@colibri.com') {
         return(
             <>
             {children}
