@@ -8,6 +8,7 @@ import { useState,  useEffect } from "react";
 import { nftService } from "@/services/nft";
 import { projectsService } from "@/services/project";
 import LoadingScreen from "@/components/LoadingScreen";
+import { getProjectIC } from "@/lib/hooks/createIcMap";
 
 
 const projects = [
@@ -102,8 +103,9 @@ export default function NftPage(){
     for(let i = 0; i < 3;  i++){
       const { data:  userData } = await getUserData(allProjects[i].project.ownerUserId);
       const { data:  tramoData } = await getTramo(allProjects[i].project.currentTramoId);
+      const ic = getProjectIC(allProjects[i].project.projectName);
 
-      allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData })
+      allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData, ic: ic })
     }
     setProjectsInfo(allProjectsInfo)
     setLoading(false);
@@ -223,7 +225,7 @@ console.log(projectsInfo)
 
               {/* IC */}
               <td className="px-4 py-3 text-gray-200">
-                {projects[index].ic.toFixed(2)}
+                {project.ic}
               </td>
 
               {/* Estado */}
