@@ -78,7 +78,8 @@ export default function NftPage(){
   const [ error, setError ] = useState(null);
   const [ user, setUser ] = useState(null);
   const [ loading, setLoading ] = useState(false);
-  const [ projectsInfo, setProjectsInfo ] = useState([]);
+  const [ projectsInfo, setProjectsInfo ] = useState(null);
+
   const [ nftProjectsData, setNftProjectsData ] = useState([]);
   const [ tramos, setTramos ] = useState([]);
 
@@ -88,57 +89,34 @@ export default function NftPage(){
   const { execute: nftProjectData, error: nftProjectError, loading: nftProjectLoading } = useRequest(nftService.update);
   const { execute: getProjects, error: projectsError, loading: projectsLoading } = useRequest(projectsService.getAll);
   const { execute: getNftProjectsInfo, error: nftProjectsInfoError, loading: nftProjectsInfoLoading } = useRequest(nftService.getNftProjects);
-  const { execute: getTramos, error: tramosError, loading: tramosLoading } = useRequest(projectsService.getAllTramos);
+  const { execute: getTramo, error: tramosError, loading: tramosLoading } = useRequest(projectsService.currentTramo);
+  const { execute: getUserData, error: userDataError, loading: userDataLoading } = useRequest(userService.userData);
 
-  useEffect(() => {
-    
-    //fetchNftStats();
-    nftProject();
-    
-  }, []);
-
-  async function nftProject(){
+      async function getData(){
     setLoading(true);
-    const {data: userData} = await getUser();
-    const { data: tramosData } = await getTramos();
-    setTramos(tramosData);
-    setUser(userData);
-    const { data: projectsData } = await getProjects();
-    if(projectsError) setError(projectsError);
-    for(let i=0; i<6; i++){
-      await createNftProject({
-  chainId: 1,
-  contractAddress: "0x1234aklsñjdlkaabcd",
-  tokenId: "42",
-  nftHash: `nft_hash_${i}`,
-  metadataUri: "https://metadata.uri/42",
-  currentVisualVersion: "v1",
-  representedTramoId: projectsData[i].currentTramoId,
-  currentHolderUserId: userData.sub
-},projectsData[i].id);
 
-setProjectsInfo([[...projectsInfo],projectsData[i] ])
+    const { data: allProjects, error: allProjectsError} = await getNftProjectsInfo();
+    
+    const allProjectsInfo = [];
+
+    for(let i = 0; i < 3;  i++){
+      const { data:  userData } = await getUserData(allProjects[i].project.ownerUserId);
+      const { data:  tramoData } = await getTramo(allProjects[i].project.currentTramoId);
+
+      allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData })
     }
-
-    const {data: nftProjectsInfo} = await getNftProjectsInfo();
-    setNftProjectsData(nftProjectsInfo.filter((p, index) => p.projectId !== null && p.currentHolder !== null).slice(0, 3));
+    setProjectsInfo(allProjectsInfo)
     setLoading(false);
+    
   }
 
-  /*async function fetchNftStats(){
-      const {data} = await getUser();
-      setUser(data);
-      const { data: nftStats, error: nftStatsError } = await getNfts(data.sub);
-      if(nftStatsError) setError(nftStatsError);
-   
-      if(nftStats.totalNfts < 10) createNfts(data.sub);
-    }
+  useEffect(() => {
 
-  const createNfts = async (userId) => {
-    const { data: nftResponse } = await createNft({ quantity: 10}, userId);
-    if(createNftError) setError(createNftError);
+    getData();
     
-  }*/
+  }, []);
+console.log(projectsInfo)
+
 
     const stats = [
   {
@@ -163,16 +141,6 @@ setProjectsInfo([[...projectsInfo],projectsData[i] ])
   },
 ];
 
- /*const createNftHandler = async () => {
-
-  const { data: nftResponse } = await createNft({ quantity: 1}, user.sub);
-  if(createNftError) setError(createNftError);
-  
- }*/
-
-
-
-    const { token } = useUserStore()
     if(loading) return <LoadingScreen />
 
     return(
@@ -191,7 +159,7 @@ setProjectsInfo([[...projectsInfo],projectsData[i] ])
                 </div>
                 <div className="p-2 flex flex-col md:justify-between gap-2 mt-4">
                     <div className="glass-effect rounded-2xl p-4 text-(--text-secondary) w-full gap-6 flex flex-col">
-                        <h3 className="text-(--text-primary)">Portafolio de colibrís</h3>
+                        <h3 className="text-(--text-primary)">Portafolio de proyectos</h3>
                         <ul className="space-y-2">
                             {stats.map(({ label, value }) => (
                                 <li key={label}>
@@ -218,41 +186,39 @@ setProjectsInfo([[...projectsInfo],projectsData[i] ])
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 text-left">
-            <th className="px-4 py-3 font-semibold">Colibri / Proyecto</th>
+            <th className="px-4 py-3 font-semibold">Proyecto</th>
             <th className="hidden px-4 py-3 font-semibold md:table-cell">
               Emprendedor
             </th>
-            <th className="px-4 py-3 font-semibold">NFT · Tramo</th>
+            <th className="px-4 py-3 font-semibold">Tramo</th>
             <th className="px-4 py-3 font-semibold">IC</th>
             <th className="px-4 py-3 font-semibold">Estado</th>
             <th className="px-4 py-3" />
           </tr>
         </thead>
         <tbody>
-          {nftProjectsData ? nftProjectsData.map((project, index) => (
+          {projectsInfo && projectsInfo.length === 3 && projectsInfo.map((project, index) => (
             <tr
-              key={project.nftHash}
+              key={project.nftProject.id}
               className={`border-b border-gray-100 last:border-0 ${
                 index % 2 === 0 ? "glass-effect-dark" : "glass-effect"
               }`}
             >
               {/* Colibri / Proyecto */}
               <td className="px-4 py-3">
-                <p className="font-semibold">{project.nftHash}</p>
-                <p className="text-xs text-gray-300">{project.project.projectName}</p>
-                <p className="text-xs text-gray-500">{project.project.industry}</p>
+                <p className="font-semibold">{project.nftProject.project.projectName}</p>
+                <p className="text-xs text-gray-300">{project.nftProject.project.industry}</p>
+                <p className="text-xs text-gray-500">{project.nftProject.project.country}</p>
               </td>
 
               {/* Emprendedor - oculto en mobile */}
               <td className="hidden px-4 py-3 text-gray-200 md:table-cell">
-                {project.currentHolder.fullName}
+                {project.user.fullName}
               </td>
 
               {/* NFT · Tramo */}
               <td className="px-4 py-3 text-gray-200">
-                <span>{tramos.find((tramo) => tramo.id === project.project.currentTramoId).code}</span>
-                <span className="mx-1 text-gray-400">·</span>
-                <span className="text-gray-400">{project.nftHash}</span>
+                <span>{project.tramo.code}</span>
               </td>
 
               {/* IC */}
@@ -262,21 +228,20 @@ setProjectsInfo([[...projectsInfo],projectsData[i] ])
 
               {/* Estado */}
               <td className="px-4 py-3">
-                <StatusBadge estado={project.project.status} />
+                <StatusBadge estado={project.nftProject.project.status} />
               </td>
 
               {/* Acción */}
               <td className="px-4 py-3 text-right">
                 <a
-                  href={`/dashboard/${project.projectId}/senial`}
+                  href={`/dashboard/${project.nftProject.projectId}/senial`}
                   className="glass-effect-green p-2 border-glass rounded-full text-sm font-medium text-blue-500 hover:text-blue-700 hover:underline whitespace-nowrap"
                 >
                   Ver en R-Lab
                 </a>
               </td>
             </tr>
-          )): 
-          <LoadingScreen></LoadingScreen>
+          ))
            }
         </tbody>
       </table>
