@@ -65,7 +65,7 @@ export function ProjectCard({ project, ic }) {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge value={projectTrancheLabel} variant="tranche" />
+        { project && project.projectTrancheLabel &&<Badge value={projectTrancheLabel} variant="tranche" />}
         <Badge value={project.status} variant="status" />
       </div>
 
