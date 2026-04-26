@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Button from './Button';
 
-export default function NotificationPopup({ message, isOpen: initialIsOpen = true, onClose }) {
+export default function NotificationPopup({ message, children, isOpen: initialIsOpen = true, onClose }) {
   const [isOpen, setIsOpen] = useState(initialIsOpen);
 
   const handleClose = () => {
@@ -16,7 +16,7 @@ export default function NotificationPopup({ message, isOpen: initialIsOpen = tru
   return (
     <>
       {/* Overlay oscuro */}
-      <div className="fixed inset-0 overlay-bg z-40" onClick={handleClose} />
+      <div className="text-white fixed inset-0 overlay-bg z-40" onClick={handleClose} />
 
       {/* Popup */}
       <div className=" fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
@@ -32,10 +32,12 @@ export default function NotificationPopup({ message, isOpen: initialIsOpen = tru
 
           {/* Contenido del popup */}
           <div className="pr-6">
-            <p className=" text-center mb-6 text-base leading-relaxed">
+            <p className=" text-white text-center mb-6 text-base leading-relaxed">
               {message}
             </p>
           </div>
+
+          { children && children }
 
           {/* Botón Aceptar */}
           <div className="flex justify-center">

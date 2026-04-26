@@ -20,7 +20,7 @@ export default function CreateProject() {
         alert(error);
     }
     const { data: userData } = await getUser();
-    const projectId = data?.find((p) => p.projectName === "AulaPuente").id || [];
+    const projectId = data?.find((p) => p.projectName === "FlujoClave").id || [];
 
     alert('Demostración de registro');
     router.push(`/dashboard/${projectId}/senial`);
@@ -43,9 +43,9 @@ export default function CreateProject() {
 useEffect(() => {
   if (isDemo) {
     setFormData({
-      projectName: 'AulaPuente',
-      country: 'Venezuela',
-      industry: 'EdTech',
+      projectName: 'FlujoClave',
+      country: 'Colombia',
+      industry: 'Fintech',
       tagline: 'Tecnología para una educación mejor',
       shortDescription: 'Proyecto edtech en etapa fundacional que explora una solución simple para organizar actividades, seguimiento y alertas básicas de continuidad académica en educación media venezolana.',
       startupLinkedinUrl: 'https://linkedin.com/company/mi-startup',
