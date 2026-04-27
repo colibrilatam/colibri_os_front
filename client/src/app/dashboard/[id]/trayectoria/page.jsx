@@ -19,12 +19,10 @@ import 'swiper/css/navigation';
 import { useUserStore } from '@/lib/store';
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
 
-
-
 export default function TrayectoriaSection() {
   const { tramoData, dbProject, mockProject } = useProject();
 
-  const [ notification, setNotification ] = useState(false);
+  const [notification, setNotification] = useState(false);
 
   const rol = useUserStore((state) => state.rol);
 
@@ -78,7 +76,10 @@ export default function TrayectoriaSection() {
         pacCompleted: allDone,
       };
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('aulapuente_t3_c7_progress', JSON.stringify(newProgress));
+        sessionStorage.setItem(
+          'aulapuente_t3_c7_progress',
+          JSON.stringify(newProgress),
+        );
       }
       return newProgress;
     });
@@ -95,9 +96,12 @@ export default function TrayectoriaSection() {
         pacCompleted: allDone,
       };
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('aulapuente_t3_c7_progress', JSON.stringify(newProgress));
+        sessionStorage.setItem(
+          'aulapuente_t3_c7_progress',
+          JSON.stringify(newProgress),
+        );
       }
-      
+
       return newProgress;
     });
     setNotification(true);
@@ -123,9 +127,10 @@ export default function TrayectoriaSection() {
         category: p.categoryName,
         area: p.categoryName,
         title: p.title,
-        status: p.pacCode === 'T3-C7' && dynamicProgress.pacCompleted
-          ? 'done'
-          : mapStatus[p.status],
+        status:
+          p.pacCode === 'T3-C7' && dynamicProgress.pacCompleted
+            ? 'done'
+            : mapStatus[p.status],
         detail: {
           objective: p.title,
           evidence: {
@@ -134,7 +139,9 @@ export default function TrayectoriaSection() {
           },
           microactions,
           timeline: {
-            start: p.startedAt ? new Date(p.startedAt).toLocaleDateString() : '-',
+            start: p.startedAt
+              ? new Date(p.startedAt).toLocaleDateString()
+              : '-',
             end: p.closedAt
               ? new Date(p.closedAt).toLocaleDateString()
               : 'En curso',
@@ -149,7 +156,7 @@ export default function TrayectoriaSection() {
 
   const metrics = {
     currentPac: currentState.currentPacCode,
-    totalPacs:`${pacProgress.length} / 7`,
+    totalPacs: `${pacProgress.length} / 7`,
     microactions: `${completedMicroactionsCount} / 21`,
     evidences: `${completedEvidencesCount} / 7`,
   };
@@ -161,7 +168,10 @@ export default function TrayectoriaSection() {
       date: new Date(p.closedAt).toLocaleDateString(),
     }));
   if (dynamicProgress.pacCompleted) {
-    milestones.push({ text: 'T3-C7 completado', date: new Date().toLocaleDateString() });
+    milestones.push({
+      text: 'T3-C7 completado',
+      date: new Date().toLocaleDateString(),
+    });
   }
 
   const [selectedPac, setSelectedPac] = useState(pacs[0]);
@@ -170,7 +180,7 @@ export default function TrayectoriaSection() {
   useEffect(() => {
     if (selectedPac && selectedPac.code === 'T3-C7') {
       const updatedPacs = buildPacs();
-      const updatedLastPac = updatedPacs.find(p => p.code === 'T3-C7');
+      const updatedLastPac = updatedPacs.find((p) => p.code === 'T3-C7');
       if (updatedLastPac && updatedLastPac.status !== selectedPac.status) {
         setSelectedPac(updatedLastPac);
       }
@@ -181,19 +191,21 @@ export default function TrayectoriaSection() {
   return (
     <div className="space-y-6">
       {/*<button className='bg-red-500 p-10' onClick={() => { setNotification(true); console.log("activar", notification)}}>ACTIVAR</button>*/}
-      { notification && (
-        <NotificationPopup  message="¡Felicitaciones! Completaste el Tramo 3. Tu Colibrí ha evolucionado" isOpen={notification} onClose={() => setNotification(false)}>
-        <Evolution/>
-      </NotificationPopup>
+      {notification && (
+        <NotificationPopup
+          message="¡Felicitaciones! Completaste el Tramo 3. Tu Colibrí ha evolucionado"
+          isOpen={notification}
+          onClose={() => setNotification(false)}
+        >
+          <Evolution />
+        </NotificationPopup>
       )}
-      
+
       {/* HEADER */}
       <div className="glass-effect-dark border-glass rounded-2xl p-6">
         <p className="text-overline">Trayectoria operativa del tramo</p>
 
-        <h2 className="text-h2">
-          T3 · Fase Fundacional
-        </h2>
+        <h2 className="text-h2">T3 · Fase Fundacional</h2>
 
         <p className="text-body mt-2 max-w-2xl">{project.shortDescription}</p>
 
@@ -308,23 +320,29 @@ export default function TrayectoriaSection() {
 }
 
 /* Componente dinámico para T3-C7 */
-const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onCompleteEvidence, rol }) => {
+const DynamicCargaPac = ({
+  pac,
+  dynamicProgress,
+  onCompleteMicroaction,
+  onCompleteEvidence,
+  rol,
+}) => {
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
 
-  const config = pacConfig[pac.code] || pacConfig[pac.area];
+  const config = getPacConfig(pac.code);
   const inputs = config?.inputs || [];
-  const evidenceText = config?.evidence;
+  const evidenceText = config?.evidence || defaultEvidence;
 
   // Si ya está completado, mostrar solo mensaje final
   if (isDone) {
     return (
       <div className="space-y-4">
-
         <div className="rounded-xl p-4 border border-glass-green bg-[rgba(0,153,117,0.08)]">
           <p className="text-body text-[var(--status-success)]">
-            ✅ PAC completado. ¡Felicidades! Has completado todas las microacciones y la evidencia.
+            ✅ PAC completado. ¡Felicidades! Has completado todas las
+            microacciones y la evidencia.
           </p>
         </div>
       </div>
@@ -348,10 +366,14 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
                 <p className="text-body-lg">{item.title}</p>
                 <p className="text-helper">{item.desc}</p>
               </div>
-              <StatusBadge status={isCompleted ? 'done' : (isCurrent ? 'current' : 'pending')} />
+              <StatusBadge
+                status={
+                  isCompleted ? 'done' : isCurrent ? 'current' : 'pending'
+                }
+              />
             </div>
 
-            {!isCompleted && rol !== "mecenas_semilla" && (
+            {!isCompleted && rol !== 'mecenas_semilla' && (
               <input
                 type="file"
                 onChange={(e) => {
@@ -394,7 +416,7 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
       >
         {dynamicProgress.evidenceCompleted ? (
           <p className="text-[var(--status-success)]">✔ {evidenceText.done}</p>
-        ) : rol !== "mecenas_semilla" ? (
+        ) : rol !== 'mecenas_semilla' ? (
           <>
             <p className="mb-2">{evidenceText.current}</p>
             <input
@@ -414,7 +436,9 @@ const DynamicCargaPac = ({ pac, dynamicProgress, onCompleteMicroaction, onComple
               "
             />
           </>
-        ) : <p>Evidencia pendiente</p>}
+        ) : (
+          <p>Evidencia pendiente</p>
+        )}
       </div>
     </div>
   );
@@ -428,8 +452,8 @@ const CargaPac = ({ pac }) => {
 
   const config = getPacConfig(pac.code);
 
-const inputs = config?.inputs || [];
-const evidenceText = config?.evidence || defaultEvidence;
+  const inputs = config?.inputs || [];
+  const evidenceText = config?.evidence || defaultEvidence;
 
   /* const config = pacConfig[pac.code] || pacConfig[pac.area];
   const inputs = config?.inputs || [];
