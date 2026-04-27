@@ -33,11 +33,13 @@ export default function Header({ isHome = false }) {
               onClick={() => router.push('/home')}
               className="cursor-pointer flex items-center gap-4"
             >
-              <img
-                src="/colibri-logo.png"
-                alt="Colibrí Logo"
-                className="rounded-full h-16 w-16"
-              />
+              <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
+                <img
+                  src="/Imagotipo Colibri OS.svg"
+                  alt="Colibrí Logo"
+                  className="h-11 w-11 object-contain"
+                />
+              </div>
               <span className="text-lg font-bold text-slate-50">
                 Colibrí OS
               </span>
