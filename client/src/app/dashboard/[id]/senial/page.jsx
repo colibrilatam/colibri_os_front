@@ -5,29 +5,21 @@ import ProgressBar from '@/components/ProgressBar';
 // contexto
 import { useProject } from '@/lib/projectContext';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
+import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
 
 export default function IdentidadPage() {
   // contexto
-  const { 
-    microActionInstanceData , 
-    tramoData, 
-    dbProject, 
-    mockProject, 
-    projectNftData, 
-    evidenceData } = useProject();
+  const {
+    microActionInstanceData,
+    tramoData,
+    dbProject,
+    mockProject,
+    projectNftData,
+    evidenceData,
+  } = useProject();
 
-
-    const uncertaintyType = {
-  market: 'Mercado',
-  technical: 'Técnica',
-  financial: 'Financiera',
-  operational: 'Operativa',
-  regulatory: 'Regulatoria',
-}
- 
- 
- 
-  const { project, currentState, reputationSnapshot, pacProgress } = mockProject;
+  const { project, currentState, reputationSnapshot, pacProgress } =
+    mockProject;
   // información de tramo actual
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
@@ -62,22 +54,22 @@ export default function IdentidadPage() {
             )}
             , con una señal reputacional de{' '}
             <span className="text-accent-cyan font-medium">
-            {getProjectIC(dbProject.projectName)}
-               / 6.00
+              {getProjectIC(dbProject.projectName)}/ 6.00
             </span>
             , mientras reduce la incertidumbre{' '}
             <span className="text-accent-amber font-medium">
-              {uncertaintyType[tramoData.uncertaintyType] || '[INCERTIDUMBRE DEL TRAMO]'}
+              {getUncertaintyLabel(tramoData.uncertaintyType) ||
+                '[INCERTIDUMBRE DEL TRAMO]'}
             </span>{' '}
             y los siguientes riesgos:{' '}
             {tramoData.associatedRisks.map((risk) => {
               return (
                 <span key={risk} className="text-accent-amber font-medium">
-                  {risk}{', '}
-                </span> 
+                  {risk}
+                  {', '}
+                </span>
               );
-            })}
-            {' '}
+            })}{' '}
             mientras y avanza con señales verificables propias del tramo.
           </p>
         </div>
@@ -320,7 +312,8 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="mb-4 rounded-xl bg-red-600/30 border border-white/20 px-4 py-2 text-center text-sm font-medium text-white">
-                      {uncertaintyType[tramoData.uncertaintyType] || 'No definida'}
+                      {getUncertaintyLabel(tramoData.uncertaintyType) ||
+                        'No definida'}
                     </div>
 
                     <div
@@ -332,13 +325,15 @@ export default function IdentidadPage() {
 
                     <div className="flex flex-col gap-2">
                       {tramoData.associatedRisks.map((risk, index) => {
-              return (
-                <div key={risk} className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm text-white">
-                        {risk || 'Riesgo ' + (index + 1)}
-                      </div>
-              );
-            })}
-                     
+                        return (
+                          <div
+                            key={risk}
+                            className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm text-white"
+                          >
+                            {risk || 'Riesgo ' + (index + 1)}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>

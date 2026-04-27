@@ -1,155 +1,249 @@
+// ===============================
+// PAC CONFIG ESCALABLE
+// ===============================
+
 export const pacConfig = {
-    'T3-C1': {
-      inputs: [
-        {
-          title: 'Diagnóstico personal',
-          desc: 'Subí tu cuadro de fortalezas y valores (PDF o imagen de mural físico).',
+  categories: {
+    C1: {
+      name: 'Equipo Emprendedor',
+      base: {
+        inputs: [
+          {
+            title: 'Definición de roles',
+            desc: 'Roles, dedicación y responsabilidades del equipo.',
+          },
+          {
+            title: 'Dinámica de trabajo',
+            desc: 'Cómo se organizan y toman decisiones.',
+          },
+          {
+            title: 'Acuerdos clave',
+            desc: 'Reglas básicas de funcionamiento.',
+          },
+        ],
+        evidence: {
+          done: '✔ Equipo estructurado y validado.',
+          current: '⏳ Definiendo estructura del equipo.',
+          pending: '⚠️ Definí roles, dinámica y acuerdos.',
         },
-        {
-          title: 'Mi historia subestimada',
-          desc: 'Subí tu relato emprendedor (texto, video o audio).',
+      },
+      tramos: {
+        T1: {
+          evidence: {
+            done: '✔ Equipo fundacional definido.',
+          },
         },
-        {
-          title: 'Mapa de red de apoyo',
-          desc: 'Subí el diagrama visual de aliados y apoyos.',
+        T3: {
+          inputs: [
+            {
+              title: 'Roles estratégicos',
+              desc: 'Definición de liderazgo y ownership.',
+            },
+          ],
         },
-      ],
-      evidence: {
-        done: '✔ Mapa Personal "Mi ADN Colibrí" registrado como IP compuesta.',
-        current: '⏳ Estás construyendo tu ADN Colibrí (faltan validaciones).',
-        pending: '⚠️ Completá las 3 microacciones para generar tu ADN Colibrí.',
       },
     },
-  
-    'T3-C2': {
-      inputs: [
-        {
-          title: 'Observación de problemas',
-          desc: 'Registro escrito con descripciones y fotos de 3 problemas detectados.',
+
+    C2: {
+      name: 'Problema',
+      base: {
+        inputs: [
+          {
+            title: 'Observación de problemas',
+            desc: 'Detectar problemas reales en el contexto.',
+          },
+          {
+            title: 'Entrevistas',
+            desc: 'Validar con usuarios reales.',
+          },
+          {
+            title: 'Síntesis',
+            desc: 'Definir problema principal.',
+          },
+        ],
+        evidence: {
+          done: '✔ Problema validado.',
+          current: '⏳ Validando problema.',
+          pending: '⚠️ Observá, entrevistá y sintetizá.',
         },
-        {
-          title: 'Entrevistas de validación',
-          desc: 'Subí audios, videos o notas de entrevistas.',
+      },
+      tramos: {},
+    },
+
+    C3: {
+      name: 'Propuesta de Valor',
+      base: {
+        inputs: [
+          {
+            title: 'Propuesta inicial',
+            desc: 'Definir solución al problema.',
+          },
+          {
+            title: 'Feedback',
+            desc: 'Validar con usuarios.',
+          },
+          {
+            title: 'Iteración',
+            desc: 'Ajustar propuesta.',
+          },
+        ],
+        evidence: {
+          done: '✔ Propuesta validada.',
+          current: '⏳ Iterando propuesta.',
+          pending: '⚠️ Creá, validá y ajustá tu propuesta.',
         },
-        {
-          title: 'Reflexión pública',
-          desc: 'Publicación con el aprendizaje principal (post, foro o red).',
+      },
+      tramos: {},
+    },
+
+    C4: {
+      name: 'Recursos y Finanzas',
+      base: {
+        inputs: [
+          {
+            title: 'Recursos disponibles',
+            desc: 'Listado de recursos actuales.',
+          },
+          {
+            title: 'Herramientas',
+            desc: 'Inventario de herramientas.',
+          },
+          {
+            title: 'Uso estratégico',
+            desc: 'Cómo se utilizan los recursos.',
+          },
+        ],
+        evidence: {
+          done: '✔ Recursos organizados.',
+          current: '⏳ Organizando recursos.',
+          pending: '⚠️ Identificá y organizá tus recursos.',
         },
-      ],
-      evidence: {
-        done: '✔ Ficha “Problema que me Duele” registrada como IP educativa.',
-        current: '⏳ Estás validando el problema con evidencia real.',
-        pending: '⚠️ Necesitás observar, entrevistar y reflexionar públicamente.',
+      },
+      tramos: {},
+    },
+
+    C5: {
+      name: 'Historia y Propósito',
+      base: {
+        inputs: [
+          {
+            title: 'Historia',
+            desc: 'Narrativa del proyecto.',
+          },
+          {
+            title: 'Aprendizajes',
+            desc: 'Reflexión sobre experiencias.',
+          },
+          {
+            title: 'Propósito',
+            desc: 'Conexión con misión.',
+          },
+        ],
+        evidence: {
+          done: '✔ Historia conectada con misión.',
+          current: '⏳ Construyendo narrativa.',
+          pending: '⚠️ Definí tu historia y propósito.',
+        },
+      },
+      tramos: {},
+    },
+
+    C6: {
+      name: 'Contexto y Estrategia',
+      base: {
+        inputs: [
+          {
+            title: 'Oportunidades',
+            desc: 'Identificación de oportunidades.',
+          },
+          {
+            title: 'Obstáculos',
+            desc: 'Análisis de riesgos.',
+          },
+          {
+            title: 'Acción',
+            desc: 'Ejecución de acciones.',
+          },
+        ],
+        evidence: {
+          done: '✔ Contexto analizado.',
+          current: '⏳ Analizando contexto.',
+          pending: '⚠️ Detectá oportunidades y obstáculos.',
+        },
+      },
+      tramos: {},
+    },
+
+    C7: {
+      name: 'Ejecución y Tracción',
+      base: {
+        inputs: [
+          {
+            title: 'Plan de acción',
+            desc: 'Definir tareas y objetivos.',
+          },
+          {
+            title: 'Seguimiento',
+            desc: 'Registrar avances.',
+          },
+          {
+            title: 'Difusión',
+            desc: 'Compartir resultados.',
+          },
+        ],
+        evidence: {
+          done: '✔ Ejecución completada.',
+          current: '⏳ Ejecutando acciones.',
+          pending: '⚠️ Completá las acciones.',
+        },
+      },
+      tramos: {
+        T3: {
+          evidence: {
+            done: '✔ “Mis Primeras Gotas” completado.',
+          },
+        },
       },
     },
-  
-    'T3-C3': {
-      inputs: [
-        {
-          title: 'Mini canvas',
-          desc: 'Subí tu plantilla de propuesta de valor (imagen o archivo).',
-        },
-        {
-          title: 'Feedback grupal',
-          desc: 'Acta, grabación o resumen visual del feedback recibido.',
-        },
-        {
-          title: 'Versión ajustada',
-          desc: 'Documento final con mejoras y validación.',
-        },
-      ],
-      evidence: {
-        done: '✔ Lienzo de Propuesta de Valor validado como IP.',
-        current: '⏳ Estás iterando tu propuesta con feedback.',
-        pending: '⚠️ Necesitás crear, validar y ajustar tu propuesta.',
-      },
-    },
-  
-    'T3-C4': {
-      inputs: [
-        {
-          title: 'Activos personales',
-          desc: 'Tabla o lista organizada de tus recursos.',
-        },
-        {
-          title: 'Inventario de herramientas',
-          desc: 'Hoja de cálculo o registro visual de herramientas disponibles.',
-        },
-        {
-          title: 'Reflexión de uso',
-          desc: 'Video o texto: “Cómo multiplico mis recursos”.',
-        },
-      ],
-      evidence: {
-        done: '✔ “Capital Simbólico y Tangible” registrado como IP.',
-        current: '⏳ Estás organizando y reflexionando tus recursos.',
-        pending: '⚠️ Identificá, registrá y reflexioná sobre tus recursos.',
-      },
-    },
-  
-    'T3-C5': {
-      inputs: [
-        {
-          title: 'Línea temporal',
-          desc: 'Cronograma visual o storytelling de tu historia.',
-        },
-        {
-          title: 'Aprendizajes',
-          desc: 'Cuadro síntesis o audio explicativo.',
-        },
-        {
-          title: 'Conexión con misión',
-          desc: 'Documento que conecta tu historia con tu misión.',
-        },
-      ],
-      evidence: {
-        done: '✔ Línea “De la Herida a la Misión” registrada como IP.',
-        current: '⏳ Estás conectando tu historia con tu propósito.',
-        pending: '⚠️ Construí tu narrativa y conectala con tu misión.',
-      },
-    },
-  
-    'T3-C6': {
-      inputs: [
-        {
-          title: 'Mapa de oportunidades',
-          desc: 'Listado o mapa visual de oportunidades.',
-        },
-        {
-          title: 'Identificación de obstáculos',
-          desc: 'Matriz FODA o análisis visual.',
-        },
-        {
-          title: 'Acción transformadora',
-          desc: 'Evidencia concreta de acción (foto o testimonio).',
-        },
-      ],
-      evidence: {
-        done: '✔ Radar “Oportunidades y Obstáculos” registrado como IP.',
-        current: '⏳ Estás analizando el contexto y actuando.',
-        pending: '⚠️ Detectá oportunidades, obstáculos y actuá.',
-      },
-    },
-  
-    'T3-C7': {
-      inputs: [
-        {
-          title: 'Planificación de microacciones',
-          desc: 'Subí el calendario o listado de tareas semanales.',
-        },
-        {
-          title: 'Registro de avances',
-          desc: 'Evidencias del progreso (foto, video o texto).',
-        },
-        {
-          title: 'Difusión pública',
-          desc: 'Publicación o testimonio con #EfectoColibrí.',
-        },
-      ],
-      evidence: {
-        done: '✔ “Mis Primeras Gotas” registrado como IP. Nivel completado.',
-        current: '⏳ Estás ejecutando y documentando tus acciones.',
-        pending: '⚠️ Completá las 3 acciones para cerrar el nivel.',
-      },
+  },
+};
+
+// ===============================
+// FUNCION PRINCIPAL
+// ===============================
+
+export function getPacConfig(pacCode) {
+  if (!pacCode) return null;
+
+  const [tramo, category] = pacCode.split('-'); // T1-C4
+
+  const categoryConfig = pacConfig.categories[category];
+
+  if (!categoryConfig) {
+    console.warn('Categoría no encontrada:', category);
+    return null;
+  }
+
+  const base = categoryConfig.base || {};
+  const tramoOverride = categoryConfig.tramos?.[tramo] || {};
+
+  return {
+    ...base,
+    ...tramoOverride,
+    inputs: tramoOverride.inputs || base.inputs || [],
+    evidence: {
+      ...base.evidence,
+      ...tramoOverride.evidence,
     },
   };
+}
+
+// ===============================
+// FALLBACK GLOBAL (opcional)
+// ===============================
+
+export const defaultEvidence = {
+  done: '✔ Evidencia completada',
+  current: '⏳ En proceso',
+  pending: '⚠️ Pendiente',
+};

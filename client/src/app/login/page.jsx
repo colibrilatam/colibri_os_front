@@ -36,10 +36,12 @@ export default function LoginRegisterPage() {
   // google auth
   const handleGuestLoginClick = async () => {
     setLoading(true);
-    const { data, error } = await handleDemoLogin("mentor");
+    const { data, error } = await handleDemoLogin('mentor');
     if (data) {
       setLoading(false);
-      setPopupMessage('¡Iniciaste sesión como invitado! Tu acceso será limitado.');
+      setPopupMessage(
+        '¡Iniciaste sesión como invitado! Tu acceso será limitado.',
+      );
       setIsPopupOpen(true);
     } else {
       console.log(data, error);
@@ -54,13 +56,16 @@ export default function LoginRegisterPage() {
     router.push('/home');
   };
 
-
-
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="relative flex items-center justify-center min-h-screen px-4 py-6">
-      <Button className="absolute top-4 left-4" color='green' content="Volver" redirect="home"></Button>
+      <Button
+        className="absolute top-4 left-4"
+        color="green"
+        content="Volver"
+        redirect="https://colibrilatam.com/index.html"
+      ></Button>
 
       {/* Popup */}
       {isPopupOpen && (
@@ -77,7 +82,11 @@ export default function LoginRegisterPage() {
         <p className="text-overline text-center mb-2">Acceso al sistema</p>
 
         <h1 className="text-h1 text-center mb-2">
-          {isLogin ? 'Iniciar sesión' : isSelectRole ? 'Elegir rol' : 'Crear cuenta'}
+          {isLogin
+            ? 'Iniciar sesión'
+            : isSelectRole
+              ? 'Elegir rol'
+              : 'Crear cuenta'}
         </h1>
 
         <p className="text-body--muted text-center mb-8">
@@ -90,8 +99,14 @@ export default function LoginRegisterPage() {
 
         {/* Vistas */}
         {isSelectRole && <SelectRole onSelectRole={handleSelectRole} />}
-        {view === 'nftLink' && <NftLink role={selectedRole} onBack={() => setView('selectRole')} onSuccess={() => setView('register')}/>}
-       
+        {view === 'nftLink' && (
+          <NftLink
+            role={selectedRole}
+            onBack={() => setView('selectRole')}
+            onSuccess={() => setView('register')}
+          />
+        )}
+
         {isLogin && (
           <>
             <Login onLoadingChange={setLoading} />
@@ -108,7 +123,11 @@ export default function LoginRegisterPage() {
         {view === 'register' && (
           <Register
             selectedRole={selectedRole}
-            onSuccess={selectedRole === 'emprendedor' ? () => router.push('/proyecto') : () => router.push('/user/nft')}
+            onSuccess={
+              selectedRole === 'emprendedor'
+                ? () => router.push('/proyecto')
+                : () => router.push('/user/nft')
+            }
             onBack={() => setView('selectRole')}
             onLoadingChange={setLoading}
           />
