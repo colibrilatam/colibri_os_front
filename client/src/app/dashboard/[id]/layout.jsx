@@ -6,24 +6,32 @@ import { projectsService } from '@/services/project';
 import { handleRequest } from '@/lib/handleRequest';
 import ErrorScreen from '@/components/ErrorScreen';
 
+
+
 export default async function DataLayout({ children, params }) {
   // Obtener el ID de la URL
   const { id } = await params;
+  
 
   // Obtener información del proyecto desde el backend
   const { data: projectData, error } = await handleRequest(() =>
     projectsService.getById(id),
   );
 
+  // tramo.json
   const { data: tramoData, error: tramoError } = await handleRequest(() =>
     projectsService.currentTramo(projectData.currentTramoId),
   );
 
+  // allTramosProject.json
   const { data: ProjectTramoData, error: ProjectTramoError } =
     await handleRequest(() => projectsService.projectTramoData(id));
+
+
   const { data: projectNftData, error: projectNftError } = await handleRequest(
     () => projectsService.nft(id),
   );
+
 
   const { data: evidenceData, error: evidenceError } = await handleRequest(() =>
     projectsService.evidences(id),
@@ -63,18 +71,20 @@ export default async function DataLayout({ children, params }) {
   }
 
   if (projectData) {
+   
+    
     mockProjectMatch = mockProjectsData.find(
       (p) =>
         p.project.name?.toLowerCase().trim() ===
         projectData.projectName?.toLowerCase().trim(),
     );
+    
     if (!mockProjectMatch) {
       console.warn(
         'No se encontró mock para el proyecto:',
         projectData.projectName,
       );
     }
-    // opcional: podés mergear o usar directo
     projectData.mock = mockProjectMatch || null;
   }
   //console.log('mockProjectMatch', mockProjectMatch);

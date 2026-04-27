@@ -6,8 +6,11 @@ import ProgressBar from '@/components/ProgressBar';
 import { useProject } from '@/lib/projectContext';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
+import { useUserStore } from '@/lib/store';
 
 export default function IdentidadPage() {
+
+  const subioTramo = useUserStore((state) => state.subioTramo);
   // contexto
   const {
     microActionInstanceData,
@@ -18,7 +21,7 @@ export default function IdentidadPage() {
     evidenceData,
   } = useProject();
 
-  const { project, currentState, reputationSnapshot, pacProgress } =
+  const { currentState, reputationSnapshot } =
     mockProject;
   // información de tramo actual
 
@@ -54,7 +57,7 @@ export default function IdentidadPage() {
             )}
             , con una señal reputacional de{' '}
             <span className="text-accent-cyan font-medium">
-              {getProjectIC(dbProject.projectName)}/ 6.00
+              {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}/ 6.00
             </span>
             , mientras reduce la incertidumbre{' '}
             <span className="text-accent-amber font-medium">
@@ -162,7 +165,7 @@ export default function IdentidadPage() {
                         }}
                       >
                         {/* {reputationSnapshot.icPublic} */}
-                        {getProjectIC(dbProject.projectName)}
+                        {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}
                       </div>
                       <div
                         style={{
@@ -180,7 +183,7 @@ export default function IdentidadPage() {
                         color: 'var(--text-primary)',
                       }}
                     >
-                      {tramoData.code === 'T4' ? (
+                      {tramoData.code === 'Tramo actual: T6' ? (
                         <span className="text-accent-emerald font-medium">
                           T4
                         </span>

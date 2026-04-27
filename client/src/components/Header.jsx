@@ -17,11 +17,13 @@ import { getProjectIC } from '@/lib/hooks/createIcMap';
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
 
+  
+
   useEffect(() => {
     setAuth(isAuthenticated());
   }, []);
 
-  const { isAuthenticated, logout, rol } = useUserStore();
+  const { isAuthenticated, logout, rol, subioTramo } = useUserStore();
   const router = useRouter();
 
   if (isHome) {
@@ -157,7 +159,7 @@ export default function Header({ isHome = false }) {
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-slate-50">
-                  {getProjectIC(dbProject.projectName)}
+                  {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
                   / 6.00
