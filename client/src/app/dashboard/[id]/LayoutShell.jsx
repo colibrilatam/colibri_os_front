@@ -3,9 +3,24 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import { useUserStore } from "@/lib/store";
 import { ProjectContext } from '@/lib/projectContext';
+import mockProjectDataT4 from '@/lib/mock/proyectos ficticios/flujoClaveT4.json';
+import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json'
+import allTramosMockData from '@/lib/mock/proyectos ficticios/tramo4/allTramosProject.json'
+
 
 
 export default function LayoutShell({ children, projectInfo }) {
+
+    const subioTramo = useUserStore((state) => state.subioTramo);
+
+     if(subioTramo && projectInfo.dbProject.projectName === "FlujoClave"){
+      projectInfo = {
+        ...projectInfo, 
+        mockProject: mockProjectDataT4,
+        tramoData: tramoMockData,
+        projectTramoData: allTramosMockData
+    };
+    }
     
     // estado del sidebar
     const sidebarDesktopExpanded = useUserStore((state) => state.sidebarMobileOpen);

@@ -10,6 +10,9 @@ export const useUserStore = create(
       isEvolved: false,
       setIsEvolved: (isEvolved) => set({ isEvolved }),
 
+      subioTramo: false,
+      setSubioTramo: (subioTramo) => set({ subioTramo }),
+
       // Demo
       isDemo: true,
       setIsDemo: (isDemo) => set({ isDemo }),

@@ -24,6 +24,8 @@ export default function TrayectoriaSection() {
 
   const [notification, setNotification] = useState(false);
 
+  const setSubioTramo = useUserStore((state) => state.setSubioTramo);
+
   const rol = useUserStore((state) => state.rol);
 
   const isMobile = useIsMobile();
@@ -104,6 +106,7 @@ export default function TrayectoriaSection() {
 
       return newProgress;
     });
+    setSubioTramo(true);
     setNotification(true);
   };
 
@@ -156,9 +159,9 @@ export default function TrayectoriaSection() {
 
   const metrics = {
     currentPac: currentState.currentPacCode,
-    totalPacs: `${pacProgress.length} / 7`,
-    microactions: `${completedMicroactionsCount} / 21`,
-    evidences: `${completedEvidencesCount} / 7`,
+    totalPacs: `${currentState.pacsApprovedInCurrentTramo} / 7`,
+    microactions: `${currentState.microactionsCompletedCount} / 21`,
+    evidences: `${currentState.validatedEvidenceCount} / 7`,
   };
 
   const milestones = pacProgress
@@ -205,7 +208,7 @@ export default function TrayectoriaSection() {
       <div className="glass-effect-dark border-glass rounded-2xl p-6">
         <p className="text-overline">Trayectoria operativa del tramo</p>
 
-        <h2 className="text-h2">T3 · Fase Fundacional</h2>
+        <h2 className="text-h2">{currentState.currentTramoCode} · {currentState.currentTramoName}</h2>
 
         <p className="text-body mt-2 max-w-2xl">{project.shortDescription}</p>
 
