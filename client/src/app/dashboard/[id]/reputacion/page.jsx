@@ -219,7 +219,7 @@ export default function ReputacionPage() {
               </div>
             </div>*/}
 
-            <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
+            {/*<div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
               <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
                 Nota metodológica
               </div>
@@ -234,7 +234,7 @@ export default function ReputacionPage() {
                   year: "numeric",
                 })}.
               </div>
-            </div>
+            </div>*/}
           </div>
         </section>
       </div>
