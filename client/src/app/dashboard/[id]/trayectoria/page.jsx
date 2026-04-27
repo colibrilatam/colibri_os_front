@@ -314,7 +314,7 @@ export default function TrayectoriaSection() {
               rol={rol}
             />
           ) : (
-            <CargaPac pac={selectedPac} />
+            <CargaPac pac={selectedPac} rol={rol} />
           )}
         </div>
       </div>
@@ -376,7 +376,7 @@ const DynamicCargaPac = ({
               />
             </div>
 
-            {!isCompleted && rol !== 'mecenas_semilla' && (
+            {!isCompleted && rol === 'entrepreneur' && (
               <input
                 type="file"
                 onChange={(e) => {
@@ -419,7 +419,7 @@ const DynamicCargaPac = ({
       >
         {dynamicProgress.evidenceCompleted ? (
           <p className="text-[var(--status-success)]">✔ {evidenceText.done}</p>
-        ) : rol !== 'mecenas_semilla' ? (
+        ) : rol === 'entrepreneur' ? (
           <>
             <p className="mb-2">{evidenceText.current}</p>
             <input
@@ -448,7 +448,7 @@ const DynamicCargaPac = ({
 };
 
 /* Componente CargaPac original para PACs no dinámicos */
-const CargaPac = ({ pac }) => {
+const CargaPac = ({ pac, rol }) => {
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
@@ -484,7 +484,7 @@ const CargaPac = ({ pac }) => {
           </div>
 
           {/* INPUT */}
-          {!isDone && (
+          {!isDone && rol === 'entrepreneur' && (
             <input
               type="file"
               className="
