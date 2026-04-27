@@ -6,7 +6,7 @@ import ProgressBar from '@/components/ProgressBar';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
 import { useProject } from '@/lib/projectContext';
-
+import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -19,7 +19,7 @@ export default function TramoDashboard() {
   // contexto
   const { tramoData, dbProject, mockProject } = useProject();
   const { project, currentState, pacProgress } = mockProject;
-
+ console.log('tramoData---', tramoData);
   /* =========================
      🔗 DATA MAPPING REAL
   ========================= */
@@ -33,33 +33,21 @@ export default function TramoDashboard() {
 
   const currentPacCode = currentState.currentPacCode;
 
-  const currentPac = pacs.find(
-    (p) => p.pacCode === currentPacCode
-  );
+  const currentPac = pacs.find((p) => p.pacCode === currentPacCode);
 
   const totalPacs = pacs.length;
 
   const closedPacs = currentState.pacsApprovedInCurrentTramo;
 
-  const percentage = Math.round(
-    (closedPacs / totalPacs) * 100
-  );
+  const percentage = Math.round((closedPacs / totalPacs) * 100);
 
-  const totalMicro = pacs.reduce(
-    (acc, p) => acc + p.requiredMicroactions,
-    0
-  );
+  const totalMicro = pacs.reduce((acc, p) => acc + p.requiredMicroactions, 0);
 
-  const completedMicro =
-    currentState.microactionsCompletedCount;
+  const completedMicro = currentState.microactionsCompletedCount;
 
-  const totalEvidence = pacs.reduce(
-    (acc, p) => acc + p.requiredEvidence,
-    0
-  );
+  const totalEvidence = pacs.reduce((acc, p) => acc + p.requiredEvidence, 0);
 
-  const validatedEvidence =
-    currentState.validatedEvidenceCount;
+  const validatedEvidence = currentState.validatedEvidenceCount;
 
   const categories = pacs.map((p) => {
     let status = 'next';
@@ -90,18 +78,14 @@ export default function TramoDashboard() {
   ];
 
   const blockers = pacs
-    .filter(
-      (p) =>
-        p.status === 'in_progress' &&
-        !p.closureRuleSatisfied
-    )
+    .filter((p) => p.status === 'in_progress' && !p.closureRuleSatisfied)
     .map(
       (p) =>
         `Bloqueo en ${p.pacCode}: faltan ${
           p.requiredMicroactions - p.completedMicroactions
         } microacciones o ${
           p.requiredEvidence - p.validatedEvidence
-        } evidencias`
+        } evidencias`,
     );
 
   const mapStatus = {
@@ -109,10 +93,6 @@ export default function TramoDashboard() {
     in_progress: 'current',
     pending: 'pending',
   };
-
-  // ⚠️ FALLBACKS (hasta que estén en modelo)
-  const incertidumbre = "No disponible";
-  const riesgo = "No disponible";
 
   const ventana =
     currentState.trajectoryStatus === 'in_progress'
@@ -138,21 +118,13 @@ export default function TramoDashboard() {
               {tramo.code} · {tramo.name}
             </h1>
 
-            <p className="text-body-lg mt-1">
-              {project.tagline}
-            </p>
+            <p className="text-body-lg mt-1">{project.tagline}</p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            <InfoBox
-              label="Incertidumbre dominante"
-              value={incertidumbre}
-            />
-            <InfoBox
-              label="Riesgo principal"
-              value={riesgo}
-            />
-            <InfoBox label="Ventana" value={ventana} />
+            <InfoBox label="Incertidumbre dominante" value={getUncertaintyLabel(tramoData.uncertaintyType)} />
+            <InfoBox label="Riesgo principal" value={tramoData.associatedRisks[0] || "No disponible"} />
+            {/* <InfoBox label="Ventana" value={ventana} /> */}
           </div>
         </div>
       </motion.div>
@@ -165,8 +137,7 @@ export default function TramoDashboard() {
               <h2 className="text-h3">{currentPacCode}</h2>
 
               <p className="text-body--muted">
-                PAC actual · {currentPac?.categoryName} ·{' '}
-                {currentPac?.title}
+                PAC actual · {currentPac?.categoryName} · {currentPac?.title}
               </p>
             </div>
 
@@ -250,9 +221,7 @@ export default function TramoDashboard() {
           </div>
 
           <Block>
-            <p className="text-body">
-              {currentState.nextMilestone}
-            </p>
+            <p className="text-body">{currentState.nextMilestone}</p>
           </Block>
         </AnimatedCard>
 
@@ -272,8 +241,8 @@ export default function TramoDashboard() {
                       isDone
                         ? 'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald'
                         : isCurrent
-                        ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
-                        : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
+                          ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
+                          : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
                     }
                   `}
                 >

@@ -86,7 +86,7 @@ export default function Header({ isHome = false }) {
   } = useProject();
   const { project, currentState, reputationSnapshot } = mockProject;
 
-  console.log(dbProject);
+  //console.log(dbProject);
 
   return (
     <header className=" lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-between  min-h-16 lg:min-h-auto content-center items-center">
@@ -157,7 +157,6 @@ export default function Header({ isHome = false }) {
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-slate-50">
-                  {/* {reputationSnapshot.icPublic.toFixed(2)} */}
                   {getProjectIC(dbProject.projectName)}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
