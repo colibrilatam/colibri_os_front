@@ -15,8 +15,11 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import { pacConfig } from './components/pacConfig';
+//import { pacConfig } from './components/pacConfig';
 import { useUserStore } from '@/lib/store';
+import { getPacConfig, defaultEvidence } from './components/pacConfig';
+
+
 
 export default function TrayectoriaSection() {
   const { tramoData, dbProject, mockProject } = useProject();
@@ -256,38 +259,6 @@ export default function TrayectoriaSection() {
         {/* DETALLE PAC */}
         <div className="glass-effect border-glass rounded-2xl p-6">
           <p className="text-overline mb-2">Detalle del PAC seleccionado</p>
-
-          <div className="flex justify-between mb-6">
-            {/* <div>
-              <h3 className="text-h3">
-                {selectedPac.code} · {selectedPac.category}
-              </h3>
-              <p className="text-helper">{selectedPac.area}</p>
-            </div> */}
-
-            {/* <span
-              className={`
-                inline-flex items-center justify-center
-                w-fit h-fit self-start
-                whitespace-nowrap
-                text-badge px-3 py-1 rounded-full
-                ${
-                  selectedPac.status === 'done'
-                    ? 'bg-[rgba(0,153,117,0.2)] text-[var(--status-success)]'
-                    : selectedPac.status === 'current'
-                      ? 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]'
-                      : 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]'
-                }
-              `}
-            >
-              {selectedPac.status === 'done'
-                ? 'Completado'
-                : selectedPac.status === 'current'
-                  ? 'En tránsito'
-                  : 'Pendiente'}
-            </span> */}
-          </div>
-
           <div className="grid gap-4">
             {/* TITULO */}
             <div className="glass-effect border-glass p-4 rounded-xl">
@@ -311,44 +282,6 @@ export default function TrayectoriaSection() {
                 <span>Cierre</span>
                 <span>{selectedPac.detail.timeline.end}</span>
               </div>
-            </div>
-
-            {/* EVIDENCIA */}
-            {/* <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2">Señal probatoria visible</p>
-
-              <p className="text-body">{selectedPac.detail.evidence.title}</p>
-
-              <p className="text-helper mt-1">
-                {selectedPac.detail.evidence.description}
-              </p>
-            </div> */}
-
-            {/* MICROACCIONES */}
-            {/* <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-3">Microacciones ejecutadas</p>
-
-              <div className="space-y-2">
-                {selectedPac.detail.microactions.map((m, i) => (
-                  <div key={i} className="flex gap-2 text-body">
-                    <span className="text-[var(--status-success)]">●</span>
-                    {m}
-                  </div>
-                ))}
-              </div>
-            </div> */}
-
-            {/* DERECHA */}
-            <div className="flex flex-col gap-4">
-              {/* <div className="glass-effect border-glass p-4 rounded-xl">
-                <p className="text-micro-label mb-2">Lectura de diseño</p>
-
-                <p className="text-body--muted">
-                  La profundidad de esta capa se concentra en una unidad
-                  operativa seleccionada. El timeline organiza la trayectoria;
-                  el panel lateral sostiene la verificabilidad.
-                </p>
-              </div> */}
             </div>
           </div>
         </div>
@@ -493,9 +426,14 @@ const CargaPac = ({ pac }) => {
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
 
-  const config = pacConfig[pac.code] || pacConfig[pac.area];
+  const config = getPacConfig(pac.code);
+
+const inputs = config?.inputs || [];
+const evidenceText = config?.evidence || defaultEvidence;
+
+  /* const config = pacConfig[pac.code] || pacConfig[pac.area];
   const inputs = config?.inputs || [];
-  const evidenceText = config?.evidence;
+  const evidenceText = config?.evidence; */
 
   return (
     <div className="space-y-4">
