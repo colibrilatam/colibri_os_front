@@ -10,7 +10,10 @@ import { useUserStore } from '@/lib/store';
 
 export default function IdentidadPage() {
 
+
   const subioTramo = useUserStore((state) => state.subioTramo);
+
+
   // contexto
   const {
     microActionInstanceData,
@@ -25,8 +28,11 @@ export default function IdentidadPage() {
     mockProject;
   // información de tramo actual
 
+      const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
+
+
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
-  const PacProgress = Math.round((reputationSnapshot.icPublic % 1) * 100);
+  const PacProgress = Math.round((ic % 1) * 100);
 
   return (
     <main className="h-fit glass-effect border-glass rounded-2xl">
@@ -57,7 +63,7 @@ export default function IdentidadPage() {
             )}
             , con una señal reputacional de{' '}
             <span className="text-accent-cyan font-medium">
-              {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}/ 6.00
+              {ic}/ 6.00
             </span>
             , mientras reduce la incertidumbre{' '}
             <span className="text-accent-amber font-medium">
@@ -165,7 +171,7 @@ export default function IdentidadPage() {
                         }}
                       >
                         {/* {reputationSnapshot.icPublic} */}
-                        {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}
+                        {ic}
                       </div>
                       <div
                         style={{
