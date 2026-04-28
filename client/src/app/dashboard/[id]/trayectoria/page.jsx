@@ -4,29 +4,27 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProject } from '@/lib/projectContext';
-
 import Evolution from './components/Evolution';
 import NotificationPopup from '@/components/NotificationPopup';
 
 // SWIPER
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
-
 import 'swiper/css';
 import 'swiper/css/navigation';
 
 //import { pacConfig } from './components/pacConfig';
 import { useUserStore } from '@/lib/store';
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
+import { p } from 'framer-motion/client';
 
 export default function TrayectoriaSection() {
+
   const { tramoData, dbProject, mockProject } = useProject();
 
   const [notification, setNotification] = useState(false);
-
-  const setSubioTramo = useUserStore((state) => state.setSubioTramo);
-
   const rol = useUserStore((state) => state.rol);
+  const setSubioTramo = useUserStore((state) => state.setSubioTramo);
 
   const isMobile = useIsMobile();
 
@@ -110,14 +108,6 @@ export default function TrayectoriaSection() {
     setNotification(true);
   };
 
-  // Calcular métricas dinámicas
-  const completedMicroactionsCount =
-    18 + dynamicProgress.microactionsCompleted.filter(Boolean).length;
-  const completedEvidencesCount =
-    6 + (dynamicProgress.evidenceCompleted ? 1 : 0);
-  const currentPacCompletedMicroactions =
-    dynamicProgress.microactionsCompleted.filter(Boolean).length;
-
   // Construir array de PACs con estado actualizado para T3-C7
   const buildPacs = () => {
     const basePacs = pacProgress.map((p) => {
@@ -157,6 +147,7 @@ export default function TrayectoriaSection() {
 
   const pacs = buildPacs();
 
+  // métricas para el header
   const metrics = {
     currentPac: currentState.currentPacCode,
     totalPacs: `${currentState.pacsApprovedInCurrentTramo} / 7`,
@@ -177,7 +168,8 @@ export default function TrayectoriaSection() {
     });
   }
 
-  const [selectedPac, setSelectedPac] = useState(pacs[0]);
+  // PAC actual seleccionado por defecto
+  const [selectedPac, setSelectedPac] = useState(pacs.find((p) => p.status === "current") || pacs[0]);
 
   // Actualizar selectedPac si cambia el progreso dinámico y el seleccionado es T3-C7
   useEffect(() => {
@@ -237,6 +229,7 @@ export default function TrayectoriaSection() {
 
         <Swiper
           modules={isMobile ? [] : [Navigation]}
+          initialSlide={pacs.findIndex(p => p.code === selectedPac.code)}
           navigation={!isMobile}
           spaceBetween={16}
           slidesPerView={3}
