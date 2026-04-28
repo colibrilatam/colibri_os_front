@@ -206,7 +206,7 @@ export default function TrayectoriaSection() {
 
         <div className="flex gap-3 mt-4 flex-wrap">
           <Metric label="PAC actual" value={metrics.currentPac} />
-          <Metric label="PACs visibles" value={metrics.totalPacs} />
+          <Metric label="PACs cerrados" value={metrics.totalPacs} />
           <Metric label="Microacciones" value={metrics.microactions} />
           <Metric label="Evidencias" value={metrics.evidences} />
         </div>
