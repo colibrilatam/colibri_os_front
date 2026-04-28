@@ -15,6 +15,14 @@ export default function ReputacionPage() {
   const { project, reputationSnapshot, pacProgress } = mockProject;
   const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
 
+  // Calculando el máximo del IC dependiendo del tramo actual con un caso especial para flujoClave
+  const icMax = subioTramo && dbProject.projectName === "FlujoClave" ? 4 :
+                tramoData.code === "T1" ? 2 :
+                tramoData.code === "T2" ? 3 :
+                tramoData.code === "T3" ? 4 :
+                tramoData.code === "T4" ? 5 :
+                tramoData.code === "T5" ? 6 : 7;
+
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
     { key: "action",        label: "Acción",          raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
@@ -22,7 +30,7 @@ export default function ReputacionPage() {
     { key: "consistency",   label: "Consistencia",     raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
     { key: "collaboration", label: "Colaboración",     raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
     { key: "sustainability",label: "Sostenibilidad",   raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
-  ].map((d) => ({ ...d, weighted: parseFloat(((ic * d.weight) * (d.raw / 100)).toFixed(2)) }));
+  ].map((d) => ({ ...d, weighted: parseFloat(((icMax * d.weight) * (d.raw / 100)).toFixed(2)) }));
 
   // Construir "eventos reputacionales" a partir de los PACs con actividad
   const events = pacProgress
