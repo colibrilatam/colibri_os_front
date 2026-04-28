@@ -1,402 +1,632 @@
+
+
+
+
 'use client';
 
-import { useState, useContext } from 'react';
-import { ProjectContext } from '../layout';
-import { useProject } from '@/lib/projectContext';
+import { useState, useMemo } from 'react';
+
+/* ================= MOCK REALISTA ================= */
+
+const MOCK_EVIDENCES = [
+  // 🟡 DRAFT
+  {
+    id: 'ev-draft-1',
+    evidenceType: 'file',
+    status: 'draft',
+    validationStatus: 'pending',
+    isValidForIc: false,
+    privacyLevel: 'private',
+    publicSignalEnabled: false,
+
+    description: 'Borrador de entrevistas iniciales',
+    canonicalUri: '#',
+
+    createdAt: '2024-04-01T10:00:00Z',
+    submittedAt: null,
+    approvedAt: null,
+    rejectedAt: null,
+
+    microActionInstance: {
+      id: 'mai-1',
+      status: 'in_progress',
+      isOnTime: null,
+      attemptNumber: 1,
+      reopenedCount: 0,
+      completedAt: null,
+      microActionDefinition: {
+        code: 'T1-C1-M1',
+        instruction: 'Entrevistar usuarios',
+        expectedEvidenceType: 'file',
+        isRequired: true,
+      },
+    },
+
+    author: {
+      id: 'user-1',
+      fullName: 'Juan Pérez',
+      role: 'entrepreneur',
+      avatar: '/avatar.jpg',
+    },
+
+    evaluations: [],
+    versions: [
+      {
+        id: 'ver-1',
+        versionNumber: 1,
+        storageUri: '#',
+        isMaterialChange: false,
+        createdAt: '2024-04-01T10:00:00Z',
+      },
+    ],
+  },
+
+  // 🔵 SUBMITTED
+  {
+    id: 'ev-submitted-1',
+    evidenceType: 'file',
+    status: 'submitted',
+    validationStatus: 'pending',
+    isValidForIc: false,
+    privacyLevel: 'private',
+    publicSignalEnabled: false,
+
+    description: 'Entrevistas enviadas para revisión',
+    canonicalUri: '#',
+
+    createdAt: '2024-04-02T09:00:00Z',
+    submittedAt: '2024-04-02T10:00:00Z',
+    approvedAt: null,
+    rejectedAt: null,
+
+    microActionInstance: {
+      id: 'mai-2',
+      status: 'submitted',
+      isOnTime: true,
+      attemptNumber: 1,
+      reopenedCount: 0,
+      completedAt: '2024-04-02T09:30:00Z',
+      microActionDefinition: {
+        code: 'T1-C1-M2',
+        instruction: 'Documentar insights',
+        expectedEvidenceType: 'file',
+        isRequired: true,
+      },
+    },
+
+    author: {
+      id: 'user-2',
+      fullName: 'María López',
+      role: 'entrepreneur',
+      avatar: '/avatar2.jpg',
+    },
+
+    evaluations: [],
+    versions: [
+      {
+        id: 'ver-2',
+        versionNumber: 1,
+        storageUri: '#',
+        isMaterialChange: false,
+        createdAt: '2024-04-02T09:00:00Z',
+      },
+    ],
+  },
+
+  // 🟣 UNDER REVIEW
+  {
+    id: 'ev-review-1',
+    evidenceType: 'file',
+    status: 'under_review',
+    validationStatus: 'ai_reviewed',
+    isValidForIc: false,
+    privacyLevel: 'restricted',
+    publicSignalEnabled: false,
+
+    description: 'Análisis de entrevistas en revisión',
+    canonicalUri: '#',
+
+    createdAt: '2024-04-03T08:00:00Z',
+    submittedAt: '2024-04-03T09:00:00Z',
+    approvedAt: null,
+    rejectedAt: null,
+
+    microActionInstance: {
+      id: 'mai-3',
+      status: 'submitted',
+      isOnTime: true,
+      attemptNumber: 1,
+      reopenedCount: 0,
+      completedAt: '2024-04-03T08:30:00Z',
+      microActionDefinition: {
+        code: 'T1-C1-M3',
+        instruction: 'Analizar resultados',
+        expectedEvidenceType: 'file',
+        isRequired: true,
+      },
+    },
+
+    author: {
+      id: 'user-3',
+      fullName: 'Carlos Gómez',
+      role: 'entrepreneur',
+      avatar: '/avatar3.jpg',
+    },
+
+    evaluations: [
+      {
+        id: 'eval-1',
+        evaluationType: 'ai',
+        evaluationResult: 'approved',
+        score: 4.2,
+        isFinal: false,
+        comment: 'Buen análisis preliminar',
+        evaluatedAt: '2024-04-03T10:00:00Z',
+      },
+    ],
+
+    versions: [
+      {
+        id: 'ver-3',
+        versionNumber: 1,
+        storageUri: '#',
+        isMaterialChange: false,
+        createdAt: '2024-04-03T08:00:00Z',
+      },
+    ],
+  },
+
+  // 🟢 APPROVED
+  {
+    id: 'ev-approved-1',
+    evidenceType: 'file',
+    status: 'approved',
+    validationStatus: 'validated',
+    isValidForIc: true,
+    privacyLevel: 'public',
+    publicSignalEnabled: true,
+
+    description: 'Validación completa del problema',
+    canonicalUri: '#',
+
+    createdAt: '2024-04-01T10:00:00Z',
+    submittedAt: '2024-04-01T12:00:00Z',
+    approvedAt: '2024-04-02T15:00:00Z',
+    rejectedAt: null,
+
+    microActionInstance: {
+      id: 'mai-4',
+      status: 'completed',
+      isOnTime: true,
+      attemptNumber: 1,
+      reopenedCount: 0,
+      completedAt: '2024-04-01T11:00:00Z',
+      microActionDefinition: {
+        code: 'T1-C2-M1',
+        instruction: 'Validar problema',
+        expectedEvidenceType: 'file',
+        isRequired: true,
+      },
+    },
+
+    author: {
+      id: 'user-1',
+      fullName: 'Juan Pérez',
+      role: 'entrepreneur',
+      avatar: '/avatar.jpg',
+    },
+
+    evaluations: [
+      {
+        id: 'eval-2',
+        evaluationType: 'hybrid',
+        evaluationResult: 'approved',
+        score: 4.8,
+        isFinal: true,
+        comment: 'Excelente evidencia',
+        evaluatedAt: '2024-04-02T15:00:00Z',
+      },
+    ],
+
+    versions: [
+      {
+        id: 'ver-4',
+        versionNumber: 1,
+        storageUri: '#',
+        isMaterialChange: false,
+        createdAt: '2024-04-01T10:00:00Z',
+      },
+      {
+        id: 'ver-5',
+        versionNumber: 2,
+        storageUri: '#',
+        isMaterialChange: true,
+        changeSummary: 'Se agregaron más entrevistas',
+        createdAt: '2024-04-01T11:30:00Z',
+      },
+    ],
+  },
+
+  // 🔴 REJECTED
+  {
+    id: 'ev-rejected-1',
+    evidenceType: 'file',
+    status: 'rejected',
+    validationStatus: 'rejected',
+    isValidForIc: false,
+    privacyLevel: 'private',
+    publicSignalEnabled: false,
+
+    description: 'Documento incompleto',
+    canonicalUri: '#',
+
+    createdAt: '2024-04-05T10:00:00Z',
+    submittedAt: '2024-04-05T11:00:00Z',
+    approvedAt: null,
+    rejectedAt: '2024-04-05T14:00:00Z',
+
+    microActionInstance: {
+      id: 'mai-5',
+      status: 'reopened',
+      isOnTime: false,
+      attemptNumber: 2,
+      reopenedCount: 1,
+      completedAt: '2024-04-05T10:30:00Z',
+      microActionDefinition: {
+        code: 'T1-C2-M2',
+        instruction: 'Documentar hipótesis',
+        expectedEvidenceType: 'file',
+        isRequired: true,
+      },
+    },
+
+    author: {
+      id: 'user-4',
+      fullName: 'Ana Torres',
+      role: 'entrepreneur',
+      avatar: '/avatar4.jpg',
+    },
+
+    evaluations: [
+      {
+        id: 'eval-3',
+        evaluationType: 'human',
+        evaluationResult: 'rejected',
+        score: 2.1,
+        isFinal: true,
+        comment: 'Falta evidencia suficiente',
+        evaluatedAt: '2024-04-05T14:00:00Z',
+      },
+    ],
+
+    versions: [
+      {
+        id: 'ver-6',
+        versionNumber: 1,
+        storageUri: '#',
+        isMaterialChange: false,
+        createdAt: '2024-04-05T10:00:00Z',
+      },
+    ],
+  },
+];
+
+/* ================= HELPERS ================= */
+
+const formatDate = (date) => {
+  if (!date) return '-';
+  return new Intl.DateTimeFormat('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date(date));
+};
+
+const getLastEvaluation = (evaluations = []) => {
+  if (!evaluations.length) return null;
+  return evaluations[evaluations.length - 1];
+};
 
 /* ================= COMPONENT ================= */
 
-export default function EvidenciaSection() {
-  const { tramoData, dbProject, mockProject } = useProject();
+export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
+  const [selected, setSelected] = useState(evidences[0] || null);
+  const [filterIC, setFilterIC] = useState(false);
 
-  const { evidence, evaluations, pacProgress, currentState } = mockProject;
+  /* ================= METRICS ================= */
 
-  /* =========================
-     🔗 DATA MAPPING REAL
-  ========================= */
+  const metrics = useMemo(() => {
+    const total = evidences.length;
 
-  const evidences = evidence.map((e) => {
-    const pac = pacProgress.find((p) => p.id === e.pacId);
-    const evalData = evaluations.find((ev) => ev.evidenceId === e.id);
+    const validated = evidences.filter(
+      (e) => e.validationStatus === 'validated',
+    ).length;
+
+    const ic = evidences.filter((e) => e.isValidForIc).length;
+
+    const scores = evidences
+      .map((e) => getLastEvaluation(e.evaluations))
+      .filter((ev) => ev?.score);
+
+    const avgScore =
+      scores.reduce((acc, ev) => acc + ev.score, 0) /
+      (scores.length || 1);
 
     return {
-      title: e.title,
-      status: e.status === 'approved' ? 'approved' : 'review',
-      pac: e.pacCode,
-      category: pac?.categoryName || '-',
-      date: e.validatedAt ? new Date(e.validatedAt).toLocaleDateString() : '-',
-      mentor: evalData?.evaluatorUserId || '-',
+      total,
+      validated,
+      ic,
+      avgScore: avgScore.toFixed(2),
     };
-  });
+  }, [evidences]);
 
-  const [filter, setFilter] = useState('all');
-  const [selectedEvidence, setSelectedEvidence] = useState(evidences[0]?.title);
+  /* ================= FILTER + SORT ================= */
 
-  const filtered = evidences.filter((e) => {
-    if (filter === 'all') return true;
-    return e.status === filter;
-  });
+  const filtered = useMemo(() => {
+    return evidences
+      .filter((e) => !filterIC || e.isValidForIc)
+      .sort((a, b) => {
+        if (a.isValidForIc && !b.isValidForIc) return -1;
+        if (!a.isValidForIc && b.isValidForIc) return 1;
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+  }, [evidences, filterIC]);
 
-  const selected = evidence.find((e) => e.title === selectedEvidence);
-  const selectedEval = evaluations.find((ev) => ev.evidenceId === selected?.id);
-  const selectedPac = pacProgress.find((p) => p.id === selected?.pacId);
-
-  /* =========================
-     📊 SUMMARY
-  ========================= */
-
-  const approvedCount = evidence.filter((e) => e.status === 'approved').length;
-
-  const lastEvidence = [...evidence]
-    .filter((e) => e.validatedAt)
-    .sort((a, b) => new Date(b.validatedAt) - new Date(a.validatedAt))[0];
-
-  /* ========================= */
+  if (!evidences.length) {
+    return <div className="p-10 text-slate-400">No hay evidencias</div>;
+  }
 
   return (
-    <div className="space-y-6">
-      {/* 🔼 FILA SUPERIOR */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* ESTADO */}
-        <Card>
-          <p className="text-overline">Estado actual de prueba</p>
+    <div className="grid lg:grid-cols-3 gap-6">
+      {/* ================= LEFT ================= */}
+      <div className="space-y-6">
+        {/* METRICS */}
+        <div className="grid grid-cols-2 gap-4">
+          <Metric label="Evidencias" value={metrics.total} />
+          <Metric label="Validadas" value={metrics.validated} />
+          <Metric label="Impacto IC" value={metrics.ic} />
+          <Metric label="Score" value={metrics.avgScore} />
+        </div>
 
-          <div className="flex items-center gap-4 mt-3">
-            <span className="text-value-hero">{approvedCount}</span>
+        {/* FILTER */}
+        <div className="flex justify-between items-center">
+          <p className="text-helper">Filtros</p>
 
-            <span className="text-body--muted">evidencias aprobadas</span>
-          </div>
-
-          <div
-            className="mt-4 inline-flex px-4 py-2 rounded-full 
-            bg-[rgba(0,207,207,0.12)] 
-            border border-[rgba(0,207,207,0.3)]
-            text-accent-cyan"
+          <button
+            onClick={() => setFilterIC(!filterIC)}
+            className={`px-3 py-1 rounded-full text-xs border ${
+              filterIC
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+                : 'border-slate-700 text-slate-400'
+            }`}
           >
-            {currentState.trajectoryStatus}
-          </div>
-
-          <div className="mt-4">
-            <p className="text-body">Última evidencia: {lastEvidence?.title}</p>
-
-            <p className="text-helper mt-1">
-              Aprobada:{' '}
-              {lastEvidence?.validatedAt
-                ? new Date(lastEvidence.validatedAt).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-
-          <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-micro-label mb-1">Próximo requisito crítico</p>
-
-            <p className="text-body-lg">{currentState.nextMilestone}</p>
-
-            <p className="text-helper mt-2">
-              PAC actual: {currentState.currentPacCode}
-            </p>
-          </div>
-        </Card>
-
-        {/* VALIDACIÓN */}
-        <Card>
-          <p className="text-overline">Validación asociada</p>
-
-          <div>
-            <p className="text-micro-label mb-1">Aprobado por</p>
-            <p className="text-body-lg">
-              {selectedEval?.evaluatorUserId || '-'}
-            </p>
-            <p className="text-helper mt-1">Evaluador</p>
-          </div>
-
-          <div>
-            <p className="text-micro-label mb-1">Resultado</p>
-            <p className="text-body">{selectedEval?.decision || '-'}</p>
-          </div>
-
-          <div>
-            <p className="text-micro-label mb-1">Fecha</p>
-            <p className="text-date">
-              {selectedEval?.evaluatedAt
-                ? new Date(selectedEval.evaluatedAt).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-
-          <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-body">
-              {selectedEval?.comment || 'Sin comentario'}
-            </p>
-          </div>
-        </Card>
-      </div>
-
-      {/* 🔽 FILA INFERIOR */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* EVIDENCIA */}
-        <Card>
-          <p className="text-overline mb-1">Evidencia trazable</p>
-
-          <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h3 className="text-h3">Base probatoria verificable</h3>
-
-            <div className="flex gap-2 flex-wrap">
-              <FilterBtn label="Todas" onClick={() => setFilter('all')} />
-              <FilterBtn
-                label="Aprobadas"
-                onClick={() => setFilter('approved')}
-              />
-              <FilterBtn
-                label="En revisión"
-                onClick={() => setFilter('review')}
-              />
-              <FilterBtn
-                label="Observadas"
-                onClick={() => setFilter('observed')}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {filtered.map((e, i) => (
-              <EvidenceItem
-                key={i}
-                e={e}
-                onClick={() => setSelectedEvidence(e.title)}
-                active={selectedEvidence === e.title}
-              />
-            ))}
-          </div>
-        </Card>
-
-        {/* TRAZABILIDAD */}
-        <Card>
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-overline">Detalle de trazabilidad</p>
-
-              <h3 className="text-h3 mt-1 max-w-xs">{selected?.title}</h3>
-            </div>
-
-            <span className="text-badge px-2 py-1 rounded-full border border-white/20">
-              v1
-            </span>
-          </div>
-
-          <p className="text-body--muted mt-3">{selected?.summary}</p>
-
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <MiniBlock label="PAC asociado" value={selected?.pacCode} />
-            <MiniBlock
-              label="Categoría troncal"
-              value={selectedPac?.categoryName}
-            />
-            <MiniBlock label="Resultado" value={selectedEval?.decision} />
-            <MiniBlock label="Score" value="-" />
-          </div>
-
-          <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-micro-label mb-2">Evaluación asociada</p>
-
-            <p className="text-body mb-2">{selectedEval?.comment}</p>
-
-            <p className="text-helper">
-              {selectedEval?.evaluatorUserId} · Evaluador ·{' '}
-              {selectedEval?.evaluatedAt
-                ? new Date(selectedEval.evaluatedAt).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-
-          <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-micro-label mb-3">Historial de versiones</p>
-
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-3 py-2">
-                <div>
-                  <p className="text-body">Versión actual</p>
-                  <p className="text-helper">
-                    {selected?.validatedAt
-                      ? new Date(selected.validatedAt).toLocaleDateString()
-                      : '-'}
-                  </p>
-                </div>
-
-                <span className="text-badge px-2 py-1 rounded-full border border-white/20">
-                  v1
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <button className="mt-4 w-full text-body py-2 rounded-xl border border-[var(--color-turquoise)] text-[var(--color-turquoise)] hover:bg-[rgba(0,207,207,0.1)] transition">
-            Abrir documento fuente · Bitácora estructurada
+            Solo IC válido
           </button>
-        </Card>
+        </div>
+
+        {/* LIST */}
+        <div className="space-y-3">
+          {filtered.map((e) => (
+            <EvidenceCard
+              key={e.id}
+              evidence={e}
+              isActive={selected?.id === e.id}
+              onClick={() => setSelected(e)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* 🔽 TERCERA FILA */}
-      <div className="grid md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-overline mb-4">Competencias activadas</p>
-
-          {/* ⚠️ NO EXISTE EN DATA */}
-          <p className="text-helper">No disponible en backend</p>
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Skills activadas</p>
-
-          {/* ⚠️ NO EXISTE EN DATA */}
-          <p className="text-helper">No disponible en backend</p>
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Contexto estructural activado</p>
-
-          <p className="text-helper">No disponible en backend</p>
-        </Card>
+      {/* ================= RIGHT ================= */}
+      <div className="lg:col-span-2">
+        {selected && <EvidenceDetail evidence={selected} />}
       </div>
     </div>
   );
 }
 
-/* ================= UI (SIN CAMBIOS) ================= */
+/* ================= CARD ================= */
 
-const MiniBlock = ({ label, value }) => (
-  <div className="glass-effect border-glass rounded-xl p-3">
-    <p className="text-micro-label mb-1">{label}</p>
-    <p className="text-body-lg">{value}</p>
-  </div>
-);
-
-const Card = ({ children }) => (
-  <div className="glass-effect border-glass rounded-2xl p-5">{children}</div>
-);
-
-const FilterBtn = ({ label, onClick }) => (
-  <button
-    onClick={onClick}
-    className="text-badge px-3 py-1 rounded-full border border-glass hover:bg-white/10 transition"
-  >
-    {label}
-  </button>
-);
-
-// EvidenceItem y Block SIN CAMBIOS
-
-const EvidenceItem = ({ e, onClick, active }) => {
-  const statusMap = {
-    approved: {
-      label: 'Aprobada',
-      class:
-        'bg-[rgba(0,153,117,0.15)] text-[var(--status-success)] border-glass-green',
-    },
-    review: {
-      label: 'En revisión',
-      class:
-        'bg-[rgba(255,209,102,0.15)] text-[var(--status-warning)] border-glass',
-    },
-    observed: {
-      label: 'Observada',
-      class:
-        'bg-[rgba(255,77,109,0.15)] text-[var(--status-danger)] border-glass-red',
-    },
-  };
-
-  const status = statusMap[e.status];
+function EvidenceCard({ evidence, isActive, onClick }) {
+  const lastEval = getLastEvaluation(evidence.evaluations);
 
   return (
     <div
       onClick={onClick}
-      className={`border border-glass rounded-xl p-4 space-y-3 transition cursor-pointer
-        ${active ? 'ring-2 ring-[var(--color-turquoise)] bg-white/5' : 'hover:bg-white/5'}
+      className={`p-4 rounded-xl cursor-pointer transition glass-effect border-glass
+        ${isActive ? 'border-cyan-400 bg-cyan-400/10' : 'hover:bg-white/5'}
       `}
     >
-      <Block label="Evidencia">
-        <p className="text-body-lg">{e.title}</p>
-      </Block>
+      <div className="flex justify-between mb-2">
+        <TypeBadge type={evidence.evidenceType} />
+        <StatusBadge status={evidence.status} />
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <Block label="PAC">{e.pac}</Block>
-        <Block label="Categoría">{e.category}</Block>
+      <p className="text-body mb-2">{evidence.description}</p>
 
-        <Block label="Estado">
-          <span
-            className={`text-badge px-2 py-1 rounded-full border ${status.class}`}
-          >
-            {status.label}
-          </span>
-        </Block>
+      <div className="flex justify-between text-legend">
+        <span>{evidence.microActionInstance?.status}</span>
 
-        <Block label="Fecha">{e.date}</Block>
-        <Block label="Mentor">{e.mentor}</Block>
+        {evidence.isValidForIc && (
+          <span className="text-accent-emerald">Impacta IC</span>
+        )}
+      </div>
 
-        <Block label="Fuente">
-          <button className="text-accent-cyan hover:underline">Ver</button>
-        </Block>
+      {lastEval && (
+        <p className="text-xs text-accent-amber mt-1">
+          ⭐ {lastEval.score}
+        </p>
+      )}
+
+      <div className="flex justify-between mt-2 text-legend">
+        <span>{evidence.evaluations?.length || 0} eval</span>
+        <span>{evidence.versions?.length || 0} ver</span>
       </div>
     </div>
   );
+}
+
+/* ================= DETAIL ================= */
+
+function EvidenceDetail({ evidence }) {
+  const lastEval = getLastEvaluation(evidence.evaluations);
+
+  return (
+    <div className="p-6 rounded-2xl glass-effect border-glass space-y-6">
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-h3">Evidencia</h2>
+
+        <div className="flex gap-2">
+          <TypeBadge type={evidence.evidenceType} />
+          <StatusBadge status={evidence.status} />
+        </div>
+      </div>
+
+      {/* DESCRIPTION */}
+      <p className="text-body">{evidence.description}</p>
+
+      {/* META */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <Info label="Validación" value={evidence.validationStatus} />
+        <Info
+          label="Impacto en IC"
+          value={evidence.isValidForIc ? 'Sí' : 'No'}
+        />
+        <Info label="Fecha" value={formatDate(evidence.createdAt)} />
+        <Info label="Versiones" value={evidence.versions?.length || 0} />
+        <Info label="Evaluaciones" value={evidence.evaluations?.length || 0} />
+        <Info label="Privacidad" value={evidence.privacyLevel} />
+      </div>
+
+      {/* AUTHOR */}
+      <Section title="Autor">
+        <p className="text-body">{evidence.author?.fullName}</p>
+        <p className="text-legend">{evidence.author?.role}</p>
+      </Section>
+
+      {/* MICROACTION */}
+      <Section title="Microacción">
+        <div className="grid grid-cols-2 gap-4">
+          <Info label="Estado" value={evidence.microActionInstance?.status} />
+          <Info
+            label="En tiempo"
+            value={
+              evidence.microActionInstance?.isOnTime === null
+                ? '-'
+                : evidence.microActionInstance?.isOnTime
+                ? 'Sí'
+                : 'No'
+            }
+          />
+          <Info
+            label="Intentos"
+            value={evidence.microActionInstance?.attemptNumber}
+          />
+          <Info
+            label="Reabierta"
+            value={evidence.microActionInstance?.reopenedCount}
+          />
+        </div>
+      </Section>
+
+      {/* DEFINITION */}
+      {evidence.microActionInstance?.microActionDefinition && (
+        <Section title="Microacción Definición">
+          <p className="text-white">
+            {evidence.microActionInstance.microActionDefinition.code}
+          </p>
+          <p className="text-body--muted">
+            {evidence.microActionInstance.microActionDefinition.instruction}
+          </p>
+        </Section>
+      )}
+
+      {/* TIMELINE */}
+      <Section title="Timeline">
+        <div className="text-legend space-y-1">
+          <p>Creado: {formatDate(evidence.createdAt)}</p>
+          <p>Enviado: {formatDate(evidence.submittedAt)}</p>
+          <p>Aprobado: {formatDate(evidence.approvedAt)}</p>
+          <p>Rechazado: {formatDate(evidence.rejectedAt)}</p>
+        </div>
+      </Section>
+
+      {/* EVALUATION */}
+      {lastEval && (
+        <Section title="Evaluación">
+          <p className="text-value-lg text-accent-amber">
+            ⭐ {lastEval.score}
+          </p>
+          <p className="text-body--muted">{lastEval.comment}</p>
+        </Section>
+      )}
+
+      {/* VERSIONS */}
+      {evidence.versions?.length > 0 && (
+        <Section title="Historial">
+          {evidence.versions.map((v) => (
+            <div key={v.id} className="flex justify-between text-legend">
+              <span>v{v.versionNumber}</span>
+              <span>{formatDate(v.createdAt)}</span>
+            </div>
+          ))}
+        </Section>
+      )}
+
+      {/* LINK */}
+      <a
+        href={evidence.canonicalUri}
+        target="_blank"
+        className="text-accent-cyan"
+      >
+        Ver archivo →
+      </a>
+    </div>
+  );
+}
+
+/* ================= UI ================= */
+
+const Section = ({ title, children }) => (
+  <div className="border-t border-slate-800 pt-4">
+    <h3 className="text-micro-label mb-2">{title}</h3>
+    {children}
+  </div>
+);
+
+const Metric = ({ label, value }) => (
+  <div className="p-4 rounded-xl border border-slate-800 bg-white/5">
+    <p className="text-xs text-slate-400">{label}</p>
+    <p className="text-lg text-white font-semibold">{value}</p>
+  </div>
+);
+
+const Info = ({ label, value }) => (
+  <div>
+    <p className="text-slate-500 text-xs">{label}</p>
+    <p className="text-white">{value}</p>
+  </div>
+);
+
+const StatusBadge = ({ status }) => {
+  const map = {
+    approved: 'bg-emerald-500/20 text-emerald-400',
+    submitted: 'bg-yellow-500/20 text-yellow-400',
+    draft: 'bg-slate-500/20 text-slate-400',
+    rejected: 'bg-red-500/20 text-red-400',
+    under_review: 'bg-purple-500/20 text-purple-400',
+  };
+
+  return (
+    <span className={`text-xs px-2 py-1 rounded ${map[status]}`}>
+      {status}
+    </span>
+  );
 };
 
-const Block = ({ label, children }) => (
-  <div>
-    <p className="text-micro-label mb-1">{label}</p>
-    <div className="text-body">{children}</div>
-  </div>
+const TypeBadge = ({ type }) => (
+  <span className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
+    {type}
+  </span>
 );
-
-const Blockkkkk = ({ label, children }) => (
-  <div>
-    <p className="text-micro-label mb-1">{label}</p>
-    <div className="text-body">{children}</div>
-  </div>
-);
-
-{
-  /* <div className="grid md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-overline mb-4">Competencias activadas</p>
-
-          {evidenciaData.metrics.competencies.map((c, i) => (
-            <ProgressItem key={i} label={c.label} value={c.value} />
-          ))}
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Skills activadas</p>
-
-          {evidenciaData.metrics.skills.map((s, i) => (
-            <SkillItem key={i} label={s.label} level={s.level} />
-          ))}
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Contexto estructural activado</p>
-
-          <div className="flex gap-2 mb-4">
-            {evidenciaData.metrics.context.tags.map((tag, i) => (
-              <Tag key={i}>{tag}</Tag>
-            ))}
-          </div>
-
-          <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-body mb-2">
-              <span className="text-helper">PAC asociado principal:</span>{' '}
-              <span className="text-body-lg">
-                {evidenciaData.metrics.context.pac}
-              </span>
-            </p>
-
-            <p className="text-body--muted">
-              Lectura:{' '}
-              <span className="text-body">
-                {evidenciaData.metrics.context.description}
-              </span>
-            </p>
-          </div>
-        </Card>
-      </div> */
-}
