@@ -2,13 +2,26 @@
 // contexto
 import { useContext } from "react";
 import { useProject } from '@/lib/projectContext';
+import { getProjectIC } from '@/lib/hooks/createIcMap';
+import { useUserStore } from '@/lib/store';
+
 import { IconAccion, IconEvidencia, IconConsistencia, IconColaboracion, IconSostenibilidad } from "@/components/ui/Icons";
 
 export default function ReputacionPage() {
 
   // contexto
     const { tramoData, dbProject, mockProject } = useProject();
+    const subioTramo = useUserStore((state) => state.subioTramo);
   const { project, reputationSnapshot, pacProgress } = mockProject;
+  const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
+
+  // Calculando el máximo del IC dependiendo del tramo actual con un caso especial para flujoClave
+  const icMax = subioTramo && dbProject.projectName === "FlujoClave" ? 4 :
+                tramoData.code === "T1" ? 2 :
+                tramoData.code === "T2" ? 3 :
+                tramoData.code === "T3" ? 4 :
+                tramoData.code === "T4" ? 5 :
+                tramoData.code === "T5" ? 6 : 7;
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
@@ -17,7 +30,7 @@ export default function ReputacionPage() {
     { key: "consistency",   label: "Consistencia",     raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
     { key: "collaboration", label: "Colaboración",     raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
     { key: "sustainability",label: "Sostenibilidad",   raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
-  ].map((d) => ({ ...d, weighted: parseFloat(((d.raw / 100) * d.weight * 10).toFixed(2)) }));
+  ].map((d) => ({ ...d, weighted: parseFloat(((icMax * d.weight) * (d.raw / 100)).toFixed(2)) }));
 
   // Construir "eventos reputacionales" a partir de los PACs con actividad
   const events = pacProgress
@@ -287,7 +300,7 @@ function DimensionRow({ label, raw, weight, weighted, max = 100, index, category
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte</div>
-            <div className="text-base font-medium text-slate-50">{weighted.toFixed(2)}</div>
+            <div className="text-base font-bold text-green-500">{weighted.toFixed(2)}</div>
           </div>
         </div>
       </div>
