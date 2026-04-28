@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json'
 
 import { useProject } from '@/lib/projectContext';
 import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
@@ -19,10 +20,12 @@ export default function TramoDashboard() {
   // contexto
   const { tramoData, dbProject, mockProject } = useProject();
   const { project, currentState, pacProgress } = mockProject;
- console.log('tramoData---', tramoData);
+ /*console.log('tramoData---', tramoData);
   /* =========================
      🔗 DATA MAPPING REAL
   ========================= */
+
+  const currentTramoMockData = tramosMockData.find(t => t.tranchCode === currentState.currentTramoCode);
 
   const tramo = {
     code: currentState.currentTramoCode,
@@ -102,7 +105,7 @@ export default function TramoDashboard() {
   /* ========================= */
 
   return (
-    <div className="min-h-screen max-w-[1400px] mx-auto overflow-x-hidden">
+    <div className="min-h-screen mx-auto overflow-x-hidden">
       {/* HEADER */}
       <motion.div
         variants={fadeUp}
@@ -118,16 +121,43 @@ export default function TramoDashboard() {
               {tramo.code} · {tramo.name}
             </h1>
 
-            <p className="text-body-lg mt-1">{project.tagline}</p>
+            <p className="text-body-lg text-(--text-secondary) mt-1">{currentTramoMockData.tranchShortDesc}</p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            <InfoBox label="Incertidumbre dominante" value={getUncertaintyLabel(tramoData.uncertaintyType)} />
-            <InfoBox label="Riesgo principal" value={tramoData.associatedRisks[0] || "No disponible"} />
+            <InfoBox  label="Incertidumbre dominante" value={currentTramoMockData.incertidumbre} />
             {/* <InfoBox label="Ventana" value={ventana} /> */}
           </div>
         </div>
       </motion.div>
+
+      <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-(--text-primary) gap-4 flex flex-col'>
+        <div className=" rounded-2xl p-1 lg:p-4">
+          <h3 className='text-(--text-tertiary) font-bold'>{currentTramoMockData.incertidumbre}</h3>
+          <div className='text-(--text-primary) text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
+          <div className=' max-w-3xl text-(--text-secondary) text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
+        </div>
+        <div className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
+          <h3 className="m-4 ">Riesgos</h3>
+          <div className='flex flex-col lg:flex-row gap-2 justify-between'>
+            
+            {currentTramoMockData.riesgosPrincipales.map((r, i) => (
+              <div className="flex flex-col items-center border-glass glass-effect rounded-2xl p-4" key={i}>
+
+                <div key={i} className='w-fit justify-center flex items-center gap-2 glass-effect-red border-glass px-3 py-2 rounded-xl'>
+                  <span className='text-center text-red-400 text-lg'>⚠</span>
+                  <p className="text-center  text-red-400/80 text-lg font-bold">{r.nombre}</p>
+                </div>
+
+                <div className='text-start w-full my-4 text-(--text-primary) text-lg'>{r.descripcionCorta}</div>
+                <div className='text-start w-full text-(--text-secondary) text-lg leading-relaxed'>{r.descripcionLarga}</div>
+
+              </div>
+            ))}
+
+          </div>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* AVANCE PAC */}
