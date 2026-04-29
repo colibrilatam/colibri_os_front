@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json'
 
 import { useProject } from '@/lib/projectContext';
-import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
+import AllTranches from './components/AllTranches';
+import { projectsService } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -15,11 +16,30 @@ const fadeUp = {
 };
 
 export default function TramoDashboard() {
-  const isMobile = useIsMobile();
 
+  
+  const [ tramoInfo, setTramoInfo ] = useState(null);
   // contexto
   const { tramoData, dbProject, mockProject } = useProject();
   const { project, currentState, pacProgress } = mockProject;
+
+  const { execute: getProjectTramoData, error: projectTramoDataError } = useRequest(projectsService.projectTramoData);
+
+  useEffect(() => {
+
+    async function fetchTramoData() {
+      const { data: projectTramoData, error: projectTramoDataError } = await getProjectTramoData(dbProject.id);
+    console.log(projectTramoData)
+    if (projectTramoData) {
+      setTramoInfo(projectTramoData);
+    }
+    else alert('Error fetching tramo data: ' + projectTramoDataError);
+    };
+    fetchTramoData();
+    
+  }, [])
+
+
  /*console.log('tramoData---', tramoData);
   /* =========================
      🔗 DATA MAPPING REAL
@@ -31,6 +51,8 @@ export default function TramoDashboard() {
     code: currentState.currentTramoCode,
     name: currentState.currentTramoName,
   };
+
+  
 
   const pacs = pacProgress;
 
@@ -97,11 +119,6 @@ export default function TramoDashboard() {
     pending: 'pending',
   };
 
-  const ventana =
-    currentState.trajectoryStatus === 'in_progress'
-      ? 'Tramo en ejecución'
-      : 'Sin actividad';
-
   /* ========================= */
 
   return (
@@ -133,7 +150,7 @@ export default function TramoDashboard() {
 
       <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-(--text-primary) gap-4 flex flex-col'>
         <div className=" rounded-2xl p-1 lg:p-4">
-          <h3 className='text-(--text-tertiary) font-bold'>{currentTramoMockData.incertidumbre}</h3>
+          <h3 className='text-(--text-tertiary) font-bold'>Incertidumbre: {currentTramoMockData.incertidumbre}</h3>
           <div className='text-(--text-primary) text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
           <div className=' max-w-3xl text-(--text-secondary) text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
         </div>
@@ -158,6 +175,11 @@ export default function TramoDashboard() {
           </div>
         </div>
       </div>
+
+      { tramoInfo && <div className="glass-effect border-glass text-(--text-primary) text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
+        <h3 className="my-4">Incertidumbres y riesgos de todos los tramos</h3>
+        <AllTranches elements={tramoInfo}  />
+      </div>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* AVANCE PAC */}
