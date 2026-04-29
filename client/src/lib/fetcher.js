@@ -41,6 +41,7 @@ export async function fetcher(endpoint, options = {}) {
   try {
     const res = await fetch(`${baseUrl}${endpoint}`, config);
 
+
     if (!res.ok) {
       // Token expirado o inválido — redirigir al login
   if (res.status === 401) {
