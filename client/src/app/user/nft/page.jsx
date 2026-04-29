@@ -11,39 +11,6 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { getProjectIC } from "@/lib/hooks/createIcMap";
 
 
-const projects = [
-  {
-    nombre: "EcoSolar LATAM",
-    industria: "Energía renovable",
-    estado: "en vuelo",
-    idNFT: "#00412",
-    emprendedor: "Luis Rodriguez",
-    idProject: "5c7596bb-2be4-4f6f-877c-6ccd867e364f",
-    tramo: "T2",
-    ic: 1.35,
-  },
-  {
-    nombre: "AgroRaíz Pampa",
-    industria: "Agricultura regenerativa",
-    estado: "alto impacto",
-    idNFT: "#00587",
-    emprendedor: "Luis Rodriguez",
-    idProject: "5c7596bb-2be4-4f6f-877c-6ccd867e364f",
-    tramo: "T3",
-    ic: 4.72,
-  },
-  {
-    nombre: "RedComún Barrios",
-    industria: "Tecnología social",
-    estado: "en progreso",
-    idNFT: "#00231",
-    emprendedor: "Luis Rodriguez",
-    idProject: "5c7596bb-2be4-4f6f-877c-6ccd867e364f",
-    tramo: "T1",
-    ic: 0.89,
-  },
-];
-
 const STATUS_CONFIG = {
   "active": {
     label: "Activo",
@@ -77,18 +44,10 @@ function StatusBadge({ estado }) {
 export default function NftPage(){
 
   const [ error, setError ] = useState(null);
-  const [ user, setUser ] = useState(null);
+
   const [ loading, setLoading ] = useState(false);
   const [ projectsInfo, setProjectsInfo ] = useState(null);
-
-  const [ nftProjectsData, setNftProjectsData ] = useState([]);
-  const [ tramos, setTramos ] = useState([]);
-
-  const { execute: getUser, error: userError } = useRequest(userService.profile);
-  const { execute: getNfts, error: nftError } = useRequest(nftService.getStats);
-  const { execute: createNftProject, error: createNftProjectError, loading: createNftProjectLoading } = useRequest(nftService.createNftProject);
-  const { execute: nftProjectData, error: nftProjectError, loading: nftProjectLoading } = useRequest(nftService.update);
-  const { execute: getProjects, error: projectsError, loading: projectsLoading } = useRequest(projectsService.getAll);
+ 
   const { execute: getNftProjectsInfo, error: nftProjectsInfoError, loading: nftProjectsInfoLoading } = useRequest(nftService.getNftProjects);
   const { execute: getTramo, error: tramosError, loading: tramosLoading } = useRequest(projectsService.currentTramo);
   const { execute: getUserData, error: userDataError, loading: userDataLoading } = useRequest(userService.userData);
