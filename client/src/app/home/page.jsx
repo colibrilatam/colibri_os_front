@@ -96,9 +96,9 @@ export default function HomePage() {
       }
     });
 
-    const tranches = Array.from(trancheMap.values()).sort(
+    const tranches = [ {value: "Todos", label: "Todos"} , ...Array.from(trancheMap.values()).sort(
       (a, b) => a.sortOrder - b.sortOrder,
-    );
+    )];
 
     const hasProjectsWithoutTranche = projects.some((project) => {
       const tramoMatch = tramos?.find((t) => t.id === project.currentTramoId);
@@ -118,7 +118,7 @@ export default function HomePage() {
 
   // Obtener lista de estados
   const allStatuses = useMemo(() => {
-    return [...new Set(projects.map((project) => project.status))];
+    return ['Todos',...new Set(projects.map((project) => project.status))];
   }, [projects]);
 
   const allCountries = useMemo(() => {
@@ -152,7 +152,7 @@ export default function HomePage() {
   
       return {
         ...project,
-        projectTranche, // 👈 acá lo agregás
+        projectTranche,
       };
     });
   
@@ -168,10 +168,14 @@ export default function HomePage() {
         project.owner?.fullName?.toLowerCase().includes(normalizedSearch);
   
       const matchesTranche =
-        !selectedTranche || project.projectTranche === selectedTranche;
+        !selectedTranche ||
+        selectedTranche === 'Todos' ||
+        project.projectTranche === selectedTranche;
   
       const matchesStatus =
-        !selectedStatus || project.status === selectedStatus;
+        !selectedStatus || 
+        selectedStatus === 'Todos' ||
+        project.status === selectedStatus;
   
       const matchesCountry =
         !selectedCountry ||

@@ -2,22 +2,35 @@
 // contexto
 import { useContext } from "react";
 import { useProject } from '@/lib/projectContext';
+import { getProjectIC } from '@/lib/hooks/createIcMap';
+import { useUserStore } from '@/lib/store';
+
 import { IconAccion, IconEvidencia, IconConsistencia, IconColaboracion, IconSostenibilidad } from "@/components/ui/Icons";
 
 export default function ReputacionPage() {
 
   // contexto
     const { tramoData, dbProject, mockProject } = useProject();
+    const subioTramo = useUserStore((state) => state.subioTramo);
   const { project, reputationSnapshot, pacProgress } = mockProject;
+  const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
+
+  // Calculando el máximo del IC dependiendo del tramo actual con un caso especial para flujoClave
+  const icMax = subioTramo && dbProject.projectName === "FlujoClave" ? 4 :
+                tramoData.code === "T1" ? 2 :
+                tramoData.code === "T2" ? 3 :
+                tramoData.code === "T3" ? 4 :
+                tramoData.code === "T4" ? 5 :
+                tramoData.code === "T5" ? 6 : 7;
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
-    { key: "action",        label: "Acción",          raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
-    { key: "evidence",      label: "Evidencia",        raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
-    { key: "consistency",   label: "Consistencia",     raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
-    { key: "collaboration", label: "Colaboración",     raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
-    { key: "sustainability",label: "Sostenibilidad",   raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
-  ].map((d) => ({ ...d, weighted: parseFloat(((d.raw / 100) * d.weight * 10).toFixed(2)) }));
+    { key: "action",        label: "Acción",     description: "Microacciones completadas y calidad de ejecución.",     raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
+    { key: "evidence",      label: "Evidencia",   description: "Trazabilidad on-chain y validación de mentores.",     raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
+    { key: "consistency",   label: "Consistencia",   description: "Frecuencia, ritmo y estabilidad del progreso.",  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
+    { key: "collaboration", label: "Colaboración",   description: "Apoyo a otros y participación en el ecosistema."  ,   raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
+    { key: "sustainability",label: "Sostenibilidad", description: "Alineación con ODS e indicadores de impacto social."  , raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
+  ].map((d) => ({ ...d, weighted: parseFloat(((icMax * d.weight) * (d.raw / 100)).toFixed(2)) }));
 
   // Construir "eventos reputacionales" a partir de los PACs con actividad
   const events = pacProgress
@@ -114,21 +127,6 @@ export default function ReputacionPage() {
              <p className="mt-4 text-sm leading-relaxed text-slate-400">
               El radar opera como síntesis visual. No sustituye el desglose auditable por dimensión.
             </p>
-            {/*<div className="mt-6 space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="rounded-2xl glass-effect-green border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Sostiene hoy</div>
-                  <div className="text-lg font-medium text-slate-100">{strongestTwo}</div>
-                  <div className="mt-2 text-sm text-slate-400">Dimensiones con mayor aporte reputacional actual.</div>
-                </div>
-                <div className="rounded-2xl glass-effect-red border-glass p-4">
-                  <div className="mb-2 text-xs uppercase tracking-[0.18em] text-slate-500">Frena hoy</div>
-                  <div className="text-lg font-medium text-slate-100">{weakestTwo}</div>
-                  <div className="mt-2 text-sm text-slate-400">Dimensiones con menor contribución relativa hoy.</div>
-                </div>
-              </div>
-            </div>
-            */}
             </div>
 
            
@@ -150,6 +148,7 @@ export default function ReputacionPage() {
                 {dimensions.map((dimension, index) => (
                   <DimensionRow
                     categoryIconPaths={categoryIconPaths}
+                    description={dimension.description}
                     index={index}
                     key={dimension.key}
                     label={dimension.label}
@@ -242,7 +241,7 @@ export default function ReputacionPage() {
   );
 }
 
-function DimensionRow({ label, raw, weight, weighted, max = 100, index, categoryIconPaths, iconColor }) {
+function DimensionRow({description, label, raw, weight, weighted, max = 100, index, categoryIconPaths, iconColor }) {
   const pct = (raw / max) * 100;
   const iconSvg = categoryIconPaths[index];
 
@@ -264,8 +263,9 @@ function DimensionRow({ label, raw, weight, weighted, max = 100, index, category
             >
               {iconSvg}
             </svg>
-            <div className="text-sm font-medium text-slate-100">{label}</div>
+            <div className=" text-sm font-medium text-slate-100">{label}</div>
           </div>
+          <div className="mt-2 text-sm text-(--text-secondary)">{description}</div>
           <div className="flex-1 mt-3">
             <div className="mb-2 flex items-center justify-between text-sm text-slate-400">
               <span>Escala relativa</span>
@@ -287,7 +287,7 @@ function DimensionRow({ label, raw, weight, weighted, max = 100, index, category
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte</div>
-            <div className="text-base font-medium text-slate-50">{weighted.toFixed(2)}</div>
+            <div className="text-base font-bold text-green-500">{weighted.toFixed(2)}</div>
           </div>
         </div>
       </div>
