@@ -6,8 +6,15 @@ import { setCookie, deleteCookie } from './cookies';
 export const useUserStore = create(
   persist(
     (set, get) => ({
+      // Evolución de pac
+      isEvolved: false,
+      setIsEvolved: (isEvolved) => set({ isEvolved }),
+
+      subioTramo: false,
+      setSubioTramo: (subioTramo) => set({ subioTramo }),
+
       // Demo
-      isDemo: false,
+      isDemo: true,
       setIsDemo: (isDemo) => set({ isDemo }),
 
       // Estado existente
@@ -50,22 +57,17 @@ export const useUserStore = create(
           deleteCookie('token')
           deleteCookie('isGuest')
         }
-        set({ token: null, rol: null, isGuest: false })
+        set({ token: null, rol: null, isGuest: false, sidebarDesktopExpanded: false })
       },
 
       // Verificar si hay token y si es válido, o si es invitado
       isAuthenticated: (guest = false) => {
   const token = get().token
-  const isGuest = get().isGuest
+  //const isGuest = get().isGuest
   
   // Si es invitado, está autenticado sin token
   // El parámetro 'guest' permite verificar explícitamente el modo invitado
   // no se bien por que lo puse pero creo que no tiene sentido
-  if (guest){
-    if (isGuest) {
-      return true
-    }
-  }
 
   // Si no es invitado, validar token
   if (isTokenExpired(token)) {

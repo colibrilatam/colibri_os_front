@@ -57,7 +57,7 @@ export default function ProgressBar({
           fontSize: 'var(--text-sm)', 
           color: 'var(--text-secondary)' 
         }}>
-          {label && <span>{label}</span>}
+          {label && <span className="text-(--text-secondary)">{label}</span>}
           {mostrarPorcentaje && <span>{Math.round(porcentajeReal)}%</span>}
         </div>
       )}

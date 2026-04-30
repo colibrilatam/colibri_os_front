@@ -3,22 +3,35 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import { useUserStore } from "@/lib/store";
 import { ProjectContext } from '@/lib/projectContext';
+import mockProjectDataT4 from '@/lib/mock/proyectos ficticios/flujoClaveT4.json';
+import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json'
+import allTramosMockData from '@/lib/mock/proyectos ficticios/tramo4/allTramosProject.json'
+
 
 
 export default function LayoutShell({ children, projectInfo }) {
+
+    const subioTramo = useUserStore((state) => state.subioTramo);
+
+     if(subioTramo && projectInfo.dbProject.projectName === "FlujoClave"){
+      projectInfo = {
+        ...projectInfo, 
+        mockProject: mockProjectDataT4,
+        tramoData: tramoMockData,
+        projectTramoData: allTramosMockData
+    };
+    }
     
     // estado del sidebar
-    const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
-    const setSidebarMobileOpen = useUserStore(
-      (state) => state.setSidebarMobileOpen,
-    );
+    const sidebarDesktopExpanded = useUserStore((state) => state.sidebarMobileOpen);
+    const setSidebarMobileOpen = useUserStore((state) => state.setSidebarMobileOpen);
 
     return (
         <ProjectContext.Provider value={projectInfo}>
             <div className=" lg:pt-0 min-h-screen flex flex-col w-full">
                 {/* Sidebar */}
                 <Sidebar
-                    isOpen={sidebarMobileOpen}
+                    isOpen={sidebarDesktopExpanded}
                     onClose={() => setSidebarMobileOpen(false)}
                 />
 
@@ -31,9 +44,9 @@ export default function LayoutShell({ children, projectInfo }) {
                     <Header />
                 </div>
                 <button
-                    onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
+                    onClick={() => setSidebarMobileOpen(!sidebarDesktopExpanded)}
                     className="fixed z-49 md:top-34 top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
-                    title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
+                    title={sidebarDesktopExpanded ? 'Cerrar sidebar' : 'Abrir sidebar'}
                 >
                     <svg
                         className="w-12 h-12 text-white"

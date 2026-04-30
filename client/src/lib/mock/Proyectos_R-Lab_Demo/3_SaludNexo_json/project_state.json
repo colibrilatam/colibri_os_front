@@ -1,0 +1,15 @@
+[
+  {
+    "id": "projstate_saludnexo_pa_001",
+    "projectId": "proj_saludnexo_pa_001",
+    "currentTramoId": "tramo_t2",
+    "currentPacId": "pac_t2_c6_001",
+    "trajectoryStatus": "in_progress",
+    "pacsApprovedInCurrentTramo": 5,
+    "microactionsCompletedCount": 17,
+    "validatedEvidenceCount": 5,
+    "currentPacStatus": "in_progress",
+    "createdAt": "2026-01-08T09:30:00Z",
+    "updatedAt": "2026-04-05T16:40:00Z"
+  }
+]

@@ -10,6 +10,7 @@ import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
 import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
+import { useLogin } from '@/hooks';
 
 export default function LoginRegisterPage() {
   const [view, setView] = useState('login'); // login | selectRole | register | nftLink
@@ -18,6 +19,7 @@ export default function LoginRegisterPage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const router = useRouter();
+  const { handleDemoLogin } = useLogin();
 
   const { handleGuestLogin } = useGuestLogin();
 
@@ -32,13 +34,19 @@ export default function LoginRegisterPage() {
   };
 
   // google auth
-  const handleGuestLoginClick = () => {
-    const result = handleGuestLogin();
-    if (result.success) {
-      setPopupMessage('¡Iniciaste sesión como invitado! Tu acceso será limitado.');
+  const handleGuestLoginClick = async () => {
+    setLoading(true);
+    const { data, error } = await handleDemoLogin('mentor');
+    if (data) {
+      setLoading(false);
+      setPopupMessage(
+        '¡Iniciaste sesión como invitado! Tu acceso será limitado.',
+      );
       setIsPopupOpen(true);
     } else {
-      alert(result.error);
+      console.log(data, error);
+      alert(result);
+      setLoading(false);
     }
   };
 
@@ -48,13 +56,16 @@ export default function LoginRegisterPage() {
     router.push('/home');
   };
 
-
-
   if (loading) return <LoadingScreen />;
 
   return (
     <div className="relative flex items-center justify-center min-h-screen px-4 py-6">
-      <Button className="absolute top-4 left-4" color='green' content="Volver" redirect="home"></Button>
+      <Button
+        className="absolute top-4 left-4"
+        color="green"
+        content="Volver"
+        redirect="https://colibrilatam.com/index.html"
+      ></Button>
 
       {/* Popup */}
       {isPopupOpen && (
@@ -71,7 +82,11 @@ export default function LoginRegisterPage() {
         <p className="text-overline text-center mb-2">Acceso al sistema</p>
 
         <h1 className="text-h1 text-center mb-2">
-          {isLogin ? 'Iniciar sesión' : isSelectRole ? 'Elegir rol' : 'Crear cuenta'}
+          {isLogin
+            ? 'Iniciar sesión'
+            : isSelectRole
+              ? 'Elegir rol'
+              : 'Crear cuenta'}
         </h1>
 
         <p className="text-body--muted text-center mb-8">
@@ -84,8 +99,14 @@ export default function LoginRegisterPage() {
 
         {/* Vistas */}
         {isSelectRole && <SelectRole onSelectRole={handleSelectRole} />}
-        {view === 'nftLink' && <NftLink role={selectedRole} onBack={() => setView('selectRole')} onSuccess={() => setView('register')}/>}
-       
+        {view === 'nftLink' && (
+          <NftLink
+            role={selectedRole}
+            onBack={() => setView('selectRole')}
+            onSuccess={() => setView('register')}
+          />
+        )}
+
         {isLogin && (
           <>
             <Login onLoadingChange={setLoading} />
@@ -102,7 +123,11 @@ export default function LoginRegisterPage() {
         {view === 'register' && (
           <Register
             selectedRole={selectedRole}
-            onSuccess={selectedRole === 'emprendedor' ? () => router.push('/proyecto') : () => router.push('/home')}
+            onSuccess={
+              selectedRole === 'emprendedor'
+                ? () => router.push('/proyecto')
+                : () => router.push('/user/nft')
+            }
             onBack={() => setView('selectRole')}
             onLoadingChange={setLoading}
           />

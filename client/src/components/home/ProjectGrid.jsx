@@ -1,9 +1,9 @@
-import { ProjectCard } from "./LandingProjectCard";
-
-// aca la importación del json que creaste claudio
-import data from "@/lib/mock/proyectos ficticios/projectsSummary.json";
+import { ProjectCard } from './LandingProjectCard';
+import { getProjectIC } from '@/lib/hooks/createIcMap';
 
 export function ProjectGrid({ projects }) {
+
+  //console.log("TTTTTTTT",projects)
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-24 text-center">
@@ -37,7 +37,12 @@ export function ProjectGrid({ projects }) {
     <div className="px-6 pb-10">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project, index) => (
-          <ProjectCard key={project.id} project={project} index={index}/>
+          <ProjectCard
+            key={project.id}
+            project={project}
+            index={index}
+            ic={getProjectIC(project.projectName)}
+          />
         ))}
       </div>
     </div>

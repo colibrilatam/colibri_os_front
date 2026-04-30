@@ -3,12 +3,19 @@ import { useState, useEffect } from 'react';
 import { useRegister } from '@/hooks/useRegister';
 import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
+import { useLogin } from '@/hooks';
 
 export default function Register({ selectedRole, onSuccess, onBack, onLoadingChange }) {
   const { handleRegister } = useRegister();
 
   // DEMO
   const isDemo = useUserStore((state) => state.isDemo);
+  const setIsDemo = useUserStore((state) => state.setIsDemo);
+
+  
+  
+
+  const { handleDemoLogin } = useLogin();
 
   
 
@@ -27,13 +34,15 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
   });
 
   useEffect(() => {
+    // DEMO
+    setIsDemo(true);
     setFormData({
-      username: 'Emprendedor Demo',
-      email: 'emprendedor@demo.com',
+      username: selectedRole === 'emprendedor' ? 'Ana Startup' : 'Sofia Mecenas',
+      email: selectedRole === 'emprendedor' ? 'ana@colibri.com' : 'mecenas@colibri.com',
       password: 'Test@1234',
       confirmPassword: 'Test@1234',
     })
-  }, [isDemo]);
+  }, []);
 
   // validación de contraseña
   const [passwordValidation, setPasswordValidation] = useState({
@@ -97,9 +106,11 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     !errors.confirmPassword &&
     passwordValidation.isValid;
 
-    const handleSubmitDemo = (e) => {
+    const handleSubmitDemo = async (e) => {
       e.preventDefault();
+      const result = await handleDemoLogin(selectedRole);
       alert("Registro exitoso");
+     
       onSuccess();
     }
 

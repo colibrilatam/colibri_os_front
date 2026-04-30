@@ -1,0 +1,39 @@
+import { handleRequest } from "@/lib/handleRequest";
+import ErrorScreen from "@/components/ErrorScreen";
+import { authService } from "@/services/authService";
+import { redirect } from "next/navigation";
+import { projectsService } from "@/services/project";
+import { useUserStore } from "@/lib/store";
+
+export default async function ProjectLayout({ children }){
+
+    const { data: user, error } = await handleRequest(() => authService.userData());
+    const { data: projectData, error: projectError } = await handleRequest(() => projectsService.getAll());
+
+    // DEMO
+    const isDemo = true
+
+    if(user && user.email && user.email  === 'ana@colibri.com' && isDemo) {
+        return(
+            <>
+            {children}
+            </>
+        )
+    }
+    
+
+    if(projectData){
+        if(projectData.find((p) => p.ownerUserId === user.sub)){ 
+            const userProject = projectData.find((p) => p.ownerUserId === user.sub);
+            redirect(`/dashboard/${userProject.id}/senial`);
+        return;  
+        }
+}
+
+
+    return(
+        <>
+        {children}
+        </>
+    )
+}

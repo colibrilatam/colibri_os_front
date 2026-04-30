@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json'
 
 import { useProject } from '@/lib/projectContext';
-
+import AllTranches from './components/AllTranches';
+import { projectsService } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -14,52 +16,63 @@ const fadeUp = {
 };
 
 export default function TramoDashboard() {
-  const isMobile = useIsMobile();
 
+  
+  const [ tramoInfo, setTramoInfo ] = useState(null);
   // contexto
   const { tramoData, dbProject, mockProject } = useProject();
   const { project, currentState, pacProgress } = mockProject;
 
+  const { execute: getProjectTramoData, error: projectTramoDataError } = useRequest(projectsService.projectTramoData);
+
+  useEffect(() => {
+
+    async function fetchTramoData() {
+      const { data: projectTramoData, error: projectTramoDataError } = await getProjectTramoData(dbProject.id);
+    console.log(projectTramoData)
+    if (projectTramoData) {
+      setTramoInfo(projectTramoData);
+    }
+    else alert('Error fetching tramo data: ' + projectTramoDataError);
+    };
+    fetchTramoData();
+    
+  }, [])
+
+
+ /*console.log('tramoData---', tramoData);
   /* =========================
      🔗 DATA MAPPING REAL
   ========================= */
+
+  const currentTramoMockData = tramosMockData.find(t => t.tranchCode === currentState.currentTramoCode);
 
   const tramo = {
     code: currentState.currentTramoCode,
     name: currentState.currentTramoName,
   };
 
+  
+
   const pacs = pacProgress;
 
   const currentPacCode = currentState.currentPacCode;
 
-  const currentPac = pacs.find(
-    (p) => p.pacCode === currentPacCode
-  );
+  const currentPac = pacs.find((p) => p.pacCode === currentPacCode);
 
   const totalPacs = pacs.length;
 
   const closedPacs = currentState.pacsApprovedInCurrentTramo;
 
-  const percentage = Math.round(
-    (closedPacs / totalPacs) * 100
-  );
+  const percentage = Math.round((closedPacs / totalPacs) * 100);
 
-  const totalMicro = pacs.reduce(
-    (acc, p) => acc + p.requiredMicroactions,
-    0
-  );
+  const totalMicro = pacs.reduce((acc, p) => acc + p.requiredMicroactions, 0);
 
-  const completedMicro =
-    currentState.microactionsCompletedCount;
+  const completedMicro = currentState.microactionsCompletedCount;
 
-  const totalEvidence = pacs.reduce(
-    (acc, p) => acc + p.requiredEvidence,
-    0
-  );
+  const totalEvidence = pacs.reduce((acc, p) => acc + p.requiredEvidence, 0);
 
-  const validatedEvidence =
-    currentState.validatedEvidenceCount;
+  const validatedEvidence = currentState.validatedEvidenceCount;
 
   const categories = pacs.map((p) => {
     let status = 'next';
@@ -90,18 +103,14 @@ export default function TramoDashboard() {
   ];
 
   const blockers = pacs
-    .filter(
-      (p) =>
-        p.status === 'in_progress' &&
-        !p.closureRuleSatisfied
-    )
+    .filter((p) => p.status === 'in_progress' && !p.closureRuleSatisfied)
     .map(
       (p) =>
         `Bloqueo en ${p.pacCode}: faltan ${
           p.requiredMicroactions - p.completedMicroactions
         } microacciones o ${
           p.requiredEvidence - p.validatedEvidence
-        } evidencias`
+        } evidencias`,
     );
 
   const mapStatus = {
@@ -110,19 +119,10 @@ export default function TramoDashboard() {
     pending: 'pending',
   };
 
-  // ⚠️ FALLBACKS (hasta que estén en modelo)
-  const incertidumbre = "No disponible";
-  const riesgo = "No disponible";
-
-  const ventana =
-    currentState.trajectoryStatus === 'in_progress'
-      ? 'Tramo en ejecución'
-      : 'Sin actividad';
-
   /* ========================= */
 
   return (
-    <div className="min-h-screen max-w-[1400px] mx-auto overflow-x-hidden">
+    <div className="min-h-screen mx-auto overflow-x-hidden">
       {/* HEADER */}
       <motion.div
         variants={fadeUp}
@@ -138,24 +138,48 @@ export default function TramoDashboard() {
               {tramo.code} · {tramo.name}
             </h1>
 
-            <p className="text-body-lg mt-1">
-              {project.tagline}
-            </p>
+            <p className="text-body-lg text-(--text-secondary) mt-1">{currentTramoMockData.tranchShortDesc}</p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            <InfoBox
-              label="Incertidumbre dominante"
-              value={incertidumbre}
-            />
-            <InfoBox
-              label="Riesgo principal"
-              value={riesgo}
-            />
-            <InfoBox label="Ventana" value={ventana} />
+            <InfoBox  label="Incertidumbre dominante" value={currentTramoMockData.incertidumbre} />
+            {/* <InfoBox label="Ventana" value={ventana} /> */}
           </div>
         </div>
       </motion.div>
+
+      <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-(--text-primary) gap-4 flex flex-col'>
+        <div className=" rounded-2xl p-1 lg:p-4">
+          <h3 className='text-(--text-tertiary) font-bold'>Incertidumbre: {currentTramoMockData.incertidumbre}</h3>
+          <div className='text-(--text-primary) text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
+          <div className=' max-w-3xl text-(--text-secondary) text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
+        </div>
+        <div className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
+          <h3 className="m-4 ">Riesgos</h3>
+          <div className='flex flex-col lg:flex-row gap-2 justify-between'>
+            
+            {currentTramoMockData.riesgosPrincipales.map((r, i) => (
+              <div className="flex flex-col items-center border-glass glass-effect rounded-2xl p-4" key={i}>
+
+                <div key={i} className='w-fit justify-center flex items-center gap-2 glass-effect-red border-glass px-3 py-2 rounded-xl'>
+                  <span className='text-center text-red-400 text-lg'>⚠</span>
+                  <p className="text-center  text-red-400/80 text-lg font-bold">{r.nombre}</p>
+                </div>
+
+                <div className='text-start w-full my-4 text-(--text-primary) text-lg'>{r.descripcionCorta}</div>
+                <div className='text-start w-full text-(--text-secondary) text-lg leading-relaxed'>{r.descripcionLarga}</div>
+
+              </div>
+            ))}
+
+          </div>
+        </div>
+      </div>
+
+      { tramoInfo && <div className="glass-effect border-glass text-(--text-primary) text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
+        <h3 className="my-4">Incertidumbres y riesgos de todos los tramos</h3>
+        <AllTranches elements={tramoInfo}  />
+      </div>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         {/* AVANCE PAC */}
@@ -165,8 +189,7 @@ export default function TramoDashboard() {
               <h2 className="text-h3">{currentPacCode}</h2>
 
               <p className="text-body--muted">
-                PAC actual · {currentPac?.categoryName} ·{' '}
-                {currentPac?.title}
+                PAC actual · {currentPac?.categoryName} · {currentPac?.title}
               </p>
             </div>
 
@@ -250,9 +273,7 @@ export default function TramoDashboard() {
           </div>
 
           <Block>
-            <p className="text-body">
-              {currentState.nextMilestone}
-            </p>
+            <p className="text-body">{currentState.nextMilestone}</p>
           </Block>
         </AnimatedCard>
 
@@ -272,8 +293,8 @@ export default function TramoDashboard() {
                       isDone
                         ? 'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald'
                         : isCurrent
-                        ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
-                        : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
+                          ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
+                          : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
                     }
                   `}
                 >

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "proj_flujoclave_co_001",
+    "name": "FlujoClave",
+    "tagline": "Ordena conciliación, cobros y visibilidad de caja en operación real.",
+    "shortDescription": "Proyecto fintech en etapa de prototipo vivo que ayuda a comercios colombianos a consolidar cobros, conciliaciones y alertas de caja cuando operan con múltiples medios de pago.",
+    "industry": "Fintech",
+    "country": "Colombia",
+    "ownerUserId": "usr_santiago_mejia_001",
+    "currentTramoId": "tramo_t3",
+    "createdAt": "2025-11-25T08:50:00-05:00",
+    "updatedAt": "2026-04-04T17:55:00-05:00"
+  }
+]

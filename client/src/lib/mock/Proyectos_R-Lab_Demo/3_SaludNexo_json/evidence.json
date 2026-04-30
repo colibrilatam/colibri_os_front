@@ -1,0 +1,97 @@
+[
+  {
+    "id": "evi_t2_c1_001",
+    "projectId": "proj_saludnexo_pa_001",
+    "pacId": "pac_t2_c1_001",
+    "authorUserId": "usr_lucia_morales_001",
+    "title": "Acta operativa del equipo para piloto temprano",
+    "status": "approved",
+    "evidenceHash": "hash_evi_t2_c1_001",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t2_c1_001",
+      "mai_t2_c1_002",
+      "mai_t2_c1_003"
+    ],
+    "submittedAt": "2026-01-23T16:10:00Z",
+    "validatedAt": "2026-01-24T18:10:00Z",
+    "createdAt": "2026-01-23T16:10:00Z",
+    "updatedAt": "2026-01-24T18:10:00Z"
+  },
+  {
+    "id": "evi_t2_c2_001",
+    "projectId": "proj_saludnexo_pa_001",
+    "pacId": "pac_t2_c2_001",
+    "authorUserId": "usr_lucia_morales_001",
+    "title": "Síntesis de entrevistas sobre adherencia y seguimiento postconsulta",
+    "status": "approved",
+    "evidenceHash": "hash_evi_t2_c2_001",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t2_c2_001",
+      "mai_t2_c2_002",
+      "mai_t2_c2_003"
+    ],
+    "submittedAt": "2026-02-06T16:20:00Z",
+    "validatedAt": "2026-02-07T17:20:00Z",
+    "createdAt": "2026-02-06T16:20:00Z",
+    "updatedAt": "2026-02-07T17:20:00Z"
+  },
+  {
+    "id": "evi_t2_c3_001",
+    "projectId": "proj_saludnexo_pa_001",
+    "pacId": "pac_t2_c3_001",
+    "authorUserId": "usr_omar_castillo_002",
+    "title": "Registro de prueba guiada del MVP y ajustes de recorrido",
+    "status": "approved",
+    "evidenceHash": "hash_evi_t2_c3_001",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t2_c3_001",
+      "mai_t2_c3_002",
+      "mai_t2_c3_003"
+    ],
+    "submittedAt": "2026-02-20T17:00:00Z",
+    "validatedAt": "2026-02-21T19:00:00Z",
+    "createdAt": "2026-02-20T17:00:00Z",
+    "updatedAt": "2026-02-21T19:00:00Z"
+  },
+  {
+    "id": "evi_t2_c4_001",
+    "projectId": "proj_saludnexo_pa_001",
+    "pacId": "pac_t2_c4_001",
+    "authorUserId": "usr_lucia_morales_001",
+    "title": "Escenario financiero base para piloto de validación",
+    "status": "approved",
+    "evidenceHash": "hash_evi_t2_c4_001",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t2_c4_001",
+      "mai_t2_c4_002",
+      "mai_t2_c4_003"
+    ],
+    "submittedAt": "2026-03-06T16:00:00Z",
+    "validatedAt": "2026-03-07T18:30:00Z",
+    "createdAt": "2026-03-06T16:00:00Z",
+    "updatedAt": "2026-03-07T18:30:00Z"
+  },
+  {
+    "id": "evi_t2_c5_001",
+    "projectId": "proj_saludnexo_pa_001",
+    "pacId": "pac_t2_c5_001",
+    "authorUserId": "usr_lucia_morales_001",
+    "title": "Matriz de entrada temprana para clínicas privadas de pequeña escala",
+    "status": "approved",
+    "evidenceHash": "hash_evi_t2_c5_001",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t2_c5_001",
+      "mai_t2_c5_002",
+      "mai_t2_c5_003"
+    ],
+    "submittedAt": "2026-03-20T16:30:00Z",
+    "validatedAt": "2026-03-21T17:50:00Z",
+    "createdAt": "2026-03-20T16:30:00Z",
+    "updatedAt": "2026-03-21T17:50:00Z"
+  }
+]

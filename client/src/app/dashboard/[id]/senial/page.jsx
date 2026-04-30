@@ -4,29 +4,35 @@ import ProgressBar from '@/components/ProgressBar';
 
 // contexto
 import { useProject } from '@/lib/projectContext';
-
-
+import { getProjectIC } from '@/lib/hooks/createIcMap';
+import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
+import { useUserStore } from '@/lib/store';
 
 export default function IdentidadPage() {
 
-  // contexto
-  const { 
-    microActionInstanceData , 
-    tramoData, 
-    dbProject, 
-    mockProject, 
-    projectNftData, 
-    evidenceData } = useProject();
- 
- 
- 
-  const { project, currentState, reputationSnapshot, pacProgress } = mockProject;
 
+  const subioTramo = useUserStore((state) => state.subioTramo);
+
+
+  // contexto
+  const {
+    microActionInstanceData,
+    tramoData,
+    dbProject,
+    mockProject,
+    projectNftData,
+    evidenceData,
+  } = useProject();
+
+  const { currentState, reputationSnapshot } =
+    mockProject;
   // información de tramo actual
 
+      const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
+
+
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
-  const PacProgress = Math.round((reputationSnapshot.icPublic % 1) * 100);
-  //console.log(reputationSnapshot.icPublic,"PacProgress:", PacProgress)
+  const PacProgress = Math.round((ic % 1) * 100);
 
   return (
     <main className="h-fit glass-effect border-glass rounded-2xl">
@@ -37,51 +43,43 @@ export default function IdentidadPage() {
           <h1 className="text-h3 mb-3">Estado actual del Proyecto</h1>
 
           <p className="text-body leading-relaxed">
-            <span className="text-accent-cyan font-medium">{dbProject.projectName}</span>{' '}
-            transita actualmente{' '}
-            { tramoData.code === "T4" ? <span className="text-accent-emerald font-medium">T4</span> : (
-              <>
-            <span className="text-accent-emerald font-medium">
-              {tramoData.code}
+            <span className="text-accent-cyan font-medium">
+              {dbProject.projectName}
             </span>{' '}
-            hacia{' '}
-            <span className="text-accent-emerald font-medium">
-              {`T${
-                parseInt(tramoData.code?.replace('T', ''), 10) +
-                1
-              }` || 'Tn+1'}
-            </span>
-            </>
+            transita actualmente{' '}
+            {tramoData.code === 'T4' ? (
+              <span className="text-accent-emerald font-medium">T4</span>
+            ) : (
+              <>
+                <span className="text-accent-emerald font-medium">
+                  {tramoData.code}
+                </span>{' '}
+                hacia{' '}
+                <span className="text-accent-emerald font-medium">
+                  {`T${parseInt(tramoData.code?.replace('T', ''), 10) + 1}` ||
+                    'Tn+1'}
+                </span>
+              </>
             )}
             , con una señal reputacional de{' '}
             <span className="text-accent-cyan font-medium">
-              {reputationSnapshot.icPublic.toFixed(2)} / 6.00
+              {ic}/ 6.00
             </span>
-            , mientras reduce el Riesgo{' '}
+            , mientras reduce la incertidumbre{' '}
             <span className="text-accent-amber font-medium">
-              {project.primaryRisk || '[Riesgo]'}
+              {getUncertaintyLabel(tramoData.uncertaintyType) ||
+                '[INCERTIDUMBRE DEL TRAMO]'}
             </span>{' '}
-            y las siguientes incertidumbres:{' '}
-            <span className="text-accent-amber font-medium">
-              {project.uncertainty || '[Riesgo]'}
-            </span>
-            {/* {project.secondaryUncertainty && (
-              <>*/}
-            ,{' '}
-            <span className="text-accent-amber font-medium">
-              {project.secondaryUncertainty || '[Riesgo]'}
-            </span>
-            {/* </>
-            )}
-            {project.thirdUncertainty && (
-              <>*/}{' '}
-            y{' '}
-            <span className="text-accent-amber font-medium">
-              {project.thirdUncertainty || '[Riesgo]'}
-            </span>
-            {/*  </>
-            )}*/}{' '}
-            mientras avanza con señales verificables propias del tramo.
+            y los siguientes riesgos:{' '}
+            {tramoData.associatedRisks.map((risk) => {
+              return (
+                <span key={risk} className="text-accent-amber font-medium">
+                  {risk}
+                  {', '}
+                </span>
+              );
+            })}{' '}
+            mientras y avanza con señales verificables propias del tramo.
           </p>
         </div>
       </div>
@@ -122,35 +120,33 @@ export default function IdentidadPage() {
               </div>
 
               <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[28px] glass-effect-dark border-glass p-6">
-  {/* BACKGROUND */}
-  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_50%_55%,rgba(16,185,129,0.14),transparent_32%)]" />
+                {/* BACKGROUND */}
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.18),transparent_28%),radial-gradient(circle_at_50%_55%,rgba(16,185,129,0.14),transparent_32%)]" />
 
-  {/* CONTENIDO */}
-  <div className="z-10 flex flex-col items-center gap-6">
-    
-    {/* NFT */}
-    <div className="flex items-center justify-center">
-      <NftAvatar size="lg" />
-    </div>
+                {/* CONTENIDO */}
+                <div className="z-10 flex flex-col items-center gap-6">
+                  {/* NFT */}
+                  <div className="flex items-center justify-center">
+                    <NftAvatar size="lg" />
+                  </div>
 
-    {/* TEXTO */}
-    <div className="flex flex-col items-center gap-2 text-center">
-      <div className="text-sm text-[var(--text-secondary)]">
-        <span className="text-[var(--text-primary)] font-medium">
-          {tramoData.code} ·{' '}
-          {tramoData.name || 'Nombre del tramo'}
-        </span>
-      </div>
+                  {/* TEXTO */}
+                  <div className="flex flex-col items-center gap-2 text-center">
+                    <div className="text-sm text-[var(--text-secondary)]">
+                      <span className="text-[var(--text-primary)] font-medium">
+                        {tramoData.code} ·{' '}
+                        {tramoData.name || 'Nombre del tramo'}
+                      </span>
+                    </div>
 
-      <div className="text-xs text-[var(--text-tertiary)] p-2 border-gray-500 border bg-gray-400/20  rounded-full"  >
-        <span className="text-(var(--text-secondary))">
-          {projectNftData.nftHash}
-        </span>
-      </div>
-    </div>
-
-  </div>
-</div>
+                    <div className="text-xs text-[var(--text-tertiary)] p-2 border-gray-500 border bg-gray-400/20  rounded-full">
+                      <span className="text-(var(--text-secondary))">
+                        {projectNftData.nftHash}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="space-y-6 xl:col-span-7">
@@ -159,7 +155,7 @@ export default function IdentidadPage() {
                 className="glass-effect border-glass rounded-3xl p-6"
               >
                 <div className="flex flex-col content-center items-center gap-6 md:flex-row  md:justify-between">
-                  <div className='w-full'>
+                  <div className="w-full">
                     <div
                       className="mb-2 text-xs uppercase tracking-[0.22em]"
                       style={{ color: 'var(--text-secondary)' }}
@@ -174,7 +170,8 @@ export default function IdentidadPage() {
                           color: 'var(--text-primary)',
                         }}
                       >
-                        {reputationSnapshot.icPublic}
+                        {/* {reputationSnapshot.icPublic} */}
+                        {ic}
                       </div>
                       <div
                         style={{
@@ -192,20 +189,23 @@ export default function IdentidadPage() {
                         color: 'var(--text-primary)',
                       }}
                     >
-                      { tramoData.code === "T4" ? <span className="text-accent-emerald font-medium">T4</span> : (
-              <>
-            <span className="text-accent-emerald font-medium">
-              {tramoData.code}
-            </span>{' '}
-            en tránsito hacia{' '}
-            <span className="text-accent-emerald font-medium">
-              {`T${
-                parseInt(tramoData.code?.replace('T', ''), 10) +
-                1
-              }` || 'Tn+1'}
-            </span>
-            </>
-            )}
+                      {tramoData.code === 'Tramo actual: T6' ? (
+                        <span className="text-accent-emerald font-medium">
+                          T4
+                        </span>
+                      ) : (
+                        <>
+                          <span className="text-accent-emerald font-medium">
+                            {tramoData.code}
+                          </span>{' '}
+                          en tránsito hacia{' '}
+                          <span className="text-accent-emerald font-medium">
+                            {`T${
+                              parseInt(tramoData.code?.replace('T', ''), 10) + 1
+                            }` || 'Tn+1'}
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -217,7 +217,6 @@ export default function IdentidadPage() {
                       label="Lectura sobre escala completa"
                       mostrarPorcentaje={true}
                     />
-                   
                   </div>
                 </div>
               </div>
@@ -270,44 +269,43 @@ export default function IdentidadPage() {
                     </div>
 
                     {microActionInstanceData && (
-
-                    <div className="glass-effect-dark border-glass rounded-2xl p-4">
-                      <div
-                        className="mb-2 text-xs uppercase tracking-[0.18em]"
-                        style={{ color: 'var(--text-tertiary)' }}
-                      >
-                        Microacciones acumuladas
+                      <div className="glass-effect-dark border-glass rounded-2xl p-4">
+                        <div
+                          className="mb-2 text-xs uppercase tracking-[0.18em]"
+                          style={{ color: 'var(--text-tertiary)' }}
+                        >
+                          Microacciones acumuladas
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-medium)',
+                            color: 'var(--text-primary)',
+                          }}
+                        >
+                          {currentState.microactionsCompletedCount} / 21
+                        </div>
                       </div>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-lg)',
-                          fontWeight: 'var(--font-medium)',
-                          color: 'var(--text-primary)',
-                        }}
-                      >
-                        {currentState.microactionsCompletedCount} / 21
-                      </div>
-                    </div>
                     )}
 
-                        {evidenceData &&(
-                    <div className="glass-effect-dark border-glass rounded-2xl p-4">
-                      <div
-                        className="mb-2 text-xs uppercase tracking-[0.18em]"
-                        style={{ color: 'var(--text-tertiary)' }}
-                      >
-                        Evidencias aprobadas
+                    {evidenceData && (
+                      <div className="glass-effect-dark border-glass rounded-2xl p-4">
+                        <div
+                          className="mb-2 text-xs uppercase tracking-[0.18em]"
+                          style={{ color: 'var(--text-tertiary)' }}
+                        >
+                          Evidencias aprobadas
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 'var(--text-lg)',
+                            fontWeight: 'var(--font-medium)',
+                            color: 'var(--text-primary)',
+                          }}
+                        >
+                          {currentState.validatedEvidenceCount} / 7
+                        </div>
                       </div>
-                      <div
-                        style={{
-                          fontSize: 'var(--text-lg)',
-                          fontWeight: 'var(--font-medium)',
-                          color: 'var(--text-primary)',
-                        }}
-                      >
-                        {currentState.validatedEvidenceCount} / 7
-                      </div>
-                    </div>
                     )}
                   </div>
                 </div>
@@ -322,8 +320,9 @@ export default function IdentidadPage() {
                       Incertidumbre dominante
                     </div>
 
-                    <div className="mb-4 rounded-xl bg-white/10 border border-white/20 px-4 py-2 text-center text-sm font-medium text-white">
-                      {project.uncertainty || 'No definida'}
+                    <div className="mb-4 rounded-xl bg-red-600/30 border border-white/20 px-4 py-2 text-center text-sm font-medium text-white">
+                      {getUncertaintyLabel(tramoData.uncertaintyType) ||
+                        'No definida'}
                     </div>
 
                     <div
@@ -334,21 +333,16 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
-                        {project.primaryRisk || 'Riesgo 1'}
-                      </div>
-
-                      {/* {project.secondaryRisk && ( */}
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
-                        {project.secondaryRisk || 'Riesgo 2'}
-                      </div>
-                      {/* )} */}
-
-                      {/* {project.thirdRisk && ( */}
-                      <div className="rounded-xl bg-white/10 border border-white/20 px-3 py-2 text-center text-sm text-white">
-                        {project.thirdRisk || 'Riesgo 3'}
-                      </div>
-                      {/* )} */}
+                      {tramoData.associatedRisks.map((risk, index) => {
+                        return (
+                          <div
+                            key={risk}
+                            className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm text-white"
+                          >
+                            {risk || 'Riesgo ' + (index + 1)}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
