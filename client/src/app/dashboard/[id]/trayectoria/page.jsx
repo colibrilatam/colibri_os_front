@@ -512,8 +512,11 @@ const CargaPac = ({ pac, rol }) => {
 
           {/* ESTADOS */}
           {isDone && (
-            <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
-              ✔ Documento validado
+            <div className="flex flex-col gap-2">
+              <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
+                ✔ Documento validado
+              </div>
+              <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de microacción</div>
             </div>
           )}
 
@@ -540,7 +543,12 @@ const CargaPac = ({ pac, rol }) => {
           ${isPending && 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]'}
         `}
       >
-        {isDone && <p>{evidenceText.done}</p>}
+        {isDone && 
+        <div className="flex flex-col gap-2">
+              <p>{evidenceText.done}</p>
+              <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de evidencia</div>
+            </div>
+        }
         {isCurrent && <p>{evidenceText.current}</p>}
         {isPending && <p>{evidenceText.pending}</p>}
       </div>

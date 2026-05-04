@@ -30,7 +30,8 @@ export default function ReputacionPage() {
     { key: "consistency",   label: "Consistencia",   description: "Frecuencia, ritmo y estabilidad del progreso.",  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
     { key: "collaboration", label: "Colaboración",   description: "Apoyo a otros y participación en el ecosistema."  ,   raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
     { key: "sustainability",label: "Sostenibilidad", description: "Alineación con ODS e indicadores de impacto social."  , raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
-  ].map((d) => ({ ...d, weighted: parseFloat(((icMax * d.weight) * (d.raw / 100)).toFixed(2)) }));
+  // Calculo del aporte ponderado de cada dimensión al IC total, ajustado al máximo del tramo actual
+  ].map((d) => ({ ...d, weighted: parseFloat(((1 * d.weight) * (d.raw / 100)).toFixed(2)) }));
 
   // Construir "eventos reputacionales" a partir de los PACs con actividad
   const events = pacProgress
@@ -286,7 +287,7 @@ function DimensionRow({description, label, raw, weight, weighted, max = 100, ind
             <div className="text-base font-medium text-slate-200">{Math.round(weight * 100)}%</div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte</div>
+            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte en el tramo actual</div>
             <div className="text-base font-bold text-green-500">{weighted.toFixed(2)}</div>
           </div>
         </div>

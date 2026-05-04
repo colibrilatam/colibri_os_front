@@ -20,7 +20,7 @@ export default function NotificationPopup({ message, children, isOpen: initialIs
 
       {/* Popup */}
       <div className=" fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-        <div className="bg-gradient-to-br from-zinc-700/30 to-zinc-900/30 border border-zinc-600 rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 pointer-events-auto relative">
+        <div className=" bg-gradient-to-br from-zinc-700/30 to-zinc-900/30 border border-zinc-600 rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 pointer-events-auto relative">
           {/* Botón Cerrar (X) */}
           <button
             onClick={handleClose}
@@ -40,7 +40,7 @@ export default function NotificationPopup({ message, children, isOpen: initialIs
           { children && children }
 
           {/* Botón Aceptar */}
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-4">
             <Button content="Aceptar" onClick={handleClose} color="blue" />
           </div>
         </div>
