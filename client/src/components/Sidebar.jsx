@@ -16,6 +16,9 @@ import {
 } from 'lucide-react';
 import Button from './Button';
 import { useRouter } from 'next/navigation';
+import NotificationPopup from './NotificationPopup';
+import { useState } from 'react';
+import EntrepreneurCard from './Contact';
 
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
@@ -24,6 +27,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
   const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
   const router = useRouter();
+
+  const [ notification, setNotification ] = useState(false);
 
   // obtencion del id por parametro 
   const pathname = usePathname(); 
@@ -65,15 +70,31 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     router.push('/login')
   }
 
+  function handleContact(){
+    setNotification(true);
+  };
+  function handleCloseNotification(){
+    setNotification(false);
+  }
+
 
   return (
     <>
+    { notification && <NotificationPopup isOpen={notification} message="Datos del emprendedor" onClose={handleCloseNotification}>
+      <EntrepreneurCard 
+        name="Valentina Moreno"
+        email="valentina.moreno@empresa.com"
+        phone="+54 11 4234 5678"
+        linkedin="linkedin.com/in/valentina-moreno"
+      />
+    </NotificationPopup> }
       {/* Mobile */}
       <aside
         className={`glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
+        
         <button
           onClick={onClose}
           className="p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
@@ -154,7 +175,10 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
           })}
         </nav>
         {sidebarDesktopExpanded && (
+          <div  className="flex flex-col gap-4">
+          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
           <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
+          </div>
         )}
       </aside>
     </>
