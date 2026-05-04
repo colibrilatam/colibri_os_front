@@ -181,8 +181,8 @@ export default function TramoDashboard() {
         <AllTranches elements={tramoInfo}  />
       </div>}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-        {/* AVANCE PAC */}
+      {/*<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+       
         <AnimatedCard title="Avance por PAC">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 gap-3">
             <div>
@@ -257,7 +257,7 @@ export default function TramoDashboard() {
           </div>
         </AnimatedCard>
 
-        {/* DENSIDAD */}
+       
         <AnimatedCard title="Densidad de avance">
           <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
             <MetricBox
@@ -277,7 +277,7 @@ export default function TramoDashboard() {
           </Block>
         </AnimatedCard>
 
-        {/* CATEGORÍAS */}
+       
         <AnimatedCard title="Categorías activadas">
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {categories.map((c) => {
@@ -311,7 +311,7 @@ export default function TramoDashboard() {
           </div>
         </AnimatedCard>
 
-        {/* SEÑALES */}
+       
         <AnimatedCard title="Señales de avance">
           <div className="space-y-3">
             {signals.map((s, i) => (
@@ -322,7 +322,7 @@ export default function TramoDashboard() {
           </div>
         </AnimatedCard>
 
-        {/* BLOQUEOS */}
+      
         <AnimatedCard title="Bloqueos">
           {blockers.length === 0 ? (
             <Block>
@@ -336,14 +336,14 @@ export default function TramoDashboard() {
             ))
           )}
         </AnimatedCard>
-      </div>
+      </div>*/}
     </div>
   );
 }
 
 /* COMPONENTES */
 
-const AnimatedCard = ({ title, children }) => (
+/*const AnimatedCard = ({ title, children }) => (
   <motion.div
     variants={fadeUp}
     initial="hidden"
@@ -353,7 +353,7 @@ const AnimatedCard = ({ title, children }) => (
     <p className="text-overline mb-4">{title}</p>
     {children}
   </motion.div>
-);
+);*/
 
 const InfoBox = ({ label, value }) => (
   <div className="glass-effect border-glass px-3 py-2 sm:px-4 sm:py-2 rounded-xl">
@@ -362,15 +362,15 @@ const InfoBox = ({ label, value }) => (
   </div>
 );
 
-const MetricBox = ({ label, value, sub }) => (
+/*const MetricBox = ({ label, value, sub }) => (
   <div className="glass-effect border-glass p-3 sm:p-4 rounded-xl text-center">
     <p className="text-micro-label">{label}</p>
     <p className="text-value-lg">{value}</p>
     <p className="text-legend">{sub}</p>
   </div>
-);
+);*/
 
-const Signal = ({ children, ok }) => {
+/*const Signal = ({ children, ok }) => {
   const styles = ok
     ? {
         container:
@@ -397,10 +397,11 @@ const Signal = ({ children, ok }) => {
       <p className="text-body">{children}</p>
     </div>
   );
-};
+};*/
 
-const Block = ({ children }) => (
+/*const Block = ({ children }) => (
   <div className="glass-effect border-glass p-3 sm:p-4 rounded-xl mb-2">
     {children}
   </div>
 );
+*/
