@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLogin  } from '@/hooks/useLogin';
+import { useLogin } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
 
@@ -13,8 +13,12 @@ export default function Login({ onLoadingChange }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
 
+  const [serverError, setServerError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   // handlers
   const handleInputChange = (e) => {
+    setServerError('');
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
@@ -22,12 +26,14 @@ export default function Login({ onLoadingChange }) {
 
     if (name === 'email') {
       if (value.trim() === '') newErrors.email = 'El email es requerido';
-      else if (!validateEmail(value)) newErrors.email = 'El email no tiene un formato válido';
+      else if (!validateEmail(value))
+        newErrors.email = 'El email no tiene un formato válido';
       else newErrors.email = '';
     }
 
     if (name === 'password') {
-      newErrors.password = value.trim() === '' ? 'La contraseña es requerida' : '';
+      newErrors.password =
+        value.trim() === '' ? 'La contraseña es requerida' : '';
     }
 
     setErrors(newErrors);
@@ -40,69 +46,97 @@ export default function Login({ onLoadingChange }) {
   // enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    onLoadingChange(true);
+    setLoading(true);
+    setServerError('');
+
     const result = await handleLogin(formData);
+    console.log('RESULTADO', result);
+
+    if (!result.success) {
+      setServerError(result.error);
+      setLoading(false);
+      return;
+    }
 
     const userResult = await userData();
-
-    
-    onLoadingChange(false);
-    if (result.success) {
-      alert('¡Has iniciado sesión correctamente! Bienvenido a Colibri OS');
-    } else {
-      alert(result.error);
-    }
-    if(userResult.error){
-      alert("error obteniendo información del usuario: " + userResult.error + ". Por favor, vuelva a iniciar sesión."); 
+    if (userResult.error) {
+      setServerError(
+        'Error obteniendo información del usuario. Por favor, vuelva a iniciar sesión.',
+      );
+      setLoading(false);
+      onLoadingChange?.(false);
       return;
     }
     setRol(userResult.data.role);
-    if(userResult.data.role === "mecenas_semilla"){
-      router.push("/user/nft")
+    if (userResult.data.role === 'mecenas_semilla') {
+      router.push('/user/nft');
       return;
     }
-    if(userResult.data.role === "entrepreneur"){
-      router.push("/proyecto")
+    if (userResult.data.role === 'entrepreneur') {
+      router.push('/proyecto');
       return;
     }
-    router.push("/home")
-
-    
+    router.push('/home');
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div>
-        <label className="text-micro-label block mb-2">Email</label>
-        <input
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.email ? 'border-red-500' : ''
-          }`}
-        />
-      </div>
+    <>
+      {loading && (
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-lg">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+        </div>
+      )}
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="text-micro-label block mb-2">Email</label>
+          <input
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            disabled={loading}
+            className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
+              errors.email ? 'border-red-500' : ''
+            }`}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+          )}
+        </div>
 
-      <div>
-        <label className="text-micro-label block mb-2">Contraseña</label>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleInputChange}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.password ? 'border-red-500' : ''
-          }`}
-        />
-      </div>
+        <div>
+          <label className="text-micro-label block mb-2">Contraseña</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            disabled={loading}
+            className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
+              errors.password ? 'border-red-500' : ''
+            }`}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+          )}
+        </div>
+        {serverError && (
+          <p className="text-red-500 text-sm text-center">{serverError}</p>
+        )}
 
-      <button
-        type="submit"
-        className={`w-full py-3 rounded-lg font-semibold transition  'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer bg-gray-500 `}
-      >
-        Iniciar sesión
-      </button>
-    </form>
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-3 rounded-lg font-semibold transition 
+  ${
+    loading
+      ? 'bg-gray-500 cursor-not-allowed'
+      : 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer'
+  }
+`}
+        >
+          Iniciar sesión
+        </button>
+      </form>
+    </>
   );
 }
