@@ -1,4 +1,6 @@
+import { useProject } from "@/lib/projectContext";
 import { useState } from "react";
+
 
 const CopyIcon = () => (
   <svg
@@ -49,30 +51,33 @@ const CopyField = ({ value }) => {
 };
 
 export default function EntrepreneurCard ({ name, email, phone, linkedin }) {
+
+  const { dbProject } = useProject();
+
   return (
     <div className="glass-effect border-glass rounded-2xl p-8 w-full shadow-sm flex flex-col gap-5">
       {/* Nombre — no clickeable */}
       <div className="border-b border-stone-100 pb-5 w-fit">
         <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Emprendedor</p>
-        <h2 className="text-2xl font-semibold">{name}</h2>
+        <h2 className="text-2xl font-semibold">{dbProject.owner.fullName}</h2>
       </div>
 
       {/* Email */}
       <div>
         <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">Email</p>
-        <CopyField value={email} />
+        <CopyField value={dbProject.owner.email} />
       </div>
 
       {/* Teléfono */}
       <div>
         <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">Teléfono</p>
-        <CopyField value={phone} />
+        <CopyField value={dbProject.owner.phone ? dbProject.owner.phone : "No registró número de teléfono"} />
       </div>
 
       {/* LinkedIn */}
       <div>
         <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">LinkedIn</p>
-        <CopyField value={linkedin} />
+        <CopyField value={dbProject.owner.linkedinId ? dbProject.owner.linkedinId : "No registró LinkedIn"} />
       </div>
     </div>
   );
