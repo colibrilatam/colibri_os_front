@@ -516,7 +516,9 @@ const CargaPac = ({ pac, rol }) => {
               <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
                 ✔ Documento validado
               </div>
-              <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de microacción</div>
+              <a href="/evidencia.pdf" download>
+                <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de microacción</div>
+              </a>
             </div>
           )}
 
@@ -546,7 +548,9 @@ const CargaPac = ({ pac, rol }) => {
         {isDone && 
         <div className="flex flex-col gap-2">
               <p>{evidenceText.done}</p>
+              <a href="/evidencia.pdf" download>
               <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de evidencia</div>
+              </a>
             </div>
         }
         {isCurrent && <p>{evidenceText.current}</p>}
