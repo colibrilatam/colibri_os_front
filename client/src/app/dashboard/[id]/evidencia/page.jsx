@@ -4,6 +4,7 @@
 
 'use client';
 
+import { getEvidenceStatusLabel, getEvidenceTypeLabel, getMicroActionInstanceStatusLabel, getPrivacyLevelLabel, getUserRoleLabel, getValidationStatusLabel } from '@/lib/mappers/evidence-labels';
 import { useState, useMemo } from 'react';
 
 /* ================= MOCK REALISTA ================= */
@@ -445,7 +446,7 @@ function EvidenceCard({ evidence, isActive, onClick }) {
       <p className="text-body mb-2">{evidence.description}</p>
 
       <div className="flex justify-between text-legend">
-        <span>{evidence.microActionInstance?.status}</span>
+        <span>{getMicroActionInstanceStatusLabel(evidence.microActionInstance?.status)}</span>
 
         {evidence.isValidForIc && (
           <span className="text-accent-emerald">Impacta IC</span>
@@ -488,7 +489,7 @@ function EvidenceDetail({ evidence }) {
 
       {/* META */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <Info label="Validación" value={evidence.validationStatus} />
+        <Info label="Validación" value={getValidationStatusLabel(evidence.validationStatus)} />
         <Info
           label="Impacto en IC"
           value={evidence.isValidForIc ? 'Sí' : 'No'}
@@ -496,19 +497,19 @@ function EvidenceDetail({ evidence }) {
         <Info label="Fecha" value={formatDate(evidence.createdAt)} />
         <Info label="Versiones" value={evidence.versions?.length || 0} />
         <Info label="Evaluaciones" value={evidence.evaluations?.length || 0} />
-        <Info label="Privacidad" value={evidence.privacyLevel} />
+        <Info label="Privacidad" value={getPrivacyLevelLabel(evidence.privacyLevel)} />
       </div>
 
       {/* AUTHOR */}
       <Section title="Autor">
         <p className="text-body">{evidence.author?.fullName}</p>
-        <p className="text-legend">{evidence.author?.role}</p>
+        <p className="text-legend">{getUserRoleLabel(evidence.author?.role)}</p>
       </Section>
 
       {/* MICROACTION */}
       <Section title="Microacción">
         <div className="grid grid-cols-2 gap-4">
-          <Info label="Estado" value={evidence.microActionInstance?.status} />
+          <Info label="Estado" value={getMicroActionInstanceStatusLabel(evidence.microActionInstance?.status)} />
           <Info
             label="En tiempo"
             value={
@@ -620,13 +621,13 @@ const StatusBadge = ({ status }) => {
 
   return (
     <span className={`text-xs px-2 py-1 rounded ${map[status]}`}>
-      {status}
+      {getEvidenceStatusLabel(status)}
     </span>
   );
 };
 
 const TypeBadge = ({ type }) => (
   <span className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
-    {type}
+    {getEvidenceTypeLabel(type)}
   </span>
 );
