@@ -90,11 +90,11 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     </NotificationPopup> }
       {/* Mobile */}
       <aside
-        className={`glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
+        className={`flex flex-col justify-between glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        
+        <div>
         <button
           onClick={onClose}
           className="p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
@@ -128,6 +128,13 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             })}
           </nav>
         </div>
+        </div>
+       
+          <div  className="flex flex-col gap-4">
+          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
+          <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
+          </div>
+   
       </aside>
 
       {/* Desktop */}
