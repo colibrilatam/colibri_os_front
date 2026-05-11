@@ -109,7 +109,6 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     const handleSubmitDemo = async (e) => {
       e.preventDefault();
       const result = await handleDemoLogin(selectedRole);
-      alert("Registro exitoso");
      
       onSuccess();
     }
@@ -129,7 +128,6 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     onLoadingChange(false);
 
     if (result.success) {
-      alert('¡Te has registrado correctamente! Bienvenido a Colibri OS');
       onSuccess();
     } else {
       alert(result.error);

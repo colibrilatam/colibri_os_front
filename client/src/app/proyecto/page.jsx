@@ -9,6 +9,8 @@ import { userService } from '@/services/user';
 export default function CreateProject() {
   const router = useRouter();
 
+  const [ formError, setFormError ] = useState(null);
+
   const { execute, error } = useRequest(projectsService.getAll);
   const { execute: getUser } = useRequest(() => userService.profile());
 
@@ -17,12 +19,11 @@ export default function CreateProject() {
     
     const { data } = await execute();
     if(error){
-        alert(error);
+        setFormError("Error al obtener los proyectos");
     }
     const { data: userData } = await getUser();
     const projectId = data?.find((p) => p.projectName === "FlujoClave").id || [];
 
-    alert('Demostración de registro');
     router.push(`/dashboard/${projectId}/senial`);
   };
 
@@ -117,7 +118,9 @@ useEffect(() => {
     e.preventDefault();
 
     if (!isFormValid()) {
-      return alert('Por favor, corrige los errores en el formulario antes de continuar.');
+      
+      setFormError('Por favor, corrige los errores en el formulario antes de continuar.');
+      return 
     }
 
     const payload = {
@@ -136,10 +139,9 @@ useEffect(() => {
 
       if (!res.ok) throw new Error('Error al crear el proyecto');
 
-      alert('¡Proyecto creado correctamente!');
       router.push('/home');
     } catch (err) {
-      alert(err.message);
+      setFormError('Error al crear el proyecto', err.message);
     } finally {
       setLoading(false);
     }
@@ -192,6 +194,10 @@ useEffect(() => {
             )}
             </div>
         ))}
+
+        {formError && (
+            <p className="text-red-500 text-xl mt-2">{formError}</p>
+        )}
 
         <button
             type="submit"
