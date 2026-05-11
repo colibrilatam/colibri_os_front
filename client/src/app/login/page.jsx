@@ -77,7 +77,7 @@ export default function LoginRegisterPage() {
       )}
 
       <div
-        className={`w-full ${isSelectRole ? 'max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl' : 'max-w-md'} glass-effect-dark border-glass rounded-2xl p-6 sm:p-8 sm:p-10`}
+        className={`w-full ${isSelectRole ? 'max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl' : 'max-w-md'} mt-12 lg:mt-2 glass-effect-dark border-glass rounded-2xl p-6 sm:p-8 sm:p-10`}
       >
         <p className="text-overline text-center mb-2">Acceso al sistema</p>
 

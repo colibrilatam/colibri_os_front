@@ -33,7 +33,7 @@ export default function TramoDashboard() {
     if (projectTramoData) {
       setTramoInfo(projectTramoData);
     }
-    else alert('Error fetching tramo data: ' + projectTramoDataError);
+    else console.log('Error fetching tramo data: ' + projectTramoDataError);
     };
     fetchTramoData();
     
