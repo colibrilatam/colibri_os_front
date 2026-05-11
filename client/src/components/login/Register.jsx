@@ -12,7 +12,7 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
   const isDemo = useUserStore((state) => state.isDemo);
   const setIsDemo = useUserStore((state) => state.setIsDemo);
 
-  
+  const [ formError, setFormError ] = useState(null);
   
 
   const { handleDemoLogin } = useLogin();
@@ -120,7 +120,8 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
      setPasswordValidation(validation);
 
     if (!isFormValid()) {
-      return alert('Por favor, corrige los errores en el formulario antes de continuar.');
+       setFormError('Por favor, corrige los errores en el formulario antes de continuar.');;
+       return;
     }
 
     onLoadingChange(true);
@@ -130,7 +131,7 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     if (result.success) {
       onSuccess();
     } else {
-      alert(result.error);
+      setFormError("Error al crear usuario: " + result.error);
     }
   };
 
@@ -185,6 +186,10 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
           }`}
         />
       </div>
+
+          {formError && (
+            <p className="text-red-500 text-xl mt-2">{formError}</p>
+           )}
 
       <button
         type="submit"
