@@ -65,8 +65,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       excludeRoles: null,
     },
     {
-      href: `/dashboard/${id}/senial`,
-      label: 'Señal',
+      href: `/dashboard/${id}/identidad`,
+      label: 'Identidad',
       icon: User,
       excludeRoles: null,
     },
