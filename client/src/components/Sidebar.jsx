@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import NotificationPopup from './NotificationPopup';
 import { useState } from 'react';
 import EntrepreneurCard from './Contact';
+import TourButton from './tutoriales/TourButton';
 
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
@@ -32,6 +33,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
   // obtencion del id por parametro 
   const pathname = usePathname(); 
+
+  const capaActual = pathname.split('/').pop();
 
   // 1. Dividimos por "/" -> ["", "dashboard", "1", "senial"]
   // 2. El "1" está en la posición 2 del array
@@ -183,6 +186,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         </nav>
         {sidebarDesktopExpanded && (
           <div  className="flex flex-col gap-4">
+            <TourButton tourName={capaActual} ></TourButton>
           <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
           <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
           </div>

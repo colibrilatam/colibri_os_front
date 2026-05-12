@@ -3,14 +3,25 @@
 export function getDashboardSteps(isMobile) {
   return [
     {
-      tour: "dashboard-tour",
+      tour: "senial",
       steps: [
+
+        {
+          icon: "🖼️",
+          title: "Estado actual del proyecto",
+          content: "Un resumen del estado actual del proyecto.",
+          selector: "#estado",
+          side: isMobile ? "bottom" : "bottom",  // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
         {
           icon: "🖼️",
           title: "NFT Colibrí",
           content: "Tu identidad reputacional visual dentro de Colibrí OS.",
           selector: "#nft",
-          side: isMobile ? "top" : "right",  // 👈 condicional
+          side: isMobile ? "top" : "right",  // 👈 posición
           showControls: true,
           pointerPadding: 10,
           pointerRadius: 8,
@@ -27,9 +38,19 @@ export function getDashboardSteps(isMobile) {
         },
         {
           icon: "🧭",
-          title: "Contexto del tramo",
-          content: "Incertidumbre, riesgo y ventana estimada del tramo actual.",
+          title: "Estado del avance en el tramo",
+          content: "Métricas del estado actual del avance en el tramo.",
           selector: "#contexto",
+          side: isMobile ? "top" : "top",
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "!!",
+          title: "Incertidumbre y riesgos",
+          content: "Incertidumbre y riesgos del tramo actual.",
+          selector: "#incertidumbre",
           side: isMobile ? "top" : "top",
           showControls: true,
           pointerPadding: 10,
