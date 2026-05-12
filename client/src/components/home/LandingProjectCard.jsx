@@ -2,6 +2,9 @@ import { Badge } from '@/components/ui/Badge';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import logoAvatar from '../../../public/logos/logo-avatar.jpg';
+// 👇 IMPORTÁ LOS ICONOS
+import maleIcon from '../../../public/icons/male-blue.png';
+import femaleIcon from '../../../public/icons/female-pink.png';
 
 function formatProjectDate(dateString) {
   const parsedDate = new Date(dateString);
@@ -14,17 +17,18 @@ function formatProjectDate(dateString) {
 
 // FUNCION QUE VERIFICA AUTENTTICACION DE USUARIO Y REDIRIGE A LOGIN O A RLAB
 
-export function ProjectCard({ project, ic }) {
+export function ProjectCard({ project, ic, maleCount, femaleCount}) {
   const projectTrancheLabel = project.projectTranche || 'Sin tramo';
   const router = useRouter();
 
   function getICColor(value) {
     const n = parseFloat(value);
-  
+
     if (n >= 4) return 'text-green-400 border-green-400/30 bg-green-500/10';
     if (n >= 2.5) return 'text-cyan-300 border-cyan-400/30 bg-cyan-500/10';
-    if (n >= 1.5) return 'text-yellow-300 border-yellow-400/30 bg-yellow-500/10';
-  
+    if (n >= 1.5)
+      return 'text-yellow-300 border-yellow-400/30 bg-yellow-500/10';
+
     return 'text-red-300 border-red-400/30 bg-red-500/10';
   }
 
@@ -75,11 +79,47 @@ export function ProjectCard({ project, ic }) {
           'Sin descripción disponible'}
       </div>
 
-      <div className="mb-5 text-xs text-slate-500">
-        Responsable:{' '}
-        <span className="text-slate-300">
-          {project.owner?.fullName || 'Sin responsable'}
-        </span>
+      {/* RESPONSABLE + GÉNERO */}
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <div className="text-xs text-slate-500">
+          Responsable:{' '}
+          <span className="text-slate-300">
+            {project.owner?.fullName || 'Sin responsable'}
+          </span>
+        </div>
+
+        {/* ICONOS */}
+        <div className="flex items-end">
+          {/* MUJER */}
+          <div className="flex flex-col items-center">
+            <span className="text-[11px] font-semibold text-pink-300">
+              {femaleCount}
+            </span>
+
+            <Image
+              src={femaleIcon}
+              alt="Mujeres"
+              width={22}
+              height={22}
+              className="object-contain"
+            />
+          </div>
+
+          {/* HOMBRE */}
+          <div className="flex flex-col items-center">
+            <span className="text-[11px] font-semibold text-cyan-300">
+              {maleCount}
+            </span>
+
+            <Image
+              src={maleIcon}
+              alt="Hombres"
+              width={22}
+              height={22}
+              className="object-contain"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="mt-auto flex items-center justify-between border-t border-white/8 pt-4">
