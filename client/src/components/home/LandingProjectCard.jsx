@@ -131,7 +131,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
         </span>
         {/** CAMBIAR LOGICA DEPENDIENDO DE AUTENTICACIÖN */}
         <button
-          onClick={() => router.push(`/dashboard/${project.id}/senial`)}
+          onClick={() => router.push(`/dashboard/${project.id}/about`)}
           className="bg-linear-to-r from-cyan-500 to-blue-500  border border-cyan-700 rounded-2xl p-2 group/btn flex items-center gap-1 text-xs font-bold text-white transition-all duration-150 hover:text-cyan-200 cursor-pointer active:scale-95"
         >
           Ver en R-Lab
