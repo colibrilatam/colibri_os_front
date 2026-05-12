@@ -25,7 +25,7 @@ export default async function ProjectLayout({ children }){
     if(projectData){
         if(projectData.find((p) => p.ownerUserId === user.sub)){ 
             const userProject = projectData.find((p) => p.ownerUserId === user.sub);
-            redirect(`/dashboard/${userProject.id}/senial`);
+            redirect(`/dashboard/${userProject.id}/about`);
         return;  
         }
 }
