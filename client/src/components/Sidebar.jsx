@@ -184,13 +184,10 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             </nav>
           </div>
         </div>
-
-        <div className="flex flex-col gap-4">
-          <Button
-            color="blue"
-            content="Contactar al emprendedor"
-            onClick={handleContact}
-          ></Button>
+       
+          <div  className="flex flex-col gap-4">
+            <TourButton tourName={capaActual} ></TourButton>
+          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
           <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
         </div>
       </aside>
