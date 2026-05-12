@@ -1,27 +1,13 @@
 'use client';
-// contexto
-import { useContext } from "react";
 import { useProject } from '@/lib/projectContext';
-import { getProjectIC } from '@/lib/hooks/createIcMap';
-import { useUserStore } from '@/lib/store';
-
-import { IconAccion, IconEvidencia, IconConsistencia, IconColaboracion, IconSostenibilidad } from "@/components/ui/Icons";
+//import { IconAccion, IconEvidencia, IconConsistencia, IconColaboracion, IconSostenibilidad } from "@/components/ui/Icons";
 
 export default function ReputacionPage() {
 
   // contexto
     const { tramoData, dbProject, mockProject } = useProject();
-    const subioTramo = useUserStore((state) => state.subioTramo);
   const { project, reputationSnapshot, pacProgress } = mockProject;
-  const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
-
-  // Calculando el máximo del IC dependiendo del tramo actual con un caso especial para flujoClave
-  const icMax = subioTramo && dbProject.projectName === "FlujoClave" ? 4 :
-                tramoData.code === "T1" ? 2 :
-                tramoData.code === "T2" ? 3 :
-                tramoData.code === "T3" ? 4 :
-                tramoData.code === "T4" ? 5 :
-                tramoData.code === "T5" ? 6 : 7;
+ 
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
@@ -32,38 +18,7 @@ export default function ReputacionPage() {
     { key: "sustainability",label: "Sostenibilidad", description: "Alineación con ODS e indicadores de impacto social."  , raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
   // Calculo del aporte ponderado de cada dimensión al IC total, ajustado al máximo del tramo actual
   ].map((d) => ({ ...d, weighted: parseFloat(((1 * d.weight) * (d.raw / 100)).toFixed(2)) }));
-
-  // Construir "eventos reputacionales" a partir de los PACs con actividad
-  const events = pacProgress
-    .filter((pac) => pac.status === "approved" || pac.status === "in_progress")
-    .map((pac) => ({
-      date: pac.closedAt
-        ? new Date(pac.closedAt).toLocaleDateString("es-VE", { day: "2-digit", month: "short", year: "numeric" })
-        : new Date(pac.updatedAt).toLocaleDateString("es-VE", { day: "2-digit", month: "short", year: "numeric" }),
-      title: pac.title,
-      impact: pac.status === "approved" ? "PAC aprobado" : "En progreso",
-      description: `${pac.categoryName} · ${pac.completedMicroactions}/${pac.requiredMicroactions} microacciones completadas`,
-    }));
-
-  const icPct = (reputationSnapshot.icPublic / 10) * 100;
-  const variationIsPositive = true; // sin dato histórico previo en el JSON, asumimos positivo
-
-  const leader = dimensions.reduce((max, item) => item.weighted > max.weighted ? item : max);
-  const weakest = dimensions.reduce((min, item) => item.weighted < min.weighted ? item : min);
-  const recentImprovement = dimensions.find((item) => item.key === "consistency") ?? leader;
-  const mainLag = dimensions.find((item) => item.key === "sustainability") ?? weakest;
-
-  const strongestTwo = [...dimensions]
-    .sort((a, b) => b.weighted - a.weighted)
-    .slice(0, 2)
-    .map((item) => item.label)
-    .join(", ");
-
-  const weakestTwo = [...dimensions]
-    .sort((a, b) => a.weighted - b.weighted)
-    .slice(0, 2)
-    .map((item) => item.label)
-    .join(", ");
+  
 
   const radarValues = [
     reputationSnapshot.actionScore,
@@ -168,10 +123,10 @@ export default function ReputacionPage() {
 
           <div className="space-y-6 xl:col-span-7">
 
-            <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
+             {/*<div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
               
 
-            {<div className="mt-6 rounded-3xl glass-effect-dark border-glass p-5">
+           <div className="mt-6 rounded-3xl glass-effect-dark border-glass p-5">
               <div className="mb-4 text-xs uppercase tracking-[0.22em] text-slate-400">
                 Lectura reputacional ejecutiva
               </div>
@@ -197,44 +152,12 @@ export default function ReputacionPage() {
                   <div className="mt-2 text-sm text-slate-400">Todavía no convierte continuidad en solidez estructural.</div>
                 </div>
               </div>
-            </div>}
             </div>
-
-            {/*<div className="grid grid-cols-1 gap-6">
-              <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
-                <div className="mb-4 text-xs uppercase tracking-[0.22em] text-slate-400">
-                  Eventos recientes que alteran reputación
-                </div>
-                <div className="space-y-4">
-                  {events.map((event) => (
-                    <EventItem
-                      key={`${event.date}-${event.title}`}
-                      date={event.date}
-                      title={event.title}
-                      impact={event.impact}
-                      description={event.description}
-                    />
-                  ))}
-                </div>
-              </div>
             </div>*/}
 
-            {/*<div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl">
-              <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
-                Nota metodológica
-              </div>
-              <div className="text-lg font-medium text-slate-100">
-                Algoritmo IC vigente: {reputationSnapshot.algorithmVersionId}
-              </div>
-              <div className="mt-2 text-sm text-slate-400">
-                Ponderación reputacional activa para snapshot{" "}
-                {new Date(reputationSnapshot.calculatedAt).toLocaleDateString("es-VE", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })}.
-              </div>
-            </div>*/}
+           
+
+
           </div>
         </section>
       </div>
@@ -247,7 +170,7 @@ function DimensionRow({description, label, raw, weight, weighted, max = 100, ind
   const iconSvg = categoryIconPaths[index];
 
   return (
-    <div className="rounded-2xl glass-effect-dark border-glass p-4">
+    <div className="rounded-2xl glass-effect border-glass p-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div className="w-full flex-col">
           <div className="flex items-center gap-3">
@@ -287,7 +210,7 @@ function DimensionRow({description, label, raw, weight, weighted, max = 100, ind
             <div className="text-base font-medium text-slate-200">{Math.round(weight * 100)}%</div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte en el tramo actual</div>
+            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte actual</div>
             <div className="text-base font-bold text-green-500">{weighted.toFixed(2)}</div>
           </div>
         </div>
