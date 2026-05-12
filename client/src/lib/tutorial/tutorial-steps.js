@@ -3,7 +3,7 @@
 export function getDashboardSteps(isMobile) {
   return [
     {
-      tour: "senial",
+      tour: "identidad",
       steps: [
 
         {
