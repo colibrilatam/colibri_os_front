@@ -12,7 +12,7 @@ export default function TourCard({
   const { closeOnborda } = useOnborda();
 
   return (
-    <div className="relative bg-white rounded-xl shadow-xl p-5 w-fit ">
+    <div className="relative bg-white rounded-xl shadow-xl p-5 lg:w-fit w-dvw ">
       {/* Flecha indicadora */}
       <span className="text-white">{arrow}</span>
 
