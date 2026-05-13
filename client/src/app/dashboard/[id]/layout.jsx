@@ -48,7 +48,7 @@ export default async function DataLayout({ children, params }) {
     projectNftData,
     projectNftError,
   ); */
-  console.log('evidenceData', evidenceData);
+  //console.log('evidenceData', evidenceData);
   // Manejo de errores
   if (error || tramoError || ProjectTramoError || projectNftError) {
     return (

@@ -3,6 +3,42 @@
 export function getDashboardSteps(isMobile) {
   return [
     {
+      tour: "evidencia",
+      steps: [
+        {
+          icon: "📊",
+          title: "Métricas de evidencias del tramo",
+          content: "En esta sección podrás ver las métricas resumidas de las evidencias del tramo.",
+          selector: "#metricas",
+          side: isMobile ? "bottom" : "bottom", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "📊",
+          title: "Lista de evidencias del tramo",
+          content: "En esta sección podrás ver las evidencias del tramo con información resumida.",
+          selector: "#lista",
+          side: isMobile ? "bottom" : "right", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "📊",
+          title: "Detalle de la evidencia",
+          content: "En esta sección podrás ver los detalles de la evidencia seleccionada.",
+          selector: "#detalle",
+          side: isMobile ? "bottom" : "left", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+
+      ]
+    },
+    {
       tour: "trayectoria",
       steps: [
         {

@@ -7,11 +7,28 @@ import mockProjectDataT4 from '@/lib/mock/proyectos ficticios/flujoClaveT4.json'
 import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json';
 import allTramosMockData from '@/lib/mock/proyectos ficticios/tramo4/allTramosProject.json';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+
+import { useOnborda } from "onborda";
 
 export default function LayoutShell({ children, projectInfo }) {
   const pathname = usePathname();
 
   const hideHeader = pathname.includes('/about');
+  const { startOnborda } = useOnborda();
+
+  const capaActual = pathname.split('/').pop();
+
+useEffect(() => {
+  if(hideHeader) return; // No mostrar tutorial en about
+  const key = `tutorial_seen_${capaActual}`;
+  const seen = localStorage.getItem(key);
+  
+  if (!seen) {
+    localStorage.setItem(key, 'true');
+    startOnborda(capaActual);
+  }
+}, [capaActual]);
 
   const subioTramo = useUserStore((state) => state.subioTramo);
 
