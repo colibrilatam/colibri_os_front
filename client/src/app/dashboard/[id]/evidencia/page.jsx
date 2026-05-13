@@ -382,7 +382,7 @@ export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
       {/* ================= LEFT ================= */}
       <div className="space-y-6">
         {/* METRICS */}
-        <div className="grid grid-cols-2 gap-4">
+        <div id="metricas" className="grid grid-cols-2 gap-4">
           <Metric label="Evidencias" value={metrics.total} />
           <Metric label="Validadas" value={metrics.validated} />
           <Metric label="Impacto IC" value={metrics.ic} />
@@ -406,7 +406,7 @@ export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
         </div>
 
         {/* LIST */}
-        <div className="space-y-3">
+        <div id="lista" className="space-y-3">
           {filtered.map((e) => (
             <EvidenceCard
               key={e.id}
@@ -419,7 +419,7 @@ export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
       </div>
 
       {/* ================= RIGHT ================= */}
-      <div className="lg:col-span-2">
+      <div id="detalle" className="lg:col-span-2">
         {selected && <EvidenceDetail evidence={selected} />}
       </div>
     </div>
