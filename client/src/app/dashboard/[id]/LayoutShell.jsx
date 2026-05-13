@@ -15,20 +15,22 @@ export default function LayoutShell({ children, projectInfo }) {
   const pathname = usePathname();
 
   const hideHeader = pathname.includes('/about');
-  const { startOnborda } = useOnborda();
 
   const capaActual = pathname.split('/').pop();
 
+const { startOnborda, closeOnborda } = useOnborda();
+
 useEffect(() => {
-  if(hideHeader) return; // No mostrar tutorial en about
+  closeOnborda(); // limpiá el estado anterior
+
   const key = `tutorial_seen_${capaActual}`;
   const seen = localStorage.getItem(key);
-  
+
   if (!seen) {
     localStorage.setItem(key, 'true');
-    startOnborda(capaActual);
+    setTimeout(() => startOnborda(capaActual), 100); // pequeño delay para que el DOM esté listo
   }
-}, [capaActual]);
+}, [capaActual]); // se ejecuta cada vez que cambia la ruta
 
   const subioTramo = useUserStore((state) => state.subioTramo);
 
