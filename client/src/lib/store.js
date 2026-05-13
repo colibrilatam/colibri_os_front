@@ -1,11 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { isTokenExpired } from './auth';
+import { useState, useEffect } from 'react';
 import { setCookie, deleteCookie } from './cookies';
 
 export const useUserStore = create(
   persist(
     (set, get) => ({
+      // Estado para ingreso por primera vez
+      isFirstVisit: true,
+      setIsFirstVisit: (isFirstVisit) => set({ isFirstVisit }),
+
       // Evolución de pac
       isEvolved: false,
       setIsEvolved: (isEvolved) => set({ isEvolved }),
@@ -94,3 +99,37 @@ export const useUserStore = create(
     }
   )
 );
+
+export const useOnboardingStore = create(
+  persist(
+    (set) => ({
+      hasSeenTutorial: {
+        identidad: false,
+        tramo: false,
+        reputacion: false,
+        trayectoria: false,
+        evidencia: false,
+        about: false
+      },
+      markAsSeen: (route) =>
+        set((state) => ({
+          hasSeenTutorial: {
+            ...state.hasSeenTutorial,
+            [route]: true,
+          },
+        })),
+    }),
+    { name: 'onboarding' }
+  )
+)
+
+// Selector para saber si ya hidrato
+export const useOnboardingHydrated = () => {
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  return hydrated;
+}

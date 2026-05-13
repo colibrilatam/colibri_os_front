@@ -7,11 +7,37 @@ import mockProjectDataT4 from '@/lib/mock/proyectos ficticios/flujoClaveT4.json'
 import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json';
 import allTramosMockData from '@/lib/mock/proyectos ficticios/tramo4/allTramosProject.json';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
+
+import { useOnboardingHydrated } from '@/lib/store';
+import { useOnboardingStore } from '@/lib/store';
+
+import { useOnborda } from "onborda";
 
 export default function LayoutShell({ children, projectInfo }) {
   const pathname = usePathname();
 
   const hideHeader = pathname.includes('/about');
+  const { startOnborda } = useOnborda();
+
+
+  const capaActual = pathname.split('/').pop();
+
+  const hydrated = useOnboardingHydrated();
+  
+  const hasSeenTutorial = useOnboardingStore((state) => state.hasSeenTutorial[capaActual]);
+  const markAsSeen = useOnboardingStore((state) => state.markAsSeen);
+  console.log('capaActual', capaActual, 'hasSeenTutorial', hasSeenTutorial);
+
+useEffect(() => {
+  if(hideHeader) return; // no mostrar tutorial en la capa about
+  if (!hydrated) return; // espera a que zustand lea el localStorage
+  
+  if (hasSeenTutorial === false) {
+    markAsSeen(capaActual);
+    startOnborda(capaActual);
+  }
+}, [hasSeenTutorial, capaActual, hydrated]);
 
   const subioTramo = useUserStore((state) => state.subioTramo);
 
