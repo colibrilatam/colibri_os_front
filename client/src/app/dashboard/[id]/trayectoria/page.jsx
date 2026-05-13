@@ -16,7 +16,6 @@ import 'swiper/css/navigation';
 //import { pacConfig } from './components/pacConfig';
 import { useUserStore } from '@/lib/store';
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
-import { p } from 'framer-motion/client';
 
 export default function TrayectoriaSection() {
 
@@ -197,7 +196,7 @@ export default function TrayectoriaSection() {
       )}
 
       {/* HEADER */}
-      <div className="glass-effect-dark border-glass rounded-2xl p-6">
+      <div id="cabecera" className="glass-effect-dark border-glass rounded-2xl p-6">
         <p className="text-overline">Trayectoria operativa del tramo</p>
 
         <h2 className="text-h2">{currentState.currentTramoCode} · {currentState.currentTramoName}</h2>
@@ -213,7 +212,7 @@ export default function TrayectoriaSection() {
       </div>
 
       {/* TIMELINE */}
-      <div className="glass-effect border-glass rounded-2xl p-6">
+      <div id="timeline"  className="glass-effect border-glass rounded-2xl p-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
           <div>
             <p className="text-overline mb-1">Secuencia operativa por PAC</p>
@@ -265,7 +264,7 @@ export default function TrayectoriaSection() {
       {/* LOWER GRID */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* DETALLE PAC */}
-        <div className="glass-effect border-glass rounded-2xl p-6">
+        <div id="detalle" className="glass-effect border-glass rounded-2xl p-6">
           <p className="text-overline mb-2">Detalle del PAC seleccionado</p>
           <div className="grid gap-4">
             {/* TITULO */}
@@ -295,7 +294,7 @@ export default function TrayectoriaSection() {
         </div>
 
         {/* CARGA OPERATIVA DEL PAC (interactivo para T3-C7) */}
-        <div className="glass-effect border-glass rounded-2xl p-6">
+        <div id="carga" className="glass-effect border-glass rounded-2xl p-6">
           <h4 className="text-micro-label mb-4">Carga operativa del PAC</h4>
 
           {selectedPac.code === 'T3-C7' ? (

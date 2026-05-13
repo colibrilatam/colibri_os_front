@@ -28,7 +28,7 @@ export default function Header({ isHome = false }) {
 
   if (isHome) {
     return (
-      <header className="z-49 lg:m-2  border-glass lg:rounded-2xl glass-effect-dark lg:px-4 lg:py-2 p-1 flex justify-around  min-h-16 lg:min-h-auto content-center items-center">
+      <header className="z-48 lg:m-2  border-glass lg:rounded-2xl glass-effect-dark lg:px-4 lg:py-2 p-1 flex justify-around  min-h-16 lg:min-h-auto content-center items-center">
         <div className=" flex items-center gap-0 lg:items-center justify-between lg:gap-4 content-center  w-full ">
           <div className="flex items-center justify-between px-4 w-full">
             <div

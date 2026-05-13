@@ -3,10 +3,55 @@
 export function getDashboardSteps(isMobile) {
   return [
     {
+      tour: "trayectoria",
+      steps: [
+        {
+          icon: "📊",
+          title: "Trayectoria operativa del tramo",
+          content: "En esta capa podrás ver el progreso del emprendimiento en el tramo actual, con sus microacciones y evidencias.",
+          selector: "#cabecera",
+          side: isMobile ? "bottom" : "bottom", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "🧭",
+          title: "Línea del tiempo del avance del tramo",
+          content: "En la línea del tiempo se muestran todos los PACs del tramo y su estado. Puedes hacer click en cada uno para ver su detalle.",
+          selector: "#timeline",
+          side: isMobile ? "bottom" : "bottom", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "",
+          title: "Detalle del PAC seleccionado",
+          content: "En esta sección se muestra el detalle del PAC seleccionado en la línea del tiempo.",
+          selector: "#detalle",
+          side: isMobile ? "top" : "right", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "",
+          title: "Carga operativa del PAC",
+          content: "En esta sección podrás gestionar las microacciones y evidencias del PAC seleccionado.",
+          selector: "#carga",
+          side: isMobile ? "top" : "left", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+      ]
+    },
+    {
       tour: "tramo",
       steps: [
         {
-          icon: "!",
+          icon: "",
           title: "Riesgos e incertidumbre",
           content: "En esta capa podrás ver los riesgos e incertidumbre que enfrenta el emprendimiento.",
           selector: "#cabecera",
@@ -16,7 +61,7 @@ export function getDashboardSteps(isMobile) {
           pointerRadius: 8,
         },
         {
-          icon: "!",
+          icon: "",
           title: "Incertidumbre",
           content: "La incertidumbre del tramo actual que enfrenta el emprendimiento.",
           selector: "#incertidumbre",
@@ -40,7 +85,7 @@ export function getDashboardSteps(isMobile) {
           title: "Riesgos e incertidumbre de todos los tramos",
           content: "Todos los riesgos e incertidumbres del tramo actual y su estado correspondiente al emprendimiento.",
           selector: "#tramos",
-          side: isMobile ? "top" : "top", // 👈 posición
+          side: isMobile ? "top" : "bottom top left right", // 👈 posición
           showControls: true,
           pointerPadding: 10,
           pointerRadius: 8,
@@ -161,9 +206,3 @@ export function getDashboardSteps(isMobile) {
   ];
 }
 
-
-export function getTramoSteps(isMobile) {
-  return [
-    {},
-  ];
-}

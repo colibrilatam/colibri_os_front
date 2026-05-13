@@ -58,9 +58,10 @@ export default function TramoDashboard() {
         variants={fadeUp}
         initial="hidden"
         animate="show"
+        id="cabecera"
         className="glass-effect-dark border-glass rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6"
       >
-        <div id="cabecera" className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div  className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <p className="text-overline">Cabecera analítica del tramo</p>
 
