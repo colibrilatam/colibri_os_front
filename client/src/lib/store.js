@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { isTokenExpired } from './auth';
-import { useState, useEffect } from 'react';
 import { setCookie, deleteCookie } from './cookies';
 
 export const useUserStore = create(
