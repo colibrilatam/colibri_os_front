@@ -3,6 +3,51 @@
 export function getDashboardSteps(isMobile) {
   return [
     {
+      tour: "tramo",
+      steps: [
+        {
+          icon: "!",
+          title: "Riesgos e incertidumbre",
+          content: "En esta capa podrás ver los riesgos e incertidumbre que enfrenta el emprendimiento.",
+          selector: "#cabecera",
+          side: isMobile ? "bottom" : "bottom", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "!",
+          title: "Incertidumbre",
+          content: "La incertidumbre del tramo actual que enfrenta el emprendimiento.",
+          selector: "#incertidumbre",
+          side: isMobile ? "top" : "bottom", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+         {
+          icon: "",
+          title: "Riesgos",
+          content: "Los riesgos del tramo actual que enfrenta el emprendimiento.",
+          selector: "#riesgos",
+          side: isMobile ? "top" : "bottom", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+        {
+          icon: "",
+          title: "Riesgos e incertidumbre de todos los tramos",
+          content: "Todos los riesgos e incertidumbres del tramo actual y su estado correspondiente al emprendimiento.",
+          selector: "#tramos",
+          side: isMobile ? "top" : "top", // 👈 posición
+          showControls: true,
+          pointerPadding: 10,
+          pointerRadius: 8,
+        },
+      ]
+    },
+    {
       tour: "reputacion",
       steps: [
         {
