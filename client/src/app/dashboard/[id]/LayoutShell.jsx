@@ -28,7 +28,7 @@ useEffect(() => {
 
   if (!seen) {
     localStorage.setItem(key, 'true');
-    setTimeout(() => startOnborda(capaActual), 100); // pequeño delay para que el DOM esté listo
+    setTimeout(() => startOnborda(capaActual), 500); // pequeño delay para que el DOM esté listo
   }
 }, [capaActual]); // se ejecuta cada vez que cambia la ruta
 
