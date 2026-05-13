@@ -152,7 +152,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         <div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
+            className="z-50 p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
           >
             <Menu size={24} />
           </button>
