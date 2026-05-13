@@ -76,6 +76,7 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
         <section className="flex flex-col  gap-6 xl:grid-cols-12">
           <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl justify-around flex lg:flex-row flex-col gap-5">
             <div className="flex flex-col gap-1 w-full">
+            <div id="radar">
             <div className="mb-5 flex flex-col lg:flex-row items-start justify-between gap-4">
               <div>
                 <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
@@ -98,8 +99,9 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
              <p className="mt-4 text-sm leading-relaxed text-slate-400">
               El radar opera como síntesis visual. No sustituye el desglose auditable por dimensión.
             </p>
+            </div>
 
-            <div className='mt-4 lg:p-4 lg:py-10 p-4 glass-effect border-glass rounded-2xl'>
+            <div id="balance" className='mt-4 lg:p-4 lg:py-10 p-4 glass-effect border-glass rounded-2xl'>
               <h3>Balance reputacional</h3>
               <div className="flex flex-col lg:flex-row gap-2 my-6">
                 <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
@@ -119,7 +121,7 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
             </div>
 
            
-          <div className="flex flex-col gap-2 w-full">
+          <div id="arquitectura" className="flex flex-col gap-2 w-full">
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
@@ -133,7 +135,7 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
                 </div>
               </div>
 
-              <div className="glass-effect border-glass p-4 lg:p-4 rounded-2xl">
+              <div id="legitimidad" className="glass-effect border-glass p-4 lg:p-4 rounded-2xl">
                 <div className="w-full flex flex-row justify-between items-center">
                   <div className="flex flex-row gap-2 items-center"> <svg
                   viewBox="0 0 24 24"
@@ -167,7 +169,7 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               </div>
               </div>
 
-              <div className="glass-effect border-glass p-4 lg:p-4 rounded-2xl">
+              <div id="diferenciacion" className="glass-effect border-glass p-4 lg:p-4 rounded-2xl">
                 <div className="w-full flex flex-row justify-between items-center">
                   <div className="flex flex-row gap-2 items-center"> <svg
                   viewBox="0 0 24 24"
