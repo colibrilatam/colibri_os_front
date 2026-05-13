@@ -43,13 +43,14 @@ export default function LayoutShell({ children, projectInfo }) {
 
         {/* Header - siempre deja espacio al sidebar contraído */}
         {!hideHeader && (
-          <div className="fixed lg:pl-24 lg:pr-6 z-49 p-1 w-svw">
+          <div className="fixed lg:pl-24 lg:pr-6 z-48 p-1 w-svw">
             <Header />
           </div>
         )}
-        <button
+        {!sidebarDesktopExpanded && (
+<button
           onClick={() => setSidebarMobileOpen(!sidebarDesktopExpanded)}
-          className="fixed z-49 md:top-34 top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
+          className="fixed z-50 md:top-34 top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
           title={sidebarDesktopExpanded ? 'Cerrar sidebar' : 'Abrir sidebar'}
         >
           <svg
@@ -66,6 +67,8 @@ export default function LayoutShell({ children, projectInfo }) {
             />
           </svg>
         </button>
+        )}
+        
 
         <div
           className={`
