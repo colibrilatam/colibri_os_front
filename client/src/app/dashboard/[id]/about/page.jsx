@@ -255,6 +255,9 @@ const project = {
 };
 
 export default function ProjectSection() {
+
+  const { dbProject } = useProject();
+
   const pathname = usePathname();
   const projectId = pathname.split('/')[2];
   console.log(projectId);
@@ -285,8 +288,8 @@ export default function ProjectSection() {
           <div className="w-28 h-28 rounded-2xl overflow-hidden shrink-0 border border-slate-700">
             {project.projectImageUrl ? (
               <img
-                src={project.projectImageUrl}
-                alt={project.projectName}
+                src={dbProject.projectImageUrl}
+                alt={dbProject.projectName}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -301,28 +304,28 @@ export default function ProjectSection() {
             <div>
               <p className="text-overline">Proyecto</p>
 
-              <h2 className="text-h2">{project.projectName}</h2>
+              <h2 className="text-h2">{dbProject.projectName}</h2>
             </div>
 
-            {project.tagline && (
-              <p className="text-body-lg text-accent-cyan">{project.tagline}</p>
+            {dbProject.tagline && (
+              <p className="text-body-lg text-accent-cyan">{dbProject.tagline}</p>
             )}
 
             <div className="flex flex-wrap gap-2">
-              <Badge>{getProjectStatusLabel(project.status)}</Badge>
+              <Badge>{getProjectStatusLabel(dbProject.status)}</Badge>
 
-              {project.trajectoryStatus && (
+              {dbProject.trajectoryStatus && (
                 <Badge variant="cyan">
-                  {getTrajectoryStatusLabel(project.trajectoryStatus)}
+                  {getTrajectoryStatusLabel(dbProject.trajectoryStatus)}
                 </Badge>
               )}
 
-              {project.industry && (
-                <Badge variant="amber">{project.industry}</Badge>
+              {dbProject.industry && (
+                <Badge variant="amber">{dbProject.industry}</Badge>
               )}
 
-              {project.country && (
-                <Badge variant="emerald">{project.country}</Badge>
+              {dbProject.country && (
+                <Badge variant="emerald">{dbProject.country}</Badge>
               )}
             </div>
           </div>
@@ -330,16 +333,16 @@ export default function ProjectSection() {
       </div>
 
       {/* ================= DESCRIPTION ================= */}
-      {project.shortDescription && (
+      {dbProject.shortDescription && (
         <div className="space-y-2">
           <p className="text-overline">Descripción</p>
 
-          <p className="text-body">{project.shortDescription}</p>
+          <p className="text-body">{dbProject.shortDescription}</p>
         </div>
       )}
 
       {/* ================= OWNER ================= */}
-      {ownerMember && (
+      {dbProject.owner && (
         <div className="space-y-4">
           <p className="text-overline">Lider del proyecto</p>
 
@@ -348,7 +351,7 @@ export default function ProjectSection() {
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <p className="text-value-card">
-                    {ownerMember.user?.fullName}
+                    {dbProject.owner.fullName}
                   </p>
 
                   <button
@@ -377,14 +380,14 @@ export default function ProjectSection() {
                 </div>
 
                 <p className="text-helper mt-1">
-                  {getRoleInTeamLabel(ownerMember.roleInTeam)}
+                  {getRoleInTeamLabel(ownerMember.roleInTeam) /* CAMBIAR POR INFORMACIÓN DE BASE DE DATOS */} 
                 </p>
               </div>
 
               {ownerMember.user?.avatar && (
                 <img
                   src={ownerMember.user.avatar}
-                  alt={ownerMember.user.fullName}
+                  alt={dbProject.owner.fullName}
                   className="w-14 h-14 rounded-full object-cover border border-slate-700"
                 />
               )}
@@ -399,16 +402,11 @@ export default function ProjectSection() {
           message="Datos del emprendedor"
           onClose={() => setOpenEntrepreneurCard(false)}
         >
-          <EntrepreneurCard
-            name="Valentina Moreno"
-            email="valentina.moreno@empresa.com"
-            phone="+54 11 4234 5678"
-            linkedin="linkedin.com/in/valentina-moreno"
-          />
+          <EntrepreneurCard />
         </NotificationPopup>
       )}
 
-      {/* ================= TEAM ================= */}
+      {/* ================= TEAM ================= CONECTAR CON BASE DE DATOS */}
       {activeMembers.length > 0 && (
         <div className="space-y-4">
           {/* HEADER */}
@@ -600,13 +598,15 @@ export default function ProjectSection() {
 
       {/* ================= LINKS ================= */}
       <div className="grid md:grid-cols-3 gap-4">
-        <LinkCard label="Sitio web" url={project.websiteUrl} />
-
-        <LinkCard label="LinkedIn" url={project.startupLinkedinUrl} />
+       
+          <LinkCard label="Sitio web" url={dbProject.websiteUrl} />
+       
+          <LinkCard label="LinkedIn" url={dbProject.startupLinkedinUrl} />
+       
 
         <LinkCard
           label="Perfil RLAB"
-          url={`/dashboard/${projectId}/about`}
+          url={`/dashboard/${dbProject.id}/about`}
           copyMode
         />
       </div>
