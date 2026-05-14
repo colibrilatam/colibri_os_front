@@ -16,6 +16,8 @@ import maleIcon from '../../../../../public/icons/male-blue.png';
 import femaleIcon from '../../../../../public/icons/female-pink.png';
 import EntrepreneurCard from '@/components/Contact';
 import NotificationPopup from '@/components/NotificationPopup';
+import { useProject } from '@/lib/projectContext';
+import { usePathname } from 'next/navigation';
 
 const formatDate = (date) => {
   if (!date) return '-';
@@ -101,7 +103,7 @@ const project = {
     'Proyecto edtech en etapa de prototipo vivo que ayuda a instituciones chilenas a seguir participación, continuidad y avance de estudiantes en experiencias híbridas de formación.',
   startupLinkedinUrl: 'https://linkedin.com/company/trayectoclaro',
   websiteUrl: 'https://trayectoclaro.cl',
-  rlabProfileUrl: 'https://rlab.lat/projects/trayectoclaro',
+  rlabProfileUrl: '/dashboard/${projectId}/about',
   openedAt: '2026-05-08T15:25:24.254Z',
   closedAt: null,
   closeReason: null,
@@ -117,7 +119,7 @@ const project = {
   owner: {
     id: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
     email: 'lucas@colibri.com',
-    fullName: 'Lucas Emprendedor',
+    fullName: 'Lucas Martinez',
     role: 'entrepreneur',
     status: 'active',
     provider: 'local',
@@ -130,6 +132,28 @@ const project = {
   profile: null,
 
   members: [
+    // 👑 FUNDADOR PRINCIPAL (OWNER)
+    {
+      id: 'member-owner',
+      projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
+      userId: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
+      roleInTeam: 'founder',
+      joinedAt: '2026-05-08T15:25:24.254Z',
+      leftAt: null,
+      isActive: true,
+      participationWeight: 40,
+      isFounder: true,
+      isPrimaryOperator: true,
+
+      user: {
+        id: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
+        fullName: 'Lucas Martinez',
+        role: 'entrepreneur',
+        gender: 'male',
+        avatar: 'https://i.pravatar.cc/300?img=12',
+      },
+    },
+
     {
       id: 'member-1',
       projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
@@ -139,8 +163,8 @@ const project = {
       leftAt: null,
       isActive: true,
       participationWeight: 35,
-      isFounder: true,
-      isPrimaryOperator: true,
+      isFounder: false,
+      isPrimaryOperator: false,
 
       user: {
         id: 'usr-2',
@@ -231,6 +255,10 @@ const project = {
 };
 
 export default function ProjectSection() {
+  const pathname = usePathname();
+  const projectId = pathname.split('/')[2];
+  console.log(projectId);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const activeMembers = useMemo(() => {
@@ -294,17 +322,6 @@ export default function ProjectSection() {
             </div>
           </div>
         </div>
-
-        {/* NFT */}
-        {project.nftImageUrl && (
-          <div className="w-32 h-32 rounded-2xl overflow-hidden border border-slate-700 shrink-0">
-            <img
-              src={project.nftImageUrl}
-              alt="NFT"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
       </div>
 
       {/* ================= DESCRIPTION ================= */}
@@ -324,26 +341,31 @@ export default function ProjectSection() {
           <div className="glass-effect-white rounded-2xl p-5 border border-slate-800">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3 flex-wrap">
                   <p className="text-value-card">{project.owner.fullName}</p>
 
                   <button
                     onClick={() => setOpenEntrepreneurCard(true)}
                     className="
-      flex items-center justify-center
-      w-7 h-7 rounded-full
+      flex items-center gap-2
+      px-3 py-1.5 rounded-full
       bg-cyan-500/10
       border border-cyan-500/20
       text-cyan-300
       transition-all duration-200
       hover:bg-cyan-500/20
-      hover:scale-105
+      hover:border-cyan-400/40
       hover:text-cyan-200
+      hover:scale-[1.02]
       cursor-pointer
     "
                     title="Contactar fundador"
                   >
                     <MessageCircle size={14} />
+
+                    <span className="text-xs font-medium">
+                      Contactar fundador
+                    </span>
                   </button>
                 </div>
 
@@ -521,9 +543,9 @@ export default function ProjectSection() {
                           <MiniBadge variant="amber">Founder</MiniBadge>
                         )}
 
-                        {member.isPrimaryOperator && (
+                        {/* {member.isPrimaryOperator && (
                           <MiniBadge variant="cyan">Operador</MiniBadge>
-                        )}
+                        )} */}
                       </div>
                     </div>
 
@@ -532,7 +554,7 @@ export default function ProjectSection() {
                       <span>Ingreso: {formatDate(member.joinedAt)}</span>
 
                       {member.participationWeight && (
-                        <span>{member.participationWeight}%</span>
+                        <span>Participación {member.participationWeight}%</span>
                       )}
                     </div>
                   </div>
@@ -575,7 +597,11 @@ export default function ProjectSection() {
 
         <LinkCard label="LinkedIn" url={project.startupLinkedinUrl} />
 
-        <LinkCard label="Perfil RLAB" url={project.rlabProfileUrl} />
+        <LinkCard
+  label="Perfil RLAB"
+  url={`/dashboard/${projectId}/about`}
+  copyMode
+/>
       </div>
 
       {/* ================= TIMELINE ================= */}
@@ -634,12 +660,46 @@ function InfoItem({ label, value }) {
   );
 }
 
-function LinkCard({ label, url }) {
+function LinkCard({ label, url, copyMode = false }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+  if (!url) return;
+
+  try {
+    const fullUrl = `${window.location.origin}${url}`;
+
+    await navigator.clipboard.writeText(fullUrl);
+
+    setCopied(true);
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 1800);
+  } catch (error) {
+    console.error('Error al copiar:', error);
+  }
+};
+
   return (
     <div className="glass-effect-white border border-slate-800 rounded-2xl p-4">
       <p className="text-micro-label mb-3">{label}</p>
 
-      {url ? (
+      {!url ? (
+        <p className="text-body--muted">No disponible</p>
+      ) : copyMode ? (
+        <button
+          onClick={handleCopy}
+          className="
+            text-accent-cyan
+            transition-all duration-200
+            hover:text-cyan-200
+            cursor-pointer
+          "
+        >
+          {copied ? '✅ Copiado' : 'Copiar enlace →'}
+        </button>
+      ) : (
         <a
           href={url}
           target="_blank"
@@ -648,8 +708,6 @@ function LinkCard({ label, url }) {
         >
           Abrir enlace →
         </a>
-      ) : (
-        <p className="text-body--muted">No disponible</p>
       )}
     </div>
   );
