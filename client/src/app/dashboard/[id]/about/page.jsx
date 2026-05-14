@@ -115,7 +115,7 @@ const project = {
   lastActivityAt: '2026-05-08T15:25:24.254Z',
   createdAt: '2026-05-08T15:25:24.255Z',
   updatedAt: '2026-05-08T15:25:24.255Z',
-
+  ownerUserId: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
   owner: {
     id: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
     email: 'lucas@colibri.com',
@@ -270,6 +270,11 @@ export default function ProjectSection() {
   if (!project) return null;
 
   //const activeMembers = project.members?.filter((m) => m.isActive) || [];
+  const ownerMember = useMemo(() => {
+    return project.members.find(
+      (member) => member.userId === project.ownerUserId,
+    );
+  }, [project.members]);
 
   return (
     <section className="glass-effect border-glass rounded-3xl p-6 md:p-8 space-y-8">
@@ -334,31 +339,33 @@ export default function ProjectSection() {
       )}
 
       {/* ================= OWNER ================= */}
-      {project.owner && (
+      {ownerMember && (
         <div className="space-y-4">
-          <p className="text-overline">Fundador principal</p>
+          <p className="text-overline">Lider del proyecto</p>
 
           <div className="glass-effect-white rounded-2xl p-5 border border-slate-800">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <p className="text-value-card">{project.owner.fullName}</p>
+                  <p className="text-value-card">
+                    {ownerMember.user?.fullName}
+                  </p>
 
                   <button
                     onClick={() => setOpenEntrepreneurCard(true)}
                     className="
-      flex items-center gap-2
-      px-3 py-1.5 rounded-full
-      bg-cyan-500/10
-      border border-cyan-500/20
-      text-cyan-300
-      transition-all duration-200
-      hover:bg-cyan-500/20
-      hover:border-cyan-400/40
-      hover:text-cyan-200
-      hover:scale-[1.02]
-      cursor-pointer
-    "
+                flex items-center gap-2
+                px-3 py-1.5 rounded-full
+                bg-cyan-500/10
+                border border-cyan-500/20
+                text-cyan-300
+                transition-all duration-200
+                hover:bg-cyan-500/20
+                hover:border-cyan-400/40
+                hover:text-cyan-200
+                hover:scale-[1.02]
+                cursor-pointer
+              "
                     title="Contactar fundador"
                   >
                     <MessageCircle size={14} />
@@ -370,14 +377,14 @@ export default function ProjectSection() {
                 </div>
 
                 <p className="text-helper mt-1">
-                  {getUserRoleLabel(project.owner.role)}
+                  {getRoleInTeamLabel(ownerMember.roleInTeam)}
                 </p>
               </div>
 
-              {project.owner.avatar && (
+              {ownerMember.user?.avatar && (
                 <img
-                  src={project.owner.avatar}
-                  alt={project.owner.fullName}
+                  src={ownerMember.user.avatar}
+                  alt={ownerMember.user.fullName}
                   className="w-14 h-14 rounded-full object-cover border border-slate-700"
                 />
               )}
@@ -598,10 +605,10 @@ export default function ProjectSection() {
         <LinkCard label="LinkedIn" url={project.startupLinkedinUrl} />
 
         <LinkCard
-  label="Perfil RLAB"
-  url={`/dashboard/${projectId}/about`}
-  copyMode
-/>
+          label="Perfil RLAB"
+          url={`/dashboard/${projectId}/about`}
+          copyMode
+        />
       </div>
 
       {/* ================= TIMELINE ================= */}
@@ -664,22 +671,22 @@ function LinkCard({ label, url, copyMode = false }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-  if (!url) return;
+    if (!url) return;
 
-  try {
-    const fullUrl = `${window.location.origin}${url}`;
+    try {
+      const fullUrl = `${window.location.origin}${url}`;
 
-    await navigator.clipboard.writeText(fullUrl);
+      await navigator.clipboard.writeText(fullUrl);
 
-    setCopied(true);
+      setCopied(true);
 
-    setTimeout(() => {
-      setCopied(false);
-    }, 1800);
-  } catch (error) {
-    console.error('Error al copiar:', error);
-  }
-};
+      setTimeout(() => {
+        setCopied(false);
+      }, 1800);
+    } catch (error) {
+      console.error('Error al copiar:', error);
+    }
+  };
 
   return (
     <div className="glass-effect-white border border-slate-800 rounded-2xl p-4">
