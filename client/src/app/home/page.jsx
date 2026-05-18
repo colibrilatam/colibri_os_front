@@ -204,7 +204,6 @@ export default function HomePage() {
     selectedCountry,
     selectedIndustry,
   ]);
-  console.log('filteredProjects------', filteredProjects);
 
   // Funciones para manejar toggles de filtros
   function toggleTranche(tranche) {

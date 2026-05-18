@@ -1,23 +1,18 @@
 'use client';
 
-/* import {
-  getProjectStatusLabel,
-  getTrajectoryStatusLabel,
-} from '@/utils/project.enums'; */
-
-//import { getUserRoleLabel } from '@/utils/user.enums';
-
-//import { getRoleInTeamLabel } from '@/utils/project-member.enums';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
-// 👇 IMPORTÁ LOS ICONOS
+
 import maleIcon from '../../../../../public/icons/male-blue.png';
 import femaleIcon from '../../../../../public/icons/female-pink.png';
 import EntrepreneurCard from '@/components/Contact';
 import NotificationPopup from '@/components/NotificationPopup';
 import { useProject } from '@/lib/projectContext';
 import { usePathname } from 'next/navigation';
+import { projectsService } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
+
 
 const formatDate = (date) => {
   if (!date) return '-';
@@ -66,12 +61,6 @@ export const userRoleLabels = {
   guest: 'Invitado',
 };
 
-const getUserRoleLabel = (role) => {
-  const normalized = role?.toLowerCase().trim();
-
-  return userRoleLabels[normalized] || role;
-};
-
 export const roleInTeamLabels = {
   founder: 'Founder',
   co_founder: 'Co-Founder',
@@ -89,195 +78,47 @@ const getRoleInTeamLabel = (role) => {
   return roleInTeamLabels[normalized] || role;
 };
 
-const project = {
-  id: '0aebc593-ea6d-49fa-938f-1a2a06058205',
-  ownerUserId: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
-  projectName: 'TrayectoClaro',
-  projectImageUrl:
-    'https://res.cloudinary.com/doplwvnnj/image/upload/v1776794269/5_TrayectoClaro_Edtech_Chile_opy2ld.jpg',
-  status: 'active',
-  country: 'Chile',
-  industry: 'Edtech',
-  tagline: 'Hace visible la continuidad y el avance en trayectos híbridos.',
-  shortDescription:
-    'Proyecto edtech en etapa de prototipo vivo que ayuda a instituciones chilenas a seguir participación, continuidad y avance de estudiantes en experiencias híbridas de formación.',
-  startupLinkedinUrl: 'https://linkedin.com/company/trayectoclaro',
-  websiteUrl: 'https://trayectoclaro.cl',
-  rlabProfileUrl: '/dashboard/${projectId}/about',
-  openedAt: '2026-05-08T15:25:24.254Z',
-  closedAt: null,
-  closeReason: null,
-  currentTramoId: 'T2',
-  currentPacId: 'T2-C4',
-  trajectoryStatus: 'on_track',
-  nftImageUrl:
-    'https://res.cloudinary.com/doplwvnnj/image/upload/v1776794539/5_proj_trayectoclaro_cl_nft_t3_addy8w.jpg',
-  lastActivityAt: '2026-05-08T15:25:24.254Z',
-  createdAt: '2026-05-08T15:25:24.255Z',
-  updatedAt: '2026-05-08T15:25:24.255Z',
-  ownerUserId: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
-  owner: {
-    id: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
-    email: 'lucas@colibri.com',
-    fullName: 'Lucas Martinez',
-    role: 'entrepreneur',
-    status: 'active',
-    provider: 'local',
-    avatar: 'https://i.pravatar.cc/300?img=12',
-    bio: 'Founder especializado en educación híbrida y trazabilidad de aprendizaje.',
-    createdAt: '2026-05-08T15:25:23.776Z',
-    updatedAt: '2026-05-08T15:25:23.776Z',
-  },
 
-  profile: null,
-
-  members: [
-    // 👑 FUNDADOR PRINCIPAL (OWNER)
-    {
-      id: 'member-owner',
-      projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
-      userId: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
-      roleInTeam: 'founder',
-      joinedAt: '2026-05-08T15:25:24.254Z',
-      leftAt: null,
-      isActive: true,
-      participationWeight: 40,
-      isFounder: true,
-      isPrimaryOperator: true,
-
-      user: {
-        id: '8e91d5a9-e729-4d1a-8763-80c2bc063da8',
-        fullName: 'Lucas Martinez',
-        role: 'entrepreneur',
-        gender: 'male',
-        avatar: 'https://i.pravatar.cc/300?img=12',
-      },
-    },
-
-    {
-      id: 'member-1',
-      projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
-      userId: 'usr-2',
-      roleInTeam: 'cto',
-      joinedAt: '2026-05-10T10:00:00.000Z',
-      leftAt: null,
-      isActive: true,
-      participationWeight: 35,
-      isFounder: false,
-      isPrimaryOperator: false,
-
-      user: {
-        id: 'usr-2',
-        fullName: 'Sofía Martínez',
-        role: 'entrepreneur',
-        gender: 'female',
-        avatar: 'https://i.pravatar.cc/300?img=32',
-      },
-    },
-
-    {
-      id: 'member-2',
-      projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
-      userId: 'usr-3',
-      roleInTeam: 'designer',
-      joinedAt: '2026-05-12T12:00:00.000Z',
-      leftAt: null,
-      isActive: true,
-      participationWeight: 20,
-      isFounder: false,
-      isPrimaryOperator: false,
-
-      user: {
-        id: 'usr-3',
-        fullName: 'Camila Torres',
-        role: 'entrepreneur',
-        gender: 'female',
-        avatar: 'https://i.pravatar.cc/300?img=25',
-      },
-    },
-
-    {
-      id: 'member-3',
-      projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
-      userId: 'usr-4',
-      roleInTeam: 'advisor',
-      joinedAt: '2026-05-15T09:00:00.000Z',
-      leftAt: null,
-      isActive: true,
-      participationWeight: 10,
-      isFounder: false,
-      isPrimaryOperator: false,
-
-      user: {
-        id: 'usr-4',
-        fullName: 'Andrés Valenzuela',
-        role: 'mentor',
-        gender: 'male',
-        avatar: 'https://i.pravatar.cc/300?img=55',
-      },
-    },
-  ],
-
-  projectPacs: [
-    {
-      id: 'e4ed56f1-e810-492b-af5b-9c63302f9791',
-      projectId: '0aebc593-ea6d-49fa-938f-1a2a06058205',
-      pacId: 'a12b565d-7924-426a-af12-04cfd040d1c3',
-      status: 'in_progress',
-      progress: '68.00',
-      startedAt: '2026-05-08T15:25:24.261Z',
-      completedAt: null,
-      createdAt: '2026-05-08T15:25:24.261Z',
-      updatedAt: '2026-05-08T15:25:24.261Z',
-
-      pac: {
-        id: 'a12b565d-7924-426a-af12-04cfd040d1c3',
-        categoryId: '7006da48-d702-4d6d-9a2a-47fa34a42177',
-        code: 'PAC_3_1_1',
-        title: 'Evaluar capacidad operativa del equipo',
-        objectiveLine: 'Validar ejecución bajo presión real',
-        description:
-          'PAC enfocado en coordinación operativa y capacidad de ejecución temprana.',
-        sortOrder: 1,
-        executionWindowDays: 5,
-        minimumCompletionThreshold: '65.00',
-        icWeight: '0.14',
-        closureRule: 'Completar las 3 micro acciones requeridas del PAC_3_1_1.',
-        templateVersion: 'v1.0',
-        isActive: true,
-        validFrom: null,
-        validTo: null,
-        createdAt: '2026-05-08T15:25:24.039Z',
-        updatedAt: '2026-05-08T15:25:24.039Z',
-      },
-    },
-  ],
-};
 
 export default function ProjectSection() {
+
+  const { execute: getMembers, error: getMembersError } = useRequest(projectsService.getProjectMembers);
+
+  const [ projectMembers, setProjectMembers ] = useState([]);
 
   const { dbProject } = useProject();
 
   const pathname = usePathname();
   const projectId = pathname.split('/')[2];
-  console.log(projectId);
+
+  useEffect(() => {
+    const getData =  async() =>{
+      const { data: projectMembersData } = await getMembers(projectId).catch(err => {
+  console.error(err);
+  // set some error state
+});
+    setProjectMembers(projectMembersData);
+    }
+    getData();
+    
+  }, [projectId]);
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const activeMembers = useMemo(() => {
+ /* const activeMembers = useMemo(() => {
     return project.members.filter((member) => member.isActive);
-  }, [project.members]);
+  }, [project.members]);*/
 
   const [openEntrepreneurCard, setOpenEntrepreneurCard] = useState(false);
 
-  if (!project) return null;
+  //if (!project) return null;
 
   //const activeMembers = project.members?.filter((m) => m.isActive) || [];
-  const ownerMember = useMemo(() => {
+  /*const ownerMember = useMemo(() => {
     return project.members.find(
       (member) => member.userId === project.ownerUserId,
     );
-  }, [project.members]);
+  }, [project.members]);*/
 
   return (
     <section className="glass-effect border-glass rounded-3xl p-6 md:p-8 space-y-8">
@@ -286,7 +127,7 @@ export default function ProjectSection() {
         <div className="flex gap-5 items-start">
           {/* IMAGE */}
           <div className="w-28 h-28 rounded-2xl overflow-hidden shrink-0 border border-slate-700">
-            {project.projectImageUrl ? (
+            {dbProject.projectImageUrl ? (
               <img
                 src={dbProject.projectImageUrl}
                 alt={dbProject.projectName}
@@ -380,13 +221,13 @@ export default function ProjectSection() {
                 </div>
 
                 <p className="text-helper mt-1">
-                  {getRoleInTeamLabel(ownerMember.roleInTeam) /* CAMBIAR POR INFORMACIÓN DE BASE DE DATOS */} 
+                  Fundador
                 </p>
               </div>
 
-              {ownerMember.user?.avatar && (
+              {dbProject.owner.avatar && (
                 <img
-                  src={ownerMember.user.avatar}
+                  src={dbProject.owner.avatar}
                   alt={dbProject.owner.fullName}
                   className="w-14 h-14 rounded-full object-cover border border-slate-700"
                 />
@@ -406,8 +247,8 @@ export default function ProjectSection() {
         </NotificationPopup>
       )}
 
-      {/* ================= TEAM ================= CONECTAR CON BASE DE DATOS */}
-      {activeMembers.length > 0 && (
+      {/* ================= TEAM =================*/}
+      {dbProject.members.length > 0 && (
         <div className="space-y-4">
           {/* HEADER */}
           <div
@@ -416,10 +257,10 @@ export default function ProjectSection() {
               flex items-center justify-between
               cursor-pointer select-none
               rounded-2xl border border-slate-800
-              bg-white/[0.03]
+              bg-white/3
               px-4 py-3
               transition-all duration-300
-              hover:bg-white/[0.05]
+              hover:bg-white/5
               hover:border-slate-700
             "
           >
@@ -436,13 +277,14 @@ export default function ProjectSection() {
               </div>
             </div>
 
+                  {dbProject.members[0].gender && (
             <div className="flex items-center gap-4">
               {/* WOMEN */}
               <div className="flex items-center gap-1">
                 <span className="text-[11px] font-semibold text-fuchsia-300">
                   {
-                    activeMembers.filter(
-                      (member) => member.user?.gender === 'female',
+                    dbProject.members.filter(
+                      (member) => member.user?.gender === 'female', // Asegúrate de que el campo de género en tu base de datos
                     ).length
                   }
                 </span>
@@ -462,7 +304,7 @@ export default function ProjectSection() {
                 <span className="text-[11px] font-semibold text-cyan-300">
                   {
                     activeMembers.filter(
-                      (member) => member.user?.gender === 'male',
+                      (member) => member.user?.gender === 'male', // Asegúrate de que el campo de género en tu base de datos
                     ).length
                   }
                 </span>
@@ -477,7 +319,9 @@ export default function ProjectSection() {
                 />
               </div>
             </div>
+            )}
           </div>
+          
 
           {/* COLLAPSIBLE CONTENT */}
           <div
@@ -492,7 +336,7 @@ export default function ProjectSection() {
           >
             <div className="overflow-hidden">
               <div className="grid md:grid-cols-2 gap-4 pt-2">
-                {activeMembers.map((member) => (
+                {projectMembers.length > 0 && projectMembers.map((member) => (
                   <div
                     key={member.id}
                     className="
@@ -507,7 +351,7 @@ export default function ProjectSection() {
                     <div className="flex items-start justify-between gap-3">
                       {/* LEFT */}
                       <div className="flex gap-4 items-start">
-                        {/* AVATAR */}
+                        {/* AVATAR 
                         {member.user?.avatar ? (
                           <img
                             src={member.user.avatar}
@@ -528,7 +372,7 @@ export default function ProjectSection() {
                           >
                             ?
                           </div>
-                        )}
+                        )}*/}
 
                         {/* INFO */}
                         <div>
@@ -616,18 +460,18 @@ export default function ProjectSection() {
         <p className="text-overline">Timeline del proyecto</p>
 
         <div className="grid md:grid-cols-4 gap-4">
-          <TimelineCard label="Inicio" value={formatDate(project.openedAt)} />
+          <TimelineCard label="Inicio" value={formatDate(dbProject.openedAt)} />
 
           <TimelineCard
             label="Última actividad"
-            value={formatDate(project.lastActivityAt)}
+            value={formatDate(dbProject.lastActivityAt)}
           />
 
-          <TimelineCard label="Creado" value={formatDate(project.createdAt)} />
+          <TimelineCard label="Creado" value={formatDate(dbProject.createdAt)} />
 
           <TimelineCard
             label="Actualizado"
-            value={formatDate(project.updatedAt)}
+            value={formatDate(dbProject.updatedAt)}
           />
         </div>
       </div>
@@ -637,7 +481,7 @@ export default function ProjectSection() {
 
 /* ================= UI ================= */
 
-function MetricCard({ label, value }) {
+/*function MetricCard({ label, value }) {
   return (
     <div className="glass-effect-white border border-slate-800 rounded-2xl p-4">
       <p className="text-micro-label">{label}</p>
@@ -645,7 +489,7 @@ function MetricCard({ label, value }) {
       <p className="text-value-card mt-3">{value}</p>
     </div>
   );
-}
+}*/
 
 function TimelineCard({ label, value }) {
   return (
@@ -657,7 +501,7 @@ function TimelineCard({ label, value }) {
   );
 }
 
-function InfoItem({ label, value }) {
+/*function InfoItem({ label, value }) {
   return (
     <div>
       <p className="text-micro-label">{label}</p>
@@ -665,7 +509,7 @@ function InfoItem({ label, value }) {
       <p className="text-body mt-2">{value}</p>
     </div>
   );
-}
+}*/
 
 function LinkCard({ label, url, copyMode = false }) {
   const [copied, setCopied] = useState(false);
