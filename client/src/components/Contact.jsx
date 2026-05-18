@@ -59,7 +59,7 @@ export default function EntrepreneurCard ({ name, email, phone, linkedin }) {
       {/* Nombre — no clickeable */}
       <div className="border-b border-stone-100 pb-5 w-fit">
         <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Emprendedor</p>
-        <h2 className="text-2xl font-semibold">{dbProject.owner.fullName}</h2>
+        <h2 className="text-2xl font-semibold text-white">{dbProject.owner.fullName}</h2>
       </div>
 
       {/* Email */}
