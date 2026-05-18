@@ -28,7 +28,7 @@ export default function TramoDashboard() {
 
     async function fetchTramoData() {
       const { data: projectTramoData, error: projectTramoDataError } = await getProjectTramoData(dbProject.id);
-    console.log(projectTramoData)
+
     if (projectTramoData) {
       setTramoInfo(projectTramoData);
     }

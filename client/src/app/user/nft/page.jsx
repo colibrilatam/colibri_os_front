@@ -76,7 +76,6 @@ export default function NftPage(){
     getData();
     
   }, []);
-console.log(projectsInfo)
 
 
     const stats = [
