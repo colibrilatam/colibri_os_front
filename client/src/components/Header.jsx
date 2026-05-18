@@ -28,7 +28,7 @@ export default function Header({ isHome = false }) {
 
   if (isHome) {
     return (
-      <header className="z-49 lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-around  min-h-16 lg:min-h-auto content-center items-center">
+      <header className="z-48 lg:m-2  border-glass lg:rounded-2xl glass-effect-dark lg:px-4 lg:py-2 p-1 flex justify-around  min-h-16 lg:min-h-auto content-center items-center">
         <div className=" flex items-center gap-0 lg:items-center justify-between lg:gap-4 content-center  w-full ">
           <div className="flex items-center justify-between px-4 w-full">
             <div
@@ -59,7 +59,7 @@ export default function Header({ isHome = false }) {
                 <Link className="hover:text-gray-200" href="/login">
                   <button
                     onClick={() => logout()}
-                    className="rounded-xl bg-linear-to-r from-red-600 to-red-800 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
+                    className="rounded-xl bg-linear-to-r from-red-600 to-red-800 p-2 lg:px-5 lg:py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
                     Cerrar sesión
                   </button>

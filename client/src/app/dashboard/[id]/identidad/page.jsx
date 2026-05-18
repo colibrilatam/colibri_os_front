@@ -10,9 +10,7 @@ import { useUserStore } from '@/lib/store';
 
 export default function IdentidadPage() {
 
-
   const subioTramo = useUserStore((state) => state.subioTramo);
-
 
   // contexto
   const {
@@ -28,8 +26,7 @@ export default function IdentidadPage() {
     mockProject;
   // información de tramo actual
 
-      const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
-
+  const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
   const PacProgress = Math.round((ic % 1) * 100);
@@ -38,7 +35,7 @@ export default function IdentidadPage() {
     <main className="h-fit glass-effect border-glass rounded-2xl">
       {/*<TourButton tourName="dashboard-tour" /> */}
       {/* Header */}
-      <div className="w-full glass-effect border-glass rounded-2xl p-4 lg:p-6">
+      <div id="estado" className=" w-full glass-effect border-glass rounded-2xl p-4 lg:p-6">
         <div className="text-center max-w-5xl mx-auto">
           <h1 className="text-h3 mb-3">Estado actual del Proyecto</h1>
 
@@ -223,7 +220,7 @@ export default function IdentidadPage() {
 
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
                 {/* Estado actual del avance */}
-                <div className="glass-effect border-glass rounded-3xl p-6 lg:col-span-3">
+                <div id="contexto" className="glass-effect border-glass rounded-3xl p-6 lg:col-span-3">
                   <div
                     className="mb-2 text-xs uppercase tracking-[0.22em]"
                     style={{ color: 'var(--text-secondary)' }}
@@ -311,7 +308,7 @@ export default function IdentidadPage() {
                 </div>
 
                 {/* INCERTIDUMBRE DOMINANTE */}
-                <div className="glass-effect border-glass rounded-3xl p-6 lg:col-span-2">
+                <div id="incertidumbre" className="glass-effect border-glass rounded-3xl p-6 lg:col-span-2">
                   <div>
                     <div
                       className="mb-3 text-xs uppercase tracking-[0.22em]"

@@ -76,7 +76,6 @@ export default function NftPage(){
     getData();
     
   }, []);
-console.log(projectsInfo)
 
 
     const stats = [
@@ -195,7 +194,7 @@ console.log(projectsInfo)
               {/* Acción */}
               <td className="px-4 py-3 text-right">
                 <a
-                  href={`/dashboard/${project.nftProject.projectId}/senial`}
+                  href={`/dashboard/${project.nftProject.projectId}/about`}
                   className="glass-effect-green p-2 border-glass rounded-full text-sm font-medium text-blue-500 hover:text-blue-700 hover:underline whitespace-nowrap"
                 >
                   Ver en R-Lab

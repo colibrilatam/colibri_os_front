@@ -1,8 +1,8 @@
+import { getProjectTeamStats } from '@/lib/hooks/project.team';
 import { ProjectCard } from './LandingProjectCard';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 
 export function ProjectGrid({ projects }) {
-
   //console.log("TTTTTTTT",projects)
   if (projects.length === 0) {
     return (
@@ -42,6 +42,8 @@ export function ProjectGrid({ projects }) {
             project={project}
             index={index}
             ic={getProjectIC(project.projectName)}
+            maleCount={getProjectTeamStats(project.projectName).men}
+            femaleCount={getProjectTeamStats(project.projectName).women}
           />
         ))}
       </div>

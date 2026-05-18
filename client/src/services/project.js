@@ -35,5 +35,7 @@ export const projectsService = {
   getAllTramos: () => 
     fetcher(`/tramos`),
 
+  getProjectMembers: (idProject) => 
+    fetcher(`/projects/${idProject}/members`),
 
 };

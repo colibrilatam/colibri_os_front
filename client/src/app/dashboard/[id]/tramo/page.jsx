@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import ProgressBar from '@/components/ProgressBar';
 import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json'
 
 import { useProject } from '@/lib/projectContext';
@@ -29,7 +28,7 @@ export default function TramoDashboard() {
 
     async function fetchTramoData() {
       const { data: projectTramoData, error: projectTramoDataError } = await getProjectTramoData(dbProject.id);
-    console.log(projectTramoData)
+
     if (projectTramoData) {
       setTramoInfo(projectTramoData);
     }
@@ -40,7 +39,6 @@ export default function TramoDashboard() {
   }, [])
 
 
- /*console.log('tramoData---', tramoData);
   /* =========================
      🔗 DATA MAPPING REAL
   ========================= */
@@ -51,74 +49,6 @@ export default function TramoDashboard() {
     code: currentState.currentTramoCode,
     name: currentState.currentTramoName,
   };
-
-  
-
-  const pacs = pacProgress;
-
-  const currentPacCode = currentState.currentPacCode;
-
-  const currentPac = pacs.find((p) => p.pacCode === currentPacCode);
-
-  const totalPacs = pacs.length;
-
-  const closedPacs = currentState.pacsApprovedInCurrentTramo;
-
-  const percentage = Math.round((closedPacs / totalPacs) * 100);
-
-  const totalMicro = pacs.reduce((acc, p) => acc + p.requiredMicroactions, 0);
-
-  const completedMicro = currentState.microactionsCompletedCount;
-
-  const totalEvidence = pacs.reduce((acc, p) => acc + p.requiredEvidence, 0);
-
-  const validatedEvidence = currentState.validatedEvidenceCount;
-
-  const categories = pacs.map((p) => {
-    let status = 'next';
-
-    if (p.status === 'approved') status = 'done';
-    else if (p.pacCode === currentPacCode) status = 'current';
-
-    return {
-      code: p.categoryCode,
-      label: p.categoryName,
-      status,
-    };
-  });
-
-  const signals = [
-    {
-      type: 'success',
-      text: `${closedPacs} PACs cerrados con evidencia validada`,
-    },
-    ...(currentPac?.status !== 'approved'
-      ? [
-          {
-            type: 'warning',
-            text: `PAC actual ${currentPacCode} aún requiere evidencia`,
-          },
-        ]
-      : []),
-  ];
-
-  const blockers = pacs
-    .filter((p) => p.status === 'in_progress' && !p.closureRuleSatisfied)
-    .map(
-      (p) =>
-        `Bloqueo en ${p.pacCode}: faltan ${
-          p.requiredMicroactions - p.completedMicroactions
-        } microacciones o ${
-          p.requiredEvidence - p.validatedEvidence
-        } evidencias`,
-    );
-
-  const mapStatus = {
-    approved: 'closed',
-    in_progress: 'current',
-    pending: 'pending',
-  };
-
   /* ========================= */
 
   return (
@@ -128,9 +58,10 @@ export default function TramoDashboard() {
         variants={fadeUp}
         initial="hidden"
         animate="show"
+        id="cabecera"
         className="glass-effect-dark border-glass rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6"
       >
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div  className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <p className="text-overline">Cabecera analítica del tramo</p>
 
@@ -149,12 +80,12 @@ export default function TramoDashboard() {
       </motion.div>
 
       <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-(--text-primary) gap-4 flex flex-col'>
-        <div className=" rounded-2xl p-1 lg:p-4">
-          <h3 className='text-(--text-tertiary) font-bold'>Incertidumbre: {currentTramoMockData.incertidumbre}</h3>
+        <div id="incertidumbre" className=" rounded-2xl p-1 lg:p-4">
+          <h3 className='text-red-500/70 font-bold'>{currentTramoMockData.incertidumbre}</h3>
           <div className='text-(--text-primary) text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
           <div className=' max-w-3xl text-(--text-secondary) text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
         </div>
-        <div className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
+        <div id="riesgos" className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
           <h3 className="m-4 ">Riesgos</h3>
           <div className='flex flex-col lg:flex-row gap-2 justify-between'>
             
@@ -176,7 +107,7 @@ export default function TramoDashboard() {
         </div>
       </div>
 
-      { tramoInfo && <div className="glass-effect border-glass text-(--text-primary) text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
+      { tramoInfo && <div id="tramos" className="glass-effect border-glass text-(--text-primary) text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
         <h3 className="my-4">Incertidumbres y riesgos de todos los tramos</h3>
         <AllTranches elements={tramoInfo}  />
       </div>}

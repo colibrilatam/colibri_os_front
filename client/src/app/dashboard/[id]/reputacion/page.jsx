@@ -11,13 +11,22 @@ export default function ReputacionPage() {
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
-    { key: "action",        label: "Acción",     description: "Microacciones completadas y calidad de ejecución.",     raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
-    { key: "evidence",      label: "Evidencia",   description: "Trazabilidad on-chain y validación de mentores.",     raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
-    { key: "consistency",   label: "Consistencia",   description: "Frecuencia, ritmo y estabilidad del progreso.",  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
-    { key: "collaboration", label: "Colaboración",   description: "Apoyo a otros y participación en el ecosistema."  ,   raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
-    { key: "sustainability",label: "Sostenibilidad", description: "Alineación con ODS e indicadores de impacto social."  , raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
+    { index: 0, key: "action",        label: "Acción",     description: "Microacciones completadas y calidad de ejecución.",     raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
+    { index: 1, key: "evidence",      label: "Evidencia",   description: "Trazabilidad on-chain y validación de mentores.",     raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
+    { index: 2, key: "consistency",   label: "Consistencia",   description: "Frecuencia, ritmo y estabilidad del progreso.",  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
+    { index: 3, key: "collaboration", label: "Colaboración",   description: "Apoyo a otros y participación en el ecosistema."  ,   raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
+    { index: 4, key: "sustainability",label: "Sostenibilidad", description: "Alineación con ODS e indicadores de impacto social."  , raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
   // Calculo del aporte ponderado de cada dimensión al IC total, ajustado al máximo del tramo actual
   ].map((d) => ({ ...d, weighted: parseFloat(((1 * d.weight) * (d.raw / 100)).toFixed(2)) }));
+
+  const legitimidadKeys = ["action", "evidence"];
+
+  const dimensionesLegitimidad = dimensions.filter(d => 
+  legitimidadKeys.includes(d.key)
+);
+const dimensionesDiferenciacion = dimensions.filter(d => 
+  !legitimidadKeys.includes(d.key)
+);
   
 
   const radarValues = [
@@ -53,6 +62,12 @@ export default function ReputacionPage() {
       <path d="M2 22C2 22 4 10 12 10C20 10 22 22 22 22" />
       <path d="M12 10C12 10 10 4 14 2C16 6 13 8 12 10" />
     </>,
+  
+// Diferenciación (con punto de origen)
+<>
+  <circle cx="12" cy="20" r="1.5" />
+  <path d="M12 20 L12 10 L5 2 M12 10 L19 2" />
+</>
   ];
 
   return (
@@ -61,6 +76,7 @@ export default function ReputacionPage() {
         <section className="flex flex-col  gap-6 xl:grid-cols-12">
           <div className="rounded-3xl glass-effect border-glass p-4 shadow-2xl justify-around flex lg:flex-row flex-col gap-5">
             <div className="flex flex-col gap-1 w-full">
+            <div id="radar">
             <div className="mb-5 flex flex-col lg:flex-row items-start justify-between gap-4">
               <div>
                 <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
@@ -85,25 +101,94 @@ export default function ReputacionPage() {
             </p>
             </div>
 
+            <div id="balance" className='mt-4 lg:p-4 lg:py-10 p-4 glass-effect border-glass rounded-2xl'>
+              <h3>Balance reputacional</h3>
+              <div className="flex flex-col lg:flex-row gap-2 my-6">
+                <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
+                  <div className="text-(--text-tertiary) uppercase tracking-[0.22em]">legimitidad</div>
+                  <div className="text-2xl font-bold">78</div>
+                  <p className="text-(--text-secondary)">Alta capacidad de ejecución y evidencia verificable</p>
+                </div>
+                <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
+                  <div className="text-(--text-tertiary) uppercase tracking-[0.22em]">diferenciación</div>
+                  <div className="text-2xl font-bold">43</div>
+                  <p className="text-(--text-secondary)">La trayectoria aún necesita estabilidad y colaboración sistémica.</p>
+                </div>
+              </div>
+              <div className="text-slate-300 text-lg">El proyecto ya demuestra legitimdad operativa. El siguiente salto reputacional depende de fortalecer constancia, colaboración y sostenibilidad.</div>
+            </div>
+
+            </div>
+
            
-          <div className="flex flex-col gap-2 w-full">
+          <div id="arquitectura" className="flex flex-col gap-2 w-full">
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
-                    Desglose composicional del IC
+                    Arquitectura reputacional
                   </div>
-                  <h2 className="text-xl font-semibold text-slate-50">Composición auditable actual</h2>
+                  <h2 className="text-xl font-semibold text-slate-50">Composición del Índice Colibrí</h2>
                 
                 <div className="text-sm mt-1 text-slate-400">
-                  Valor bruto + peso metodológico + aporte ponderado
+                  El IC separa variables que validan ejecución real de aquellas que explican diferenciación y sostenibilidad reputacional.
                 </div>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                {dimensions.map((dimension, index) => (
+              <div id="legitimidad" className="glass-effect border-glass p-4 lg:p-4 rounded-2xl">
+                <div className="w-full flex flex-row justify-between items-center">
+                  <div className="flex flex-row gap-2 items-center"> <svg
+                  viewBox="0 0 24 24"
+              width="28"
+              height="28"
+              fill="none"
+              stroke="orange"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="shrink-0">{categoryIconPaths[0]}</svg> <h3>Variables de Legitimidad</h3></div>
+                  <div className="text-2xl font-bold">78</div>
+                </div>
+                <p className='my-4 text-sm text-(--text-secondary)'>Validan ejecución real, evidencia verificable y consistencia operativa observable.</p>
+              <div className="space-y-1">
+                {dimensionesLegitimidad.map((dimension, index) => (
                   <DimensionRow
                     categoryIconPaths={categoryIconPaths}
+                    description={dimension.description}
+                    svgIcon={dimension.index}
+                    index={index}
+                    key={dimension.key}
+                    label={dimension.label}
+                    raw={dimension.raw}
+                    weight={dimension.weight}
+                    weighted={dimension.weighted}
+                    max={100}
+                    iconColor={dimension.color}
+                  />
+                ))}
+              </div>
+              </div>
+
+              <div id="diferenciacion" className="glass-effect border-glass p-4 lg:p-4 rounded-2xl">
+                <div className="w-full flex flex-row justify-between items-center">
+                  <div className="flex flex-row gap-2 items-center"> <svg
+                  viewBox="0 0 24 24"
+              width="28"
+              height="28"
+              fill="none"
+              stroke="gray"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="shrink-0">{categoryIconPaths[5]}</svg> <h3>Variables de Diferenciación</h3></div>
+                  <div className="text-2xl font-bold">43</div>
+                </div>
+                <p className='my-4 text-sm text-(--text-secondary)'>Explican estabilidad reputacional, colaboracional sistémica y sostenibilidad del vuelo emprendedor.</p>
+              <div className="space-y-1">
+                {dimensionesDiferenciacion.map((dimension, index) => (
+                  <DimensionRow
+                    categoryIconPaths={categoryIconPaths}
+                    svgIcon={dimension.index}
                     description={dimension.description}
                     index={index}
                     key={dimension.key}
@@ -116,6 +201,10 @@ export default function ReputacionPage() {
                   />
                 ))}
               </div>
+              </div>
+
+
+
               </div>
 
             
@@ -165,12 +254,12 @@ export default function ReputacionPage() {
   );
 }
 
-function DimensionRow({description, label, raw, weight, weighted, max = 100, index, categoryIconPaths, iconColor }) {
+function DimensionRow({description, svgIcon, label, raw, weight, weighted, max = 100, index, categoryIconPaths, iconColor }) {
   const pct = (raw / max) * 100;
-  const iconSvg = categoryIconPaths[index];
+  const iconSvg = categoryIconPaths[svgIcon];
 
   return (
-    <div className="rounded-2xl glass-effect border-glass p-4">
+    <div className="rounded-2xl glass-effect border-glass p-2 px-3">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div className="w-full flex-col">
           <div className="flex items-center gap-3">
@@ -189,11 +278,10 @@ function DimensionRow({description, label, raw, weight, weighted, max = 100, ind
             </svg>
             <div className=" text-sm font-medium text-slate-100">{label}</div>
           </div>
-          <div className="mt-2 text-sm text-(--text-secondary)">{description}</div>
-          <div className="flex-1 mt-3">
-            <div className="mb-2 flex items-center justify-between text-sm text-slate-400">
-              <span>Escala relativa</span>
-              <span>{Math.round(pct)}%</span>
+          <div className="flex-1 mt-2">
+            <div className="gap-2 mb-2 flex items-center justify-between text-sm text-slate-400">
+              <span>{description}</span>
+              <span className="text-(--text-primary)" >{Math.round(pct)}%</span>
             </div>
             <div className="h-3 overflow-hidden rounded-full border border-slate-700 bg-slate-800">
               <div
