@@ -2,243 +2,245 @@
 
 export function getDashboardSteps(isMobile) {
   return [
-    {
-      tour: "evidencia",
-      steps: [
-        {
-          icon: "📊",
-          title: "Métricas de evidencias del tramo",
-          content: "En esta sección podrás ver las métricas resumidas de las evidencias del tramo.",
-          selector: "#metricas",
-          side: isMobile ? "bottom" : "bottom", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Lista de evidencias del tramo",
-          content: "En esta sección podrás ver las evidencias del tramo con información resumida.",
-          selector: "#lista",
-          side: isMobile ? "bottom" : "right", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Detalle de la evidencia",
-          content: "En esta sección podrás ver los detalles de la evidencia seleccionada.",
-          selector: "#detalle",
-          side: isMobile ? "bottom" : "left", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
+  {
+    tour: "evidencia",
+    steps: [
+      {
+        icon: "📊",
+        title: "Métricas del tramo",
+        content: "Aquí puedes ver un resumen del desempeño reputacional de las evidencias registradas en este tramo: cantidad enviada, validaciones obtenidas e impacto sobre tu Índice Colibrí.",
+        selector: "#metricas",
+        side: isMobile ? "bottom" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "📂",
+        title: "Evidencias registradas",
+        content: "Esta sección reúne todas las evidencias del tramo. Cada tarjeta muestra su estado, evaluación, impacto reputacional y avance dentro del proceso.",
+        selector: "#lista",
+        side: isMobile ? "bottom" : "right",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🧾",
+        title: "Detalle de la evidencia",
+        content: "Aquí puedes revisar la trazabilidad completa de la evidencia seleccionada: validación, historial, autor, evaluaciones y relación con la microacción ejecutada.",
+        selector: "#detalle",
+        side: isMobile ? "bottom" : "left",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+    ]
+  },
 
-      ]
-    },
-    {
-      tour: "trayectoria",
-      steps: [
-        {
-          icon: "📊",
-          title: "Trayectoria operativa del tramo",
-          content: "En esta capa podrás ver el progreso del emprendimiento en el tramo actual, con sus microacciones y evidencias.",
-          selector: "#cabecera",
-          side: isMobile ? "bottom" : "bottom", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "🧭",
-          title: "Línea del tiempo del avance del tramo",
-          content: "En la línea del tiempo se muestran todos los PACs del tramo y su estado. Puedes hacer click en cada uno para ver su detalle.",
-          selector: "#timeline",
-          side: isMobile ? "bottom" : "bottom", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "",
-          title: "Detalle del PAC seleccionado",
-          content: "En esta sección se muestra el detalle del PAC seleccionado en la línea del tiempo.",
-          selector: "#detalle",
-          side: isMobile ? "top" : "right", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "",
-          title: "Carga operativa del PAC",
-          content: "En esta sección podrás gestionar las microacciones y evidencias del PAC seleccionado.",
-          selector: "#carga",
-          side: isMobile ? "top" : "left", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-      ]
-    },
-    {
-      tour: "tramo",
-      steps: [
-        {
-          icon: "",
-          title: "Riesgos e incertidumbre",
-          content: "En esta capa podrás ver los riesgos e incertidumbre que enfrenta el emprendimiento.",
-          selector: "#cabecera",
-          side: isMobile ? "bottom" : "bottom", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "",
-          title: "Incertidumbre",
-          content: "La incertidumbre del tramo actual que enfrenta el emprendimiento.",
-          selector: "#incertidumbre",
-          side: isMobile ? "top" : "bottom", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-         {
-          icon: "",
-          title: "Riesgos",
-          content: "Los riesgos del tramo actual que enfrenta el emprendimiento.",
-          selector: "#riesgos",
-          side: isMobile ? "top" : "bottom", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "",
-          title: "Riesgos e incertidumbre de todos los tramos",
-          content: "Todos los riesgos e incertidumbres del tramo actual y su estado correspondiente al emprendimiento.",
-          selector: "#tramos",
-          side: isMobile ? "top" : "bottom top left right", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-      ]
-    },
-    {
-      tour: "reputacion",
-      steps: [
-        {
-          icon: "📊",
-          title: "Nivel de reputación en las 5 dimensiones",
-          content: "Tu nivel de reputación medido en las 5 dimensiones.",
-          selector: "#radar",
-          side: isMobile ? "bottom" : "right", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Desglose de las 5 dimensiones",
-          content: "Detalle del nivel de reputación de las 5 dimensiones, separadas en 2 grupos.",
-          selector: "#arquitectura",
-          side: isMobile ? "top" : "left", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Grupo legitimidad",
-          content: "Detalle del nivel de reputación de dimensiones de legitimidad, acción y evidencia.",
-          selector: "#legitimidad",
-          side: isMobile ? "top" : "left", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Grupo diferenciación",
-          content: "Detalle del nivel de reputación de dimensiones de diferenciación, consistencia, colaboración y sostenibilidad.",
-          selector: "#diferenciacion",
-          side: isMobile ? "top" : "left", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Resumen de balance reputacional",
-          content: "Resumen de nivel reputacional en los dos grupos diferenciación y legitimidad.",
-          selector: "#balance",
-          side: isMobile ? "top" : "right", // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-      ]
-    },
-    {
-      tour: "identidad",
-      steps: [
+  {
+    tour: "trayectoria",
+    steps: [
+      {
+        icon: "🛤️",
+        title: "Trayectoria operativa del tramo",
+        content: "Esta vista muestra el avance operativo del emprendimiento dentro del tramo actual, incluyendo PACs, microacciones, evidencias y señales reputacionales generadas.",
+        selector: "#cabecera",
+        side: isMobile ? "bottom" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🧭",
+        title: "Línea de avance del tramo",
+        content: "La línea temporal organiza los PACs del tramo y permite visualizar qué etapas ya fueron iniciadas, completadas o siguen pendientes.",
+        selector: "#timeline",
+        side: isMobile ? "bottom" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "📘",
+        title: "Detalle del PAC",
+        content: "Aquí se despliega la información estructural del PAC seleccionado: objetivo, categoría, estado operativo y relación con la trayectoria reputacional.",
+        selector: "#detalle",
+        side: isMobile ? "top" : "right",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "⚙️",
+        title: "Carga operativa",
+        content: "Desde esta sección puedes ejecutar microacciones, registrar evidencias y avanzar en la construcción verificable de tu reputación emprendedora.",
+        selector: "#carga",
+        side: isMobile ? "top" : "left",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+    ]
+  },
 
-        {
-          icon: "🖼️",
-          title: "Estado actual del proyecto",
-          content: "Un resumen del estado actual del proyecto.",
-          selector: "#estado",
-          side: isMobile ? "bottom" : "bottom",  // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "🖼️",
-          title: "NFT Colibrí",
-          content: "Tu identidad reputacional visual dentro de Colibrí OS.",
-          selector: "#nft",
-          side: isMobile ? "top" : "right",  // 👈 posición
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "📊",
-          title: "Índice de Comportamiento",
-          content: "Tu señal reputacional actual sobre la escala máxima.",
-          selector: "#ic",
-          side: isMobile ? "top" : "left",
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "🧭",
-          title: "Estado del avance en el tramo",
-          content: "Métricas del estado actual del avance en el tramo.",
-          selector: "#contexto",
-          side: isMobile ? "top" : "top",
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-        {
-          icon: "!!",
-          title: "Incertidumbre y riesgos",
-          content: "Incertidumbre y riesgos del tramo actual.",
-          selector: "#incertidumbre",
-          side: isMobile ? "top" : "top",
-          showControls: true,
-          pointerPadding: 10,
-          pointerRadius: 8,
-        },
-      ],
-    },
-  ];
+  {
+    tour: "tramo",
+    steps: [
+      {
+        icon: "⚠️",
+        title: "Riesgos e incertidumbre",
+        content: "Esta vista permite comprender las principales incertidumbres y riesgos que actualmente condicionan el avance del proyecto dentro del tramo.",
+        selector: "#cabecera",
+        side: isMobile ? "bottom" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🌫️",
+        title: "Incertidumbre dominante",
+        content: "La incertidumbre dominante representa aquello que aún no ha sido suficientemente validado y que limita la capacidad de tomar decisiones con confianza.",
+        selector: "#incertidumbre",
+        side: isMobile ? "top" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🚨",
+        title: "Riesgos asociados",
+        content: "Los riesgos identificados son señales que podrían afectar la sostenibilidad, validación o crecimiento del proyecto si no se gestionan a tiempo.",
+        selector: "#riesgos",
+        side: isMobile ? "top" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🗺️",
+        title: "Mapa de riesgos por tramo",
+        content: "Aquí puedes comparar las incertidumbres y riesgos de todos los tramos del ecosistema, comprendiendo cómo evoluciona la complejidad del vuelo emprendedor.",
+        selector: "#tramos",
+        side: isMobile ? "top" : "bottom top left right",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+    ]
+  },
+
+  {
+    tour: "reputacion",
+    steps: [
+      {
+        icon: "📊",
+        title: "Radar reputacional",
+        content: "El radar sintetiza visualmente tu desempeño en las 5 dimensiones del Índice Colibrí y permite identificar fortalezas y áreas que aún requieren desarrollo.",
+        selector: "#radar",
+        side: isMobile ? "bottom" : "right",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🏗️",
+        title: "Arquitectura del Índice Colibrí",
+        content: "El Índice Colibrí se compone de variables que evalúan legitimidad operativa y capacidad de diferenciación sostenible dentro del ecosistema.",
+        selector: "#arquitectura",
+        side: isMobile ? "top" : "left",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "⚡",
+        title: "Variables de legitimidad",
+        content: "Estas variables miden ejecución real, evidencia verificable y consistencia operativa observable dentro de la trayectoria emprendedora.",
+        selector: "#legitimidad",
+        side: isMobile ? "top" : "left",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🌱",
+        title: "Variables de diferenciación",
+        content: "Estas dimensiones evalúan sostenibilidad, colaboración, consistencia y capacidad del proyecto para construir valor reputacional de largo plazo.",
+        selector: "#diferenciacion",
+        side: isMobile ? "top" : "left",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "⚖️",
+        title: "Balance reputacional",
+        content: "Este resumen integra legitimidad y diferenciación para mostrar el estado actual del equilibrio reputacional del proyecto.",
+        selector: "#balance",
+        side: isMobile ? "top" : "right",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+    ]
+  },
+
+  {
+    tour: "identidad",
+    steps: [
+      {
+        icon: "🛰️",
+        title: "Estado actual del proyecto",
+        content: "Aquí puedes ver una lectura sintética del estado actual del emprendimiento: tramo, señal reputacional, incertidumbre dominante y riesgos principales.",
+        selector: "#estado",
+        side: isMobile ? "bottom" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🕊️",
+        title: "NFT Colibrí dinámico",
+        content: "Tu NFT representa visualmente la evolución reputacional del proyecto. Cambia conforme generas evidencia verificable y avanzas en tu trayectoria.",
+        selector: "#nft",
+        side: isMobile ? "bottom" : "bottom",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "📈",
+        title: "Índice Colibrí",
+        content: "Esta señal resume el estado reputacional actual del proyecto sobre una escala evolutiva de progreso verificable.",
+        selector: "#ic",
+        side: isMobile ? "top" : "top",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🧭",
+        title: "Estado de avance",
+        content: "Estas métricas muestran el progreso operativo del tramo actual: PACs aprobados, microacciones acumuladas y evidencias validadas.",
+        selector: "#contexto",
+        side: isMobile ? "top" : "right",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+      {
+        icon: "🚨",
+        title: "Incertidumbre y riesgos",
+        content: "Aquí se resumen los principales factores que hoy limitan o amenazan el avance del proyecto dentro del tramo actual.",
+        selector: "#incertidumbre",
+        side: isMobile ? "top" : "left",
+        showControls: true,
+        pointerPadding: 10,
+        pointerRadius: 8,
+      },
+    ],
+  },
+];
 }
 
