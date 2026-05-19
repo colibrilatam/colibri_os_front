@@ -16,10 +16,46 @@ import 'swiper/css/navigation';
 //import { pacConfig } from './components/pacConfig';
 import { useUserStore } from '@/lib/store';
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
+import { projectsService } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
 
 export default function TrayectoriaSection() {
 
+  const [microActionData, setMicroActionData] = useState([]);
+  const [evidencesData, setEvidencesData] = useState([]);
+
+
+  const { execute: getMicroActionInstances } = useRequest(projectsService.microActionInstance);
+  const { execute: getEvidenceData } = useRequest(projectsService.evidences);
+
   const { tramoData, dbProject, mockProject } = useProject();
+  //console.log(tramoData, dbProject);
+
+  const getData = async () => {
+    const { data: microactionData } = await getMicroActionInstances(dbProject.id);
+    const { data: evidenceData } = await getEvidenceData(dbProject.id);
+
+    //console.log(microactionData)
+
+    //  Obtener las instancias de microacciones del tramo actual
+    const currentTramoMicroActions = microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`));
+
+    //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
+    const filteredEvidences = evidenceData.filter(evidence =>
+      currentTramoMicroActions.some(ma => ma.id === evidence.microActionInstanceId)
+    );
+
+    // console.log(filteredEvidences)
+
+    setMicroActionData(currentTramoMicroActions);
+    setEvidencesData(filteredEvidences);
+
+    setMetrics(prev => ({
+      ...prev,
+      microactions: `${microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`) && m.status === 'completed').length} / 21`,
+      evidences: `${filteredEvidences.length} / 7`,
+    }))
+  }
 
   const [notification, setNotification] = useState(false);
   const rol = useUserStore((state) => state.rol);
@@ -27,12 +63,20 @@ export default function TrayectoriaSection() {
 
   const isMobile = useIsMobile();
 
+
   /* =========================
      🔗 DATA MAPPING REAL
   ========================= */
 
   const { project, currentState, pacProgress, evidence, microactionInstances } =
     mockProject;
+
+  const [metrics, setMetrics] = useState({
+    currentPac: currentState.currentPacCode,
+    totalPacs: `${currentState.pacsApprovedInCurrentTramo} / 7`,
+    microactions: `${currentState.microactionsCompletedCount} / 21`,
+    evidences: `${currentState.validatedEvidenceCount} / 7`,
+  })
 
   const mapStatus = {
     approved: 'done',
@@ -51,13 +95,14 @@ export default function TrayectoriaSection() {
 
   // Cargar el progreso guardado SOLO en el cliente después del montaje
   useEffect(() => {
+    getData();
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('aulapuente_t3_c7_progress');
       if (saved) {
-        try {
+        try { 
           const parsed = JSON.parse(saved);
           setDynamicProgress(parsed);
-        } catch (e) {}
+        } catch (e) { }
       }
     }
   }, []);
@@ -147,12 +192,7 @@ export default function TrayectoriaSection() {
   const pacs = buildPacs();
 
   // métricas para el header
-  const metrics = {
-    currentPac: currentState.currentPacCode,
-    totalPacs: `${currentState.pacsApprovedInCurrentTramo} / 7`,
-    microactions: `${currentState.microactionsCompletedCount} / 21`,
-    evidences: `${currentState.validatedEvidenceCount} / 7`,
-  };
+
 
   const milestones = pacProgress
     .filter((p) => p.status === 'approved')
@@ -199,12 +239,12 @@ export default function TrayectoriaSection() {
       <div id="cabecera" className="glass-effect-dark border-glass rounded-2xl p-6">
         <p className="text-overline">Trayectoria operativa del tramo</p>
 
-        <h2 className="text-h2">{currentState.currentTramoCode} · {currentState.currentTramoName}</h2>
+        <h2 className="text-h2">{tramoData.code} · {tramoData.name}</h2>
 
-        <p className="text-body mt-2 max-w-2xl">{project.shortDescription}</p>
+        <p className="text-body mt-2 max-w-2xl">{tramoData.description}</p>
 
         <div className="flex gap-3 mt-4 flex-wrap">
-          <Metric label="PAC actual" value={metrics.currentPac} />
+          <Metric label="PAC actual" value={metrics.currentPac} /> 
           <Metric label="PACs cerrados" value={metrics.totalPacs} />
           <Metric label="Microacciones" value={metrics.microactions} />
           <Metric label="Evidencias" value={metrics.evidences} />
@@ -212,7 +252,7 @@ export default function TrayectoriaSection() {
       </div>
 
       {/* TIMELINE */}
-      <div id="timeline"  className="glass-effect border-glass rounded-2xl p-6">
+      <div id="timeline" className="glass-effect border-glass rounded-2xl p-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
           <div>
             <p className="text-overline mb-1">Secuencia operativa por PAC</p>
@@ -544,13 +584,13 @@ const CargaPac = ({ pac, rol }) => {
           ${isPending && 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]'}
         `}
       >
-        {isDone && 
-        <div className="flex flex-col gap-2">
-              <p>{evidenceText.done}</p>
-              <a href="/evidencia.pdf" download>
+        {isDone &&
+          <div className="flex flex-col gap-2">
+            <p>{evidenceText.done}</p>
+            <a href="/evidencia.pdf" download>
               <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de evidencia</div>
-              </a>
-            </div>
+            </a>
+          </div>
         }
         {isCurrent && <p>{evidenceText.current}</p>}
         {isPending && <p>{evidenceText.pending}</p>}
@@ -612,10 +652,9 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
         ${isCurrent && 'bg-[rgba(0,207,207,0.10)] border-glass'}
         ${isPending && 'bg-white/5 border-glass-dark'}
 
-        ${
-          isSelected
-            ? 'ring-2 ring-[var(--color-turquoise)] shadow-[0_10px_30px_rgba(0,207,207,0.25)] scale-[1.02]'
-            : 'hover:shadow-[0_10px_25px_rgba(0,0,0,0.25)]'
+        ${isSelected
+          ? 'ring-2 ring-[var(--color-turquoise)] shadow-[0_10px_30px_rgba(0,207,207,0.25)] scale-[1.02]'
+          : 'hover:shadow-[0_10px_25px_rgba(0,0,0,0.25)]'
         }
       `}
     >
