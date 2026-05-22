@@ -38,4 +38,9 @@ export const projectsService = {
   getProjectMembers: (idProject) => 
     fetcher(`/projects/${idProject}/members`),
 
+  updateMicroAction: (id, data) => 
+    fetcher(`/micro-action-instances/${id}`, {method: 'PATCH', body: JSON.stringify(data)}),
+
+  requestUploadSignature: (data) => 
+    fetcher(`/evidence/request-upload-signature`, {method: 'POST', body: JSON.stringify(data)}),
 };

@@ -1,316 +1,16 @@
-
-
-
-
 'use client';
 
-import { getEvidenceStatusLabel, getEvidenceTypeLabel, getMicroActionInstanceStatusLabel, getPrivacyLevelLabel, getUserRoleLabel, getValidationStatusLabel } from '@/lib/mappers/evidence-labels';
-import { useState, useMemo } from 'react';
-
-/* ================= MOCK REALISTA ================= */
-
-const MOCK_EVIDENCES = [
-  // 🟡 DRAFT
-  {
-    id: 'ev-draft-1',
-    evidenceType: 'file',
-    status: 'draft',
-    validationStatus: 'pending',
-    isValidForIc: false,
-    privacyLevel: 'private',
-    publicSignalEnabled: false,
-
-    description: 'Borrador de entrevistas iniciales',
-    canonicalUri: '#',
-
-    createdAt: '2024-04-01T10:00:00Z',
-    submittedAt: null,
-    approvedAt: null,
-    rejectedAt: null,
-
-    microActionInstance: {
-      id: 'mai-1',
-      status: 'in_progress',
-      isOnTime: null,
-      attemptNumber: 1,
-      reopenedCount: 0,
-      completedAt: null,
-      microActionDefinition: {
-        code: 'T1-C1-M1',
-        instruction: 'Entrevistar usuarios',
-        expectedEvidenceType: 'file',
-        isRequired: true,
-      },
-    },
-
-    author: {
-      id: 'user-1',
-      fullName: 'Juan Pérez',
-      role: 'entrepreneur',
-      avatar: '/avatar.jpg',
-    },
-
-    evaluations: [],
-    versions: [
-      {
-        id: 'ver-1',
-        versionNumber: 1,
-        storageUri: '#',
-        isMaterialChange: false,
-        createdAt: '2024-04-01T10:00:00Z',
-      },
-    ],
-  },
-
-  // 🔵 SUBMITTED
-  {
-    id: 'ev-submitted-1',
-    evidenceType: 'file',
-    status: 'submitted',
-    validationStatus: 'pending',
-    isValidForIc: false,
-    privacyLevel: 'private',
-    publicSignalEnabled: false,
-
-    description: 'Entrevistas enviadas para revisión',
-    canonicalUri: '#',
-
-    createdAt: '2024-04-02T09:00:00Z',
-    submittedAt: '2024-04-02T10:00:00Z',
-    approvedAt: null,
-    rejectedAt: null,
-
-    microActionInstance: {
-      id: 'mai-2',
-      status: 'submitted',
-      isOnTime: true,
-      attemptNumber: 1,
-      reopenedCount: 0,
-      completedAt: '2024-04-02T09:30:00Z',
-      microActionDefinition: {
-        code: 'T1-C1-M2',
-        instruction: 'Documentar insights',
-        expectedEvidenceType: 'file',
-        isRequired: true,
-      },
-    },
-
-    author: {
-      id: 'user-2',
-      fullName: 'María López',
-      role: 'entrepreneur',
-      avatar: '/avatar2.jpg',
-    },
-
-    evaluations: [],
-    versions: [
-      {
-        id: 'ver-2',
-        versionNumber: 1,
-        storageUri: '#',
-        isMaterialChange: false,
-        createdAt: '2024-04-02T09:00:00Z',
-      },
-    ],
-  },
-
-  // 🟣 UNDER REVIEW
-  {
-    id: 'ev-review-1',
-    evidenceType: 'file',
-    status: 'under_review',
-    validationStatus: 'ai_reviewed',
-    isValidForIc: false,
-    privacyLevel: 'restricted',
-    publicSignalEnabled: false,
-
-    description: 'Análisis de entrevistas en revisión',
-    canonicalUri: '#',
-
-    createdAt: '2024-04-03T08:00:00Z',
-    submittedAt: '2024-04-03T09:00:00Z',
-    approvedAt: null,
-    rejectedAt: null,
-
-    microActionInstance: {
-      id: 'mai-3',
-      status: 'submitted',
-      isOnTime: true,
-      attemptNumber: 1,
-      reopenedCount: 0,
-      completedAt: '2024-04-03T08:30:00Z',
-      microActionDefinition: {
-        code: 'T1-C1-M3',
-        instruction: 'Analizar resultados',
-        expectedEvidenceType: 'file',
-        isRequired: true,
-      },
-    },
-
-    author: {
-      id: 'user-3',
-      fullName: 'Carlos Gómez',
-      role: 'entrepreneur',
-      avatar: '/avatar3.jpg',
-    },
-
-    evaluations: [
-      {
-        id: 'eval-1',
-        evaluationType: 'ai',
-        evaluationResult: 'approved',
-        score: 4.2,
-        isFinal: false,
-        comment: 'Buen análisis preliminar',
-        evaluatedAt: '2024-04-03T10:00:00Z',
-      },
-    ],
-
-    versions: [
-      {
-        id: 'ver-3',
-        versionNumber: 1,
-        storageUri: '#',
-        isMaterialChange: false,
-        createdAt: '2024-04-03T08:00:00Z',
-      },
-    ],
-  },
-
-  // 🟢 APPROVED
-  {
-    id: 'ev-approved-1',
-    evidenceType: 'file',
-    status: 'approved',
-    validationStatus: 'validated',
-    isValidForIc: true,
-    privacyLevel: 'public',
-    publicSignalEnabled: true,
-
-    description: 'Validación completa del problema',
-    canonicalUri: '#',
-
-    createdAt: '2024-04-01T10:00:00Z',
-    submittedAt: '2024-04-01T12:00:00Z',
-    approvedAt: '2024-04-02T15:00:00Z',
-    rejectedAt: null,
-
-    microActionInstance: {
-      id: 'mai-4',
-      status: 'completed',
-      isOnTime: true,
-      attemptNumber: 1,
-      reopenedCount: 0,
-      completedAt: '2024-04-01T11:00:00Z',
-      microActionDefinition: {
-        code: 'T1-C2-M1',
-        instruction: 'Validar problema',
-        expectedEvidenceType: 'file',
-        isRequired: true,
-      },
-    },
-
-    author: {
-      id: 'user-1',
-      fullName: 'Juan Pérez',
-      role: 'entrepreneur',
-      avatar: '/avatar.jpg',
-    },
-
-    evaluations: [
-      {
-        id: 'eval-2',
-        evaluationType: 'hybrid',
-        evaluationResult: 'approved',
-        score: 4.8,
-        isFinal: true,
-        comment: 'Excelente evidencia',
-        evaluatedAt: '2024-04-02T15:00:00Z',
-      },
-    ],
-
-    versions: [
-      {
-        id: 'ver-4',
-        versionNumber: 1,
-        storageUri: '#',
-        isMaterialChange: false,
-        createdAt: '2024-04-01T10:00:00Z',
-      },
-      {
-        id: 'ver-5',
-        versionNumber: 2,
-        storageUri: '#',
-        isMaterialChange: true,
-        changeSummary: 'Se agregaron más entrevistas',
-        createdAt: '2024-04-01T11:30:00Z',
-      },
-    ],
-  },
-
-  // 🔴 REJECTED
-  {
-    id: 'ev-rejected-1',
-    evidenceType: 'file',
-    status: 'rejected',
-    validationStatus: 'rejected',
-    isValidForIc: false,
-    privacyLevel: 'private',
-    publicSignalEnabled: false,
-
-    description: 'Documento incompleto',
-    canonicalUri: '#',
-
-    createdAt: '2024-04-05T10:00:00Z',
-    submittedAt: '2024-04-05T11:00:00Z',
-    approvedAt: null,
-    rejectedAt: '2024-04-05T14:00:00Z',
-
-    microActionInstance: {
-      id: 'mai-5',
-      status: 'reopened',
-      isOnTime: false,
-      attemptNumber: 2,
-      reopenedCount: 1,
-      completedAt: '2024-04-05T10:30:00Z',
-      microActionDefinition: {
-        code: 'T1-C2-M2',
-        instruction: 'Documentar hipótesis',
-        expectedEvidenceType: 'file',
-        isRequired: true,
-      },
-    },
-
-    author: {
-      id: 'user-4',
-      fullName: 'Ana Torres',
-      role: 'entrepreneur',
-      avatar: '/avatar4.jpg',
-    },
-
-    evaluations: [
-      {
-        id: 'eval-3',
-        evaluationType: 'human',
-        evaluationResult: 'rejected',
-        score: 2.1,
-        isFinal: true,
-        comment: 'Falta evidencia suficiente',
-        evaluatedAt: '2024-04-05T14:00:00Z',
-      },
-    ],
-
-    versions: [
-      {
-        id: 'ver-6',
-        versionNumber: 1,
-        storageUri: '#',
-        isMaterialChange: false,
-        createdAt: '2024-04-05T10:00:00Z',
-      },
-    ],
-  },
-];
+import {
+  formatRouteCode,
+  getEvidenceStatusLabel,
+  getEvidenceTypeLabel,
+  getMicroActionInstanceStatusLabel,
+  getPrivacyLevelLabel,
+  getUserRoleLabel,
+  getValidationStatusLabel,
+} from '@/lib/mappers/evidence-labels';
+import { useProject } from '@/lib/projectContext';
+import { useState, useMemo, useEffect } from 'react';
 
 /* ================= HELPERS ================= */
 
@@ -328,11 +28,40 @@ const getLastEvaluation = (evaluations = []) => {
   return evaluations[evaluations.length - 1];
 };
 
+const parseRouteCode = (code) => {
+  if (!code) return null;
+
+  // MAD_3_2_1
+  const parts = code.split('_');
+
+  if (parts.length !== 4) return null;
+
+  return {
+    tramo: `T${parts[1]}`,
+    categoria: `C${parts[2]}`,
+    microAction: `MA${parts[3]}`,
+  };
+};
+
 /* ================= COMPONENT ================= */
 
-export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
-  const [selected, setSelected] = useState(evidences[0] || null);
+export default function EvidenciaSection() {
+  const { evidenceData } = useProject();
+
+  const evidences = evidenceData || [];
+  console.log('evidences-----', evidences);
+  const [selected, setSelected] = useState(null);
   const [filterIC, setFilterIC] = useState(false);
+
+  useEffect(() => {
+    if (evidences.length > 0 && !selected) {
+      setSelected(evidences[0]);
+    }
+  }, [evidences, selected]);
+
+  const [statusFilter, setStatusFilter] = useState('all');
+const [tramoFilter, setTramoFilter] = useState('all');
+const [categoriaFilter, setCategoriaFilter] = useState('all');
 
   /* ================= METRICS ================= */
 
@@ -350,8 +79,7 @@ export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
       .filter((ev) => ev?.score);
 
     const avgScore =
-      scores.reduce((acc, ev) => acc + ev.score, 0) /
-      (scores.length || 1);
+      scores.reduce((acc, ev) => acc + ev.score, 0) / (scores.length || 1);
 
     return {
       total,
@@ -364,14 +92,62 @@ export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
   /* ================= FILTER + SORT ================= */
 
   const filtered = useMemo(() => {
-    return evidences
-      .filter((e) => !filterIC || e.isValidForIc)
-      .sort((a, b) => {
-        if (a.isValidForIc && !b.isValidForIc) return -1;
-        if (!a.isValidForIc && b.isValidForIc) return 1;
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      });
-  }, [evidences, filterIC]);
+  return evidences
+    .filter((e) => {
+      // IC
+      if (filterIC && !e.isValidForIc) {
+        return false;
+      }
+
+      // STATUS
+      if (statusFilter !== 'all') {
+        if (statusFilter === 'pending') {
+          const pendingStatuses = ['submitted', 'under_review'];
+
+          if (!pendingStatuses.includes(e.status)) {
+            return false;
+          }
+        } else if (e.status !== statusFilter) {
+          return false;
+        }
+      }
+
+      const code =
+        e.microActionInstance?.microActionDefinition?.code;
+
+      const parsed = parseRouteCode(code);
+
+      // TRAMO
+      if (
+        tramoFilter !== 'all' &&
+        parsed?.tramo !== tramoFilter
+      ) {
+        return false;
+      }
+
+      // CATEGORIA
+      if (
+        categoriaFilter !== 'all' &&
+        parsed?.categoria !== categoriaFilter
+      ) {
+        return false;
+      }
+
+      return true;
+    })
+    .sort((a, b) => {
+      if (a.isValidForIc && !b.isValidForIc) return -1;
+      if (!a.isValidForIc && b.isValidForIc) return 1;
+
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+}, [
+  evidences,
+  filterIC,
+  statusFilter,
+  tramoFilter,
+  categoriaFilter,
+]);
 
   if (!evidences.length) {
     return <div className="p-10 text-slate-400">No hay evidencias</div>;
@@ -389,21 +165,94 @@ export default function EvidenciaSection({ evidences = MOCK_EVIDENCES }) {
           <Metric label="Score" value={metrics.avgScore} />
         </div>
 
-        {/* FILTER */}
-        <div className="flex justify-between items-center">
-          <p className="text-helper">Filtros</p>
+        {/* ================= FILTERS ================= */}
 
-          <button
-            onClick={() => setFilterIC(!filterIC)}
-            className={`px-3 py-1 rounded-full text-xs border ${
-              filterIC
-                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                : 'border-slate-700 text-slate-400'
-            }`}
-          >
-            Solo IC válido
-          </button>
-        </div>
+<div className="space-y-5 p-4 rounded-2xl glass-effect border-glass">
+  {/* STATUS */}
+  <div>
+    <p className="text-helper mb-2">Estado</p>
+
+    <div className="flex flex-wrap gap-2">
+      {[
+        { label: 'Todas', value: 'all' },
+        { label: 'Pendientes', value: 'pending' },
+        { label: 'Aprobadas', value: 'approved' },
+        { label: 'Rechazadas', value: 'rejected' },
+        { label: 'Borradores', value: 'draft' },
+      ].map((item) => (
+        <FilterChip
+          key={item.value}
+          active={statusFilter === item.value}
+          onClick={() => setStatusFilter(item.value)}
+        >
+          {item.label}
+        </FilterChip>
+      ))}
+    </div>
+  </div>
+
+  {/* TRAMO */}
+  <div>
+    <p className="text-helper mb-2">Tramo</p>
+
+    <div className="flex flex-wrap gap-2">
+      <FilterChip
+        active={tramoFilter === 'all'}
+        onClick={() => setTramoFilter('all')}
+      >
+        Todos
+      </FilterChip>
+
+      {[1, 2, 3, 4, 5, 6].map((t) => (
+        <FilterChip
+          key={t}
+          active={tramoFilter === `T${t}`}
+          onClick={() => setTramoFilter(`T${t}`)}
+        >
+          {`T${t}`}
+        </FilterChip>
+      ))}
+    </div>
+  </div>
+
+  {/* CATEGORIA */}
+  <div>
+    <p className="text-helper mb-2">Categoría</p>
+
+    <div className="flex flex-wrap gap-2">
+      <FilterChip
+        active={categoriaFilter === 'all'}
+        onClick={() => setCategoriaFilter('all')}
+      >
+        Todas
+      </FilterChip>
+
+      {[1, 2, 3, 4, 5, 6, 7].map((c) => (
+        <FilterChip
+          key={c}
+          active={categoriaFilter === `C${c}`}
+          onClick={() => setCategoriaFilter(`C${c}`)}
+        >
+          {`C${c}`}
+        </FilterChip>
+      ))}
+    </div>
+  </div>
+
+  {/* IC */}
+  <div className="pt-2">
+    <button
+      onClick={() => setFilterIC(!filterIC)}
+      className={`px-3 py-1 rounded-full text-xs border transition ${
+        filterIC
+          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+          : 'border-slate-700 text-slate-400'
+      }`}
+    >
+      Solo IC válido
+    </button>
+  </div>
+</div>
 
         {/* LIST */}
         <div id="lista" className="space-y-3">
@@ -446,7 +295,11 @@ function EvidenceCard({ evidence, isActive, onClick }) {
       <p className="text-body mb-2">{evidence.description}</p>
 
       <div className="flex justify-between text-legend">
-        <span>{getMicroActionInstanceStatusLabel(evidence.microActionInstance?.status)}</span>
+        <span>
+          {getMicroActionInstanceStatusLabel(
+            evidence.microActionInstance?.status,
+          )}
+        </span>
 
         {evidence.isValidForIc && (
           <span className="text-accent-emerald">Impacta IC</span>
@@ -454,9 +307,7 @@ function EvidenceCard({ evidence, isActive, onClick }) {
       </div>
 
       {lastEval && (
-        <p className="text-xs text-accent-amber mt-1">
-          ⭐ {lastEval.score}
-        </p>
+        <p className="text-xs text-accent-amber mt-1">⭐ {lastEval.score}</p>
       )}
 
       <div className="flex justify-between mt-2 text-legend">
@@ -489,7 +340,10 @@ function EvidenceDetail({ evidence }) {
 
       {/* META */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <Info label="Validación" value={getValidationStatusLabel(evidence.validationStatus)} />
+        <Info
+          label="Validación"
+          value={getValidationStatusLabel(evidence.validationStatus)}
+        />
         <Info
           label="Impacto en IC"
           value={evidence.isValidForIc ? 'Sí' : 'No'}
@@ -497,7 +351,10 @@ function EvidenceDetail({ evidence }) {
         <Info label="Fecha" value={formatDate(evidence.createdAt)} />
         <Info label="Versiones" value={evidence.versions?.length || 0} />
         <Info label="Evaluaciones" value={evidence.evaluations?.length || 0} />
-        <Info label="Privacidad" value={getPrivacyLevelLabel(evidence.privacyLevel)} />
+        <Info
+          label="Privacidad"
+          value={getPrivacyLevelLabel(evidence.privacyLevel)}
+        />
       </div>
 
       {/* AUTHOR */}
@@ -509,15 +366,20 @@ function EvidenceDetail({ evidence }) {
       {/* MICROACTION */}
       <Section title="Microacción">
         <div className="grid grid-cols-2 gap-4">
-          <Info label="Estado" value={getMicroActionInstanceStatusLabel(evidence.microActionInstance?.status)} />
+          <Info
+            label="Estado"
+            value={getMicroActionInstanceStatusLabel(
+              evidence.microActionInstance?.status,
+            )}
+          />
           <Info
             label="En tiempo"
             value={
               evidence.microActionInstance?.isOnTime === null
                 ? '-'
                 : evidence.microActionInstance?.isOnTime
-                ? 'Sí'
-                : 'No'
+                  ? 'Sí'
+                  : 'No'
             }
           />
           <Info
@@ -535,7 +397,7 @@ function EvidenceDetail({ evidence }) {
       {evidence.microActionInstance?.microActionDefinition && (
         <Section title="Microacción Definición">
           <p className="text-white">
-            {evidence.microActionInstance.microActionDefinition.code}
+            {formatRouteCode(evidence.microActionInstance.microActionDefinition.code)}
           </p>
           <p className="text-body--muted">
             {evidence.microActionInstance.microActionDefinition.instruction}
@@ -556,9 +418,7 @@ function EvidenceDetail({ evidence }) {
       {/* EVALUATION */}
       {lastEval && (
         <Section title="Evaluación">
-          <p className="text-value-lg text-accent-amber">
-            ⭐ {lastEval.score}
-          </p>
+          <p className="text-value-lg text-accent-amber">⭐ {lastEval.score}</p>
           <p className="text-body--muted">{lastEval.comment}</p>
         </Section>
       )}
@@ -608,6 +468,20 @@ const Info = ({ label, value }) => (
     <p className="text-slate-500 text-xs">{label}</p>
     <p className="text-white">{value}</p>
   </div>
+);
+const FilterChip = ({ children, active, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`px-3 py-1 rounded-full text-xs border transition
+      ${
+        active
+          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+          : 'border-slate-700 text-slate-400 hover:bg-white/5'
+      }
+    `}
+  >
+    {children}
+  </button>
 );
 
 const StatusBadge = ({ status }) => {

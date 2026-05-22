@@ -82,13 +82,13 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     {
       href: `/dashboard/${id}/tramo`,
       label: 'Tramo',
-      icon: Map,
+      icon: AlertCircle,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/trayectoria`,
       label: 'Trayectoria',
-      icon: AlertCircle,
+      icon: Map,
       excludeRoles: null,
     },
     {

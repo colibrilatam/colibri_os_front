@@ -117,3 +117,31 @@ export const getMicroActionInstanceStatusLabel = (status) => {
   const normalized = status?.toLowerCase().trim();
   return microActionInstanceStatusLabels[normalized] || status;
 };
+
+
+/* =========================================================
+   FORMAT MICRO ACTION CODE
+   ========================================================= */
+export const formatRouteCode = (code) => {
+  if (!code) return '-';
+
+  const parts = code.split('_');
+
+  const prefix = parts[0];
+
+  // MAD_3_2_1
+  if (prefix === 'MAD' && parts.length === 4) {
+    const [, tramo, categoria, microAction] = parts;
+
+    return `T${tramo}-C${categoria}-MA${microAction}`;
+  }
+
+  // PAC_3_2
+  if (prefix === 'PAC' && parts.length >= 3) {
+    const [, tramo, categoria] = parts;
+
+    return `T${tramo}-C${categoria}`;
+  }
+
+  return code;
+};
