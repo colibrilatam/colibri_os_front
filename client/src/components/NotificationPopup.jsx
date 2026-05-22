@@ -16,11 +16,11 @@ export default function NotificationPopup({ message, children, isOpen: initialIs
   return (
     <>
       {/* Overlay oscuro */}
-      <div className="text-white fixed inset-0 overlay-bg z-40" onClick={handleClose} />
+      <div className="text-white fixed inset-0 overlay-bg z-40 w-svw h-svh" onClick={handleClose} />
 
       {/* Popup */}
-      <div className=" fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-        <div className=" bg-gradient-to-br from-zinc-700/30 to-zinc-900/30 border border-zinc-600 rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 pointer-events-auto relative">
+      <div className=" fixed inset-0 flex items-center justify-center z-53 pointer-events-none">
+        <div className=" bg-gradient-to-br from-zinc-700/30 to-zinc-900/30 border border-zinc-600 rounded-lg shadow-2xl p-8 max-w-lg w-full mx-4 pointer-events-auto relative">
           {/* Botón Cerrar (X) */}
           <button
             onClick={handleClose}
@@ -41,7 +41,7 @@ export default function NotificationPopup({ message, children, isOpen: initialIs
 
           {/* Botón Aceptar */}
           <div className="flex justify-center mt-4">
-            <Button content="Aceptar" onClick={handleClose} color="blue" />
+            <Button content="Cerrar" onClick={handleClose} color="blue" />
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ export default function CreateProject() {
     const { data: userData } = await getUser();
     const projectId = data?.find((p) => p.projectName === "FlujoClave").id || [];
 
-    router.push(`/dashboard/${projectId}/senial`);
+    router.push(`/dashboard/${projectId}/identidad`);
   };
 
   // DEMO
