@@ -29,7 +29,7 @@ export default function Evolution() {
   />
   {/* Imagen evolucionada */}
   <img
-    className={` border-4 border-amber-300 absolute rounded-2xl transition-opacity duration-1000 ${evolvedState ? 'opacity-100' : 'opacity-0'}`}
+    className={` border-2 border-amber-300 absolute rounded-2xl transition-opacity duration-1000 ${evolvedState ? 'opacity-100' : 'opacity-0'}`}
     src="/flujo-evolved.png"
   />
 </div>  
