@@ -361,11 +361,11 @@ export default function NewTrayectoria() {
                 {/* METRICAS DEL PAC SELECCIONADO */}
                 { selectedPacMetrics.microactions && (
                   <div className="flex flex-row gap-8 text-center mt-4">
-                  <div className="border-glass p-2 rounded-2xl flex flex-col items-center gap-2 justify-center content-center text-center">
+                  <div className="glass-effect border-glass p-2 rounded-2xl flex flex-col items-center gap-2 justify-center content-center text-center">
                     <p className="text-micro-label mb-1 text-center">Micro acciones</p>
                   <div className="glass-effect-dark border-glass p-4 rounded-xl text-white">{selectedPacMetrics.microactions}</div>
                   </div>
-                  <div className=" border-glass p-2 rounded-2xl flex flex-col items-center gap-2 text-center justify-center content-center">
+                  <div className="glass-effect border-glass p-2 rounded-2xl flex flex-col items-center gap-2 text-center justify-center content-center">
                     <p className="text-micro-label mb-1 text-center">Evidencias</p>
                   <div className="glass-effect-dark border-glass p-4 rounded-xl text-white">{metrics.evidences}</div>
                   </div>
