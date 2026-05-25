@@ -69,7 +69,6 @@ export default function NewTrayectoria() {
     // Obtener información del backend y setear estados
     const { data: projectInfoResponse } = await getProjectInfo(dbProject.id);
     setProjectInfo(projectInfoResponse);
-    //console.log(projectInfoResponse)
     const { data: tramoDataResponse } = await getTramoInfo(projectInfoResponse.currentTramoId);
     setTramoInfo(tramoDataResponse);
 
@@ -77,16 +76,16 @@ export default function NewTrayectoria() {
     const tramoPacs = projectInfoResponse.projectPacs.filter(p => p.pac.code.startsWith(`PAC_${tramoDataResponse.code[1]}`));
 
     // Ordenarlos según el sortOrder definido en cada PAC
-    console.log(tramoPacs)
-    const sortedPacs = tramoPacs.sort((a, b) => a.pac.sortOrder - b.pac.sortOrder)
-    console.log(sortedPacs)
+    const sortedPacs = [...tramoPacs].sort((a, b) =>a.pac.sortOrder - b.pac.sortOrder)
+
+ 
     // Setear el estado con los PACs ordenados
     setPacs(sortedPacs);
 
     // Obtener el PAC en progreso o el último PAC del tramo
-    const firstPac = sortedPacs.find(p => p.status === "in_progress") || sortedPacs.reverse()[0];
+    const firstPac = sortedPacs.find(p => p.status === "in_progress") || [...sortedPacs].reverse()[0];
 
-    //console.log(dbProject.projectPacs)
+
     // Calcular y guardar en estado métricas
     const currentPac = `C${firstPac.pac.code[6]}`;
     const totalPacs = sortedPacs.filter(pac => pac.status === "completed").length;
@@ -106,7 +105,6 @@ export default function NewTrayectoria() {
   // Obtener información de microacciones
   const getMAInfo = async (tramoInfoParam = tramoInfo, inProgressPacParam = inProgressPac) => {
     const { data: microActionsResponse } = await getMicroActions(dbProject.id);
-    //console.log(tramoInfoParam)
     //  Obtener las instancias de microacciones del tramo actual
     const currentTramoMicroActions = microActionsResponse.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoInfoParam.code[1]}`));
 
@@ -139,10 +137,10 @@ export default function NewTrayectoria() {
 
     // Obtener y guardar las microacciones del PAC en progreso
     const inProgressPacMicroActions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`));
-    setInProgressPacActions({
-      ...inProgressPacActions,
+    setInProgressPacActions(prev=> ({
+      ...prev,
       microactions: inProgressPacMicroActions
-    })
+    }));
 
     setMicroActionData(orderedMicroActions);
     // Setear métricas
@@ -156,7 +154,6 @@ export default function NewTrayectoria() {
       ...prev,
       microactions: completedSelectedPacMicroactions,
     }))
-    //console.log(completedSelectedPacMicroactions)
     return { inProgressPacMicroActions, orderedMicroActions }
   }
 
@@ -168,22 +165,22 @@ export default function NewTrayectoria() {
     const filteredEvidences = evidencesResponse.filter(evidence =>
       microActionDataParam.some(ma => ma.id === evidence.microActionInstanceId)
     );
+  
 
     setEvidencesData(filteredEvidences.reverse());
 
     // Guardar la evidencia del PAC actual
     const inProgressPacEvidence = filteredEvidences.find(e => e.microActionInstanceId === inProgressPacActionsParam[0].id)
-    setInProgressPacActions({
-      ...inProgressPacActions,
+    setInProgressPacActions(prev => ({
+      ...prev,
       evidences: inProgressPacEvidence
-    })
+    }))
 
     // Setear métricas
     setMetrics(prev => ({
       ...prev,
       evidences: `${filteredEvidences.filter((e) => e.status === 'approved').length} / 7`,
     }))
-    //console.log(inProgressPacEvidence)
     setSelectedPacMetrics(prev => ({
   ...prev,
   evidences: `${inProgressPacEvidence.status === 'approved' ? 1 : 0} / 1`
@@ -196,7 +193,6 @@ export default function NewTrayectoria() {
 
     const currentPacId = pacsParam.find(p => p.status === "in_progress" || p.status === "pending")
     if(!currentPacId) return;
-    console.log(currentPacId)
 
     if (inProgressPacMicroActions.every((ma) =>
       ma.status === 'completed' ||
@@ -207,13 +203,13 @@ export default function NewTrayectoria() {
       
       const { data: updatePacResponse, error: updatePacError } = await updatePacStatus(currentPacId.id, { status: 'completed' });
 
-      console.log(updatePacResponse)
 
       if (updatePacError) {
         console.log(updatePacError)
       };
-      getPacsInfo();
       setIsPacCompleted(true);
+      getPacsInfo();
+      
 
       //}
     }
@@ -264,7 +260,6 @@ export default function NewTrayectoria() {
     completed: 'closed',
   }
 
-  //console.log(dbProject, tramoData)
  
 
   const getMicroActionsForPac = (pacCode) => {
@@ -273,7 +268,6 @@ export default function NewTrayectoria() {
   }
 
   const openUploadModal = (type, data) => {
-    //console.log(type, data)
     setUploadModal({
       isOpen: true,
       type,
@@ -288,7 +282,11 @@ export default function NewTrayectoria() {
       data: null,
     });
   };
-  //console.log(selectedPacMetrics)
+
+  const handleCompletedPac = () => {
+    const { evidenceData } = getEvidenceInfo();
+    checkCurrentPac(undefined, undefined, evidenceData);
+  }
 
 
   return (
@@ -311,9 +309,9 @@ export default function NewTrayectoria() {
         onClose={closeUploadModal}
         type={uploadModal.type}
         data={uploadModal.data}
-        evidenceRefresh={() => getEvidenceInfo()}
+        
         microactionRefresh={() => getMAInfo()}
-        checkPacStatus={() => checkCurrentPac()}
+        checkPacStatus={() => handleCompletedPac()}
       />
       {loading && <Loading></Loading>}
       {/* HEADER */}
@@ -442,7 +440,7 @@ export default function NewTrayectoria() {
           </div>
 
           {/* CARGA OPERATIVA DEL PAC - usando datos reales */}
-                { inProgressPacActions && inProgressPacActions.evidences && inProgressPacActions.microactions && 
+                { inProgressPacActions &&  inProgressPacActions.microactions && 
           <div id="carga" className="glass-effect border-glass rounded-2xl p-6">
             <h4 className="text-micro-label mb-4">Carga operativa del PAC</h4>
             <RealCargaPac
@@ -450,7 +448,7 @@ export default function NewTrayectoria() {
               onUploadEvidence={(ev) => openUploadModal('evidence', ev)}
               microActionCompleted={selectedPacMetrics.microactions === 3}
               pac={selectedPac}
-              microActions={getMicroActionsForPac(selectedPac.pac.code)}
+              microActions={inProgressPacActions.microactions}
               evidencesData={inProgressPacActions.evidences}
               rol={rol}
             />

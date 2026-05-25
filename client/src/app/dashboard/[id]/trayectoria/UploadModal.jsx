@@ -11,7 +11,6 @@ export default function UploadModal({
   onClose,
   type, // 'microaction' | 'evidence'
   data, // microaction o evidence object
-  evidenceRefresh,
   microactionRefresh,
   checkPacStatus,
   newStatusMap = {
@@ -210,7 +209,7 @@ export default function UploadModal({
           return;
         }
 
-        evidenceRefresh();
+     
         checkPacStatus();
         setSuccess('Evidencia aprobada.')
         
@@ -246,7 +245,7 @@ export default function UploadModal({
             transition={{ duration: 0.2 }}
             className="text-white glass-effect border-glass rounded-2xl p-6 max-w-md w-full space-y-4"
           >
-            {/* Header */}
+            {/* Header 
             <div>
               <h3 className="text-h3 mb-2">{title}</h3>
               {nextStatus && (
@@ -254,7 +253,7 @@ export default function UploadModal({
                   Próximo estado: <span className="font-medium">{nextStatus}</span>
                 </p>
               )}
-            </div>
+            </div>*/}
 
             {/* Error Message */}
             <AnimatePresence>
@@ -270,7 +269,7 @@ export default function UploadModal({
               )}
             </AnimatePresence>
 
-            {/* Success Message */}
+            {/* Success Message 
             <AnimatePresence>
               {success && (
                 <motion.div
@@ -282,7 +281,7 @@ export default function UploadModal({
                   {success}
                 </motion.div>
               )}
-            </AnimatePresence>
+            </AnimatePresence>*/}
 
             {/* executionNotes Input - Solo para microacciones */}
             {isMicroaction && (
