@@ -211,7 +211,6 @@ export default function NewTrayectoria() {
 
       if (updatePacError) {
         console.log(updatePacError)
-        return;
       };
       getPacsInfo();
       setIsPacCompleted(true);
