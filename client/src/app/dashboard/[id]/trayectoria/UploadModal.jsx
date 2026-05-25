@@ -4,13 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import NotificationPopup from "@/components/NotificationPopup";
 import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
+import {evidencesService} from "@/services/evidences";
 
 export default function UploadModal({
   isOpen,
   onClose,
   type, // 'microaction' | 'evidence'
   data, // microaction o evidence object
-  onSubmit, // callback que retorna la promesa del backend
+  evidenceRefresh,
+  microactionRefresh,
+  checkPacStatus,
   newStatusMap = {
     pending: 'started',
     started: 'submitted',
@@ -24,6 +27,11 @@ export default function UploadModal({
 
     const { execute: updateMicroAction } = useRequest(projectsService.updateMicroAction);
     const { execute: requestUpload } = useRequest(projectsService.requestUploadSignature);
+    const { execute: confirmUpload } = useRequest(projectsService.confirmUpload);
+    const { execute: submitEvidence } = useRequest(evidencesService.submit);
+    const { execute: createEvaluation } = useRequest(evidencesService.createEvaluation);
+    const { execute: getActiveRubrics } = useRequest(evidencesService.getActiveRubrics);
+    const { execute: closeEvaluation } = useRequest(evidencesService.closeEvaluation);
 
   const [formData, setFormData] = useState({
     file: null,
@@ -93,27 +101,109 @@ export default function UploadModal({
             setError(error.message || error || 'Error al enviar. Intenta nuevamente.');
             return;
           }
+          microactionRefresh();
           setSuccess('Actualización enviada correctamente.')
 
         };
 
         if(type === 'evidence'){
-            const body = {
+          // PASO 1 - Solicitar firma al backend
+            const requestUploadBody = {
   evidenceId: data.id,
   mimeType: "application/pdf",
   evidenceType: "file"
 }
-        const { data: responseData, error } = await requestUpload(body);
-        if(error){
-          console.log(error)
-          setError(error.message || error || 'Error al enviar. Intenta nuevamente.');
+        const { data: requestSignatureResponse, error: requestUploadError } = await requestUpload(requestUploadBody);
+        if(requestUploadError){
+          console.log(requestUploadError)
+          setError(requestUploadError.message || requestUploadError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
-        console.log(responseData)
-        setSuccess('Actualización enviada correctamente.')
+
+        // PASO 2 - Subir archivo a Cloudinary con firma
+        const CloudinaryformData = new FormData();
+        CloudinaryformData.append("file", formData.file); // File object o blob
+        CloudinaryformData.append("signature", requestSignatureResponse.signature);
+        CloudinaryformData.append("timestamp", requestSignatureResponse.timestamp);
+        CloudinaryformData.append("api_key", requestSignatureResponse.apiKey);
+        CloudinaryformData.append("folder", requestSignatureResponse.folder);
+        CloudinaryformData.append("public_id", requestSignatureResponse.publicId);
+
+        const cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${requestSignatureResponse.cloudName}/raw/upload`, {
+          method: "POST",
+          body: CloudinaryformData,
+        });
+
+        const cloudinaryData = await cloudinaryResponse.json();
+
+        // PASO 3 - Confirmar subida al backend
+        const { data: confirmUploadResponse, error: confirmUploadError } = await confirmUpload({
+          evidenceId: data.id,
+          cloudinaryPublicId: cloudinaryData.public_id,
+          storageUri: cloudinaryData.url,
+          mimeType: "pdf",
+          changeSummary: "Corrección de formato solicitada por el evaluador.",
+          isMaterialChange: false
+        })
+        if(confirmUploadError){
+          console.log(confirmUploadError)
+          setError(confirmUploadError.message || confirmUploadError || 'Error al enviar. Intenta nuevamente.');
+          return;
+        }
+        console.log(confirmUploadResponse)
+
+        // PASO 4 - Enviar evidencia a revisión
+        const { data: submitEvidenceResponse, error: submitEvidenceError } = await submitEvidence(data.id);
+        if(submitEvidenceError){
+          console.log(submitEvidenceError)
+          setError(submitEvidenceError.message || submitEvidenceError || 'Error al enviar. Intenta nuevamente.');
+          return;
+        };
+        console.log(submitEvidenceResponse)
+
+
+        // PASO 5 - Crear evaluación de evidencia
+        // Primero se obtienen todas las rúbricas activas
+        const { data: activeRubricsResponse, error: activeRubricsError } = await getActiveRubrics();
+        if(activeRubricsError){
+          console.log(activeRubricsError)
+          setError(activeRubricsError.message || activeRubricsError || 'Error al enviar. Intenta nuevamente.');
+          return;
+        }
+        console.log(activeRubricsResponse)
+        
+        // Luego se crea la evaluación con la primer rúbrica
+        const { data: createEvaluationResponse, error: createEvaluationError } = await createEvaluation({
+          evidenceId: data.id,
+          rubricId: activeRubricsResponse[0].id,
+          rubricVersion: "v1.0",
+          evaluationType: "hybrid",
+          evaluationSourceWeight: 0.5
+        })
+console.log(createEvaluationResponse)
+        // PASO 6 - Solo en DEMO: Cerrar evaluación y aprobar evidencia
+        
+        
+        const { data: closeEvaluationResponse, error: closeEvaluationError } = await closeEvaluation({
+          
+  evaluationId: createEvaluationResponse.id,
+  evaluationResult: "approved",
+  score: 99,
+  dimensionScoresJson: {
+    consistency: 82,
+    collaboration: 77,
+    sustainability: 81
+  },
+  comment: "Evidencia aprobada. Excelente trabajo de investigación."
+
+        })
+        console.log(closeEvaluationResponse)
+
+        evidenceRefresh();
+        checkPacStatus();
+        setSuccess('Evidencia aprobada.')
         
 }
-        onSubmit();
       // Solo limpiamos el formulario si la petición fue exitosa
       setFormData({
         file: null,
