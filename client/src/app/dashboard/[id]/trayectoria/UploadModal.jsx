@@ -11,7 +11,6 @@ export default function UploadModal({
   onClose,
   type, // 'microaction' | 'evidence'
   data, // microaction o evidence object
-  evidenceRefresh,
   microactionRefresh,
   checkPacStatus,
   newStatusMap = {
@@ -22,8 +21,9 @@ export default function UploadModal({
     completed: 'closed',
   }
 }) {
-    if(!data) return null
+    
     //console.log(data)
+    
 
     const { execute: updateMicroAction } = useRequest(projectsService.updateMicroAction);
     const { execute: requestUpload } = useRequest(projectsService.requestUploadSignature);
@@ -36,13 +36,15 @@ export default function UploadModal({
   const [formData, setFormData] = useState({
     file: null,
     executionNotes: '',
-    status: newStatusMap[data.status],
+    status: data?.status ? newStatusMap[data.status] : null,
     fileName: null,
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [ success, setSuccess ] = useState(null);
+
+  if(!data) return null
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -88,12 +90,18 @@ export default function UploadModal({
     setLoading(true);
     setError(null);
 
+    const STATES = ['pending', 'started','in_progress', 'submitted', 'validated', 'completed'];
+
     try {
       
         if(type === 'microaction') {
-            const body = {
+          const currentIndex = STATES.indexOf(ma.status);
+          const stepsNeeded = STATES.length - 1 - currentIndex;
+
+          for (let i = 0; i < stepsNeeded; i++) {
+    const body = {
                 executionNotes: formData.executionNotes,
-                status: formData.status
+                status: STATES[currentIndex + i + 1],
             }
           const { data: responseData, error } = await updateMicroAction(ma.id, body);
           if(error){
@@ -101,6 +109,8 @@ export default function UploadModal({
             setError(error.message || error || 'Error al enviar. Intenta nuevamente.');
             return;
           }
+  }
+            
           microactionRefresh();
           setSuccess('Actualización enviada correctamente.')
 
@@ -150,7 +160,6 @@ export default function UploadModal({
           setError(confirmUploadError.message || confirmUploadError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
-        console.log(confirmUploadResponse)
 
         // PASO 4 - Enviar evidencia a revisión
         const { data: submitEvidenceResponse, error: submitEvidenceError } = await submitEvidence(data.id);
@@ -159,7 +168,6 @@ export default function UploadModal({
           setError(submitEvidenceError.message || submitEvidenceError || 'Error al enviar. Intenta nuevamente.');
           return;
         };
-        console.log(submitEvidenceResponse)
 
 
         // PASO 5 - Crear evaluación de evidencia
@@ -170,7 +178,6 @@ export default function UploadModal({
           setError(activeRubricsError.message || activeRubricsError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
-        console.log(activeRubricsResponse)
         
         // Luego se crea la evaluación con la primer rúbrica
         const { data: createEvaluationResponse, error: createEvaluationError } = await createEvaluation({
@@ -180,7 +187,6 @@ export default function UploadModal({
           evaluationType: "hybrid",
           evaluationSourceWeight: 0.5
         })
-console.log(createEvaluationResponse)
         // PASO 6 - Solo en DEMO: Cerrar evaluación y aprobar evidencia
         
         
@@ -197,9 +203,13 @@ console.log(createEvaluationResponse)
   comment: "Evidencia aprobada. Excelente trabajo de investigación."
 
         })
-        console.log(closeEvaluationResponse)
+        if(closeEvaluationError){
+          console.log(closeEvaluationError)
+          setError(closeEvaluationError.message || closeEvaluationError || 'Error al enviar. Intenta nuevamente.');
+          return;
+        }
 
-        evidenceRefresh();
+     
         checkPacStatus();
         setSuccess('Evidencia aprobada.')
         
@@ -235,7 +245,7 @@ console.log(createEvaluationResponse)
             transition={{ duration: 0.2 }}
             className="text-white glass-effect border-glass rounded-2xl p-6 max-w-md w-full space-y-4"
           >
-            {/* Header */}
+            {/* Header 
             <div>
               <h3 className="text-h3 mb-2">{title}</h3>
               {nextStatus && (
@@ -243,7 +253,7 @@ console.log(createEvaluationResponse)
                   Próximo estado: <span className="font-medium">{nextStatus}</span>
                 </p>
               )}
-            </div>
+            </div>*/}
 
             {/* Error Message */}
             <AnimatePresence>
@@ -259,7 +269,7 @@ console.log(createEvaluationResponse)
               )}
             </AnimatePresence>
 
-            {/* Success Message */}
+            {/* Success Message 
             <AnimatePresence>
               {success && (
                 <motion.div
@@ -271,7 +281,7 @@ console.log(createEvaluationResponse)
                   {success}
                 </motion.div>
               )}
-            </AnimatePresence>
+            </AnimatePresence>*/}
 
             {/* executionNotes Input - Solo para microacciones */}
             {isMicroaction && (
