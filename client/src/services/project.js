@@ -43,4 +43,10 @@ export const projectsService = {
 
   requestUploadSignature: (data) => 
     fetcher(`/evidence/request-upload-signature`, {method: 'POST', body: JSON.stringify(data)}),
+
+  confirmUpload: (data) => 
+    fetcher(`/evidence/confirm-upload`, {method: 'POST', body: JSON.stringify(data)}),
+
+  updatePacStatus: (pacId ,data) => 
+    fetcher(`/projects/pac/${pacId}`, {method: 'PATCH', body: JSON.stringify(data)}),
 };

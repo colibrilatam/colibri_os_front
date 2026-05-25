@@ -20,66 +20,40 @@ import NotificationPopup from "@/components/NotificationPopup";
 import ProgressBar from "@/components/ProgressBar";
 
 export default function NewTrayectoria() {
-
-  const [isPacCompleted, setIsPacCompleted] = useState(false);
-
-  const checkCurrentPac = (microActions, evidences) => {
-
-    if (microActions.every((ma) =>
-      ma.status === 'completed' ||
-      ma.status === 'validated' ||
-      ma.status === 'closed'
-    )) {
-
-      //if(!evidences.find((e) => e.status !== 'approved')){  VERIFICAR SI TODAS LAS EVIDENCIAS ESTAN COMPLETAS
-      setIsPacCompleted(true);
-
-      //}
-    }
-
-  }
-
-  const convertDate = (date) => {
-    // 1. Convertimos el string en un objeto de fecha real de JavaScript
-    const newDate = new Date(date);
-
-    // 2. Le damos formato usando el idioma local del usuario
-    const formatedDate = new Intl.DateTimeFormat('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).format(newDate);
-    return formatedDate;
-  }
-
+  // contexto para obtener el id del proyecto
+  const { tramoData, dbProject } = useProject();
 
   const { execute: getMicroActions } = useRequest(projectsService.microActionInstance);
   const { execute: getEvidences } = useRequest(projectsService.evidences);
-
-  const { tramoData, dbProject } = useProject();
-  const isMobile = useIsMobile();
-
-  const rol = useUserStore((state) => state.rol);
-
-  
+  const { execute: updatePacStatus } = useRequest(projectsService.updatePacStatus);
+  const { execute: getProjectInfo } = useRequest(projectsService.getById);
+  const { execute: getTramoInfo } = useRequest(projectsService.currentTramo);
 
   // Estados
-  const [microActionData, setMicroActionData] = useState([]);
-  const [evidencesData, setEvidencesData] = useState([]);
+  const [microActionData, setMicroActionData] = useState(null);
+  const [projectInfo, setProjectInfo] = useState(null);
+  const [tramoInfo, setTramoInfo] = useState(null);
+  const [evidencesData, setEvidencesData] = useState(null);
+  const [isPacCompleted, setIsPacCompleted] = useState(false);
+  const [pacs, setPacs] = useState(null);
+  const [selectedPac, setSelectedPac] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [inProgressPac, setInProgressPac] = useState(null);
+  const [inProgressPacActions, setInProgressPacActions] = useState({
+    microactions: null,
+    evidences: null
+  });
+  // Métricas
+  const [selectedPacMetrics, setSelectedPacMetrics] = useState({
+    microactions: null,
+    evidences: null
+  });
   const [metrics, setMetrics] = useState({
     currentPac: null,
     totalPacs: null,
     microactions: null,
     evidences: null,
   });
-  const [pacs, setPacs] = useState([]);
-  const [selectedPac, setSelectedPac] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedPacMetrics, setSelectedPacMetrics] = useState({
-    microactions: null,
-    evidences: null
-  });
-
   // Estados del modal de carga
   const [uploadModal, setUploadModal] = useState({
     isOpen: false,
@@ -87,68 +61,52 @@ export default function NewTrayectoria() {
     data: null,
   });
 
-  const newStatus = {
-    pending: 'started',
-    started: 'submitted',
-    submitted: 'validated',
-    validated: 'completed',
-    completed: 'closed',
-  }
-
-  console.log(dbProject, tramoData)
-
   // Obtener el tramo actual
   const currentTramo = useMemo(() => tramoData.code, [tramoData]);
 
-  // Construir array de PACs del tramo actual a partir de dbProject.projectPacs
-  
-    const getCurrentPacs = () => {
-      if (!tramoData || dbProject.projectPacs.length === 0) return;
+  // Obtener información de PACs
+  const getPacsInfo = async () => {
+    // Obtener información del backend y setear estados
+    const { data: projectInfoResponse } = await getProjectInfo(dbProject.id);
+    setProjectInfo(projectInfoResponse);
+    //console.log(projectInfoResponse)
+    const { data: tramoDataResponse } = await getTramoInfo(projectInfoResponse.currentTramoId);
+    setTramoInfo(tramoDataResponse);
 
     // Filtrar los PACs que pertenecen al tramo actual usando el código del tramo
-    const tramoPacs = dbProject.projectPacs.filter(p => p.pac.code.startsWith(`PAC_${tramoData.code[1]}`));
+    const tramoPacs = projectInfoResponse.projectPacs.filter(p => p.pac.code.startsWith(`PAC_${tramoDataResponse.code[1]}`));
 
     // Ordenarlos según el sortOrder definido en cada PAC
     const sortedPacs = tramoPacs.sort((a, b) => a.pac.sortOrder - b.pac.sortOrder)
     // Setear el estado con los PACs ordenados
     setPacs(sortedPacs);
 
-    // Calcular métricas
-    const currentPac = `C${dbProject.projectPacs.find(pac => pac.status === "in_progress").pac.code[6]}`;
-    const totalPacs = sortedPacs.filter(pac => pac.status === "completed").length;
+    // Obtener el PAC en progreso o el último PAC del tramo
+    const firstPac = sortedPacs.find(p => p.status === "in_progress") || sortedPacs.reverse()[0];
 
+    //console.log(dbProject.projectPacs)
+    // Calcular y guardar en estado métricas
+    const currentPac = `C${firstPac.pac.code[6]}`;
+    const totalPacs = sortedPacs.filter(pac => pac.status === "completed").length;
     setMetrics(prev => ({
       ...prev,
       currentPac: currentPac,
       totalPacs: totalPacs
     }))
-    //console.log(sortedPacs)
 
-    // Setear el PAC actual
-    
-    setSelectedPac(sortedPacs.find(p => p.status === "in_progress") || sortedPacs[0]);
+    // Guardar el PAC en progreso
+    setInProgressPac(firstPac);
 
-    
-    }
-    
-
-  // Función para obtener información del backend
-  const fetchData = async () => {
-
-    setLoading(true);
-    getCurrentPacs();
-
-    const actualPac = dbProject.projectPacs.find(p => p.status === "in_progress") || dbProject.projectPacs[0]
-    
-    
-    
-
-
-    const { data: microActions } = await getMicroActions(dbProject.id);
-    const { data: evidences } = await getEvidences(dbProject.id);
-
+    // Setear el PAC en progreso como el seleccionado para la timeline
+    setSelectedPac(firstPac);
+    return { tramoDataResponse: tramoDataResponse, firstPac: firstPac, sortedPacs: sortedPacs };
+  }
+  // Obtener información de microacciones
+  const getMAInfo = async (tramoInfoParam = tramoInfo, inProgressPacParam = inProgressPac) => {
+    const { data: microActionsResponse } = await getMicroActions(dbProject.id);
+    //console.log(tramoInfoParam)
     //  Obtener las instancias de microacciones del tramo actual
-    const currentTramoMicroActions = microActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`));
+    const currentTramoMicroActions = microActionsResponse.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoInfoParam.code[1]}`));
 
     // Ordenar por código MAD
     const orderedMicroActions = currentTramoMicroActions.sort((a, b) => {
@@ -177,43 +135,136 @@ export default function NewTrayectoria() {
     });
     // FIN del ordenamiento de MAD
 
-    //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
-    const filteredEvidences = evidences.filter(evidence =>
-      currentTramoMicroActions.some(ma => ma.id === evidence.microActionInstanceId)
-    );
-
-    console.log(currentTramoMicroActions, filteredEvidences)
-
-    // Con la información de las microacciones y evidencias del tramo actual verificar si el mismo está completo
-    checkCurrentPac(orderedMicroActions, filteredEvidences);
+    // Obtener y guardar las microacciones del PAC en progreso
+    const inProgressPacMicroActions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`));
+    setInProgressPacActions({
+      ...inProgressPacActions,
+      microactions: inProgressPacMicroActions
+    })
 
     setMicroActionData(orderedMicroActions);
-    setEvidencesData(filteredEvidences.reverse()); // Se invierte el orden del array hasta que incluya una forma de ordenar
+    // Setear métricas
     setMetrics(prev => ({
       ...prev,
-      microactions: `${currentTramoMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length} / 21`,
+      microactions: `${currentTramoMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoInfoParam.code[1]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length} / 21`,
+    }))
+    // Métricas del pac actual
+    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length;
+    setSelectedPacMetrics( prev => ({
+      ...prev,
+      microactions: completedSelectedPacMicroactions,
+    }))
+    //console.log(completedSelectedPacMicroactions)
+    return { inProgressPacMicroActions, orderedMicroActions }
+  }
+
+  // Obtener información de evidencias
+  const getEvidenceInfo = async (microActionDataParam = microActionData, inProgressPacActionsParam = inProgressPacActions.microactions) => {
+    console.log(inProgressPacActionsParam)
+    const { data: evidencesResponse } = await getEvidences(dbProject.id);
+
+    //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
+    const filteredEvidences = evidencesResponse.filter(evidence =>
+      microActionDataParam.some(ma => ma.id === evidence.microActionInstanceId)
+    );
+
+    setEvidencesData(filteredEvidences.reverse());
+
+    // Guardar la evidencia del PAC actual
+    const inProgressPacEvidence = filteredEvidences.find(e => e.microActionInstanceId === inProgressPacActionsParam[0].id)
+    setInProgressPacActions({
+      ...inProgressPacActions,
+      evidences: inProgressPacEvidence
+    })
+
+    // Setear métricas
+    setMetrics(prev => ({
+      ...prev,
       evidences: `${filteredEvidences.filter((e) => e.status === 'approved').length} / 7`,
     }))
-    
-    // Métricas del pac actual
-    const selectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${actualPac.pac.code[4]}_${actualPac.pac.code[6]}`)).length;
-    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${actualPac.pac.code[4]}_${actualPac.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length;
-    const selectedPacEvidencesCompleted = filteredEvidences.filter((e) => e.status === 'approved').length
-    setSelectedPacMetrics({
-      microactions: `${completedSelectedPacMicroactions} / ${selectedPacMicroactions}`,
-      evidences: `${selectedPacEvidencesCompleted} / 7`
-    })
-    setLoading(false);
+    //console.log(inProgressPacEvidence)
+    setSelectedPacMetrics(prev => ({
+  ...prev,
+  evidences: `${inProgressPacEvidence.status === 'approved' ? 1 : 0} / 1`
+}))
+    return { inProgressPacEvidence }
+  }
 
+    // Función para verificar si el PAC actual está completado
+  const checkCurrentPac = async (pacsParam = pacs, inProgressPacMicroActions = inProgressPacActions.microactions, inProgressEvidence = inProgressPacActions.evidences ) => {
+
+    const currentPacId = pacsParam.find(p => p.status === "in_progress" || p.status === "pending")
+    if(!currentPacId) return;
+    console.log(currentPacId)
+
+    if (inProgressPacMicroActions.every((ma) =>
+      ma.status === 'completed' ||
+      ma.status === 'validated' ||
+      ma.status === 'closed'
+    ) && inProgressEvidence.status === 'approved') {
+
+      
+      const { data: updatePacResponse, error: updatePacError } = await updatePacStatus(currentPacId.id, { status: 'completed' });
+
+      console.log(updatePacResponse)
+
+      if (updatePacError) {
+        console.log(updatePacError)
+        return;
+      };
+      getPacsInfo();
+      setIsPacCompleted(true);
+
+      //}
+    }
 
   }
 
+  const initialize = async () => {
+  setLoading(true);
+  const { tramoDataResponse, firstPac, sortedPacs } = await getPacsInfo(); // await para esperar el return
+  const {inProgressPacMicroActions, orderedMicroActions} = await getMAInfo(tramoDataResponse, firstPac);
+  const { inProgressPacEvidence } = await getEvidenceInfo(orderedMicroActions, inProgressPacMicroActions);
+  checkCurrentPac(sortedPacs, inProgressPacMicroActions, inProgressPacEvidence);
+  setLoading(false);
+}
+
   // Al montar el componente se ejecuta la función para obtener los datos
   useEffect(() => {
-    if (dbProject?.id && currentTramo) {
-      fetchData();
-    }
-  }, [dbProject, currentTramo]);
+    initialize();
+  }, []);
+
+  
+
+
+
+  const convertDate = (date) => {
+    // 1. Convertimos el string en un objeto de fecha real de JavaScript
+    const newDate = new Date(date);
+
+    // 2. Le damos formato usando el idioma local del usuario
+    const formatedDate = new Intl.DateTimeFormat('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(newDate);
+    return formatedDate;
+  }
+
+
+  const isMobile = useIsMobile();
+
+  const rol = useUserStore((state) => state.rol);
+
+  const newStatus = {
+    pending: 'started',
+    started: 'submitted',
+    submitted: 'validated',
+    validated: 'completed',
+    completed: 'closed',
+  }
+
+  //console.log(dbProject, tramoData)
 
 
   // Función para obtener evidencias de una microacción específica
@@ -243,10 +294,8 @@ export default function NewTrayectoria() {
       data: null,
     });
   };
+  //console.log(selectedPacMetrics)
 
-  const handleUploadSubmit = async () => {
-    fetchData();
-  };
 
   return (
     <div className="relative space-y-6">
@@ -268,7 +317,9 @@ export default function NewTrayectoria() {
         onClose={closeUploadModal}
         type={uploadModal.type}
         data={uploadModal.data}
-        onSubmit={handleUploadSubmit}
+        evidenceRefresh={() => getEvidenceInfo()}
+        microactionRefresh={() => getMAInfo()}
+        checkPacStatus={() => checkCurrentPac()}
       />
       {loading && <Loading></Loading>}
       {/* HEADER */}
@@ -328,7 +379,7 @@ export default function NewTrayectoria() {
 
 
       {/* LOWER GRID */}
-      {selectedPac && microActionData.length > 0 && (
+      {selectedPac && microActionData && microActionData.length > 0 && (
         <div className="grid cols-1 md:grid-cols-2 gap-6">
           {/* DETALLE PAC */}
           <div id="detalle" className="glass-effect border-glass rounded-2xl p-6">
@@ -349,29 +400,30 @@ export default function NewTrayectoria() {
                 <p className="text-body-lg mb-4">{selectedPac.pac.closureRule}</p>
 
                 <div className="flex flex-row gap-4 items-center">
-                <p className="text-lg text-(--text-primary) mb-2">Peso del PAC en Índice Colibrí: </p>
+                  <p className="text-lg text-(--text-primary) mb-2">Peso del PAC en Índice Colibrí: </p>
 
-                <p className="text-body-lg mb-4 p-1 glass-effect-green border-glass rounded-lg">{selectedPac.pac.icWeight}</p>
+                  <p className="text-body-lg mb-4 p-1 glass-effect-green border-glass rounded-lg">{selectedPac.pac.icWeight}</p>
                 </div>
 
                 <p className="text-micro-label mb-1">Progreso del PAC</p>
 
-                <ProgressBar color='cyan' progreso={selectedPac.progress}/>
+                <ProgressBar color='cyan' progreso={selectedPac.progress} />
 
                 {/* METRICAS DEL PAC SELECCIONADO */}
-                { selectedPacMetrics.microactions && (
+                {selectedPacMetrics.microactions !== null && metrics.evidences !== null ? (
                   <div className="flex flex-row gap-8 text-center mt-4">
-                  <div className="glass-effect border-glass p-2 rounded-2xl flex flex-col items-center gap-2 justify-center content-center text-center">
-                    <p className="text-micro-label mb-1 text-center">Micro acciones</p>
-                  <div className="glass-effect-dark border-glass p-4 rounded-xl text-white">{selectedPacMetrics.microactions}</div>
+                    <div className="glass-effect border-glass p-2 rounded-2xl flex flex-col items-center gap-2 justify-center content-center text-center">
+                      <p className="text-micro-label mb-1 text-center">Micro acciones</p>
+                      <div className="glass-effect-dark border-glass p-4 rounded-xl text-white">{selectedPacMetrics.microactions} / 3</div>
+                    </div>
+                    <div className="glass-effect border-glass p-2 rounded-2xl flex flex-col items-center gap-2 text-center justify-center content-center">
+                      <p className="text-micro-label mb-1 text-center">Evidencias</p>
+                      <div className="glass-effect-dark border-glass p-4 rounded-xl text-white">{selectedPacMetrics.evidences}</div>
+                    </div>
                   </div>
-                  <div className="glass-effect border-glass p-2 rounded-2xl flex flex-col items-center gap-2 text-center justify-center content-center">
-                    <p className="text-micro-label mb-1 text-center">Evidencias</p>
-                  <div className="glass-effect-dark border-glass p-4 rounded-xl text-white">{metrics.evidences}</div>
-                  </div>
-                </div>
-                )}
-                
+                ) :
+                  <div>Error al calcular métricas del PAC</div>}
+
 
               </div>
               <div className="glass-effect border-glass p-4 rounded-xl">
@@ -389,7 +441,7 @@ export default function NewTrayectoria() {
 
                 <div className="flex justify-between text-body">
                   <span>Cierre</span>
-                  <span>{selectedPac.status !== 'completed' ? '-' :convertDate(selectedPac.pac.updatedAt)}</span>
+                  <span>{selectedPac.status !== 'completed' ? '-' : convertDate(selectedPac.pac.updatedAt)}</span>
                 </div>
               </div>
             </div>
@@ -402,6 +454,7 @@ export default function NewTrayectoria() {
             <RealCargaPac
               onUploadMicroaction={(ma) => openUploadModal('microaction', ma)}
               onUploadEvidence={(ev) => openUploadModal('evidence', ev)}
+              microActionCompleted={selectedPacMetrics.microactions === 3}
               pac={selectedPac}
               microActions={getMicroActionsForPac(selectedPac.pac.code)}
               evidencesData={getEvidenceForMicroAction(selectedPac.pac.code)}
@@ -416,7 +469,7 @@ export default function NewTrayectoria() {
 }
 
 // Componente que muestra las microacciones reales del PAC
-const RealCargaPac = ({ pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence }) => {
+const RealCargaPac = ({ pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence, microActionCompleted }) => {
   if (!microActions.length) {
     return (
       <div className="rounded-xl p-4 border border-glass-dark bg-white/5">
@@ -507,7 +560,7 @@ const RealCargaPac = ({ pac, microActions, evidencesData, rol, onUploadMicroacti
             </div>
 
             {/* Botón de carga - para evidencias no aprobadas */}
-            {evidencesData.status !== "approved" && rol === 'entrepreneur' && (
+            {evidencesData.status !== "approved" && rol === 'entrepreneur' && microActionCompleted && (
               <button
                 onClick={() => onUploadEvidence(evidencesData)}
                 className="cursor-pointer text-white text-base glass-effect-green border-glass font-bold py-2 px-4 rounded-lg
@@ -515,6 +568,10 @@ const RealCargaPac = ({ pac, microActions, evidencesData, rol, onUploadMicroacti
               >
                 Cargar o actualizar
               </button>
+            )
+            }
+            {evidencesData.status !== "approved" && rol === 'entrepreneur' && !microActionCompleted && (
+              <div className="text-yellow-600/80 text-lg">Completa todas las micro acciones del PAC para poder subir la evidencia</div>
             )}
 
             {/* Estado: Aprobada */}
