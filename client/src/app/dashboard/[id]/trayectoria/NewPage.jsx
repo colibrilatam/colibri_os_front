@@ -77,7 +77,9 @@ export default function NewTrayectoria() {
     const tramoPacs = projectInfoResponse.projectPacs.filter(p => p.pac.code.startsWith(`PAC_${tramoDataResponse.code[1]}`));
 
     // Ordenarlos según el sortOrder definido en cada PAC
+    console.log(tramoPacs)
     const sortedPacs = tramoPacs.sort((a, b) => a.pac.sortOrder - b.pac.sortOrder)
+    console.log(sortedPacs)
     // Setear el estado con los PACs ordenados
     setPacs(sortedPacs);
 
@@ -160,7 +162,6 @@ export default function NewTrayectoria() {
 
   // Obtener información de evidencias
   const getEvidenceInfo = async (microActionDataParam = microActionData, inProgressPacActionsParam = inProgressPacActions.microactions) => {
-    console.log(inProgressPacActionsParam)
     const { data: evidencesResponse } = await getEvidences(dbProject.id);
 
     //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
@@ -265,13 +266,7 @@ export default function NewTrayectoria() {
   }
 
   //console.log(dbProject, tramoData)
-
-
-  // Función para obtener evidencias de una microacción específica
-  const getEvidenceForMicroAction = (pacCode) => {
-    const pacMA = microActionData.find(ma => ma.microActionDefinition.code.startsWith(`MAD_${pacCode[4]}_${pacCode[6]}`) && ma.evidences.length > 0);
-    return pacMA.evidences[0];
-  };
+ 
 
   const getMicroActionsForPac = (pacCode) => {
     return microActionData.filter(ma => ma.microActionDefinition.code.startsWith(`MAD_${pacCode[4]}_${pacCode[6]}`))
@@ -363,7 +358,7 @@ export default function NewTrayectoria() {
             }}
             className="!overflow-visible"
           >
-            {pacs.length > 0 && pacs.map((p, i) => (
+            {pacs && pacs.length > 0 && pacs.map((p, i) => (
               <SwiperSlide key={p.code} className="!h-auto">
                 <PacCard
                   pac={p}
@@ -448,7 +443,7 @@ export default function NewTrayectoria() {
           </div>
 
           {/* CARGA OPERATIVA DEL PAC - usando datos reales */}
-
+                { inProgressPacActions && inProgressPacActions.evidences && inProgressPacActions.microactions && 
           <div id="carga" className="glass-effect border-glass rounded-2xl p-6">
             <h4 className="text-micro-label mb-4">Carga operativa del PAC</h4>
             <RealCargaPac
@@ -457,10 +452,11 @@ export default function NewTrayectoria() {
               microActionCompleted={selectedPacMetrics.microactions === 3}
               pac={selectedPac}
               microActions={getMicroActionsForPac(selectedPac.pac.code)}
-              evidencesData={getEvidenceForMicroAction(selectedPac.pac.code)}
+              evidencesData={inProgressPacActions.evidences}
               rol={rol}
             />
           </div>
+}
         </div>
       )}
 
