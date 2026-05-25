@@ -303,7 +303,7 @@ export default function ProjectSection() {
               <div className="flex items-center gap-1">
                 <span className="text-[11px] font-semibold text-cyan-300">
                   {
-                    activeMembers.filter(
+                    dbProject.members.filter(
                       (member) => member.user?.gender === 'male', // Asegúrate de que el campo de género en tu base de datos
                     ).length
                   }
