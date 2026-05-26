@@ -49,6 +49,14 @@ export default function UploadModal({
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validar que el archivo sea estrictamente un PDF
+    if (file.type !== "application/pdf") {
+      setError("El archivo seleccionado no es un PDF. Por favor, sube un formato válido.");
+      // Limpiamos el input por si acaso
+      e.target.value = ""; 
+      return;
+    }
+
       setFormData(prev => ({
         ...prev,
         file,
@@ -305,9 +313,11 @@ export default function UploadModal({
               <label className="text-body-lg font-medium">
                 Archivo {isMicroaction ? 'de evidencia' : ''} *
               </label>
+              <p className="text-(--text-tertiary)">Solo archivos en formato .PDF</p>
               <div className="relative">
                 <input
                   type="file"
+                  accept="application/pdf"
                   onChange={handleFileChange}
                   disabled={loading}
                   className="w-full text-sm text-white border border-glass rounded-xl p-3
