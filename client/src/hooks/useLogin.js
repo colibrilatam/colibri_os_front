@@ -32,6 +32,7 @@ export const useLogin = () => {
 
   const userData = async() => {
     const { data, error } = await handleRequest(() => userService.profile())
+    if(error) return { error }
     return { data }
   }
 

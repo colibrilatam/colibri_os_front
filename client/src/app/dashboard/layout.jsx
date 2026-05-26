@@ -15,16 +15,16 @@ export default function DashboardLayout({ children }) {
  
 
 
-  useEffect(() => {
+  /*useEffect(() => {
     // Verificar autenticación
-    setIsLoading(true);
+    //setIsLoading(true);
     if (!isAuthenticated()) {
       setError("Debes iniciar sesión para acceder a esta sección")
       setIsLoading(false);
     } else {
       setIsLoading(false);
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router]);*/
 
   if (isLoading) {
     return <LoadingScreen />;
@@ -32,6 +32,10 @@ export default function DashboardLayout({ children }) {
 
   if(error) {
     return <ErrorScreen error={{message: error}} next={"Iniciar sesión"} redirect={"/login"} />;
+  }
+
+  if (!isAuthenticated()){
+    return <ErrorScreen error={{message: "Debes iniciar sesión para acceder a esta sección"}} next={"Iniciar sesión"} redirect={"/login"} />
   }
  
 
