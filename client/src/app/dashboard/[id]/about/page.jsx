@@ -248,7 +248,7 @@ export default function ProjectSection() {
       )}
 
       {/* ================= TEAM =================*/}
-      {dbProject.members.length > 0 && (
+      {dbProject.members.length > 0 ? (
         <div className="space-y-4">
           {/* HEADER */}
           <div
@@ -412,7 +412,23 @@ export default function ProjectSection() {
             </div>
           </div>
         </div>
-      )}
+      ) : 
+      (
+        <div
+        className="
+              flex items-center justify-between
+              text-slate-400
+              text-xl
+              rounded-2xl border border-slate-800
+              bg-white/3
+              px-4 py-3
+              transition-all duration-300
+              hover:bg-white/5
+              hover:border-slate-700
+            "
+        >El proyecto aún no tiene miembros</div>
+      )
+      }
       {/* ================= METRICS ================= */}
       {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <MetricCard
