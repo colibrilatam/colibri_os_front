@@ -14,7 +14,7 @@ export const useUserStore = create(
       setSubioTramo: (subioTramo) => set({ subioTramo }),
 
       // Demo
-      isDemo: true,
+      isDemo: false,
       setIsDemo: (isDemo) => set({ isDemo }),
 
       // Estado existente

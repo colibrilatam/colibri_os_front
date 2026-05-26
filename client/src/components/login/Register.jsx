@@ -1,203 +1,249 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useRegister } from '@/hooks/useRegister';
-import { validatePassword, getPasswordErrors, validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
 import { useLogin } from '@/hooks';
+import { useEffect, useState } from 'react';
+
+// --- Esquema de validación (sin cambios) ---
+const registerSchema = z
+  .object({
+    fullName: z.string().min(1, 'El nombre de usuario es requerido'),
+    email: z.string().min(1, 'El email es requerido').email('El email no tiene un formato válido'),
+    password: z
+      .string()
+      .min(1, 'La contraseña es requerida')
+      .min(8, 'La contraseña debe tener al menos 8 caracteres')
+      .regex(/[A-Z]/, 'La contraseña debe tener al menos una mayúscula')
+      .regex(/[0-9]/, 'La contraseña debe tener al menos un número')
+      .regex(/[!@#$%^&*(),.?":{}|<>]/, 'La contraseña debe tener al menos un carácter especial'),
+    confirmPassword: z.string().min(1, 'Confirmar contraseña es requerido'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
+  });
+
+// Clave para guardar datos en localStorage (opcional)
+const STORAGE_KEY = 'register_form_backup';
 
 export default function Register({ selectedRole, onSuccess, onBack, onLoadingChange }) {
   const { handleRegister } = useRegister();
-
-  // DEMO
   const isDemo = useUserStore((state) => state.isDemo);
   const setIsDemo = useUserStore((state) => state.setIsDemo);
-
-  const [ formError, setFormError ] = useState(null);
-  
-
+  const setToken = useUserStore((state) => state.setToken);
   const { handleDemoLogin } = useLogin();
 
-  
+  const [ generalError, setGeneralError ] = useState('');
 
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    setError,
+    watch,
+    reset,
+    getValues,
+    setValue,
+    trigger, // ← añade esta línea
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+    mode: 'onChange',
+    defaultValues: {
+      fullName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      role: selectedRole,
+    },
   });
 
-  const [errors, setErrors] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  useEffect(() => {
-    // DEMO
-    setIsDemo(true);
-    setFormData({
-      username: selectedRole === 'emprendedor' ? 'Ana Startup' : 'Sofia Mecenas',
-      email: selectedRole === 'emprendedor' ? 'ana@colibri.com' : 'mecenas@colibri.com',
-      password: 'Test@1234',
-      confirmPassword: 'Test@1234',
-    })
-  }, []);
-
-  // validación de contraseña
-  const [passwordValidation, setPasswordValidation] = useState({
-    hasMinLength: false,
-    hasUpperCase: false,
-    hasNumber: false,
-    hasSpecialChar: false,
-    isValid: false,
-  });
-
-  // input handler
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    const newErrors = { ...errors };
-
-    if (name === 'username') {
-      newErrors.username = value.trim() === '' ? 'El nombre de usuario es requerido' : '';
-    }
-
-    if (name === 'email') {
-      if (value.trim() === '') newErrors.email = 'El email es requerido';
-      else if (!validateEmail(value)) newErrors.email = 'El email no tiene un formato válido';
-      else newErrors.email = '';
-    }
-
-    if (name === 'password') {
-      const validation = validatePassword(value);
-      setPasswordValidation(validation);
-
-      if (value.trim() === '') newErrors.password = 'La contraseña es requerida';
-      else if (!validation.isValid) newErrors.password = getPasswordErrors(validation).join(', ');
-      else newErrors.password = '';
-
-      if (formData.confirmPassword && value !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Las contraseñas no coinciden';
-      } else if (formData.confirmPassword === value) {
-        newErrors.confirmPassword = '';
+ // --- Recuperar datos guardados (solo si son válidos) ---
+useEffect(() => {
+  const saved = sessionStorage.getItem(STORAGE_KEY);
+  if (saved && !isDemo) {
+    try {
+      const parsed = JSON.parse(saved);
+      // Validamos los datos con Zod
+      const validation = registerSchema.safeParse(parsed);
+      if (validation.success) {
+        // Restauramos forzando la validación en cada campo
+        setValue('fullName', parsed.fullName, { shouldValidate: true });
+        setValue('email', parsed.email, { shouldValidate: true });
+        setValue('password', parsed.password, { shouldValidate: true });
+        setValue('confirmPassword', parsed.confirmPassword, { shouldValidate: true });
+        // Forzamos una validación global por si acaso
+        trigger();
+        console.log('✅ Formulario restaurado y validado');
+      } else {
+        console.warn('❌ Datos inválidos en storage, se limpian');
+        sessionStorage.removeItem(STORAGE_KEY);
       }
+    } catch (e) {
+      sessionStorage.removeItem(STORAGE_KEY);
     }
+  }
+}, [isDemo, setValue, trigger]);
 
-    if (name === 'confirmPassword') {
-      if (value.trim() === '') newErrors.confirmPassword = 'Confirmar contraseña es requerido';
-      else if (value !== formData.password) newErrors.confirmPassword = 'Las contraseñas no coinciden';
-      else newErrors.confirmPassword = '';
+// Depuración (puedes quitarlo después)
+useEffect(() => {
+  console.log('isValid:', isValid, 'isSubmitting:', isSubmitting);
+}, [isValid, isSubmitting]);
+
+  // --- (Opcional) Guardar en localStorage cada vez que cambian los valores ---
+  useEffect(() => {
+    if (!isDemo) {
+      const subscription = watch((value) => {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
+      });
+      return () => subscription.unsubscribe();
     }
+  }, [watch, isDemo]);
 
-    setErrors(newErrors);
+  // Observar contraseña para los requisitos visuales
+  const passwordValue = watch('password', '');
+  const requirements = {
+    minLength: passwordValue.length >= 8,
+    hasNumber: /[0-9]/.test(passwordValue),
+    hasUppercase: /[A-Z]/.test(passwordValue),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue),
   };
 
-  // validación de formulario
-  const isFormValid = () =>
-    formData.username &&
-    formData.email &&
-    formData.password &&
-    formData.confirmPassword &&
-    !errors.username &&
-    !errors.email &&
-    !errors.password &&
-    !errors.confirmPassword &&
-    passwordValidation.isValid;
-
-    const handleSubmitDemo = async (e) => {
-      e.preventDefault();
-      const result = await handleDemoLogin(selectedRole);
-     
-      onSuccess();
-    }
-
-    // enviar formulario
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validation = await validatePassword(formData.password);
-     setPasswordValidation(validation);
-
-    if (!isFormValid()) {
-       setFormError('Por favor, corrige los errores en el formulario antes de continuar.');;
-       return;
-    }
-
+  const onSubmitReal = async (data) => {
+  try {
     onLoadingChange(true);
-    const result = await handleRegister({ ...formData, role: selectedRole });
-    onLoadingChange(false);
+    const result = await handleRegister({ ...data, role: selectedRole });
 
     if (result.success) {
+      sessionStorage.removeItem(STORAGE_KEY);
+      console.log(result);
+      setToken(result.data.token);
       onSuccess();
     } else {
-      setFormError("Error al crear usuario: " + result.error);
+      const errorMessage = result.error?.message || result.error || 'Error desconocido';
+      setError('root', { type: 'manual', message: `Error al crear usuario: ${errorMessage}` });
+      setGeneralError(`Error al crear usuario: ${errorMessage}`);
+      alert(`Error al crear usuario: ${errorMessage}`)
+    }
+  } catch (error) {
+    console.error(error);
+    setError('root', { 
+      type: 'manual', 
+      message: 'Error de conexión. Intenta nuevamente más tarde.' 
+    });
+    setGeneralError('Error de conexión. Intenta nuevamente más tarde.');
+    alert('Error de conexión. Intenta nuevamente más tarde.')
+  } finally {
+    onLoadingChange(false);
+  }
+};
+
+  const onSubmitDemo = async (e) => {
+    e.preventDefault();
+    const result = await handleDemoLogin(selectedRole);
+    if (result?.success !== false) {
+      onSuccess();
     }
   };
 
+  const onSubmit = isDemo ? onSubmitDemo : handleSubmit(onSubmitReal);
+
   return (
-    <form onSubmit={isDemo ? handleSubmitDemo : handleSubmit} className="space-y-5">
+    <form onSubmit={onSubmit} className="space-y-5" noValidate>
+      {/* Nombre completo */}
       <div>
         <label className="text-micro-label block mb-2">Nombre completo</label>
         <input
-          name="username"
-          value={formData.username}
-          onChange={handleInputChange}
+          {...register('fullName')}
           className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.username ? 'border-red-500' : ''
+            errors.fullName ? 'border-red-500' : ''
           }`}
         />
+        {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
       </div>
 
+      {/* Email */}
       <div>
         <label className="text-micro-label block mb-2">Email</label>
         <input
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
+          type="email"
+          {...register('email')}
           className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
             errors.email ? 'border-red-500' : ''
           }`}
         />
+        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
       </div>
 
+      {/* Contraseña */}
       <div>
         <label className="text-micro-label block mb-2">Contraseña</label>
         <input
           type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleInputChange}
+          {...register('password')}
           className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
             errors.password ? 'border-red-500' : ''
           }`}
         />
+        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
       </div>
 
+      {/* Lista de requisitos */}
+      <div className="space-y-2 mt-2 mb-4 bg-white/5 p-3 rounded-lg">
+        <p className="text-sm text-gray-300 mb-2">La contraseña debe cumplir:</p>
+        <ul className="space-y-1 text-sm">
+          <li className={`flex items-center gap-2 ${requirements.minLength ? 'text-green-400' : 'text-gray-400'}`}>
+            {requirements.minLength ? '✅' : '○'} Mínimo 8 caracteres
+          </li>
+          <li className={`flex items-center gap-2 ${requirements.hasNumber ? 'text-green-400' : 'text-gray-400'}`}>
+            {requirements.hasNumber ? '✅' : '○'} Al menos 1 número
+          </li>
+          <li className={`flex items-center gap-2 ${requirements.hasUppercase ? 'text-green-400' : 'text-gray-400'}`}>
+            {requirements.hasUppercase ? '✅' : '○'} Al menos 1 mayúscula
+          </li>
+          <li className={`flex items-center gap-2 ${requirements.hasSpecialChar ? 'text-green-400' : 'text-gray-400'}`}>
+            {requirements.hasSpecialChar ? '✅' : '○'} Al menos 1 carácter especial
+          </li>
+        </ul>
+      </div>
+
+      {/* Confirmar contraseña */}
       <div>
         <label className="text-micro-label block mb-2">Confirmar contraseña</label>
         <input
           type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
-          onChange={handleInputChange}
+          {...register('confirmPassword')}
           className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
             errors.confirmPassword ? 'border-red-500' : ''
           }`}
         />
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+        )}
       </div>
 
-          {formError && (
-            <p className="text-red-500 text-xl mt-2">{formError}</p>
-           )}
+      {/* Error general */}
+      {errors.root && <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>}
+      {generalError.length > 0 && <p className="text-red-500 text-sm mt-2">{generalError}</p>}
 
+      {/* Botón registro */}
       <button
         type="submit"
-        className={`w-full py-3 rounded-lg font-semibold transitionbg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer bg-gray-500`}
+        disabled={(!isDemo && !isValid) || isSubmitting}
+        className={`w-full py-3 rounded-lg font-semibold transition bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer ${
+          (!isDemo && !isValid) || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
       >
-        Registrarse
+        {isSubmitting ? 'Registrando...' : 'Registrarse'}
       </button>
 
+      {!isDemo && !isValid && !isSubmitting && (
+  <p className="text-yellow-400 text-sm">Completa todos los campos correctamente para habilitar el registro</p>
+)}
+
+      {/* Botón volver */}
       <button
         type="button"
         onClick={onBack}

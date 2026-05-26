@@ -124,7 +124,7 @@ export default function LoginRegisterPage() {
           <Register
             selectedRole={selectedRole}
             onSuccess={
-              selectedRole === 'emprendedor'
+              selectedRole === 'entrepreneur'
                 ? () => router.push('/proyecto')
                 : () => router.push('/user/nft')
             }

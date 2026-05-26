@@ -284,7 +284,7 @@ export default function ProjectSection() {
                 <span className="text-[11px] font-semibold text-fuchsia-300">
                   {
                     dbProject.members.filter(
-                      (member) => member.user?.gender === 'female', // Asegúrate de que el campo de género en tu base de datos
+                      (member) => member.gender === 'female', // Asegúrate de que el campo de género en tu base de datos
                     ).length
                   }
                 </span>
@@ -304,7 +304,7 @@ export default function ProjectSection() {
                 <span className="text-[11px] font-semibold text-cyan-300">
                   {
                     dbProject.members.filter(
-                      (member) => member.user?.gender === 'male', // Asegúrate de que el campo de género en tu base de datos
+                      (member) => member.gender === 'male', // Asegúrate de que el campo de género en tu base de datos
                     ).length
                   }
                 </span>

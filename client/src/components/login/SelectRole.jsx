@@ -33,7 +33,7 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
-          onClick={() => onSelectRole('emprendedor')}
+          onClick={() => onSelectRole('entrepreneur')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
           Continuar como Emprendedor
@@ -50,7 +50,7 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
-          onClick={() => onSelectRole('mecenas')}
+          onClick={() => onSelectRole('mecenas_semilla')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
           Continuar como Mecenas
