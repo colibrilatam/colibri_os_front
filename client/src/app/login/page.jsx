@@ -11,8 +11,11 @@ import Register from '@/components/login/Register';
 import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
 import { useLogin } from '@/hooks';
+import {useUserStore} from '@/lib/store';
 
 export default function LoginRegisterPage() {
+  const setIsDemo = useUserStore((state) => state.setIsDemo);
+  setIsDemo(false)
   const [view, setView] = useState('login'); // login | selectRole | register | nftLink
   const [selectedRole, setSelectedRole] = useState('');
   const [loading, setLoading] = useState(false);
