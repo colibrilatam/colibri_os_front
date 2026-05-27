@@ -49,4 +49,7 @@ export const projectsService = {
 
   updatePacStatus: (pacId ,data) => 
     fetcher(`/projects/pac/${pacId}`, {method: 'PATCH', body: JSON.stringify(data)}),
+
+  categories: (tramoId) => 
+    fetcher(`/categories?tramoId=${tramoId}`),
 };
