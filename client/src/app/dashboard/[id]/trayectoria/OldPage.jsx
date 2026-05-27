@@ -22,6 +22,7 @@ import { useRequest } from '@/hooks/useRequest';
 export default function OldTrayectoria() {
 
   const convertDate = (date) => {
+    console.log(date)
     // 1. Convertimos el string en un objeto de fecha real de JavaScript
   const newDate = new Date(date);
 
@@ -335,7 +336,7 @@ return formatedDate;
 
               <div className="flex justify-between text-body">
                 <span>Inicio</span>
-                <span>{convertDate(selectedPac.detail.timeline.start)}</span>
+                <span>{selectedPac.detail.timeline.start}</span>
               </div>
 
               <div className="flex justify-between text-body">
