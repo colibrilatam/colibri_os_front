@@ -61,7 +61,7 @@ export const useUserStore = create(
       },
 
       // Verificar si hay token y si es válido, o si es invitado
-      isAuthenticated: (guest = false) => {
+      isAuthenticated: () => {
   const token = get().token
   //const isGuest = get().isGuest
   
@@ -71,7 +71,7 @@ export const useUserStore = create(
 
   // Si no es invitado, validar token
   if (isTokenExpired(token)) {
-    set({ token: null })
+    //set({ token: null })
     return false
   }
   return true
