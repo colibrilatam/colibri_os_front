@@ -4,8 +4,11 @@ import { useRouter } from 'next/navigation';
 import { useLogin } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
+import { projectsService } from '@/services/project';
+import { useRequest } from '@/hooks/useRequest';
 
 export default function Login({ onLoadingChange }) {
+
   const router = useRouter();
   const { handleLogin, userData } = useLogin();
   const setRol = useUserStore((state) => state.setRol);
@@ -15,6 +18,8 @@ export default function Login({ onLoadingChange }) {
 
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const { execute: getAllProjects } = useRequest(projectsService.getAll);
 
   // handlers
   const handleInputChange = (e) => {
@@ -46,6 +51,10 @@ export default function Login({ onLoadingChange }) {
   // enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!isFormValid()) {
+      setServerError('Por favor, corrige los errores en el formulario antes de continuar.');
+      return;
+    };
     setLoading(true);
     setServerError('');
 
@@ -58,6 +67,7 @@ export default function Login({ onLoadingChange }) {
     }
 
     const userResult = await userData();
+
     if (userResult.error) {
       setServerError(
         'Error obteniendo información del usuario. Por favor, vuelva a iniciar sesión.',
@@ -66,14 +76,30 @@ export default function Login({ onLoadingChange }) {
       onLoadingChange?.(false);
       return;
     }
+
     setRol(userResult.data.role);
     if (userResult.data.role === 'mecenas_semilla') {
       router.push('/user/nft');
       return;
     }
+    // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
     if (userResult.data.role === 'entrepreneur') {
-      router.push('/proyecto');
+      const {data: allProjectsResponse, error: allProjectsError} = await getAllProjects();
+      if(allProjectsError) {
+        setServerError('Error obteniendo proyectos. Por favor, vuelva a iniciar sesión.');
+        setLoading(false);
+        onLoadingChange?.(false);
+        return;
+      }
+      const project = allProjectsResponse.find((project) => project.owner.id === userResult.data.sub);
+
+      if(project) {router.push(`/dashboard/${project.id}/about`);
       return;
+    }
+    else {
+      router.push(`/proyecto`);
+      return;
+    }
     }
     router.push('/home');
   };

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useGuestLogin } from '@/hooks/useGuestLogin';
@@ -15,7 +15,11 @@ import {useUserStore} from '@/lib/store';
 
 export default function LoginRegisterPage() {
   const setIsDemo = useUserStore((state) => state.setIsDemo);
-  setIsDemo(false)
+  useEffect(() => {
+    setIsDemo(false)
+  }, [])
+  
+  
   const [view, setView] = useState('login'); // login | selectRole | register | nftLink
   const [selectedRole, setSelectedRole] = useState('');
   const [loading, setLoading] = useState(false);

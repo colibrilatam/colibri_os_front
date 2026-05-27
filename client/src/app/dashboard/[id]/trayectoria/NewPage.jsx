@@ -60,6 +60,8 @@ export default function NewTrayectoria() {
     type: null, // 'microaction' | 'evidence'
     data: null,
   });
+  const [ MADetail, setMADetail ] = useState(false);
+  const [ selectedMADetail, setSelectedMADetail ] = useState(null);
 
   // Obtener el tramo actual
   const currentTramo = useMemo(() => tramoData.code, [tramoData]);
@@ -230,7 +232,7 @@ export default function NewTrayectoria() {
     initialize();
   }, []);
 
-  
+  console.log(inProgressPacActions.microactions)
 
 
 
@@ -299,6 +301,29 @@ export default function NewTrayectoria() {
             <h3>Has completado el tramo {tramoData.code}</h3>
             <Evolution />
             <p className="text-(--text-secondary) mt-4">Ya estamos preparando el siguiente tramo para ti.</p>
+          </div>
+        </NotificationPopup>
+      )}
+      {MADetail && selectedMADetail && (
+        <NotificationPopup onClose={() => setMADetail(false)}>
+          <div className="text-white glass-effect border-glass p-4 rounded-2xl text-lg  flex flex-col gap-4">
+            <h3>Detalles de la micro acción</h3>
+            <div>
+              <div className="text-(--text-tertiary)">Instrucción</div>
+              <div>{selectedMADetail.microActionDefinition.instruction}</div>
+            </div>
+            <div>
+              <div className="text-(--text-tertiary)">Notas de ejecución</div>
+              <div>{selectedMADetail.executionNotes}</div>
+            </div>
+            <div>
+              <div className="text-(--text-tertiary)">Fecha de envío</div>
+              <div>{convertDate(selectedMADetail.submittedAt)}</div>
+            </div>
+            <div>
+              <div className="text-(--text-tertiary)">Fecha de validación</div>
+              <div>{convertDate(selectedMADetail.validatedAt)}</div>
+            </div>
           </div>
         </NotificationPopup>
       )}
@@ -451,6 +476,7 @@ export default function NewTrayectoria() {
               microActions={inProgressPacActions.microactions}
               evidencesData={inProgressPacActions.evidences}
               rol={rol}
+              openDetail={(ma) => {setSelectedMADetail(ma); setMADetail(true);}}
             />
           </div>
 }
@@ -462,7 +488,7 @@ export default function NewTrayectoria() {
 }
 
 // Componente que muestra las microacciones reales del PAC
-const RealCargaPac = ({ pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence, microActionCompleted }) => {
+const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence, microActionCompleted }) => {
   if (!microActions.length) {
     return (
       <div className="rounded-xl p-4 border border-glass-dark bg-white/5">
@@ -511,8 +537,13 @@ const RealCargaPac = ({ pac, microActions, evidencesData, rol, onUploadMicroacti
 
             {/* Estado: Completada */}
             {isCompleted && (
-              <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
-                ✔ Microacción completada
+              <div className="flex flex-row justify-between">
+                <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
+                  ✔ Microacción completada
+                </div>
+                <div onClick={() => openDetail(ma)} className="px-2 items-center justify-center flex text-(--text-secondary) hover:text-white hover:bg-cyan-600-30 text-lg rounded-full bg-cyan-600/30 hover:border-cyan-300 border-cyan-500 border cursor-pointer">
+                  Ver detalles
+                </div>
               </div>
             )}
 
