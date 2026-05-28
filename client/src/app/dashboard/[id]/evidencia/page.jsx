@@ -12,6 +12,14 @@ import {
 import { useProject } from '@/lib/projectContext';
 import { useState, useMemo, useEffect } from 'react';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { Navigation, Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
 /* ================= HELPERS ================= */
 
 const formatDate = (date) => {
@@ -49,19 +57,13 @@ export default function EvidenciaSection() {
   const { evidenceData } = useProject();
 
   const evidences = evidenceData || [];
-  console.log('evidences-----', evidences);
+  //console.log('evidences-----', evidences);
   const [selected, setSelected] = useState(null);
   const [filterIC, setFilterIC] = useState(false);
 
-  useEffect(() => {
-    if (evidences.length > 0 && !selected) {
-      setSelected(evidences[0]);
-    }
-  }, [evidences, selected]);
-
   const [statusFilter, setStatusFilter] = useState('all');
-const [tramoFilter, setTramoFilter] = useState('all');
-const [categoriaFilter, setCategoriaFilter] = useState('all');
+  const [tramoFilter, setTramoFilter] = useState('all');
+  const [categoriaFilter, setCategoriaFilter] = useState('all');
 
   /* ================= METRICS ================= */
 
@@ -92,185 +94,252 @@ const [categoriaFilter, setCategoriaFilter] = useState('all');
   /* ================= FILTER + SORT ================= */
 
   const filtered = useMemo(() => {
-  return evidences
-    .filter((e) => {
-      // IC
-      if (filterIC && !e.isValidForIc) {
-        return false;
-      }
-
-      // STATUS
-      if (statusFilter !== 'all') {
-        if (statusFilter === 'pending') {
-          const pendingStatuses = ['submitted', 'under_review'];
-
-          if (!pendingStatuses.includes(e.status)) {
-            return false;
-          }
-        } else if (e.status !== statusFilter) {
+    return evidences
+      .filter((e) => {
+        // IC
+        if (filterIC && !e.isValidForIc) {
           return false;
         }
-      }
 
-      const code =
-        e.microActionInstance?.microActionDefinition?.code;
+        // STATUS
+        if (statusFilter !== 'all') {
+          if (statusFilter === 'pending') {
+            const pendingStatuses = ['submitted', 'under_review'];
 
-      const parsed = parseRouteCode(code);
+            if (!pendingStatuses.includes(e.status)) {
+              return false;
+            }
+          } else if (e.status !== statusFilter) {
+            return false;
+          }
+        }
 
-      // TRAMO
-      if (
-        tramoFilter !== 'all' &&
-        parsed?.tramo !== tramoFilter
-      ) {
-        return false;
-      }
+        const code = e.microActionInstance?.microActionDefinition?.code;
 
-      // CATEGORIA
-      if (
-        categoriaFilter !== 'all' &&
-        parsed?.categoria !== categoriaFilter
-      ) {
-        return false;
-      }
+        const parsed = parseRouteCode(code);
 
-      return true;
-    })
-    .sort((a, b) => {
-      if (a.isValidForIc && !b.isValidForIc) return -1;
-      if (!a.isValidForIc && b.isValidForIc) return 1;
+        // TRAMO
+        if (tramoFilter !== 'all' && parsed?.tramo !== tramoFilter) {
+          return false;
+        }
 
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-}, [
-  evidences,
-  filterIC,
-  statusFilter,
-  tramoFilter,
-  categoriaFilter,
-]);
+        // CATEGORIA
+        if (
+          categoriaFilter !== 'all' &&
+          parsed?.categoria !== categoriaFilter
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.isValidForIc && !b.isValidForIc) return -1;
+        if (!a.isValidForIc && b.isValidForIc) return 1;
+
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+  }, [evidences, filterIC, statusFilter, tramoFilter, categoriaFilter]);
+
+  useEffect(() => {
+    // No hay resultados
+    if (filtered.length === 0) {
+      setSelected(null);
+      return;
+    }
+
+    // Si la evidencia seleccionada ya no existe en el filtro
+    const stillExists = filtered.some((e) => e.id === selected?.id);
+
+    if (!stillExists) {
+      setSelected(filtered[0]);
+    }
+  }, [filtered, selected]);
 
   if (!evidences.length) {
     return <div className="p-10 text-slate-400">No hay evidencias</div>;
   }
 
   return (
-    <div className="grid lg:grid-cols-3 gap-6">
-      {/* ================= LEFT ================= */}
-      <div className="space-y-6">
-        {/* METRICS */}
-        <div id="metricas" className="grid grid-cols-2 gap-4">
-          <Metric label="Evidencias" value={metrics.total} />
-          <Metric label="Validadas" value={metrics.validated} />
-          <Metric label="Impacto IC" value={metrics.ic} />
-          <Metric label="Score" value={metrics.avgScore} />
+    <div className="space-y-6 w-full">
+      {/* ================= METRICS ================= */}
+      <div
+        id="metricas"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
+      >
+        <Metric label="Evidencias" value={metrics.total} />
+        <Metric label="Validadas" value={metrics.validated} />
+        <Metric label="Impacto IC" value={metrics.ic} />
+        <Metric label="Score" value={metrics.avgScore} />
+      </div>
+
+      {/* ================= FILTERS ================= */}
+      <div
+        className="
+  flex flex-wrap items-center gap-4
+  p-4 rounded-2xl
+  glass-effect border-glass w-full
+"
+      >
+        {/* STATUS */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-helper whitespace-nowrap">Estado</p>
+
+          <div className="flex flex-wrap gap-2">
+            {[
+              { label: 'Todas', value: 'all' },
+              { label: 'Pendientes', value: 'pending' },
+              { label: 'Aprobadas', value: 'approved' },
+              { label: 'Rechazadas', value: 'rejected' },
+              { label: 'Borradores', value: 'draft' },
+            ].map((item) => (
+              <FilterChip
+                key={item.value}
+                active={statusFilter === item.value}
+                onClick={() => setStatusFilter(item.value)}
+              >
+                {item.label}
+              </FilterChip>
+            ))}
+          </div>
         </div>
 
-        {/* ================= FILTERS ================= */}
+        {/* TRAMO */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-helper whitespace-nowrap">Tramo</p>
 
-<div className="space-y-5 p-4 rounded-2xl glass-effect border-glass">
-  {/* STATUS */}
-  <div>
-    <p className="text-helper mb-2">Estado</p>
+          <div className="flex flex-wrap gap-2">
+            <FilterChip
+              active={tramoFilter === 'all'}
+              onClick={() => setTramoFilter('all')}
+            >
+              Todos
+            </FilterChip>
 
-    <div className="flex flex-wrap gap-2">
-      {[
-        { label: 'Todas', value: 'all' },
-        { label: 'Pendientes', value: 'pending' },
-        { label: 'Aprobadas', value: 'approved' },
-        { label: 'Rechazadas', value: 'rejected' },
-        { label: 'Borradores', value: 'draft' },
-      ].map((item) => (
-        <FilterChip
-          key={item.value}
-          active={statusFilter === item.value}
-          onClick={() => setStatusFilter(item.value)}
+            {[1, 2, 3, 4, 5, 6].map((t) => (
+              <FilterChip
+                key={t}
+                active={tramoFilter === `T${t}`}
+                onClick={() => setTramoFilter(`T${t}`)}
+              >
+                {`T${t}`}
+              </FilterChip>
+            ))}
+          </div>
+        </div>
+
+        {/* CATEGORIA */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-helper whitespace-nowrap">Categoría</p>
+
+          <div className="flex flex-wrap gap-2">
+            <FilterChip
+              active={categoriaFilter === 'all'}
+              onClick={() => setCategoriaFilter('all')}
+            >
+              Todas
+            </FilterChip>
+
+            {[1, 2, 3, 4, 5, 6, 7].map((c) => (
+              <FilterChip
+                key={c}
+                active={categoriaFilter === `C${c}`}
+                onClick={() => setCategoriaFilter(`C${c}`)}
+              >
+                {`C${c}`}
+              </FilterChip>
+            ))}
+          </div>
+        </div>
+
+        {/* IC */}
+        <div className="pt-2">
+          <button
+            onClick={() => setFilterIC(!filterIC)}
+            className={`px-3 py-1 rounded-full text-xs border transition ${
+              filterIC
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+                : 'border-slate-700 text-slate-400'
+            }`}
+          >
+            Solo IC válido
+          </button>
+        </div>
+      </div>
+
+      {/* ================= LIST ================= */}
+      <div id="lista" className="space-y-4 w-full">
+        {/* HEADER */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-h3">Evidencias</h2>
+
+          <div
+            className="
+        px-3 py-1 rounded-full
+        bg-cyan-500/10
+        border border-cyan-500/20
+        text-cyan-300 text-sm
+      "
+          >
+            {filtered.length} evidencias
+          </div>
+        </div>
+
+        {/* SWIPER */}
+        <Swiper
+          modules={[Navigation, Pagination]}
+          navigation
+          pagination={{ clickable: true }}
+          spaceBetween={16}
+          slidesPerView={1.1}
+          breakpoints={{
+            640: {
+              slidesPerView: 1.5,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+            1280: {
+              slidesPerView: 4,
+            },
+          }}
+          className="pb-12"
         >
-          {item.label}
-        </FilterChip>
-      ))}
-    </div>
-  </div>
-
-  {/* TRAMO */}
-  <div>
-    <p className="text-helper mb-2">Tramo</p>
-
-    <div className="flex flex-wrap gap-2">
-      <FilterChip
-        active={tramoFilter === 'all'}
-        onClick={() => setTramoFilter('all')}
-      >
-        Todos
-      </FilterChip>
-
-      {[1, 2, 3, 4, 5, 6].map((t) => (
-        <FilterChip
-          key={t}
-          active={tramoFilter === `T${t}`}
-          onClick={() => setTramoFilter(`T${t}`)}
-        >
-          {`T${t}`}
-        </FilterChip>
-      ))}
-    </div>
-  </div>
-
-  {/* CATEGORIA */}
-  <div>
-    <p className="text-helper mb-2">Categoría</p>
-
-    <div className="flex flex-wrap gap-2">
-      <FilterChip
-        active={categoriaFilter === 'all'}
-        onClick={() => setCategoriaFilter('all')}
-      >
-        Todas
-      </FilterChip>
-
-      {[1, 2, 3, 4, 5, 6, 7].map((c) => (
-        <FilterChip
-          key={c}
-          active={categoriaFilter === `C${c}`}
-          onClick={() => setCategoriaFilter(`C${c}`)}
-        >
-          {`C${c}`}
-        </FilterChip>
-      ))}
-    </div>
-  </div>
-
-  {/* IC */}
-  <div className="pt-2">
-    <button
-      onClick={() => setFilterIC(!filterIC)}
-      className={`px-3 py-1 rounded-full text-xs border transition ${
-        filterIC
-          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-          : 'border-slate-700 text-slate-400'
-      }`}
-    >
-      Solo IC válido
-    </button>
-  </div>
-</div>
-
-        {/* LIST */}
-        <div id="lista" className="space-y-3">
           {filtered.map((e) => (
-            <EvidenceCard
-              key={e.id}
-              evidence={e}
-              isActive={selected?.id === e.id}
-              onClick={() => setSelected(e)}
-            />
+            <SwiperSlide key={e.id} className="h-auto">
+              <div className="h-full">
+                <EvidenceCard
+                  evidence={e}
+                  isActive={selected?.id === e.id}
+                  onClick={() => setSelected(e)}
+                />
+              </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
+        {filtered.length === 0 && (
+          <div
+            className="
+      p-10 rounded-2xl
+      border border-dashed border-slate-700
+      text-center text-slate-400
+      glass-effect
+    "
+          >
+            No se encontraron evidencias con los filtros actuales.
+          </div>
+        )}
       </div>
 
-      {/* ================= RIGHT ================= */}
-      <div id="detalle" className="lg:col-span-2">
-        {selected && <EvidenceDetail evidence={selected} />}
-      </div>
+      {/* ================= DETAIL ================= */}
+      {selected && filtered.length > 0 && (
+        <div id="detalle" className="w-full">
+          <EvidenceDetail evidence={selected} />
+        </div>
+      )}
     </div>
   );
 }
@@ -283,9 +352,13 @@ function EvidenceCard({ evidence, isActive, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`p-4 rounded-xl cursor-pointer transition glass-effect border-glass
-        ${isActive ? 'border-cyan-400 bg-cyan-400/10' : 'hover:bg-white/5'}
-      `}
+      className={`
+    h-[220px]
+    flex flex-col justify-between
+    p-4 rounded-xl cursor-pointer transition
+    glass-effect border-glass
+    ${isActive ? 'border-cyan-400 bg-cyan-400/10' : 'hover:bg-white/5'}
+  `}
     >
       <div className="flex justify-between mb-2">
         <TypeBadge type={evidence.evidenceType} />
@@ -397,7 +470,9 @@ function EvidenceDetail({ evidence }) {
       {evidence.microActionInstance?.microActionDefinition && (
         <Section title="Microacción Definición">
           <p className="text-white">
-            {formatRouteCode(evidence.microActionInstance.microActionDefinition.code)}
+            {formatRouteCode(
+              evidence.microActionInstance.microActionDefinition.code,
+            )}
           </p>
           <p className="text-body--muted">
             {evidence.microActionInstance.microActionDefinition.instruction}
