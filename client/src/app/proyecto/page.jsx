@@ -5,12 +5,15 @@ import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 import { useUserStore } from '@/lib/store';
 import { userService } from '@/services/user';
+import { useNewProject } from '@/hooks/useNewProject';
 
 export default function CreateProject() {
   const router = useRouter();
-
+  
+  const { create } = useNewProject();
   const [ formError, setFormError ] = useState(null);
 
+  const { execute: createProject } = useRequest(projectsService.create);
   const { execute, error } = useRequest(projectsService.getAll);
   const { execute: getUser } = useRequest(() => userService.profile());
 
@@ -39,9 +42,10 @@ export default function CreateProject() {
       shortDescription: '',
       startupLinkedinUrl: '',
       websiteUrl: '',
+      image: null
     })
 
-useEffect(() => {
+useEffect(() => { 
   if (isDemo) {
     setFormData({
       projectName: 'FlujoClave',
@@ -63,6 +67,7 @@ useEffect(() => {
     shortDescription: '',
     startupLinkedinUrl: '',
     websiteUrl: '',
+    image: ''
   });
 
 
@@ -108,9 +113,34 @@ useEffect(() => {
     setErrors(newErrors);
   };
 
-  const isFormValid = () =>
-    Object.values(formData).every((v) => v.trim() !== '') &&
-    Object.values(errors).every((e) => e === '');
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    const file = files?.[0] || null;
+    const newErrors = { ...errors };
+
+    if (file) {
+      const validImageFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+      if (!validImageFormats.includes(file.type)) {
+        newErrors[name] = 'Por favor, selecciona un archivo de imagen válido (JPG, PNG, WebP, GIF, SVG)';
+        setFormData((prev) => ({ ...prev, [name]: null }));
+      } else {
+        newErrors[name] = '';
+        setFormData((prev) => ({ ...prev, [name]: file }));
+      }
+    } else {
+      newErrors[name] = '';
+      setFormData((prev) => ({ ...prev, [name]: null }));
+    }
+
+    setErrors(newErrors);
+  };
+
+  const isFormValid = () => {
+    const requiredFields = ['projectName', 'country', 'industry', 'tagline', 'shortDescription', 'startupLinkedinUrl', 'websiteUrl'];
+    const hasRequiredFields = requiredFields.every((field) => formData[field].trim() !== '');
+    const hasNoErrors = Object.values(errors).every((e) => e === '');
+    return hasRequiredFields && hasNoErrors;
+  };
 
  
 
@@ -128,18 +158,19 @@ useEffect(() => {
       status: 'active',
       trajectoryStatus: 'on_track',
     };
+    //create(payload);
+    //return;
 
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      const createdProject = await create(payload);
 
-      if (!res.ok) throw new Error('Error al crear el proyecto');
-
-      router.push('/home');
+      if(createdProject.error){
+        const errorMessage = createdProject.error|| 'Error desconocido';
+        setFormError('Error al crear el proyecto', errorMessage);
+        return;
+      }
+      router.push(`/dashboard/${createdProject.id}/about`);
     } catch (err) {
       setFormError('Error al crear el proyecto', err.message);
     } finally {
@@ -155,7 +186,6 @@ useEffect(() => {
     { name: 'shortDescription',   label: 'Descripción corta',    type: 'textarea' },
     { name: 'startupLinkedinUrl', label: 'LinkedIn de la startup', type: 'text' },
     { name: 'websiteUrl',         label: 'Sitio web',            type: 'text' },
-    
   ];
 
   return (
@@ -194,6 +224,25 @@ useEffect(() => {
             )}
             </div>
         ))}
+
+        <div>
+          <label className="text-micro-label block mb-2">Imagen del proyecto (opcional)</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/svg+xml"
+            onChange={handleFileChange}
+            className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 file:bg-[var(--action-primary)] file:text-white file:border-0 file:rounded file:px-3 file:py-1 file:cursor-pointer ${
+              errors['image'] ? 'border-red-500' : ''
+            }`}
+          />
+          {formData.image && (
+            <p className="text-green-500 text-xs mt-1">Archivo seleccionado: {formData.image.name}</p>
+          )}
+          {errors['image'] && (
+            <p className="text-red-500 text-xs mt-1">{errors['image']}</p>
+          )}
+        </div>
 
         {formError && (
             <p className="text-red-500 text-xl mt-2">{formError}</p>

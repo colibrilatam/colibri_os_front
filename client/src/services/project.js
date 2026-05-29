@@ -32,6 +32,9 @@ export const projectsService = {
   microActionInstance: (id) => 
     fetcher(`/micro-action-instances/project/${id}`),
 
+  getMicroActionDefinition: (pacId) => 
+    fetcher(`/micro-action-definitions?pacId=${pacId}`),
+
   getAllTramos: () => 
     fetcher(`/tramos`),
 
@@ -50,6 +53,19 @@ export const projectsService = {
   updatePacStatus: (pacId ,data) => 
     fetcher(`/projects/pac/${pacId}`, {method: 'PATCH', body: JSON.stringify(data)}),
 
+
   categories: (tramoId) => 
     fetcher(`/categories?tramoId=${tramoId}`),
+
+  getPacs: (categoryId) => 
+    fetcher(`/pacs?categoryId=${categoryId}`),
+
+  createProjectPac: (projectId, pacId) => 
+    fetcher(`/projects/${projectId}/pac/${pacId}`, {method: 'POST'}),
+
+  createMicroActionInstance: (data) =>
+    fetcher(`/micro-action-instances`, {method: 'POST', body: JSON.stringify(data)}),
+
+  changeActiveTranche: (projectId, tramoId, changeReason) => 
+    fetcher(`/tramos/project/${projectId}/change`, {method: 'POST', body: JSON.stringify({newTramoId: tramoId, changeReason})}),
 };
