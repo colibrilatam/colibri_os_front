@@ -17,13 +17,7 @@ import { getProjectIC } from '@/lib/hooks/createIcMap';
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
 
-   const {
-    tramoData,
-    dbProject,
-    projectNftData,
-    projectTramoData,
-    mockProject,
-  } = useProject();
+  const contextData = useProject();
 
   const { isAuthenticated, logout, rol, subioTramo } = useUserStore();
 
@@ -92,6 +86,15 @@ export default function Header({ isHome = false }) {
   // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios.
  
   const { project, currentState, reputationSnapshot } = mockProject;
+
+     const {
+    tramoData,
+    dbProject,
+    projectNftData,
+    projectTramoData,
+    mockProject,
+  } = contextData;
+
 
   //console.log(dbProject);
 
