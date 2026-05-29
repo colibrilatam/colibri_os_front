@@ -12,6 +12,8 @@ export default function IdentidadPage() {
 
   const subioTramo = useUserStore((state) => state.subioTramo);
 
+  
+
   // contexto
   const {
     microActionInstanceData,
@@ -21,9 +23,18 @@ export default function IdentidadPage() {
     projectNftData,
     evidenceData,
   } = useProject();
+// Métricas
+  const currentPac = dbProject.projectPacs.find((pac) => pac.status === 'in_progress')?.pac.code[6] || null;
+  const aprovedPacs = dbProject.projectPacs.filter((pac) => pac.status === 'completed').length;
+  const completedMicroActions = microActionInstanceData.filter((instance) => instance.status === 'completed' || instance.status === 'validated').length;
+  const completedEvidences = evidenceData.filter((evidence) => evidence.status === 'approved').length;
 
+  console.log(microActionInstanceData, 'microActionInstanceData');
+  console.log(evidenceData, 'evidenceData');
+  
   const { currentState, reputationSnapshot } =
     mockProject;
+  
   // información de tramo actual
 
   const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
@@ -243,7 +254,7 @@ export default function IdentidadPage() {
                           color: 'var(--text-primary)',
                         }}
                       >
-                        {currentState.currentPacCode}
+                        {currentPac ? `C${currentPac}` :  currentState.currentPacCode}
                       </div>
                     </div>
 
@@ -261,7 +272,7 @@ export default function IdentidadPage() {
                           color: 'var(--text-primary)',
                         }}
                       >
-                        {currentState.pacsApprovedInCurrentTramo} de 7
+                        {aprovedPacs !== null ? aprovedPacs : currentState.pacsApprovedInCurrentTramo} de 7
                       </div>
                     </div>
 
@@ -280,7 +291,7 @@ export default function IdentidadPage() {
                             color: 'var(--text-primary)',
                           }}
                         >
-                          {currentState.microactionsCompletedCount} / 21
+                          {completedMicroActions !== null ? completedMicroActions :  currentState.microactionsCompletedCount} / 21
                         </div>
                       </div>
                     )}
@@ -300,7 +311,7 @@ export default function IdentidadPage() {
                             color: 'var(--text-primary)',
                           }}
                         >
-                          {currentState.validatedEvidenceCount} / 7
+                          {completedEvidences !== null ? completedEvidences : currentState.validatedEvidenceCount} / 7
                         </div>
                       </div>
                     )}
