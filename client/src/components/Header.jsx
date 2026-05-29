@@ -17,13 +17,21 @@ import { getProjectIC } from '@/lib/hooks/createIcMap';
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
 
-  
+   const {
+    tramoData,
+    dbProject,
+    projectNftData,
+    projectTramoData,
+    mockProject,
+  } = useProject();
+
+  const { isAuthenticated, logout, rol, subioTramo } = useUserStore();
 
   useEffect(() => {
     setAuth(isAuthenticated());
   }, []);
 
-  const { isAuthenticated, logout, rol, subioTramo } = useUserStore();
+  
   const router = useRouter();
 
   if (isHome) {
@@ -36,6 +44,7 @@ export default function Header({ isHome = false }) {
               className="cursor-pointer flex items-center gap-4"
             >
               <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
+           
                 <img
                   src="/Imagotipo Colibri OS.svg"
                   alt="Colibrí Logo"
@@ -81,13 +90,7 @@ export default function Header({ isHome = false }) {
   }
 
   // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios.
-  const {
-    tramoData,
-    dbProject,
-    projectNftData,
-    projectTramoData,
-    mockProject,
-  } = useProject();
+ 
   const { project, currentState, reputationSnapshot } = mockProject;
 
   //console.log(dbProject);
@@ -122,12 +125,16 @@ export default function Header({ isHome = false }) {
             <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
               {/* <NftAvatar size="sm" rounded={true} /> */}
               <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center">
+                { dbProject.projectImageUrl ?
                 <Image
                   src={dbProject.projectImageUrl}
                   alt={dbProject.projectName}
                   fill
                   className="object-cover"
                 />
+                :
+                <div className="text-sm text-slate-500 p-8 rounded-full">Sin imagen</div>
+                }
               </div>
               <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
                 {dbProject.projectName}
