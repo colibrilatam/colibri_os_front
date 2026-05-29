@@ -8,14 +8,11 @@ import {
   Home,
   User,
   Map,
-  Zap,
   AlertCircle,
   Link2,
   Folder,
   Layers,
-  LayoutDashboard,
-  ClipboardList,
-  Building2,
+  Building2 ,SearchCheck 
 } from 'lucide-react';
 import Button from './Button';
 import { useRouter } from 'next/navigation';
@@ -95,6 +92,12 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       href: `/dashboard/${id}/evidencia`,
       label: 'Evidencia',
       icon: Link2,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/evaluations`,
+      label: 'Evaluador',
+      icon: SearchCheck  ,
       excludeRoles: null,
     },
     {

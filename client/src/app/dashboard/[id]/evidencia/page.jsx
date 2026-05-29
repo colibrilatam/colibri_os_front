@@ -287,7 +287,7 @@ export default function EvidenciaSection() {
 
         {/* SWIPER */}
         <Swiper
-          modules={[Navigation, Pagination]}
+          modules={[Navigation]}
           navigation
           pagination={{ clickable: true }}
           spaceBetween={16}
@@ -306,7 +306,7 @@ export default function EvidenciaSection() {
               slidesPerView: 4,
             },
           }}
-          className="pb-12"
+          className="evidence-swiper"
         >
           {filtered.map((e) => (
             <SwiperSlide key={e.id} className="h-auto">
