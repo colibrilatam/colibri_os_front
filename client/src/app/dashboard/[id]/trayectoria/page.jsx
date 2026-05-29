@@ -11,10 +11,11 @@ export default function TrayectoriaSection() {
   const mockProjectMatch = mockProjectsData.find(
       (p) =>
         p.project.name?.toLowerCase().trim() ===
-        dbProject.projectName?.toLowerCase().trim() && p.projectName !== "FlujoClave",
+        dbProject.projectName?.toLowerCase().trim() && p.project.name !== "FlujoClave",
     );
 
 
+    console.log(mockProjectMatch, "mockProjectMatch");
   if(mockProjectMatch) return <OldTrayectoria />
   else return <NewTrayectoria />
 };
