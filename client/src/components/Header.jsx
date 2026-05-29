@@ -85,15 +85,19 @@ export default function Header({ isHome = false }) {
 
   // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios.
  
-  const { project, currentState, reputationSnapshot } = mockProject;
-
-     const {
+  const {
     tramoData,
     dbProject,
     projectNftData,
     projectTramoData,
     mockProject,
   } = contextData;
+
+  if(mockProject !== null){
+  const { project, currentState, reputationSnapshot } = mockProject;
+  }
+
+     console.log("Header - dbProject:", dbProject);
 
 
   //console.log(dbProject);
@@ -184,7 +188,7 @@ export default function Header({ isHome = false }) {
                 Última actualización
               </div>
               <div className="mt-1 text-sm md:text-base text-slate-200">
-                {formatDateSafe(reputationSnapshot.calculatedAt)}
+                {dbProject.updatedAt ? formatDateSafe(dbProject.updatedAt) : formatDateSafe(reputationSnapshot.calculatedAt)}
               </div>
             </div>
           </div>
