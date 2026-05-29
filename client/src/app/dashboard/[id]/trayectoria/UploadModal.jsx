@@ -98,7 +98,7 @@ export default function UploadModal({
     setLoading(true);
     setError(null);
 
-    const STATES = ['pending', 'started','in_progress', 'submitted', 'validated', 'completed'];
+    const STATES = ['pending', 'started','in_progress', 'submitted'];
 
     try {
       
