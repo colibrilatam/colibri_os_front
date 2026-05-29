@@ -77,8 +77,9 @@ export default async function DataLayout({ children, params }) {
         'No se encontró mock para el proyecto:',
         projectData.projectName,
       );
+      mockProjectMatch = mockProjectsData[0];
     }
-    projectData.mock = mockProjectMatch || null;
+    projectData.mock = mockProjectMatch || mockProjectsData[0];
   }
   //console.log('mockProjectMatch', mockProjectMatch);
   return (

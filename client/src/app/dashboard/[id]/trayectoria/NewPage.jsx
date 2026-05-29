@@ -502,8 +502,8 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
       {/* Microacciones */}
       {microActions.map((ma) => {
         const isCompleted = ma.status === 'completed' || ma.status === 'validated' || ma.status === 'closed';
-        const isCurrent = ma.status === 'started' || ma.status === 'submitted' || ma.status === 'in_progress';
-        const isPending = ma.status === 'pending' || ma.status === 'reopened';
+        const isCurrent =  ma.status === 'submitted' || ma.status === 'in_progress';
+        const isPending = ma.status === 'started' || ma.status === 'pending' || ma.status === 'reopened';
         const instruction = ma.microActionDefinition?.instruction || 'Sin descripción';
 
         return (

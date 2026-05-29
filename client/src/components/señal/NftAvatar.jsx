@@ -17,12 +17,11 @@ export default function NftAvatar({ size = "sm", rounded = false }) {
   const segments = pathname.split('/');
   const id = segments[2];
 
-
   return (
       <div className={`${isLarge ? "h-64 w-64" : "h-14 w-14"} ${rounded ? "rounded-full" : "rounded"} relative flex items-center justify-center `}>
         <img 
           className={`w-full h-full object-contain m-6 ${rounded ? "rounded-full" : "rounded-xl"}`}
-          src={subioTramo ? "/flujo-evolved.png" : dbProject.nftImageUrl}
+          src={dbProject.nftImageUrl ? dbProject.nftImageUrl : `/nfts/${tramoData.code}.png`}
           alt="NFT Avatar"
         />
       </div>
