@@ -97,7 +97,7 @@ export default function Header({ isHome = false }) {
   const { project, currentState, reputationSnapshot } = mockProject;
   }
 
-     console.log("Header - dbProject:", dbProject);
+     //console.log("Header - dbProject:", dbProject);
 
 
   //console.log(dbProject);
