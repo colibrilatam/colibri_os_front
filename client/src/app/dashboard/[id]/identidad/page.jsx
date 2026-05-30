@@ -23,15 +23,16 @@ export default function IdentidadPage() {
     projectNftData,
     evidenceData,
   } = useProject();
-// Métricas
-  const currentPac = dbProject.projectPacs.find((pac) => pac.status === 'in_progress')?.pac.code[6] || null;
-  const aprovedPacs = dbProject.projectPacs.filter((pac) => pac.status === 'completed').length;
-  const completedMicroActions = microActionInstanceData.filter((instance) => instance.status === 'completed' || instance.status === 'validated').length;
-  const completedEvidences = evidenceData.filter((evidence) => evidence.status === 'approved').length;
 
-  console.log(microActionInstanceData, 'microActionInstanceData');
-  console.log(evidenceData, 'evidenceData');
-  
+  //console.log("IdentidadPage - dbProject:", dbProject);
+// Métricas - Hay que crear un hook para calcular estas métricas para no repetir este código siempre
+  const currentPac = dbProject.projectPacs.find((pac) => pac.status === 'in_progress')?.pac.code[6] || null;
+  const aprovedPacs = dbProject.projectPacs.filter((pac) => pac.status === 'completed' && pac.pac.code.startsWith(`PAC_${tramoData.code[1]}`)).length;
+  const currentTramoMicroActions = microActionInstanceData.filter((instance) => instance.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`));
+  const completedMicroActions = currentTramoMicroActions.filter((instance) => (instance.status === 'completed' || instance.status === 'validated')).length;
+  const currentMicroActionsId = new Set(currentTramoMicroActions.map((instance) => instance.id));
+  const completedEvidences = evidenceData.filter((evidence) => evidence.status === 'approved' && currentMicroActionsId.has(evidence.microActionInstanceId)).length;
+
   const { currentState, reputationSnapshot } =
     mockProject;
   
