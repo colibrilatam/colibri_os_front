@@ -525,7 +525,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
             </div>
 
             {/* Botón de carga - para no completadas */}
-            {!isCompleted && rol === 'entrepreneur' && (
+            {isPending && rol === 'entrepreneur' && (
               <button
                 onClick={() => onUploadMicroaction(ma)}
                 className=" cursor-pointer text-white text-lg glass-effect-green border-glass font-bold p-3 rounded-full
@@ -550,14 +550,14 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
             {/* Estado: En tránsito */}
             {isCurrent && (
               <div className="mt-3 text-[var(--status-info)] text-body flex items-center gap-2">
-                ⏳ Pendiente de carga / en revisión
+                ⏳ En revisión
               </div>
             )}
 
             {/* Estado: Pendiente */}
             {isPending && (
               <div className="mt-3 text-[var(--status-warning)] text-body flex items-center gap-2">
-                ⚠️ Pendiente de inicio
+                ⚠️ Pendiente de carga
               </div>
             )}
           </div>
@@ -611,7 +611,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
             {/* Estado: Pendiente de revisión */}
             {evidencesData.status !== "approved" && (
               <div className="text-[var(--status-info)] text-body flex items-center gap-2">
-                ⏳ Pendiente de revisión
+                ⏳ Pendiente
               </div>
             )}
           </div>
