@@ -1,6 +1,5 @@
 import './globals.css';
-import OnbordaWrapper from '@/lib/tutorial/layout';
-
+import ClientLayout from './ClientLayout';
 
 export const metadata = {
   title: 'Colibrí OS',
@@ -8,11 +7,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
   return (
     <html lang="es">
       <body>
-        <OnbordaWrapper>{children}</OnbordaWrapper>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

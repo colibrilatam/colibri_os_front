@@ -56,18 +56,21 @@ export default function EvaluationMetrics({ evaluations }) {
 function MetricCard({ label, value }) {
   return (
     <div
-      className="
-        rounded-2xl
-        border border-slate-800
-        bg-white/[0.03]
-        p-5
-      "
-    >
-      <p className="text-xs text-slate-500">{label}</p>
+  className="
+    rounded-2xl
+    border border-slate-800
+    bg-white/[0.03]
+    p-5
+    flex items-center gap-3
+  "
+>
+  <span className="text-3xl font-bold text-white">
+    {value}
+  </span>
 
-      <p className="text-3xl font-bold text-white mt-2">
-        {value}
-      </p>
-    </div>
+  <span className="text-sm text-slate-400">
+    {label}
+  </span>
+</div>
   );
 }
