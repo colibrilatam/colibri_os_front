@@ -8,7 +8,6 @@ import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 
 export default function Login({ onLoadingChange }) {
-
   const router = useRouter();
   const { handleLogin, userData } = useLogin();
   const setRol = useUserStore((state) => state.setRol);
@@ -51,10 +50,12 @@ export default function Login({ onLoadingChange }) {
   // enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!isFormValid()) {
-      setServerError('Por favor, corrige los errores en el formulario antes de continuar.');
+    if (!isFormValid()) {
+      setServerError(
+        'Por favor, corrige los errores en el formulario antes de continuar.',
+      );
       return;
-    };
+    }
     setLoading(true);
     setServerError('');
 
@@ -82,24 +83,33 @@ export default function Login({ onLoadingChange }) {
       router.push('/user/nft');
       return;
     }
+    if (userResult.data.role === 'mentor') {
+      router.push('/evaluations');
+      return;
+    }
     // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
     if (userResult.data.role === 'entrepreneur') {
-      const {data: allProjectsResponse, error: allProjectsError} = await getAllProjects();
-      if(allProjectsError) {
-        setServerError('Error obteniendo proyectos. Por favor, vuelva a iniciar sesión.');
+      const { data: allProjectsResponse, error: allProjectsError } =
+        await getAllProjects();
+      if (allProjectsError) {
+        setServerError(
+          'Error obteniendo proyectos. Por favor, vuelva a iniciar sesión.',
+        );
         setLoading(false);
         onLoadingChange?.(false);
         return;
       }
-      const project = allProjectsResponse.find((project) => project.owner.id === userResult.data.sub);
+      const project = allProjectsResponse.find(
+        (project) => project.owner.id === userResult.data.sub,
+      );
 
-      if(project) {router.push(`/dashboard/${project.id}/about`);
-      return;
-    }
-    else {
-      router.push(`/proyecto`);
-      return;
-    }
+      if (project) {
+        router.push(`/dashboard/${project.id}/about`);
+        return;
+      } else {
+        router.push(`/proyecto`);
+        return;
+      }
     }
     router.push('/home');
   };

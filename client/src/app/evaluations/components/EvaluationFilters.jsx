@@ -94,7 +94,7 @@ function FilterChip({ children, active, onClick }) {
     <button
       onClick={onClick}
       className={`
-        px-4 py-2 rounded-full text-sm border transition-all duration-200
+        px-4 py-2 rounded-full text-sm border transition-all duration-200 cursor-pointer
         ${
           active
             ? 'bg-cyan-500/15 border-cyan-400/40 text-cyan-300'
