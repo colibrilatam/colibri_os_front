@@ -20,8 +20,7 @@ const mockEvaluations = [
     evidence: {
       id: 'ev-1',
       title: 'Landing validada con entrevistas',
-      description:
-        'Se validó el MVP con 24 entrevistas y 7 usuarios activos.',
+      description: 'Se validó el MVP con 24 entrevistas y 7 usuarios activos.',
 
       evidenceType: 'document',
       status: 'submitted',
@@ -62,8 +61,7 @@ const mockEvaluations = [
     evidence: {
       id: 'ev-2',
       title: 'Métricas de retención',
-      description:
-        'Los usuarios presentan baja retención durante la semana 2.',
+      description: 'Los usuarios presentan baja retención durante la semana 2.',
 
       evidenceType: 'metrics',
       status: 'under_review',
@@ -159,45 +157,46 @@ export default function EvaluationsPage() {
     });
   }, [search, statusFilter]);
 
-  return (
-    <div className="space-y-6">
-      {/* ================= HEADER ================= */}
+ return (
+  <div className="h-[calc(100vh-6rem)] px-6 py-6 flex flex-col gap-6">
+    {/* HEADER */}
 
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <p className="text-overline">Evaluaciones</p>
-
-          <h1 className="text-h2">Queue de revisión</h1>
-        </div>
-
-        <div className="text-helper">
-          {filtered.length} evaluaciones encontradas
-        </div>
+    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div>
+        <p className="text-overline">Evaluaciones</p>
+        <h1 className="text-h2">Queue de revisión</h1>
       </div>
 
-      {/* ================= METRICS ================= */}
-
-      <EvaluationMetrics evaluations={mockEvaluations} />
-
-      {/* ================= FILTERS ================= */}
-
-      <EvaluationFilters
-        search={search}
-        setSearch={setSearch}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-      />
-
-      {/* ================= GRID ================= */}
-
-      <div className="grid xl:grid-cols-2 2xl:grid-cols-3 gap-5">
-        {filtered.map((evaluation) => (
-          <EvaluationCard
-            key={evaluation.id}
-            evaluation={evaluation}
-          />
-        ))}
+      <div className="text-helper">
+        {filtered.length} evaluaciones encontradas
       </div>
     </div>
-  );
+
+    {/* METRICS */}
+
+    <EvaluationMetrics evaluations={mockEvaluations} />
+
+    {/* FILTERS */}
+
+    <EvaluationFilters
+      search={search}
+      setSearch={setSearch}
+      statusFilter={statusFilter}
+      setStatusFilter={setStatusFilter}
+    />
+
+    {/* LISTA SCROLLEABLE */}
+
+    <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+  <div className="flex flex-col gap-4">
+    {filtered.map((evaluation) => (
+      <EvaluationCard
+        key={evaluation.id}
+        evaluation={evaluation}
+      />
+    ))}
+  </div>
+</div>
+  </div>
+);
 }

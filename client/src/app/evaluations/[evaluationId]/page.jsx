@@ -418,7 +418,7 @@ export default function EvaluationWorkspace() {
   }, [dimensionScores]);
 
   return (
-    <div className="space-y-6">
+    <div className="w-full px-4 py-6 space-y-6">
       {/* ================= HEADER ================= */}
 
       <div className="glass-effect border-glass rounded-3xl p-6">
