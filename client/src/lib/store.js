@@ -20,9 +20,13 @@ export const useUserStore = create(
       // Estado existente
       rol: 'CEO',
       setRol: (newRol) => set({ rol: newRol }),
-      user: null,
 
+      user: null,
       setUser: (user) => set({ user }),
+
+      theme: null,
+      setTheme: (theme) => set({ theme }),
+      clearTheme: () => set({ theme: null }),
 
       // Token
       token: null,
@@ -63,6 +67,8 @@ export const useUserStore = create(
         set({
           token: null,
           rol: null,
+          user:null,
+          theme: null,
           isGuest: false,
           sidebarDesktopExpanded: false,
         });
