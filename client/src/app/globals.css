@@ -2,18 +2,22 @@
 
 html {
   background: #09111d;
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(0, 153, 117, 0.301) 0%, transparent 40%),
+  background-image: var(--default-app-background);
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+
+.primary-button{
+  background: var(--theme-primary-button);
+}
+
+:root {
+  --default-app-background: radial-gradient(circle at 20% 30%, rgba(0, 153, 117, 0.301) 0%, transparent 40%),
     radial-gradient(circle at 80% 70%, rgba(0, 207, 207, 0.312) 0%, transparent 40%),
     radial-gradient(circle at 60% 20%, rgba(255, 209, 102, 0.301) 0%, transparent 35%),
     radial-gradient(circle at 15% 80%, rgba(255, 77, 109, 0.312) 0%, transparent 40%),
     radial-gradient(circle at 85% 15%, rgba(0, 51, 102, 0.313) 0%, transparent 45%),
     radial-gradient(circle at 40% 60%, rgba(120, 217, 180, 0.311) 0%, transparent 38%);
-  background-attachment: fixed;
-  background-size: 100% 100%;
-}
-
-:root {
   /*#######################################################################################*/
   --theme-page-background:
     linear-gradient(180deg,
@@ -22,7 +26,7 @@ html {
 
   /* EJEMPLO LOS DE ABAJO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
   --theme-surface-background:
-    rgba(15, 23, 42, 0.75);
+    rgba(35, 48, 78, 0.75);
 
   --theme-surface-border:
     rgba(255, 255, 255, .08);
@@ -74,6 +78,7 @@ html {
   --bg-elevated: #FFFFFF;
   --bg-sunken: var(--gray-100);
   --bg-overlay: rgba(0, 51, 102, 0.08);
+  --theme-secondary-background: rgba(255, 255, 255, 0.08);
 
   /* Texto */
   --text-primary: #FFFFFF;
@@ -81,7 +86,7 @@ html {
   --text-tertiary: #7A8A9C;
   --text-inverse: var(--color-deep-blue);
   --text-link: var(--color-turquoise);
-  --text-link-hover: var(--color-emerald);
+  --text-link-hover: var(--color-deep-blue);
 
   /* Acciones / Brand */
   --action-primary: var(--color-emerald);
@@ -348,7 +353,7 @@ a {
 
 /* Clase base: sin bordes */
 .glass-effect {
-  background: rgba(10, 15, 26, 0.45);
+  background: rgba(35, 41, 56, 0.45);
   backdrop-filter: blur(12px);
 }
 
@@ -359,6 +364,10 @@ a {
       rgba(15, 23, 42, 0.75));
 
   backdrop-filter: blur(16px);
+}
+
+.glass-effect-secondary{
+  background: var(--theme-secondary-background);
 }
 
 /* .glass-effect-dark {
