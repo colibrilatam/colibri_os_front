@@ -111,11 +111,11 @@ export default function NftPage(){
            
             { error && <p className="text-red-500 text-6xl">{error.message}</p>}
                 <div className="flex flex-col  md:justify-between gap-2">
-                    <h1>Tu impacto como aliado</h1>
-                    <p className="w-fit glass-effect-green border-glass rounded-full p-2 text-(--text-primary)">Portafolio NFT</p>
+                    <h1 className="text-(--text-primary)">Tu impacto como aliado</h1>
+                    <p className="w-fit primary-button border-glass rounded-full p-2 text-(--text-primary)">Portafolio NFT</p>
                 </div>
                 <div className="w-full items-center flex justify-center">
-                <img src={svg.src} alt="NFT Avatar" className="p-2 glass-effect w-80 h-80 rounded-full" ></img>
+                <img src={svg.src} alt="NFT Avatar" className="p-2 glass-effect-dark w-80 h-80 rounded-full" ></img>
                 </div>
                 <div className="p-2 flex flex-col md:justify-between gap-2 mt-4">
                     <div className="glass-effect rounded-2xl p-4 text-(--text-secondary) w-full gap-6 flex flex-col">
@@ -129,19 +129,19 @@ export default function NftPage(){
                             ))}
                         </ul>
                         </div>
-                <div className="mt-4">
-                <ProgressBar className="text-(--text-secondary)" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
+                <div className="mt-4 glass-effect rounded-2xl p-4">
+                <ProgressBar className="text-(--text-primary)" color="orange" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
                 <p className="mt-4 text-(--text-secondary)">Has asignado <span className="text-(--text-primary) font-bold"> 3/10 becas Semilla de luz. </span> Aún tienes 7 becas pendientes, asígnalas para aumentar tu reputación</p>
                 </div>
 
-                <button className="cursor-pointer glass-effect-green rounded-2xl p-4 text-(--text-primary) w-full mt-4" >Exportar report de impacto</button>
+                <button className="cursor-pointer primary-button rounded-2xl p-4 text-(--text-primary) w-full mt-4" >Exportar report de impacto</button>
                     </div>
                     
                 
             </div>
             <div className=" p-4 w-full rounded-2xl glass-effect border-glass">
               
-                <h3 className="mb-6">Portafolio de colibrís becados</h3>
+                <h3 className="mb-6 text-(--text-primary)">Portafolio de colibrís becados</h3>
                 <div className="w-full overflow-x-auto rounded-2xl glass-effect border-glass">
       <table className="w-full text-sm">
         <thead>
@@ -195,7 +195,7 @@ export default function NftPage(){
               <td className="px-4 py-3 text-right">
                 <a
                   href={`/dashboard/${project.nftProject.projectId}/about`}
-                  className="glass-effect-green p-2 border-glass rounded-full text-sm font-medium text-blue-500 hover:text-blue-700 hover:underline whitespace-nowrap"
+                  className="font-semibold primary-button p-2 border-glass rounded-full text-sm font-medium text-blue-500 hover:text-blue-700 hover:underline whitespace-nowrap"
                 >
                   Ver en R-Lab
                 </a>
