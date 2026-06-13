@@ -15,7 +15,7 @@ export const COMPANY_THEME = {
     'https://www.unimet.edu.ve/wp-content/uploads/2023/07/Logo-footer.png',
 };
 
-const unimetTheme = {
+export const unimetTheme = {
   logoUrl:
     'https://www.unimet.edu.ve/wp-content/uploads/2023/07/Logo-footer.png',
 
@@ -24,7 +24,7 @@ const unimetTheme = {
 
   pageBackground: 'linear-gradient(180deg,#FFFFFF 0%,#F5F5F5 100%)',
 
-  surfaceBackground: '#FFFFFF',
+  surfaceBackground: '#1a2b6bbd',
   surfaceBorder: '#E5E7EB',
 
   primaryColor: '#1A2B6B',

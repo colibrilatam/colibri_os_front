@@ -13,7 +13,7 @@ export default function ThemeLoader() {
 
     // EJEMPLO >>>>>>>>>>>>>>>>>>>
     root.style.setProperty(
-      '--theme-page-background',
+      '--default-app-background',
       user.theme.pageBackground || '',
     );
 
@@ -21,6 +21,12 @@ export default function ThemeLoader() {
       '--theme-surface-background',
       user.theme.surfaceBackground || '',
     );
+
+    root.style.setProperty(
+      '--theme-secondary-background',
+      user.theme.accentColor || '',
+    );
+    
 
     root.style.setProperty('--theme-surface-border', user.theme.surfaceBorder || '');
 

@@ -4,7 +4,7 @@ import { setCookie } from '@/lib/cookies';
 import { userService } from '@/services/user';
 import { authService } from '@/services/authService';
 import { handleRequest } from '@/lib/handleRequest';
-import { COMPANY_THEME } from '@/lib/themeMock';
+import { COMPANY_THEME, unimetTheme } from '@/lib/themeMock';
 
 export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
@@ -26,7 +26,7 @@ export const useLogin = () => {
 
       setRol(userData.role);
       if (userData) {
-        userData.theme = COMPANY_THEME;
+        userData.theme = unimetTheme;
       }
       setUser(userData);
       return { success: true, data };
