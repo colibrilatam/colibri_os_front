@@ -1,28 +1,68 @@
-import { login } from '@/services/authService'
-import { useUserStore } from '@/lib/store'
-import { setCookie } from '@/lib/cookies'
+import { login } from '@/services/authService';
+import { useUserStore } from '@/lib/store';
+import { setCookie } from '@/lib/cookies';
+import { userService } from '@/services/user';
+import { authService } from '@/services/authService';
+import { handleRequest } from '@/lib/handleRequest';
+import { COMPANY_THEME, unimetTheme } from '@/lib/themeMock';
 
 export const useLogin = () => {
-    const setToken = useUserStore((state) => state.setToken)
+  const setToken = useUserStore((state) => state.setToken);
+  const setRol = useUserStore((state) => state.setRol);
+  const setUser = useUserStore((state) => state.setUser);
 
-    const handleLogin = async (formData) => {
+  const handleLogin = async (formData) => {
     try {
       const data = await login({
         email: formData.email,
         password: formData.password,
-      })
+      });
 
-      localStorage.setItem('token', data.token)
-      setCookie('token', data.token)
-      setToken(data.token)
-      return { success: true, data }
+      setCookie('token', data.token);
+      setToken(data.token);
+      const { data: userData, error: userError } = await handleRequest(() =>
+        userService.profile(),
+      );
 
+      setRol(userData.role);
+      if (userData) {
+        userData.theme = unimetTheme;
+      }
+      setUser(userData);
+      return { success: true, data };
     } catch (err) {
-        console.log(err)
-      const message = err.response?.data?.message || 'Error al iniciar sesión'
-      return { success: false, error: message }
+      const message = err.response?.data?.message || 'Error al iniciar sesión';
+      return { success: false, error: message };
     }
-  }
+  };
 
-  return { handleLogin }
-}
+  const userData = async () => {
+    const { data, error } = await handleRequest(() => userService.profile());
+    if (error) return { error };
+    return { data };
+  };
+
+  const handleDemoLogin = async (rol) => {
+    let email;
+    if (rol === 'emprendedor') email = 'ana@colibri.com';
+    else if (rol === 'mecenas') email = 'mecenas@colibri.com';
+    else if (rol === 'mentor') email = 'mentor@colibri.com';
+
+    const { data: demoLoginData, error: demoLoginError } = await handleRequest(
+      () =>
+        authService.login({
+          email,
+          password: 'Test@1234',
+        }),
+    );
+    setCookie('token', demoLoginData.token);
+    setToken(demoLoginData.token);
+    const { data: userData, error: userError } = await handleRequest(() =>
+      userService.profile(),
+    );
+    setRol(userData.role);
+    return { data: demoLoginData, error: demoLoginError };
+  };
+
+  return { handleLogin, userData, handleDemoLogin };
+};

@@ -1,79 +1,100 @@
-"use client"
-import { getProjectById } from "@/lib/mock/proyectos ficticios/getProyectById";
-import { usePathname } from "next/navigation";
-import { createContext } from "react";
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import { useUserStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
-import Button from "@/components/Button";
+import mockDataProject from '@/lib/mock/proyectos ficticios/dataProjects.json';
+import mockProjectsData from '@/lib/mock/projectsData.json';
+import { notFound } from 'next/navigation';
+import LayoutShell from './LayoutShell';
+import { projectsService } from '@/services/project';
+import { handleRequest } from '@/lib/handleRequest';
+import ErrorScreen from '@/components/ErrorScreen';
 
-// contexto
-export const ProjectContext = createContext();
+export default async function DataLayout({ children, params }) {
+  // Obtener el ID de la URL
+  const { id } = await params;
 
-export default function DataLayout({ children }) {
+  // Obtener información del proyecto desde el backend
+  const { data: projectData, error } = await handleRequest(() =>
+    projectsService.getById(id),
+  );
 
-  // estado del sidebar
-    const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
-    const setSidebarMobileOpen = useUserStore(
-      (state) => state.setSidebarMobileOpen,
-    );
-    const router = useRouter();
+  // tramo.json
+  const { data: tramoData, error: tramoError } = await handleRequest(() =>
+    projectsService.currentTramo(projectData.currentTramoId),
+  );
 
-// obtencion del id por parametro 
-  const pathname = usePathname(); // "/dashboard/1/senial"
+  // allTramosProject.json
+  const { data: ProjectTramoData, error: ProjectTramoError } =
+    await handleRequest(() => projectsService.projectTramoData(id));
 
-  // 1. Dividimos por "/" -> ["", "dashboard", "1", "senial"]
-  // 2. El "1" está en la posición 2 del array
-  const segments = pathname.split('/');
-  const id = segments[2];
+  const { data: projectNftData, error: projectNftError } = await handleRequest(
+    () => projectsService.nft(id),
+  );
 
-  const project = getProjectById(id);
- 
-  if(!project) return <div className="flex items-center justify-center flex-col gap-2 content-center h-lvh">Proyecto no encontrado
-    <Button onClick={() => router.back()} content="Volver"></Button>
-  </div>;
+  const { data: evidenceData, error: evidenceError } = await handleRequest(() =>
+    projectsService.evidences(id),
+  );
 
-  return (
-    <ProjectContext.Provider value={project}>
-          <div className="min-h-screen flex flex-col">
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={sidebarMobileOpen}
-        onClose={() => setSidebarMobileOpen(false)}
+  const { data: microActionInstanceData, error: microActionInstanceError } =
+    await handleRequest(() => projectsService.microActionInstance(id));
+  /* console.log(
+    'projectData:',
+    projectData,
+    error,
+    'tramoData:',
+    tramoData,
+    tramoError,
+    'ProjectTramoData:',
+    ProjectTramoData,
+    ProjectTramoError,
+    'nft',
+    projectNftData,
+    projectNftError,
+  ); */
+  //console.log('evidenceData', evidenceData);
+  // Manejo de errores
+  if (error || tramoError || ProjectTramoError || projectNftError) {
+    return (
+      <ErrorScreen
+        error={error || tramoError || ProjectTramoError || projectNftError}
+        back="/home"
       />
-      <button
-        onClick={() => setSidebarMobileOpen(!sidebarMobileOpen)}
-        className="absolute z-50  top-0 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
-        title={sidebarMobileOpen ? 'Cerrar sidebar' : 'Abrir sidebar'}
-      >
-        <svg
-          className="w-12 h-14 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-      </button>
+    );
+  }
 
-      {/* Header - siempre deja espacio al sidebar contraído */}
-      <header className="lg:ml-24 p-1 lg:p-0">
-        <Header />
-      </header>
+  // Si no se encuentra el proyecto, mostrar página de error
+  let mockProjectMatch = null;
+  if (!projectData) {
+    notFound();
+  }
 
-      <div className="flex flex-1">
-        {/* Contenido - siempre deja espacio al sidebar contraído AAAAAAAAAAA*/}
-        <main className="text-black flex-1 p-4 lg:ml-24 w-full max-w-[100vw] overflow-x-hidden">
-          {children}
-        </main>
-      </div>
-    </div>
-    </ProjectContext.Provider>
+  if (projectData) {
+    mockProjectMatch = mockProjectsData.find(
+      (p) =>
+        p.project.name?.toLowerCase().trim() ===
+        projectData.projectName?.toLowerCase().trim(),
+    );
+
+    if (!mockProjectMatch) {
+      console.warn(
+        'No se encontró mock para el proyecto:',
+        projectData.projectName,
+      );
+      mockProjectMatch = mockProjectsData[0];
+    }
+    projectData.mock = mockProjectMatch || mockProjectsData[0];
+  }
+  //console.log('mockProjectMatch', mockProjectMatch);
+  return (
+    <LayoutShell
+      projectInfo={{
+        dbProject: projectData,
+        mockProject: mockProjectMatch,
+        tramoData: tramoData,
+        projectTramoData: ProjectTramoData,
+        projectNftData: projectNftData,
+        evidenceData: evidenceData || null,
+        microActionInstanceData: microActionInstanceData || null,
+      }}
+    >
+      {children}
+    </LayoutShell>
   );
 }

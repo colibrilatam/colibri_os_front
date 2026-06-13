@@ -1,33 +1,28 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useSyncExternalStore } from 'react';
 import { useUserStore } from '@/lib/store';
 import LoadingScreen from '@/components/LoadingScreen';
-
+import ErrorScreen from '@/components/ErrorScreen';
 
 export default function DashboardLayout({ children }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
+  const isAuthenticated = useSyncExternalStore(
+    useUserStore.subscribe,
+    () => useUserStore.getState().isAuthenticated(),  // cliente
+    () => null,                                        // servidor → null = "no sé todavía"
+  );
 
+  if (isAuthenticated === null) return <LoadingScreen />;
 
-  /*useEffect(() => {
-    // Verificar autenticación
-    if (!isAuthenticated()) {
-      router.push('/login');
-    } else {
-      setIsLoading(false);
-    }
-  }, [isAuthenticated, router]);*/
-
-  if (isLoading) {
-    return <LoadingScreen />;
+  if (!isAuthenticated) {
+    return (
+      <ErrorScreen
+        error={{ message: "Debes iniciar sesión para acceder a esta sección" }}
+        next={"Iniciar sesión"}
+        redirect={"/login"}
+      />
+    );
   }
 
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

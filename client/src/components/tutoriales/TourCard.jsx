@@ -12,7 +12,7 @@ export default function TourCard({
   const { closeOnborda } = useOnborda();
 
   return (
-    <div className="relative bg-white rounded-xl shadow-xl p-5 max-w-sm w-72">
+    <div className="z-49 relative bg-white rounded-xl shadow-xl p-5 xl:w-lg w-full ">
       {/* Flecha indicadora */}
       <span className="text-white">{arrow}</span>
 
@@ -26,15 +26,15 @@ export default function TourCard({
       <p className="text-gray-600 text-sm mb-4">{step.content}</p>
 
       {/* Progreso */}
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-gray-400">
+      <div className="flex flex-col gap-2 items-center justify-between">
+        <span className="text-xs text-gray-500">
           {currentStep + 1} de {totalSteps}
         </span>
 
         <div className="flex gap-2">
           <button
             onClick={closeOnborda}
-            className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1"
+            className="text-xs border border-gray-400 rounded-lg text-slate-500 hover:text-gray-600 px-2 py-1"
           >
             Saltar
           </button>
@@ -42,7 +42,7 @@ export default function TourCard({
           {currentStep !== 0 && (
             <button
               onClick={prevStep}
-              className="text-xs border border-gray-300 rounded-lg px-3 py-1 hover:bg-gray-50"
+              className="text-xs border border-gray-400 rounded-lg px-3 py-1 hover:bg-gray-50 text-slate-500"
             >
               Anterior
             </button>

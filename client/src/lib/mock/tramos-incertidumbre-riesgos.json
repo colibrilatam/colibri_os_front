@@ -1,0 +1,169 @@
+[
+  {
+    "tranchCode": "T1",
+    "tranchName": "Fase Fundacional",
+    "tranchShortDesc": "Duda sobre quién es realmente el equipo y qué problema está resolviendo.",
+    "tranchLongDesc": "El proyecto aún busca forma. El equipo ajusta propósito, enfoque y definición del problema. La incertidumbre está en la coherencia inicial y en la claridad mínima necesaria para comenzar con dirección.",
+    "incertidumbre": "Identitaria y de formulación",
+    "incertidumbreDescCorta": "Duda sobre si existe una identidad emprendedora coherente y una formulación clara del problema.",
+    "incertidumbreDescLarga": "La duda central está en la base del proyecto: identidad del equipo y precisión del problema. Aún no domina el mercado ni la tecnología; domina la necesidad de claridad fundacional.",
+    "centralQuestion": "¿Quiénes somos realmente y qué problema resolvemos?",
+    "riesgosPrincipales": [
+      {
+        "nombre": "Riesgo humano",
+        "descripcionCorta": "Posibilidad de que el equipo no funcione como una unidad efectiva.",
+        "descripcionLarga": "Aparece cuando el equipo no logra coordinarse, complementarse ni aprender junto. Una buena idea puede fracasar si los fundadores no sostienen cohesión, confianza y capacidad de ajuste."
+      },
+      {
+        "nombre": "Riesgo de irrelevancia",
+        "descripcionCorta": "Posibilidad de que el problema no sea suficientemente importante para el mercado.",
+        "descripcionLarga": "Surge cuando el equipo trabaja sobre una necesidad mal entendida o poco urgente. La solución puede parecer valiosa, pero si el dolor no es real, frecuente o costoso, el mercado no reaccionará."
+      },
+      {
+        "nombre": "Riesgo narrativo",
+        "descripcionCorta": "Dificultad para explicar con claridad qué problema se resuelve.",
+        "descripcionLarga": "Un relato confuso no solo dificulta comunicar. También suele revelar pensamiento estratégico desordenado, lo que debilita decisiones, alineación interna y capacidad de generar confianza."
+      }
+    ]
+  },
+  {
+    "tranchCode": "T2",
+    "tranchName": "Validación Temprana",
+    "tranchShortDesc": "Duda sobre si el mercado realmente quiere la solución.",
+    "tranchLongDesc": "El proyecto sale de la idea y se enfrenta a usuarios reales. La duda ya no es interna: está en la aceptación, el interés y las primeras señales de uso o disposición a pagar.",
+    "incertidumbre": "Incertidumbre de mercado",
+    "incertidumbreDescCorta": "Duda sobre si el mercado reconoce el problema y valora la solución propuesta.",
+    "incertidumbreDescLarga": "La duda está en si el mercado reconoce el problema y valora la solución. Es la primera confrontación seria entre hipótesis internas y señales reales de interés, uso o pago.",
+    "centralQuestion": "¿El mercado realmente quiere esta solución?",
+    "riesgosPrincipales": [
+      {
+        "nombre": "Riesgo de inexistencia de demanda",
+        "descripcionCorta": "Posibilidad de que nadie quiera usar o comprar la solución.",
+        "descripcionLarga": "El equipo puede creer que el problema es real, pero el mercado no confirmarlo. Aparece cuando no hay señales claras de interés, uso, adopción o intención de pago."
+      },
+      {
+        "nombre": "Riesgo de sesgo de confirmación",
+        "descripcionCorta": "Interpretar los datos solo a favor de la propia hipótesis.",
+        "descripcionLarga": "Surge cuando el equipo escucha solo lo que confirma su hipótesis e ignora señales incómodas. Eso retrasa pivotes necesarios y encarece el aprendizaje."
+      },
+      {
+        "nombre": "Riesgo de modelo débil",
+        "descripcionCorta": "Propuesta de valor poco diferenciada o mal segmentada.",
+        "descripcionLarga": "Aparece cuando la propuesta de valor no se diferencia con claridad o cuando el segmento objetivo está mal definido, debilitando validación y crecimiento."
+      }
+    ]
+  },
+  {
+    "tranchCode": "T3",
+    "tranchName": "Prototipo Vivo",
+    "tranchShortDesc": "Duda sobre si el equipo puede construir y operar la solución.",
+    "tranchLongDesc": "La hipótesis ya fue contrastada, pero ahora debe convertirse en algo funcional. La incertidumbre se mueve hacia ejecución, tecnología y capacidad operativa real.",
+    "incertidumbre": "Incertidumbre técnica y operativa",
+    "incertidumbreDescCorta": "Duda sobre si el equipo puede transformar una hipótesis validada en una solución funcional y operable.",
+    "incertidumbreDescLarga": "La duda ya no es solo conceptual. Está en si el equipo puede construir una solución funcional, operarla en condiciones reales y aprender de su desempeño técnico y operativo.",
+    "centralQuestion": "¿Podemos construir y operar esta solución?",
+    "riesgosPrincipales": [
+      {
+        "nombre": "Riesgo técnico",
+        "descripcionCorta": "Posibilidad de que la tecnología no funcione como se espera.",
+        "descripcionLarga": "Incluye fallas técnicas, errores de arquitectura o dependencia de tecnología inmadura. El resultado es una solución inestable o incapaz de entregar valor con consistencia."
+      },
+      {
+        "nombre": "Riesgo de ejecución",
+        "descripcionCorta": "Incapacidad de transformar planes en resultados.",
+        "descripcionLarga": "Aparece cuando el equipo no convierte planes en resultados, incumple hitos, usa mal los recursos o falla en la coordinación necesaria para avanzar."
+      },
+      {
+        "nombre": "Riesgo de sobreconstrucción",
+        "descripcionCorta": "Construir demasiado antes de validar suficientemente.",
+        "descripcionLarga": "Surge cuando el equipo desarrolla más de lo necesario antes de validar suficiente. Eso consume tiempo, capital y foco que deberían destinarse a aprender."
+      }
+    ]
+  },
+  {
+    "tranchCode": "T4",
+    "tranchName": "Tracción Temprana",
+    "tranchShortDesc": "Duda sobre si el negocio puede crecer de forma sostenible.",
+    "tranchLongDesc": "El producto ya funciona, pero la pregunta cambia: si puede crecer sin que los costos, la complejidad o la baja retención destruyan el valor creado.",
+    "incertidumbre": "Incertidumbre de escalabilidad",
+    "incertidumbreDescCorta": "Duda sobre si el crecimiento observado puede sostenerse sin destruir valor.",
+    "incertidumbreDescLarga": "La duda está en si las señales de uso o aceptación pueden convertirse en crecimiento sano. Escalar no basta: debe hacerse sin destruir valor por costos, baja retención o monetización débil.",
+    "centralQuestion": "¿El negocio funciona económicamente y puede escalar?",
+    "riesgosPrincipales": [
+      {
+        "nombre": "Riesgo de ilusión estadística",
+        "descripcionCorta": "Confundir métricas superficiales con crecimiento real.",
+        "descripcionLarga": "Aparece cuando los números lucen bien, pero no expresan adopción profunda, retención sólida ni sostenibilidad económica real."
+      },
+      {
+        "nombre": "Riesgo de monetización insuficiente",
+        "descripcionCorta": "El modelo no genera suficiente rentabilidad.",
+        "descripcionLarga": "Si captar clientes cuesta más de lo que esos clientes generan, el crecimiento deja de crear valor y comienza a erosionarlo."
+      },
+      {
+        "nombre": "Riesgo de retención baja",
+        "descripcionCorta": "Los usuarios no permanecen en el producto.",
+        "descripcionLarga": "Señala que el producto no genera valor suficiente para que los usuarios vuelvan, permanezcan o construyan hábitos de uso sostenidos."
+      }
+    ]
+  },
+  {
+    "tranchCode": "T5",
+    "tranchName": "Producto Vivo",
+    "tranchShortDesc": "Duda sobre si la organización puede sostener el crecimiento con orden interno y foco estratégico.",
+    "tranchLongDesc": "La empresa ya no solo valida mercado. Ahora debe sostener crecimiento con procesos, estructura y decisiones más maduras. La duda está en absorber complejidad sin perder foco ni rentabilidad.",
+    "incertidumbre": "Incertidumbre organizacional y estratégica",
+    "incertidumbreDescCorta": "Duda sobre si la organización puede sostener el crecimiento sin desordenarse ni perder dirección.",
+    "incertidumbreDescLarga": "La empresa ya funciona, pero no está asegurado que pueda crecer con consistencia. La duda está en su madurez interna: procesos, roles, disciplina financiera y capacidad de decidir sin desbordarse.",
+    "centralQuestion": "¿Puede la organización sostenerse y crecer con madurez interna?",
+    "riesgosPrincipales": [
+      {
+        "nombre": "Riesgo operativo",
+        "descripcionCorta": "Fragilidad en el funcionamiento diario.",
+        "descripcionLarga": "Surge cuando el funcionamiento depende demasiado del fundador o de procesos poco claros. En ese caso, crecer puede multiplicar el desorden interno."
+      },
+      {
+        "nombre": "Riesgo financiero estructural",
+        "descripcionCorta": "Crecer sin rentabilidad sostenible.",
+        "descripcionLarga": "Vender más no garantiza sostenibilidad. Si los costos crecen más rápido que los ingresos, la expansión puede debilitar en vez de fortalecer a la empresa."
+      },
+      {
+        "nombre": "Riesgo estratégico",
+        "descripcionCorta": "Tomar decisiones de expansión equivocadas.",
+        "descripcionLarga": "Aparece cuando la empresa se expande sin foco, en mal momento o hacia mercados mal leídos. Eso diluye recursos y debilita posicionamiento."
+      }
+    ]
+  },
+  {
+    "tranchCode": "T6",
+    "tranchName": "Liderazgo Transformador",
+    "tranchShortDesc": "Duda sobre si la organización puede sostener su posición e influir en el ecosistema bajo condiciones externas complejas.",
+    "tranchLongDesc": "La organización ya tiene madurez e impacto, pero ahora enfrenta una complejidad mayor: entorno, regulación, competencia y reputación. La prueba ya no es solo interna, sino sistémica.",
+    "incertidumbre": "Incertidumbre macro y sistémica",
+    "incertidumbreDescCorta": "Duda sobre si la organización puede resistir y orientar su vuelo en un entorno externo cambiante y complejo.",
+    "incertidumbreDescLarga": "La organización ya funciona, pero debe probar que puede resistir fuerzas externas mayores. La duda está en su capacidad para permanecer, adaptarse e influir en sistemas más amplios.",
+    "centralQuestion": "¿Puede resistir el entorno, sostener su influencia y multiplicar valor?",
+    "riesgosPrincipales": [
+      {
+        "nombre": "Riesgo macroeconómico",
+        "descripcionCorta": "Impacto de crisis económicas externas.",
+        "descripcionLarga": "Inflación, devaluaciones o crisis externas pueden alterar costos, ingresos y capacidad de inversión, incluso cuando la empresa está bien gestionada."
+      },
+      {
+        "nombre": "Riesgo regulatorio",
+        "descripcionCorta": "Cambios legales que afectan el negocio.",
+        "descripcionLarga": "Cambios legales o regulatorios pueden limitar operaciones, elevar costos o exigir ajustes técnicos y estratégicos que alteran el modelo actual."
+      },
+      {
+        "nombre": "Riesgo competitivo avanzado",
+        "descripcionCorta": "Competencia fuerte que desplaza la ventaja actual.",
+        "descripcionLarga": "Cuando el mercado madura, atrae actores más fuertes o tecnologías disruptivas. Eso puede desplazar ventajas previas y alterar el equilibrio competitivo."
+      },
+      {
+        "nombre": "Riesgo reputacional",
+        "descripcionCorta": "Deterioro de la imagen pública.",
+        "descripcionLarga": "En etapas avanzadas, la reputación es un activo central. Un evento negativo puede erosionar confianza, afectar clientes y tensionar alianzas o inversión."
+      }
+    ]
+  }
+]

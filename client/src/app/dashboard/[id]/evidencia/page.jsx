@@ -1,401 +1,582 @@
 'use client';
 
-import { useState, useContext } from 'react';
-import { ProjectContext } from '../layout';
+import {
+  formatRouteCode,
+  getEvidenceStatusLabel,
+  getEvidenceTypeLabel,
+  getMicroActionInstanceStatusLabel,
+  getPrivacyLevelLabel,
+  getUserRoleLabel,
+  getValidationStatusLabel,
+} from '@/lib/mappers/evidence-labels';
+import { useProject } from '@/lib/projectContext';
+import { useState, useMemo, useEffect } from 'react';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { Navigation, Pagination } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+
+/* ================= HELPERS ================= */
+
+const formatDate = (date) => {
+  if (!date) return '-';
+  return new Intl.DateTimeFormat('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(new Date(date));
+};
+
+const getLastEvaluation = (evaluations = []) => {
+  if (!evaluations.length) return null;
+  return evaluations[evaluations.length - 1];
+};
+
+const parseRouteCode = (code) => {
+  if (!code) return null;
+
+  // MAD_3_2_1
+  const parts = code.split('_');
+
+  if (parts.length !== 4) return null;
+
+  return {
+    tramo: `T${parts[1]}`,
+    categoria: `C${parts[2]}`,
+    microAction: `MA${parts[3]}`,
+  };
+};
 
 /* ================= COMPONENT ================= */
 
 export default function EvidenciaSection() {
-  const data = useContext(ProjectContext);
+  const { evidenceData } = useProject();
 
-  const { evidence, evaluations, pacProgress, currentState } = data;
+  const evidences = evidenceData || [];
+  //console.log('evidences-----', evidences);
+  const [selected, setSelected] = useState(null);
+  const [filterIC, setFilterIC] = useState(false);
 
-  /* =========================
-     🔗 DATA MAPPING REAL
-  ========================= */
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [tramoFilter, setTramoFilter] = useState('all');
+  const [categoriaFilter, setCategoriaFilter] = useState('all');
 
-  const evidences = evidence.map((e) => {
-    const pac = pacProgress.find((p) => p.id === e.pacId);
-    const evalData = evaluations.find((ev) => ev.evidenceId === e.id);
+  /* ================= METRICS ================= */
+
+  const metrics = useMemo(() => {
+    const total = evidences.length;
+
+    const validated = evidences.filter(
+      (e) => e.validationStatus === 'validated',
+    ).length;
+
+    const ic = evidences.filter((e) => e.isValidForIc).length;
+
+    const scores = evidences
+      .map((e) => getLastEvaluation(e.evaluations))
+      .filter((ev) => ev?.score);
+
+    const avgScore =
+      scores.reduce((acc, ev) => acc + ev.score, 0) / (scores.length || 1);
 
     return {
-      title: e.title,
-      status: e.status === 'approved' ? 'approved' : 'review',
-      pac: e.pacCode,
-      category: pac?.categoryName || '-',
-      date: e.validatedAt ? new Date(e.validatedAt).toLocaleDateString() : '-',
-      mentor: evalData?.evaluatorUserId || '-',
+      total,
+      validated,
+      ic,
+      avgScore: avgScore.toFixed(2),
     };
-  });
+  }, [evidences]);
 
-  const [filter, setFilter] = useState('all');
-  const [selectedEvidence, setSelectedEvidence] = useState(evidences[0]?.title);
+  /* ================= FILTER + SORT ================= */
 
-  const filtered = evidences.filter((e) => {
-    if (filter === 'all') return true;
-    return e.status === filter;
-  });
+  const filtered = useMemo(() => {
+    return evidences
+      .filter((e) => {
+        // IC
+        if (filterIC && !e.isValidForIc) {
+          return false;
+        }
 
-  const selected = evidence.find((e) => e.title === selectedEvidence);
-  const selectedEval = evaluations.find((ev) => ev.evidenceId === selected?.id);
-  const selectedPac = pacProgress.find((p) => p.id === selected?.pacId);
+        // STATUS
+        if (statusFilter !== 'all') {
+          if (statusFilter === 'pending') {
+            const pendingStatuses = ['submitted', 'under_review'];
 
-  /* =========================
-     📊 SUMMARY
-  ========================= */
+            if (!pendingStatuses.includes(e.status)) {
+              return false;
+            }
+          } else if (e.status !== statusFilter) {
+            return false;
+          }
+        }
 
-  const approvedCount = evidence.filter((e) => e.status === 'approved').length;
+        const code = e.microActionInstance?.microActionDefinition?.code;
 
-  const lastEvidence = [...evidence]
-    .filter((e) => e.validatedAt)
-    .sort((a, b) => new Date(b.validatedAt) - new Date(a.validatedAt))[0];
+        const parsed = parseRouteCode(code);
 
-  /* ========================= */
+        // TRAMO
+        if (tramoFilter !== 'all' && parsed?.tramo !== tramoFilter) {
+          return false;
+        }
+
+        // CATEGORIA
+        if (
+          categoriaFilter !== 'all' &&
+          parsed?.categoria !== categoriaFilter
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.isValidForIc && !b.isValidForIc) return -1;
+        if (!a.isValidForIc && b.isValidForIc) return 1;
+
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+  }, [evidences, filterIC, statusFilter, tramoFilter, categoriaFilter]);
+
+  useEffect(() => {
+    // No hay resultados
+    if (filtered.length === 0) {
+      setSelected(null);
+      return;
+    }
+
+    // Si la evidencia seleccionada ya no existe en el filtro
+    const stillExists = filtered.some((e) => e.id === selected?.id);
+
+    if (!stillExists) {
+      setSelected(filtered[0]);
+    }
+  }, [filtered, selected]);
+
+  if (!evidences.length) {
+    return <div className="p-10 text-slate-400">No hay evidencias</div>;
+  }
 
   return (
-    <div className="space-y-6">
-      {/* 🔼 FILA SUPERIOR */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* ESTADO */}
-        <Card>
-          <p className="text-overline">Estado actual de prueba</p>
-
-          <div className="flex items-center gap-4 mt-3">
-            <span className="text-value-hero">{approvedCount}</span>
-
-            <span className="text-body--muted">evidencias aprobadas</span>
-          </div>
-
-          <div
-            className="mt-4 inline-flex px-4 py-2 rounded-full 
-            bg-[rgba(0,207,207,0.12)] 
-            border border-[rgba(0,207,207,0.3)]
-            text-accent-cyan"
-          >
-            {currentState.trajectoryStatus}
-          </div>
-
-          <div className="mt-4">
-            <p className="text-body">Última evidencia: {lastEvidence?.title}</p>
-
-            <p className="text-helper mt-1">
-              Aprobada:{' '}
-              {lastEvidence?.validatedAt
-                ? new Date(lastEvidence.validatedAt).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-
-          <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-micro-label mb-1">Próximo requisito crítico</p>
-
-            <p className="text-body-lg">{currentState.nextMilestone}</p>
-
-            <p className="text-helper mt-2">
-              PAC actual: {currentState.currentPacCode}
-            </p>
-          </div>
-        </Card>
-
-        {/* VALIDACIÓN */}
-        <Card>
-          <p className="text-overline">Validación asociada</p>
-
-          <div>
-            <p className="text-micro-label mb-1">Aprobado por</p>
-            <p className="text-body-lg">
-              {selectedEval?.evaluatorUserId || '-'}
-            </p>
-            <p className="text-helper mt-1">Evaluador</p>
-          </div>
-
-          <div>
-            <p className="text-micro-label mb-1">Resultado</p>
-            <p className="text-body">{selectedEval?.decision || '-'}</p>
-          </div>
-
-          <div>
-            <p className="text-micro-label mb-1">Fecha</p>
-            <p className="text-date">
-              {selectedEval?.evaluatedAt
-                ? new Date(selectedEval.evaluatedAt).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-
-          <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-body">
-              {selectedEval?.comment || 'Sin comentario'}
-            </p>
-          </div>
-        </Card>
+    <div className="space-y-6 w-full">
+      {/* ================= METRICS ================= */}
+      <div
+        id="metricas"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
+      >
+        <Metric label="Evidencias" value={metrics.total} />
+        <Metric label="Validadas" value={metrics.validated} />
+        <Metric label="Impacto IC" value={metrics.ic} />
+        <Metric label="Score" value={metrics.avgScore} />
       </div>
 
-      {/* 🔽 FILA INFERIOR */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* EVIDENCIA */}
-        <Card>
-          <p className="text-overline mb-1">Evidencia trazable</p>
+      {/* ================= FILTERS ================= */}
+      <div
+        className="
+  flex flex-wrap items-center gap-4
+  p-4 rounded-2xl
+  glass-effect border-glass w-full
+"
+      >
+        {/* STATUS */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-helper whitespace-nowrap">Estado</p>
 
-          <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-            <h3 className="text-h3">Base probatoria verificable</h3>
-
-            <div className="flex gap-2 flex-wrap">
-              <FilterBtn label="Todas" onClick={() => setFilter('all')} />
-              <FilterBtn
-                label="Aprobadas"
-                onClick={() => setFilter('approved')}
-              />
-              <FilterBtn
-                label="En revisión"
-                onClick={() => setFilter('review')}
-              />
-              <FilterBtn
-                label="Observadas"
-                onClick={() => setFilter('observed')}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {filtered.map((e, i) => (
-              <EvidenceItem
-                key={i}
-                e={e}
-                onClick={() => setSelectedEvidence(e.title)}
-                active={selectedEvidence === e.title}
-              />
+          <div className="flex flex-wrap gap-2">
+            {[
+              { label: 'Todas', value: 'all' },
+              { label: 'Pendientes', value: 'pending' },
+              { label: 'Aprobadas', value: 'approved' },
+              { label: 'Rechazadas', value: 'rejected' },
+              { label: 'Borradores', value: 'draft' },
+            ].map((item) => (
+              <FilterChip
+                key={item.value}
+                active={statusFilter === item.value}
+                onClick={() => setStatusFilter(item.value)}
+              >
+                {item.label}
+              </FilterChip>
             ))}
           </div>
-        </Card>
+        </div>
 
-        {/* TRAZABILIDAD */}
-        <Card>
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-overline">Detalle de trazabilidad</p>
+        {/* TRAMO */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-helper whitespace-nowrap">Tramo</p>
 
-              <h3 className="text-h3 mt-1 max-w-xs">{selected?.title}</h3>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            <FilterChip
+              active={tramoFilter === 'all'}
+              onClick={() => setTramoFilter('all')}
+            >
+              Todos
+            </FilterChip>
 
-            <span className="text-badge px-2 py-1 rounded-full border border-white/20">
-              v1
-            </span>
+            {[1, 2, 3, 4, 5, 6].map((t) => (
+              <FilterChip
+                key={t}
+                active={tramoFilter === `T${t}`}
+                onClick={() => setTramoFilter(`T${t}`)}
+              >
+                {`T${t}`}
+              </FilterChip>
+            ))}
           </div>
+        </div>
 
-          <p className="text-body--muted mt-3">{selected?.summary}</p>
+        {/* CATEGORIA */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <p className="text-helper whitespace-nowrap">Categoría</p>
 
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <MiniBlock label="PAC asociado" value={selected?.pacCode} />
-            <MiniBlock
-              label="Categoría troncal"
-              value={selectedPac?.categoryName}
-            />
-            <MiniBlock label="Resultado" value={selectedEval?.decision} />
-            <MiniBlock label="Score" value="-" />
+          <div className="flex flex-wrap gap-2">
+            <FilterChip
+              active={categoriaFilter === 'all'}
+              onClick={() => setCategoriaFilter('all')}
+            >
+              Todas
+            </FilterChip>
+
+            {[1, 2, 3, 4, 5, 6, 7].map((c) => (
+              <FilterChip
+                key={c}
+                active={categoriaFilter === `C${c}`}
+                onClick={() => setCategoriaFilter(`C${c}`)}
+              >
+                {`C${c}`}
+              </FilterChip>
+            ))}
           </div>
+        </div>
 
-          <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-micro-label mb-2">Evaluación asociada</p>
-
-            <p className="text-body mb-2">{selectedEval?.comment}</p>
-
-            <p className="text-helper">
-              {selectedEval?.evaluatorUserId} · Evaluador ·{' '}
-              {selectedEval?.evaluatedAt
-                ? new Date(selectedEval.evaluatedAt).toLocaleDateString()
-                : '-'}
-            </p>
-          </div>
-
-          <div className="mt-4 glass-effect border-glass rounded-xl p-4">
-            <p className="text-micro-label mb-3">Historial de versiones</p>
-
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl px-3 py-2">
-                <div>
-                  <p className="text-body">Versión actual</p>
-                  <p className="text-helper">
-                    {selected?.validatedAt
-                      ? new Date(selected.validatedAt).toLocaleDateString()
-                      : '-'}
-                  </p>
-                </div>
-
-                <span className="text-badge px-2 py-1 rounded-full border border-white/20">
-                  v1
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <button className="mt-4 w-full text-body py-2 rounded-xl border border-[var(--color-turquoise)] text-[var(--color-turquoise)] hover:bg-[rgba(0,207,207,0.1)] transition">
-            Abrir documento fuente · Bitácora estructurada
+        {/* IC */}
+        <div className="pt-2">
+          <button
+            onClick={() => setFilterIC(!filterIC)}
+            className={`px-3 py-1 rounded-full text-xs border transition ${
+              filterIC
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
+                : 'border-slate-700 text-slate-400'
+            }`}
+          >
+            Solo IC válido
           </button>
-        </Card>
+        </div>
       </div>
 
-      {/* 🔽 TERCERA FILA */}
-      <div className="grid md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-overline mb-4">Competencias activadas</p>
+      {/* ================= LIST ================= */}
+      <div id="lista" className="space-y-4 w-full">
+        {/* HEADER */}
+        <div className="flex items-center justify-between">
+          <h2 className="text-h3">Evidencias</h2>
 
-          {/* ⚠️ NO EXISTE EN DATA */}
-          <p className="text-helper">No disponible en backend</p>
-        </Card>
+          <div
+            className="
+        px-3 py-1 rounded-full
+        bg-cyan-500/10
+        border border-cyan-500/20
+        text-cyan-300 text-sm
+      "
+          >
+            {filtered.length} evidencias
+          </div>
+        </div>
 
-        <Card>
-          <p className="text-overline mb-4">Skills activadas</p>
-
-          {/* ⚠️ NO EXISTE EN DATA */}
-          <p className="text-helper">No disponible en backend</p>
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Contexto estructural activado</p>
-
-          <p className="text-helper">No disponible en backend</p>
-        </Card>
+        {/* SWIPER */}
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          pagination={{ clickable: true }}
+          spaceBetween={16}
+          slidesPerView={1.1}
+          breakpoints={{
+            640: {
+              slidesPerView: 1.5,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3,
+            },
+            1280: {
+              slidesPerView: 4,
+            },
+          }}
+          className="evidence-swiper"
+        >
+          {filtered.map((e) => (
+            <SwiperSlide key={e.id} className="h-auto">
+              <div className="h-full">
+                <EvidenceCard
+                  evidence={e}
+                  isActive={selected?.id === e.id}
+                  onClick={() => setSelected(e)}
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        {filtered.length === 0 && (
+          <div
+            className="
+      p-10 rounded-2xl
+      border border-dashed border-slate-700
+      text-center text-slate-400
+      glass-effect
+    "
+          >
+            No se encontraron evidencias con los filtros actuales.
+          </div>
+        )}
       </div>
+
+      {/* ================= DETAIL ================= */}
+      {selected && filtered.length > 0 && (
+        <div id="detalle" className="w-full">
+          <EvidenceDetail evidence={selected} />
+        </div>
+      )}
     </div>
   );
 }
 
-/* ================= UI (SIN CAMBIOS) ================= */
+/* ================= CARD ================= */
 
-const MiniBlock = ({ label, value }) => (
-  <div className="glass-effect border-glass rounded-xl p-3">
-    <p className="text-micro-label mb-1">{label}</p>
-    <p className="text-body-lg">{value}</p>
-  </div>
-);
-
-const Card = ({ children }) => (
-  <div className="glass-effect border-glass rounded-2xl p-5">{children}</div>
-);
-
-const FilterBtn = ({ label, onClick }) => (
-  <button
-    onClick={onClick}
-    className="text-badge px-3 py-1 rounded-full border border-glass hover:bg-white/10 transition"
-  >
-    {label}
-  </button>
-);
-
-// EvidenceItem y Block SIN CAMBIOS
-
-const EvidenceItem = ({ e, onClick, active }) => {
-  const statusMap = {
-    approved: {
-      label: 'Aprobada',
-      class:
-        'bg-[rgba(0,153,117,0.15)] text-[var(--status-success)] border-glass-green',
-    },
-    review: {
-      label: 'En revisión',
-      class:
-        'bg-[rgba(255,209,102,0.15)] text-[var(--status-warning)] border-glass',
-    },
-    observed: {
-      label: 'Observada',
-      class:
-        'bg-[rgba(255,77,109,0.15)] text-[var(--status-danger)] border-glass-red',
-    },
-  };
-
-  const status = statusMap[e.status];
+function EvidenceCard({ evidence, isActive, onClick }) {
+  const lastEval = getLastEvaluation(evidence.evaluations);
 
   return (
     <div
       onClick={onClick}
-      className={`border border-glass rounded-xl p-4 space-y-3 transition cursor-pointer
-        ${active ? 'ring-2 ring-[var(--color-turquoise)] bg-white/5' : 'hover:bg-white/5'}
-      `}
+      className={`
+    h-[220px]
+    flex flex-col justify-between
+    p-4 rounded-xl cursor-pointer transition
+    glass-effect border-glass
+    ${isActive ? 'border-cyan-400 bg-cyan-400/10' : 'hover:bg-white/5'}
+  `}
     >
-      <Block label="Evidencia">
-        <p className="text-body-lg">{e.title}</p>
-      </Block>
+      <div className="flex justify-between mb-2">
+        <TypeBadge type={evidence.evidenceType} />
+        <StatusBadge status={evidence.status} />
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <Block label="PAC">{e.pac}</Block>
-        <Block label="Categoría">{e.category}</Block>
+      <p className="text-body mb-2">{evidence.description}</p>
 
-        <Block label="Estado">
-          <span
-            className={`text-badge px-2 py-1 rounded-full border ${status.class}`}
-          >
-            {status.label}
-          </span>
-        </Block>
+      <div className="flex justify-between text-legend">
+        <span>
+          {getMicroActionInstanceStatusLabel(
+            evidence.microActionInstance?.status,
+          )}
+        </span>
 
-        <Block label="Fecha">{e.date}</Block>
-        <Block label="Mentor">{e.mentor}</Block>
+        {evidence.isValidForIc && (
+          <span className="text-accent-emerald">Impacta IC</span>
+        )}
+      </div>
 
-        <Block label="Fuente">
-          <button className="text-accent-cyan hover:underline">Ver</button>
-        </Block>
+      {lastEval && (
+        <p className="text-xs text-accent-amber mt-1">⭐ {lastEval.score}</p>
+      )}
+
+      <div className="flex justify-between mt-2 text-legend">
+        <span>{evidence.evaluations?.length || 0} eval</span>
+        <span>{evidence.versions?.length || 0} ver</span>
       </div>
     </div>
   );
+}
+
+/* ================= DETAIL ================= */
+
+function EvidenceDetail({ evidence }) {
+  const lastEval = getLastEvaluation(evidence.evaluations);
+
+  return (
+    <div className="p-6 rounded-2xl glass-effect border-glass space-y-6">
+      {/* HEADER */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-h3">Evidencia</h2>
+
+        <div className="flex gap-2">
+          <TypeBadge type={evidence.evidenceType} />
+          <StatusBadge status={evidence.status} />
+        </div>
+      </div>
+
+      {/* DESCRIPTION */}
+      <p className="text-body">{evidence.description}</p>
+
+      {/* META */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <Info
+          label="Validación"
+          value={getValidationStatusLabel(evidence.validationStatus)}
+        />
+        <Info
+          label="Impacto en IC"
+          value={evidence.isValidForIc ? 'Sí' : 'No'}
+        />
+        <Info label="Fecha" value={formatDate(evidence.createdAt)} />
+        <Info label="Versiones" value={evidence.versions?.length || 0} />
+        <Info label="Evaluaciones" value={evidence.evaluations?.length || 0} />
+        <Info
+          label="Privacidad"
+          value={getPrivacyLevelLabel(evidence.privacyLevel)}
+        />
+      </div>
+
+      {/* AUTHOR */}
+      <Section title="Autor">
+        <p className="text-body">{evidence.author?.fullName}</p>
+        <p className="text-legend">{getUserRoleLabel(evidence.author?.role)}</p>
+      </Section>
+
+      {/* MICROACTION */}
+      <Section title="Microacción">
+        <div className="grid grid-cols-2 gap-4">
+          <Info
+            label="Estado"
+            value={getMicroActionInstanceStatusLabel(
+              evidence.microActionInstance?.status,
+            )}
+          />
+          <Info
+            label="En tiempo"
+            value={
+              evidence.microActionInstance?.isOnTime === null
+                ? '-'
+                : evidence.microActionInstance?.isOnTime
+                  ? 'Sí'
+                  : 'No'
+            }
+          />
+          <Info
+            label="Intentos"
+            value={evidence.microActionInstance?.attemptNumber}
+          />
+          <Info
+            label="Reabierta"
+            value={evidence.microActionInstance?.reopenedCount}
+          />
+        </div>
+      </Section>
+
+      {/* DEFINITION */}
+      {evidence.microActionInstance?.microActionDefinition && (
+        <Section title="Microacción Definición">
+          <p className="text-white">
+            {formatRouteCode(
+              evidence.microActionInstance.microActionDefinition.code,
+            )}
+          </p>
+          <p className="text-body--muted">
+            {evidence.microActionInstance.microActionDefinition.instruction}
+          </p>
+        </Section>
+      )}
+
+      {/* TIMELINE */}
+      <Section title="Timeline">
+        <div className="text-legend space-y-1">
+          <p>Creado: {formatDate(evidence.createdAt)}</p>
+          <p>Enviado: {formatDate(evidence.submittedAt)}</p>
+          <p>Aprobado: {formatDate(evidence.approvedAt)}</p>
+          <p>Rechazado: {formatDate(evidence.rejectedAt)}</p>
+        </div>
+      </Section>
+
+      {/* EVALUATION */}
+      {lastEval && (
+        <Section title="Evaluación">
+          <p className="text-value-lg text-accent-amber">⭐ {lastEval.score}</p>
+          <p className="text-body--muted">{lastEval.comment}</p>
+        </Section>
+      )}
+
+      {/* VERSIONS */}
+      {evidence.versions?.length > 0 && (
+        <Section title="Historial">
+          {evidence.versions.map((v) => (
+            <div key={v.id} className="flex justify-between text-legend">
+              <span>v{v.versionNumber}</span>
+              <span>{formatDate(v.createdAt)}</span>
+            </div>
+          ))}
+        </Section>
+      )}
+
+      {/* LINK */}
+      <a
+        href={evidence.canonicalUri}
+        target="_blank"
+        className="text-accent-cyan"
+      >
+        Ver archivo →
+      </a>
+    </div>
+  );
+}
+
+/* ================= UI ================= */
+
+const Section = ({ title, children }) => (
+  <div className="border-t border-slate-800 pt-4">
+    <h3 className="text-micro-label mb-2">{title}</h3>
+    {children}
+  </div>
+);
+
+const Metric = ({ label, value }) => (
+  <div className="p-4 rounded-xl border border-slate-800 bg-white/5">
+    <p className="text-xs text-slate-400">{label}</p>
+    <p className="text-lg text-white font-semibold">{value}</p>
+  </div>
+);
+
+const Info = ({ label, value }) => (
+  <div>
+    <p className="text-slate-500 text-xs">{label}</p>
+    <p className="text-white">{value}</p>
+  </div>
+);
+const FilterChip = ({ children, active, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`px-3 py-1 rounded-full text-xs border transition
+      ${
+        active
+          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+          : 'border-slate-700 text-slate-400 hover:bg-white/5'
+      }
+    `}
+  >
+    {children}
+  </button>
+);
+
+const StatusBadge = ({ status }) => {
+  const map = {
+    approved: 'bg-emerald-500/20 text-emerald-400',
+    submitted: 'bg-yellow-500/20 text-yellow-400',
+    draft: 'bg-slate-500/20 text-slate-400',
+    rejected: 'bg-red-500/20 text-red-400',
+    under_review: 'bg-purple-500/20 text-purple-400',
+  };
+
+  return (
+    <span className={`text-xs px-2 py-1 rounded ${map[status]}`}>
+      {getEvidenceStatusLabel(status)}
+    </span>
+  );
 };
 
-const Block = ({ label, children }) => (
-  <div>
-    <p className="text-micro-label mb-1">{label}</p>
-    <div className="text-body">{children}</div>
-  </div>
+const TypeBadge = ({ type }) => (
+  <span className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
+    {getEvidenceTypeLabel(type)}
+  </span>
 );
-
-const Blockkkkk = ({ label, children }) => (
-  <div>
-    <p className="text-micro-label mb-1">{label}</p>
-    <div className="text-body">{children}</div>
-  </div>
-);
-
-{
-  /* <div className="grid md:grid-cols-3 gap-6">
-        <Card>
-          <p className="text-overline mb-4">Competencias activadas</p>
-
-          {evidenciaData.metrics.competencies.map((c, i) => (
-            <ProgressItem key={i} label={c.label} value={c.value} />
-          ))}
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Skills activadas</p>
-
-          {evidenciaData.metrics.skills.map((s, i) => (
-            <SkillItem key={i} label={s.label} level={s.level} />
-          ))}
-        </Card>
-
-        <Card>
-          <p className="text-overline mb-4">Contexto estructural activado</p>
-
-          <div className="flex gap-2 mb-4">
-            {evidenciaData.metrics.context.tags.map((tag, i) => (
-              <Tag key={i}>{tag}</Tag>
-            ))}
-          </div>
-
-          <div className="glass-effect border-glass rounded-xl p-4">
-            <p className="text-body mb-2">
-              <span className="text-helper">PAC asociado principal:</span>{' '}
-              <span className="text-body-lg">
-                {evidenciaData.metrics.context.pac}
-              </span>
-            </p>
-
-            <p className="text-body--muted">
-              Lectura:{' '}
-              <span className="text-body">
-                {evidenciaData.metrics.context.description}
-              </span>
-            </p>
-          </div>
-        </Card>
-      </div> */
-}

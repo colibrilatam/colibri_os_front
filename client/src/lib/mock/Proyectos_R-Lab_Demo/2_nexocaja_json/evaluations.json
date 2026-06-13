@@ -1,0 +1,42 @@
+[
+  {
+    "id": "eval_evi_t1_c1_01_proj_nexocaja_ar_001",
+    "projectId": "proj_nexocaja_ar_001",
+    "evidenceId": "evi_t1_c1_01_proj_nexocaja_ar_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia muestra claridad suficiente sobre roles, dedicación y mecanismo básico de coordinación. Cumple criterio fundacional del PAC.",
+    "evaluatedAt": "2026-02-16T17:20:00-03:00"
+  },
+  {
+    "id": "eval_evi_t1_c2_01_proj_nexocaja_ar_001",
+    "projectId": "proj_nexocaja_ar_001",
+    "evidenceId": "evi_t1_c2_01_proj_nexocaja_ar_001",
+    "evaluatorUserId": "usr_evaluadora_vmontalvo_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "La evidencia permite distinguir un patrón de dolor recurrente y un lenguaje de usuario consistente. Aún corresponde seguir contrastando alcance y frecuencia.",
+    "evaluatedAt": "2026-03-08T18:05:00-03:00"
+  },
+  {
+    "id": "eval_evi_t1_c3_01_proj_nexocaja_ar_001",
+    "projectId": "proj_nexocaja_ar_001",
+    "evidenceId": "evi_t1_c3_01_proj_nexocaja_ar_001",
+    "evaluatorUserId": "usr_evaluador_darancibia_001",
+    "evaluationStatus": "approved",
+    "decision": "approved",
+    "comment": "Existe coherencia inicial entre problema priorizado, propuesta de valor y segmento elegido. El nivel de definición es adecuado para T1.",
+    "evaluatedAt": "2026-03-27T16:50:00-03:00"
+  },
+  {
+    "id": "eval_evi_t1_c4_01_proj_nexocaja_ar_001",
+    "projectId": "proj_nexocaja_ar_001",
+    "evidenceId": "evi_t1_c4_01_proj_nexocaja_ar_001",
+    "evaluatorUserId": "usr_evaluadora_msolis_001",
+    "evaluationStatus": "needs_changes",
+    "decision": "needs_changes",
+    "comment": "El corte es pertinente, pero todavía no vincula con suficiente precisión la tensión de caja observada con una necesidad financiera temprana priorizada. Requiere mayor trazabilidad comparativa.",
+    "evaluatedAt": "2026-04-02T18:10:00-03:00"
+  }
+]

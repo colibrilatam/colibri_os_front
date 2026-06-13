@@ -1,0 +1,121 @@
+[
+  {
+    "id": "evi_t3_c1_01_proj_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "pacId": "pac_t3_c1_proj_flujoclave_co_001",
+    "pacCode": "T3-C1",
+    "categoryId": "cat_c1",
+    "authorUserId": "usr_santiago_mejia_001",
+    "title": "Protocolo operativo del equipo para sostener implementación y soporte del prototipo vivo",
+    "status": "approved",
+    "submittedAt": "2026-01-20T17:10:00-05:00",
+    "validatedAt": "2026-01-21T16:50:00-05:00",
+    "evidenceHash": "hash_evi_t3_c1_01_flujoclave",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t3_c1_01_proj_flujoclave_co_001",
+      "mai_t3_c1_02_proj_flujoclave_co_001",
+      "mai_t3_c1_03_proj_flujoclave_co_001"
+    ],
+    "summary": "Documento que distribuye responsabilidades, tiempos de respuesta y reglas de coordinación para sostener el piloto con comercios reales."
+  },
+  {
+    "id": "evi_t3_c2_01_proj_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "pacId": "pac_t3_c2_proj_flujoclave_co_001",
+    "pacCode": "T3-C2",
+    "categoryId": "cat_c2",
+    "authorUserId": "usr_santiago_mejia_001",
+    "title": "Registro comparado de quiebres entre cobro, conciliación y visibilidad de caja",
+    "status": "approved",
+    "submittedAt": "2026-02-07T17:30:00-05:00",
+    "validatedAt": "2026-02-08T17:40:00-05:00",
+    "evidenceHash": "hash_evi_t3_c2_01_flujoclave",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t3_c2_01_proj_flujoclave_co_001",
+      "mai_t3_c2_02_proj_flujoclave_co_001",
+      "mai_t3_c2_03_proj_flujoclave_co_001"
+    ],
+    "summary": "Síntesis de entrevistas y observaciones que confirma fricción persistente entre medios de pago, conciliación y decisión operativa."
+  },
+  {
+    "id": "evi_t3_c3_01_proj_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "pacId": "pac_t3_c3_proj_flujoclave_co_001",
+    "pacCode": "T3-C3",
+    "categoryId": "cat_c3",
+    "authorUserId": "usr_santiago_mejia_001",
+    "title": "Resultado de operación del prototipo vivo y lectura inicial de valor comercial",
+    "status": "approved",
+    "submittedAt": "2026-02-26T17:50:00-05:00",
+    "validatedAt": "2026-02-27T17:55:00-05:00",
+    "evidenceHash": "hash_evi_t3_c3_01_flujoclave",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t3_c3_01_proj_flujoclave_co_001",
+      "mai_t3_c3_02_proj_flujoclave_co_001",
+      "mai_t3_c3_03_proj_flujoclave_co_001"
+    ],
+    "summary": "Consolidado de uso del prototipo, patrones de fricción, continuidad de uso y percepción de valor por parte de comercios piloto."
+  },
+  {
+    "id": "evi_t3_c4_01_proj_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "pacId": "pac_t3_c4_proj_flujoclave_co_001",
+    "pacCode": "T3-C4",
+    "categoryId": "cat_c4",
+    "authorUserId": "usr_lina_ospina_001",
+    "title": "Corte de costos de implementación y umbral de continuidad del piloto",
+    "status": "approved",
+    "submittedAt": "2026-03-16T17:00:00-05:00",
+    "validatedAt": "2026-03-17T16:40:00-05:00",
+    "evidenceHash": "hash_evi_t3_c4_01_flujoclave",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t3_c4_01_proj_flujoclave_co_001",
+      "mai_t3_c4_02_proj_flujoclave_co_001",
+      "mai_t3_c4_03_proj_flujoclave_co_001"
+    ],
+    "summary": "Documento de trabajo que relaciona carga operativa del piloto, costos de soporte y criterio mínimo de continuidad financiera."
+  },
+  {
+    "id": "evi_t3_c5_01_proj_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "pacId": "pac_t3_c5_proj_flujoclave_co_001",
+    "pacCode": "T3-C5",
+    "categoryId": "cat_c5",
+    "authorUserId": "usr_santiago_mejia_001",
+    "title": "Comparativo de rutas de entrada comercial y secuencia priorizada por tipo de comercio",
+    "status": "approved",
+    "submittedAt": "2026-03-30T17:10:00-05:00",
+    "validatedAt": "2026-03-31T17:50:00-05:00",
+    "evidenceHash": "hash_evi_t3_c5_01_flujoclave",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t3_c5_01_proj_flujoclave_co_001",
+      "mai_t3_c5_02_proj_flujoclave_co_001",
+      "mai_t3_c5_03_proj_flujoclave_co_001"
+    ],
+    "summary": "Análisis comparativo de tipos de comercio, tiempos de decisión y secuencia comercial seleccionada para el siguiente ciclo."
+  },
+  {
+    "id": "evi_t3_c6_01_proj_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "pacId": "pac_t3_c6_proj_flujoclave_co_001",
+    "pacCode": "T3-C6",
+    "categoryId": "cat_c6",
+    "authorUserId": "usr_santiago_mejia_001",
+    "title": "Mapa preliminar de restricciones exógenas para integración y operación financiera cotidiana",
+    "status": "submitted",
+    "submittedAt": "2026-04-04T16:55:00-05:00",
+    "validatedAt": null,
+    "evidenceHash": "hash_evi_t3_c6_01_flujoclave",
+    "privacyScope": "internal_review",
+    "linkedMicroactionIds": [
+      "mai_t3_c6_01_proj_flujoclave_co_001",
+      "mai_t3_c6_02_proj_flujoclave_co_001"
+    ],
+    "summary": "Primer consolidado de restricciones regulatorias, técnicas y operativas, aún con necesidad de mayor contraste entre comercios piloto."
+  }
+]

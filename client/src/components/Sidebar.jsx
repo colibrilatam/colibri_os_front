@@ -8,23 +8,36 @@ import {
   Home,
   User,
   Map,
-  Zap,
   AlertCircle,
   Link2,
   Folder,
-  Layers
+  Layers,
+  Building2 ,SearchCheck 
 } from 'lucide-react';
 import Button from './Button';
-
+import { useRouter } from 'next/navigation';
+import NotificationPopup from './NotificationPopup';
+import { useState } from 'react';
+import EntrepreneurCard from './Contact';
+import TourButton from './tutoriales/TourButton';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
-  const sidebarDesktopExpanded = useUserStore((state) => state.sidebarDesktopExpanded);
-  const setSidebarDesktopExpanded = useUserStore((state) => state.setSidebarDesktopExpanded);
+  const sidebarDesktopExpanded = useUserStore(
+    (state) => state.sidebarDesktopExpanded,
+  );
+  const setSidebarDesktopExpanded = useUserStore(
+    (state) => state.setSidebarDesktopExpanded,
+  );
+  const router = useRouter();
 
-  // obtencion del id por parametro 
-  const pathname = usePathname(); 
+  const [notification, setNotification] = useState(false);
+
+  // obtencion del id por parametro
+  const pathname = usePathname();
+
+  const capaActual = pathname.split('/').pop();
 
   // 1. Dividimos por "/" -> ["", "dashboard", "1", "senial"]
   // 2. El "1" está en la posición 2 del array
@@ -39,14 +52,65 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   };
 
   const links = [
-    { href: `/home`, label: 'Inicio', icon: Home },
-    { href: `/dashboard/${id}/senial`, label: 'Señal', icon: User },
-    { href: `/dashboard/${id}/reputacion`, label: 'Reputacion', icon: Layers },
-    { href: `/dashboard/${id}/tramo`, label: 'Tramo', icon: Map },
-    { href: `/dashboard/${id}/trayectoria`, label: 'Trayectoria', icon: AlertCircle },
-    { href: `/dashboard/${id}/evidencia`, label: 'Evidencia', icon: Link2 },
-    /*{ href: '/proyectos', label: 'Proyectos', icon: Folder },*/
-  ];
+    {
+      href: `/home`,
+      label: 'Inicio',
+      icon: Home,
+      excludeRoles: ['mecenas_semilla', 'entrepreneur'],
+    },
+    {
+      href: `/dashboard/${id}/about`,
+      label: 'Perfil del proyecto',
+      icon: Building2,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/identidad`,
+      label: 'Identidad',
+      icon: User,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/reputacion`,
+      label: 'Reputacion',
+      icon: Layers,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/tramo`,
+      label: 'Tramo',
+      icon: AlertCircle,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/trayectoria`,
+      label: 'Trayectoria',
+      icon: Map,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/evidencia`,
+      label: 'Evidencia',
+      icon: Link2,
+      excludeRoles: null,
+    },
+    {
+      href: `/dashboard/${id}/evaluations`,
+      label: 'Evaluador',
+      icon: SearchCheck  ,
+      excludeRoles: null,
+    },
+    {
+      href: '/user/nft',
+      label: 'NFTs',
+      icon: Folder,
+      roles: ['mecenas_semilla'],
+    },
+  ].filter((link) => {
+    if (link.excludeRoles) return !link.excludeRoles.includes(rol); // excluir si el rol está en la lista
+    if (link.roles) return link.roles.includes(rol); // incluir solo si el rol está en la lista
+    return true; // visible para todos
+  });
 
   const handleNavClick = () => {
     if (!sidebarDesktopExpanded) {
@@ -56,55 +120,84 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
   function handleLogout() {
     logout();
-    router.push('/login')
+    router.push('/login');
   }
 
+  function handleContact() {
+    setNotification(true);
+  }
+  function handleCloseNotification() {
+    setNotification(false);
+  }
 
   return (
     <>
+      {notification && (
+        <NotificationPopup
+          isOpen={notification}
+          message="Datos del emprendedor"
+          onClose={handleCloseNotification}
+        >
+          <EntrepreneurCard
+            name="Valentina Moreno"
+            email="valentina.moreno@empresa.com"
+            phone="+54 11 4234 5678"
+            linkedin="linkedin.com/in/valentina-moreno"
+          />
+        </NotificationPopup>
+      )}
       {/* Mobile */}
       <aside
-        className={`glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
+        className={`flex flex-col justify-between glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
-        >
-          <Menu size={24} />
-        </button>
+        <div>
+          <button
+            onClick={onClose}
+            className="z-50 p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
+          >
+            <Menu size={24} />
+          </button>
 
-        <div className="mt-6">
-          <h2 className="text-xl font-bold mb-2">Colibrí OS</h2>
-          <p className="text-base text-gray-400 mb-6">Rol: {rol}</p>
+          <div className="mt-6">
+            <h2 className="text-xl font-bold mb-2">Colibrí OS</h2>
+            <p className="text-base text-gray-400 mb-6">Rol: {rol}</p>
 
-          <nav className="flex flex-col gap-2">
-            {links.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={handleNavClick}
-                  className={`px-4 py-2 rounded transition-colors flex items-center gap-3 ${
-                    isActive(link.href)
-                      ? 'bg-blue-600 font-semibold'
-                      : 'text-gray-300 hover:bg-gray-800'
-                  }`}
-                >
-                  <Icon size={20} />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+            <nav className="flex flex-col gap-2">
+              {links.map((link) => {
+                if (!link) return null;
+                const Icon = link.icon;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={handleNavClick}
+                    className={`px-4 py-2 rounded transition-colors flex items-center gap-3 ${
+                      isActive(link.href)
+                        ? 'bg-blue-600 font-semibold'
+                        : 'text-gray-300 hover:bg-gray-800'
+                    }`}
+                  >
+                    <Icon size={20} />
+                    <span>{link.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+       
+          <div  className="flex flex-col gap-4">
+            <TourButton tourName={capaActual} ></TourButton>
+          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
+          <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
         </div>
       </aside>
 
       {/* Desktop */}
       <aside
-        className={` border-right hidden lg:flex flex-col glass-effect-dark text-white h-screen overflow-y-auto fixed left-0 top-0 z-45 transition-all duration-300 ${
+        className={` border-right hidden lg:flex flex-col glass-effect-dark text-white h-screen overflow-y-auto fixed left-0 top-0 z-50 transition-all duration-300 ${
           sidebarDesktopExpanded ? 'w-64 p-4' : 'w-24 p-3'
         }`}
       >
@@ -141,13 +234,19 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
                 title={!sidebarDesktopExpanded ? link.label : ''}
               >
                 <Icon size={20} className="shrink-0" />
-                {sidebarDesktopExpanded && <span className="whitespace-nowrap">{link.label}</span>}
+                {sidebarDesktopExpanded && (
+                  <span className="whitespace-nowrap">{link.label}</span>
+                )}
               </Link>
             );
           })}
         </nav>
         {sidebarDesktopExpanded && (
+          <div  className="flex flex-col gap-4">
+            <TourButton tourName={capaActual} ></TourButton>
+          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
           <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
+          </div>
         )}
       </aside>
     </>

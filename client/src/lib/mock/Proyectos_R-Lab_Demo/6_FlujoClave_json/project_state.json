@@ -1,0 +1,19 @@
+[
+  {
+    "id": "projstate_flujoclave_co_001",
+    "projectId": "proj_flujoclave_co_001",
+    "currentTramoId": "tramo_t3",
+    "currentTramoCode": "T3",
+    "currentTramoName": "Prototipo Vivo",
+    "trajectoryStatus": "in_progress",
+    "currentPacId": "pac_t3_c6_proj_flujoclave_co_001",
+    "currentPacCode": "T3-C6",
+    "pacsApprovedInCurrentTramo": 5,
+    "microactionsCompletedCount": 17,
+    "validatedEvidenceCount": 5,
+    "currentPacCompletedMicroactions": 2,
+    "nextMilestone": "Cerrar T3-C6 con evidencia suficiente sobre restricciones regulatorias, de integración y operación que afectan continuidad del prototipo vivo.",
+    "createdAt": "2025-11-25T09:10:00-05:00",
+    "updatedAt": "2026-04-04T17:55:00-05:00"
+  }
+]
