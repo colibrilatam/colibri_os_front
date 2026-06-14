@@ -13,7 +13,7 @@ import OnbordaWrapper from '@/lib/tutorial/layout';
 import { useUserStore } from '@/lib/store';
 
 import { getRouteConfig } from '@/lib/layoutConfig';
-import ThemeLoader from '@/components/ThemeLoader';
+
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
@@ -64,7 +64,7 @@ export default function ClientLayout({ children }) {
       {route.header === 'main' && <MainHeader />}
 
       {/* {route.header === 'project' && <Header />} */}
-      <ThemeLoader />
+      
       <main className={route.padding}>{children}</main>
     </OnbordaWrapper>
   );
