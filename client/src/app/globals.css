@@ -26,7 +26,7 @@ html {
 
   /* EJEMPLO LOS DE ABAJO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
   --theme-surface-background:
-    rgba(35, 48, 78, 0.75);
+    rgba(255, 255, 255, 0.116);
 
   --theme-surface-border:
     rgba(255, 255, 255, .08);
@@ -79,6 +79,7 @@ html {
   --bg-sunken: var(--gray-100);
   --bg-overlay: rgba(0, 51, 102, 0.08);
   --theme-secondary-background: rgba(255, 255, 255, 0.08);
+  --theme-dark-surface-background: rgba(212, 212, 212, 0.08);
 
   /* Texto */
   --text-primary: #FFFFFF;
@@ -209,7 +210,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: var(--font-bold);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
@@ -324,7 +325,7 @@ body {
   display: flex;
   flex-direction: column;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -353,16 +354,15 @@ a {
 
 /* Clase base: sin bordes */
 .glass-effect {
-  background: rgba(35, 41, 56, 0.45);
+  background: var(--theme-surface-background);
   backdrop-filter: blur(12px);
+  box-shadow: 0px 14px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Variación más oscura */
 /* EJEMPLO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 .glass-effect-dark {
-  background: var(--theme-surface-background,
-      rgba(15, 23, 42, 0.75));
-
+  background: var(--theme-dark-surface-background);
   backdrop-filter: blur(16px);
 }
 
