@@ -22,10 +22,45 @@ export default function ThemeLoader() {
       user.theme.surfaceBackground || '',
     );
 
+
     root.style.setProperty(
       '--theme-secondary-background',
       user.theme.accentColor || '',
     );
+    
+    
+    root.style.setProperty(
+      '--font-body',
+      user.theme.fontFamily || '',
+    );
+
+    root.style.setProperty(
+      '--font-display',
+      user.theme.fontFamily || '',
+    );
+    root.style.setProperty(
+      '--text-primary',
+      user.theme.textPrimary || '',
+    );
+
+    root.style.setProperty(
+      '--text-secondary',
+      user.theme.textSecondary || '',
+    );
+    root.style.setProperty(
+      '--text-tertiary',
+      user.theme.textTertiary || '',
+    );
+
+
+    
+    root.style.setProperty(
+      '--theme-dark-surface-background',
+      user.theme.darkSurfaceBackground || '',
+    );
+
+
+
     
 
     root.style.setProperty('--theme-surface-border', user.theme.surfaceBorder || '');
