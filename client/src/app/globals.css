@@ -25,8 +25,7 @@ html {
       #0f172a 100%);
 
   /* EJEMPLO LOS DE ABAJO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-  --theme-surface-background:
-    rgba(1, 0, 32, 0.116);
+
 
   --theme-surface-border:
     rgba(255, 255, 255, .08);
@@ -79,7 +78,11 @@ html {
   --bg-sunken: var(--gray-100);
   --bg-overlay: rgba(0, 51, 102, 0.08);
   --theme-secondary-background: rgba(255, 255, 255, 0.08);
+
+  /* FONDOS GLASS EFFECT */
   --theme-dark-surface-background: rgba(3, 0, 31, 0.253);
+  --theme-surface-background:
+    rgba(1, 0, 32, 0.116);
 
   /* Texto */
   --text-primary: #FFFFFF;
