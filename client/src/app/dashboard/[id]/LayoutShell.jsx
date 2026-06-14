@@ -8,7 +8,7 @@ import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json';
 import allTramosMockData from '@/lib/mock/proyectos ficticios/tramo4/allTramosProject.json';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-
+import ThemeLoader from "@/components/ThemeLoader";
 import { useOnborda } from "onborda";
 
 export default function LayoutShell({ children, projectInfo }) {
@@ -53,6 +53,7 @@ useEffect(() => {
 
   return (
     <ProjectContext.Provider value={projectInfo}>
+      <ThemeLoader ></ThemeLoader>
       <div className=" lg:pt-0 min-h-screen flex flex-col w-full">
         {/* Sidebar */}
         <Sidebar

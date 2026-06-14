@@ -24,7 +24,8 @@ export const unimetTheme = {
 
   pageBackground: 'linear-gradient(180deg,#FFFFFF 0%,#F5F5F5 100%)',
 
-  surfaceBackground: '#1a2b6bbd',
+  surfaceBackground: '#FFFFFF',
+  darkSurfaceBackground: '#f6f6f6',
   surfaceBorder: '#E5E7EB',
 
   primaryColor: '#1A2B6B',
@@ -38,8 +39,9 @@ export const unimetTheme = {
   secondaryButtonBorder: '#1A2B6B',
   secondaryButtonText: '#1A2B6B',
 
-  textPrimary: '#333333',
-  textSecondary: '#6B7280',
+  textPrimary: '#1A2B6B',
+  textSecondary: '#667085',
+  textTertiary: '#cbd5e1',
   textOnDark: '#FFFFFF',
 
   fontFamily: 'Roboto, sans-serif',

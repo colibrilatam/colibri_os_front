@@ -112,7 +112,7 @@ export default function NftPage(){
             { error && <p className="text-red-500 text-6xl">{error.message}</p>}
                 <div className="flex flex-col  md:justify-between gap-2">
                     <h1 className="text-(--text-primary)">Tu impacto como aliado</h1>
-                    <p className="w-fit primary-button border-glass rounded-full p-2 text-(--text-primary)">Portafolio NFT</p>
+                    <p className="w-fit font-semibold primary-button border-glass rounded-full p-2 text-(--text-primary)">Portafolio NFT</p>
                 </div>
                 <div className="w-full items-center flex justify-center">
                 <img src={svg.src} alt="NFT Avatar" className="p-2 glass-effect-dark w-80 h-80 rounded-full" ></img>
@@ -133,19 +133,21 @@ export default function NftPage(){
                 <ProgressBar className="text-(--text-primary)" color="orange" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
                 <p className="mt-4 text-(--text-secondary)">Has asignado <span className="text-(--text-primary) font-bold"> 3/10 becas Semilla de luz. </span> Aún tienes 7 becas pendientes, asígnalas para aumentar tu reputación</p>
                 </div>
-
-                <button className="cursor-pointer primary-button rounded-2xl p-4 text-(--text-primary) w-full mt-4" >Exportar report de impacto</button>
+                            <div className="w-full justify-center flex">
+                <button className="cursor-pointer font-semibold text-sm primary-button rounded-2xl p-4 text-(--text-primary) w-fit mt-4" 
+                >Exportar report de impacto</button>
+                </div>
                     </div>
                     
                 
             </div>
             <div className=" p-4 w-full rounded-2xl glass-effect border-glass">
               
-                <h3 className="mb-6 text-(--text-primary)">Portafolio de colibrís becados</h3>
+                <h1 className="font-bold mb-6 text-(--text-primary)">Portafolio de colibrís becados</h1>
                 <div className="w-full overflow-x-auto rounded-2xl glass-effect border-glass">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-200 text-left">
+          <tr className="border-b border-gray-200 text-left text-(--text-secondary)">
             <th className="px-4 py-3 font-semibold">Proyecto</th>
             <th className="hidden px-4 py-3 font-semibold md:table-cell">
               Emprendedor
@@ -160,29 +162,29 @@ export default function NftPage(){
           {projectsInfo && projectsInfo.length === 3 && projectsInfo.map((project, index) => (
             <tr
               key={project.nftProject.id}
-              className={`border-b border-gray-100 last:border-0 ${
-                index % 2 === 0 ? "glass-effect-dark" : "glass-effect"
+              className={`border-b  border-gray-100 last:border-0 ${
+                index % 2 === 0 ? "bg-var(--theme-surface-background)" : "glass-effect-dark"
               }`}
             >
               {/* Colibri / Proyecto */}
               <td className="px-4 py-3">
-                <p className="font-semibold">{project.nftProject.project.projectName}</p>
-                <p className="text-xs text-gray-300">{project.nftProject.project.industry}</p>
-                <p className="text-xs text-gray-500">{project.nftProject.project.country}</p>
+                <p className="font-semibold text-(--text-primary)">{project.nftProject.project.projectName}</p>
+                <p className="text-xs text-(--text-secondary)">{project.nftProject.project.industry}</p>
+                <p className="text-xs text-(--text-tertiary)">{project.nftProject.project.country}</p>
               </td>
 
               {/* Emprendedor - oculto en mobile */}
-              <td className="hidden px-4 py-3 text-gray-200 md:table-cell">
+              <td className="hidden px-4 py-3 text-(--text-secondary) md:table-cell">
                 {project.user.fullName}
               </td>
 
               {/* NFT · Tramo */}
-              <td className="px-4 py-3 text-gray-200">
+              <td className="px-4 py-3 text-(--text-secondary)">
                 <span>{project.tramo.code}</span>
               </td>
 
               {/* IC */}
-              <td className="px-4 py-3 text-gray-200">
+              <td className="px-4 py-3 text-(--text-secondary)">
                 {project.ic}
               </td>
 

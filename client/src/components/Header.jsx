@@ -13,13 +13,16 @@ import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
+import { unimetTheme } from '@/lib/themeMock';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
+  const logoSrc = unimetTheme?.logoUrl ? unimetTheme.logoUrl : "/Imagotipo Colibri OS.svg";
 
   const contextData = useProject();
 
-  const { isAuthenticated, logout, rol, subioTramo } = useUserStore();
+  const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
+  console.log(user)
 
   useEffect(() => {
     setAuth(isAuthenticated());
@@ -37,7 +40,18 @@ export default function Header({ isHome = false }) {
               onClick={() => router.push('/home')}
               className="cursor-pointer flex items-center gap-4"
             >
-              <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
+              { user && user.theme && user.theme.logoUrl ? (
+                <img
+                src={logoSrc}
+                alt="Colibrí Logo"
+                className="h-20 w-44 object-contain"
+              ></img>
+               
+              )
+              : 
+              (
+               <>
+                <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
            
                 <img
                   src="/Imagotipo Colibri OS.svg"
@@ -45,16 +59,18 @@ export default function Header({ isHome = false }) {
                   className="h-11 w-11 object-contain"
                 />
               </div>
-              <span className="text-lg font-bold text-slate-50">
+              <span className="text-lg font-bold text-(--text-primary)">
                 Colibrí OS
               </span>
+              </>
+              )}
             </div>
             {/* Menú desplegable */}
             {auth ? (
               <div className="flex gap-4">
                 {rol === 'mecenas_semilla' && (
                   <Link className="hover:text-gray-200" href="/login">
-                    <button className="rounded-xl bg-linear-to-r primary-button px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
+                    <button className="rounded-xl bg-linear-to-r primary-button px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
                       NFTs
                     </button>
                   </Link>
