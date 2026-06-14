@@ -26,7 +26,7 @@ html {
 
   /* EJEMPLO LOS DE ABAJO >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
   --theme-surface-background:
-    rgba(255, 255, 255, 0.116);
+    rgba(1, 0, 32, 0.116);
 
   --theme-surface-border:
     rgba(255, 255, 255, .08);
@@ -79,7 +79,7 @@ html {
   --bg-sunken: var(--gray-100);
   --bg-overlay: rgba(0, 51, 102, 0.08);
   --theme-secondary-background: rgba(255, 255, 255, 0.08);
-  --theme-dark-surface-background: rgba(212, 212, 212, 0.08);
+  --theme-dark-surface-background: rgba(3, 0, 31, 0.253);
 
   /* Texto */
   --text-primary: #FFFFFF;
