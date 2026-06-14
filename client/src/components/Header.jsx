@@ -13,13 +13,16 @@ import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
+import { unimetTheme } from '@/lib/themeMock';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
+  const logoSrc = unimetTheme?.logoUrl ? unimetTheme.logoUrl : "/Imagotipo Colibri OS.svg";
 
   const contextData = useProject();
 
-  const { isAuthenticated, logout, rol, subioTramo } = useUserStore();
+  const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
+  console.log(user)
 
   useEffect(() => {
     setAuth(isAuthenticated());
@@ -37,7 +40,18 @@ export default function Header({ isHome = false }) {
               onClick={() => router.push('/home')}
               className="cursor-pointer flex items-center gap-4"
             >
-              <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
+              { user && user.theme && user.theme.logoUrl ? (
+                <img
+                src={logoSrc}
+                alt="Colibrí Logo"
+                className="h-20 w-44 object-contain"
+              ></img>
+               
+              )
+              : 
+              (
+               <>
+                <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
            
                 <img
                   src="/Imagotipo Colibri OS.svg"
@@ -45,9 +59,11 @@ export default function Header({ isHome = false }) {
                   className="h-11 w-11 object-contain"
                 />
               </div>
-              <span className="text-lg font-bold text-slate-50">
+              <span className="text-lg font-bold text-(--text-primary)">
                 Colibrí OS
               </span>
+              </>
+              )}
             </div>
             {/* Menú desplegable */}
             {auth ? (
