@@ -6,13 +6,13 @@ const nivelColors = ['#71717A', '#FF7C7C', '#FFCA28', '#78D9B4'];
 export default function SeñalesDeCoherencia({ señales }) {
   return (
     <div className="glass-effect border-glass p-6 rounded-2xl shadow-md">
-      <h2 style={{ fontSize: 'var(--text-3xl)', color: 'white' }} className="font-semibold mb-6">Señales de Coherencia</h2>
+      <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--text-primary)' }} className="font-semibold mb-6">Señales de Coherencia</h2>
       <div className="space-y-8">
         {señales.map((señal, index) => (
           <div key={index} className="space-y-3">
             {/* Nombre y enlace de evidencia */}
             <div className="flex items-center justify-between">
-              <span style={{ fontSize: 'var(--text-xl)', color: 'white' }} className="font-semibold">{señal.nombre}</span>
+              <span style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)' }} className="font-semibold">{señal.nombre}</span>
               <a href={señal.evidencia} target="_blank" rel="noopener noreferrer" style={{ fontSize: 'var(--text-base)', color: 'var(--text-link)' }} className="hover:underline">Ver evidencia</a>
             </div>
             

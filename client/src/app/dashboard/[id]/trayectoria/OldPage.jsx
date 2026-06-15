@@ -250,12 +250,12 @@ return formatedDate;
       )}
 
       {/* HEADER */}
-      <div id="cabecera" className="glass-effect-dark border-glass rounded-2xl p-6">
-        <p className="text-overline">Trayectoria operativa del tramo</p>
+      <div id="cabecera" className="glass-effect border-glass rounded-2xl p-6">
+        <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>Trayectoria operativa del tramo</p>
 
-        <h2 className="text-h2">{tramoData.code} · {tramoData.name}</h2>
+        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData.code} · {tramoData.name}</h2>
 
-        <p className="text-body mt-2 max-w-2xl">{tramoData.description}</p>
+        <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{tramoData.description}</p>
 
         <div className="flex gap-3 mt-4 flex-wrap">
           <Metric label="PAC actual" value={metrics.currentPac} /> 
@@ -266,11 +266,11 @@ return formatedDate;
       </div>
 
       {/* TIMELINE */}
-      <div id="timeline" className="glass-effect border-glass rounded-2xl p-6">
+      <div id="timeline" className="overflow-x-hidden glass-effect border-glass rounded-2xl p-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
           <div>
-            <p className="text-overline mb-1">Secuencia operativa por PAC</p>
-            <h3 className="text-h3">Timeline estructural del tramo</h3>
+            <p className="text-overline mb-1" style={{ color: 'var(--text-tertiary)' }}>Secuencia operativa por PAC</p>
+            <h3 className="text-h3" style={{ color: 'var(--text-primary)' }}>Timeline estructural del tramo</h3>
           </div>
 
           <div className="flex items-center gap-4 text-legend">
@@ -319,27 +319,27 @@ return formatedDate;
       <div className="grid md:grid-cols-2 gap-6">
         {/* DETALLE PAC */}
         <div id="detalle" className="glass-effect border-glass rounded-2xl p-6">
-          <p className="text-overline mb-2">Detalle del PAC seleccionado</p>
+          <p className="text-overline mb-2" style={{ color: 'var(--text-tertiary)' }}>Detalle del PAC seleccionado</p>
           <div className="grid gap-4">
             {/* TITULO */}
             <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2">Título del PAC</p>
+              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>Título del PAC</p>
 
-              <p className="text-body-lg mb-4">{selectedPac.title}</p>
+              <p className="text-body-lg mb-4 text-(--text-tertiary)">{selectedPac.title}</p>
 
-              <p className="text-micro-label mb-2">Objetivo estructural</p>
+              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>Objetivo estructural</p>
 
-              <p className="text-body">{selectedPac.detail.objective}</p>
+              <p className="text-body" style={{ color: 'var(--text-secondary)' }}>{selectedPac.detail.objective}</p>
             </div>
             <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2">Corte temporal</p>
+              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>Corte temporal</p>
 
-              <div className="flex justify-between text-body">
+              <div className="flex justify-between text-body text-(--text-secondary)">
                 <span>Inicio</span>
                 <span>{selectedPac.detail.timeline.start}</span>
               </div>
 
-              <div className="flex justify-between text-body">
+              <div className="flex justify-between text-body text-(--text-secondary)">
                 <span>Cierre</span>
                 <span>{selectedPac.detail.timeline.end}</span>
               </div>
@@ -349,7 +349,7 @@ return formatedDate;
 
         {/* CARGA OPERATIVA DEL PAC (interactivo para T3-C7) */}
         <div id="carga" className="glass-effect border-glass rounded-2xl p-6">
-          <h4 className="text-micro-label mb-4">Carga operativa del PAC</h4>
+          <h4 className="text-micro-label mb-4" style={{ color: 'var(--text-tertiary)' }}>Carga operativa del PAC</h4>
 
           {selectedPac.code === 'T3-C7' ? (
             <DynamicCargaPac
@@ -412,8 +412,8 @@ const DynamicCargaPac = ({
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="text-body-lg">{item.title}</p>
-                <p className="text-helper">{item.desc}</p>
+                <p className="text-body-lg text-(--text-tertiary)">{item.title}</p>
+                <p className="text-helper text-(--text-tertiary)">{item.desc}</p>
               </div>
               <StatusBadge
                 status={
@@ -431,7 +431,7 @@ const DynamicCargaPac = ({
                   }
                 }}
                 className="
-                  w-full text-sm text-white border border-glass rounded-xl p-3
+                  w-full text-sm text-(--text-primary) border border-glass rounded-xl p-3
                   bg-white/5 backdrop-blur cursor-pointer
                   file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm
                   file:font-medium file:bg-[rgba(0,207,207,0.15)] file:text-[var(--status-info)]
@@ -459,7 +459,7 @@ const DynamicCargaPac = ({
       {/* Bloque de evidencia */}
       <div
         className={`
-          mt-4 rounded-xl p-4 border-dashed border text-white
+          mt-4 rounded-xl p-4 border-dashed border text-(--text-primary)
           ${dynamicProgress.evidenceCompleted ? 'border-[var(--status-success)] bg-[rgba(0,153,117,0.05)]' : 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]'}
         `}
       >
@@ -476,7 +476,7 @@ const DynamicCargaPac = ({
                 }
               }}
               className="
-                w-full text-sm text-white border border-glass rounded-xl p-3
+                w-full text-sm text-(--text-primary) border border-glass rounded-xl p-3
                 bg-white/5 backdrop-blur cursor-pointer
                 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm
                 file:font-medium file:bg-[rgba(0,207,207,0.15)] file:text-[var(--status-info)]
@@ -522,8 +522,8 @@ const CargaPac = ({ pac, rol }) => {
         >
           <div className="flex justify-between items-start mb-3">
             <div>
-              <p className="text-body-lg">{item.title}</p>
-              <p className="text-helper">{item.desc}</p>
+              <p className="text-body-lg text-(--text-tertiary)">{item.title}</p>
+              <p className="text-helper text-(--text-tertiary)">{item.desc}</p>
             </div>
 
             <StatusBadge status={pac.status} />
@@ -535,7 +535,7 @@ const CargaPac = ({ pac, rol }) => {
               type="file"
               className="
               w-full
-              text-sm text-white
+              text-sm text-(--text-primary)
               border border-glass
               rounded-xl
               p-3
@@ -550,7 +550,7 @@ const CargaPac = ({ pac, rol }) => {
               file:text-sm
               file:font-medium
               file:bg-[rgba(0,207,207,0.15)]
-              file:text-[var(--status-info)]
+              file:text-(--text-secondary)
           
               hover:border-[var(--color-turquoise)]
               hover:bg-[rgba(0,207,207,0.08)]
@@ -570,7 +570,7 @@ const CargaPac = ({ pac, rol }) => {
                 ✔ Documento validado
               </div>
               <a href="/evidencia.pdf" download>
-                <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de microacción</div>
+                <div className="text-[var(--text-secondary)] cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de microacción</div>
               </a>
             </div>
           )}
@@ -592,7 +592,7 @@ const CargaPac = ({ pac, rol }) => {
       {/* BLOQUE FINAL (tipo tus imágenes) */}
       <div
         className={`
-          mt-4 rounded-xl p-4 border-dashed border text-white
+          mt-4 rounded-xl p-4 border-dashed border text-(--text-secondary)
           ${isDone && 'border-[var(--status-success)] bg-[rgba(0,153,117,0.05)]'}
           ${isCurrent && 'border-[var(--status-info)] bg-[rgba(0,207,207,0.05)]'}
           ${isPending && 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]'}
@@ -600,14 +600,14 @@ const CargaPac = ({ pac, rol }) => {
       >
         {isDone &&
           <div className="flex flex-col gap-2">
-            <p>{evidenceText.done}</p>
+            <p className="text-(--text-primary)">{evidenceText.done}</p>
             <a href="/evidencia.pdf" download>
-              <div className="text-(--text-secondary) cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de evidencia</div>
+              <div className="text-[var(--text-secondary)] cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de evidencia</div>
             </a>
           </div>
         }
-        {isCurrent && <p>{evidenceText.current}</p>}
-        {isPending && <p>{evidenceText.pending}</p>}
+        {isCurrent && <p className="text-(--text-secondary)">{evidenceText.current}</p>}
+        {isPending && <p className="text-(--text-secondary)">{evidenceText.pending}</p>}
       </div>
     </div>
   );
@@ -628,7 +628,7 @@ const StatusBadge = ({ status }) => {
 
   return (
     <span
-      className={`inline-flex items-center justify-center
+      className={`font-bold inline-flex items-center justify-center
     w-fit h-fit self-start
     whitespace-nowrap
     text-badge px-3 py-1 rounded-full ${map[status]}`}
@@ -640,8 +640,8 @@ const StatusBadge = ({ status }) => {
 
 const Metric = ({ label, value }) => (
   <div className="glass-effect border-glass px-4 py-2 rounded-xl">
-    <p className="text-micro-label">{label}</p>
-    <p className="text-value-card">{value}</p>
+    <p className="text-micro-label" style={{ color: 'var(--text-tertiary)' }}>{label}</p>
+    <p className="text-value-card" style={{ color: 'var(--text-primary)' }}>{value}</p>
   </div>
 );
 
@@ -675,9 +675,9 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
       <div>
         <div className="flex justify-between items-start mb-3">
           <div>
-            <p className="text-value-card">{pac.code}</p>
+            <p className=" text-(--text-primary)">{pac.code}</p>
             {/* <p className="text-micro-label">{pac.category}</p> */}
-            <p className="text-body-lg mb-2">{pac.category}</p>
+            <p className="text-body-lg mb-2 text-(--text-secondary)">{pac.category}</p>
           </div>
 
           <StatusDot status={pac.status} />
@@ -687,7 +687,7 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
         <p className="text-helper mb-4">{pac.area}</p> */}
       </div>
 
-      <p className="text-legend">
+      <p className="text-legend text-(--text-tertiary)">
         {isDone ? 'Completado' : isCurrent ? 'En tránsito' : 'Pendiente'}
       </p>
     </motion.div>
@@ -721,7 +721,7 @@ const LegendDot = ({ color, label }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 text-legend">
+    <div className="flex items-center gap-2 text-legend text-(--text-tertiary)">
       <span
         className={`
           w-4 h-4 flex items-center justify-center rounded-full text-xs

@@ -49,6 +49,10 @@ export default function ThemeLoader() {
       '--theme-primary-button',
       user.theme.primaryButtonBackground || '',
     );
+
+    root.style.setProperty('--text-accent', user.theme.accentColor || '');
+
+    root.style.setProperty('--bg-accent', user.theme.accentSurface || '');
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   }, [user]);
 

@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
 
 export default function AllTranches({ navigationArrows = true, initialSlide = 0, elements}){
-
+console.log(elements)
     return(
         <Swiper
                   modules={[Navigation]}
@@ -33,17 +33,19 @@ export default function AllTranches({ navigationArrows = true, initialSlide = 0,
                 >
                   {elements.map((e, i) => (
                     <SwiperSlide key={e.id} className="h-auto!">
-                      <div  key={e.id} className={`text-lg text-center text-(--text-primary) ${e.isCurrent && !elements[i + 1].isUnlocked ? "glass-effect" : e.isUnlocked ? "glass-effect-green" : "glass-effect-red"} border-glass rounded-2xl p-4 h-full flex flex-col justify-between`}>
+                      <div  key={e.id} className={`text-lg text-center text-[var(--text-primary)] ${e.isCurrent && !elements[i + 1].isUnlocked ? "glass-effect" : e.isUnlocked ? "glass-effect-green" : "glass-effect-red"} border-glass rounded-2xl p-4 h-full flex flex-col justify-between`}>
                         <div className="glass-effect-dark border-glass rounded-2xl p-2 flex flex-col items-center justify-between">
                             <div>{e.code} - {e.name}</div>
-                            <div className='text-(--text-tertiary)'>{e.isCurrent && !elements[i + 1].isUnlocked ? "En proceso" : e.isUnlocked ? "Completado" : "Pendiente"}</div>
+                            <div className="text-(--text-secondary)">
+                                {e.isCurrent && !elements[i + 1].isUnlocked ? "En proceso" : e.isUnlocked ? "Completado" : "Pendiente"}
+                            </div>
                         </div>
-                        <div className='font-bold'>Incertidumbre</div>
-                        <div className='text-(--text-secondary) p-4 glass-effect-dark border-glass rounded-2xl'>{getUncertaintyLabel(e.uncertaintyType)}</div>
-                        <div className='font-bold'>Riesgos</div>
+                        <div className='font-bold' style={{ color: 'var(--text-primary)' }}>Incertidumbre</div>
+                        <div className='text-[var(--text-secondary)] p-4 glass-effect-dark border-glass rounded-2xl'>{getUncertaintyLabel(e.uncertaintyType)}</div>
+                        <div className='font-bold' style={{ color: 'var(--text-primary)' }}>Riesgos</div>
                         <div className="flex flex-col gap-2">
                         {e.associatedRisks.map((r, i) => (
-                          <div key={i} className="text-(--text-secondary) text-center p-4 glass-effect-dark border-glass rounded-2xl">
+                          <div key={i} className="text-[var(--text-secondary)] text-center p-4 glass-effect-dark border-glass rounded-2xl">
                             {r}
                           </div>
                         ))}

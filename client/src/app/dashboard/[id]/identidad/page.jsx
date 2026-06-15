@@ -49,29 +49,29 @@ export default function IdentidadPage() {
       {/* Header */}
       <div id="estado" className=" w-full glass-effect border-glass rounded-2xl p-4 lg:p-6">
         <div className="text-center max-w-5xl mx-auto">
-          <h1 className="text-h3 mb-3">Estado actual del Proyecto</h1>
+          <h1 className="text-h3 mb-3" style={{ color: 'var(--text-primary)' }}>Estado actual del Proyecto</h1>
 
-          <p className="text-body leading-relaxed">
-            <span className="text-accent-cyan font-medium">
+          <p className="text-body leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+            <span className="text-(--text-accent) font-medium">
               {dbProject.projectName}
             </span>{' '}
             transita actualmente{' '}
             {tramoData.code === 'T4' ? (
-              <span className="text-accent-emerald font-medium">T4</span>
+              <span className="text-(--text-accent) font-medium">T4</span>
             ) : (
               <>
-                <span className="text-accent-emerald font-medium">
+                <span className="text-(--text-accent) font-medium">
                   {tramoData.code}
                 </span>{' '}
                 hacia{' '}
-                <span className="text-accent-emerald font-medium">
+                <span className="text-(--text-accent) font-medium">
                   {`T${parseInt(tramoData.code?.replace('T', ''), 10) + 1}` ||
                     'Tn+1'}
                 </span>
               </>
             )}
             , con una señal reputacional de{' '}
-            <span className="text-accent-cyan font-medium">
+            <span className="text-(--text-accent) font-medium">
               {ic}/ 6.00
             </span>
             , mientras reduce la incertidumbre{' '}
@@ -118,10 +118,10 @@ export default function IdentidadPage() {
                   NFT Colibrí dinámico
                 </h2>
                 <span
-                  className="m-2 rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1"
+                  className="m-2 rounded-full border border-(--text-accent) glass-effect-accent px-3 py-1"
                   style={{
                     fontSize: 'var(--text-xs)',
-                    color: 'var(--color-turquoise)',
+                    color: 'var(--text-accent)',
                   }}
                 >
                   Estado visual {tramoData.code}
@@ -149,7 +149,7 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="text-xs text-[var(--text-tertiary)] p-2 border-gray-500 border bg-gray-400/20  rounded-full">
-                      <span className="text-(var(--text-secondary))">
+                      <span className="text-[var(--text-secondary)]">
                         {projectNftData.nftHash}
                       </span>
                     </div>
@@ -329,14 +329,14 @@ export default function IdentidadPage() {
                       Incertidumbre dominante
                     </div>
 
-                    <div className="mb-4 rounded-xl bg-red-600/30 border border-white/20 px-4 py-2 text-center text-sm font-medium text-white">
+                    <div className="mb-4 rounded-xl bg-red-600/30 border border-red-600 px-4 py-2 text-center text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
                       {getUncertaintyLabel(tramoData.uncertaintyType) ||
                         'No definida'}
                     </div>
 
                     <div
                       className="mb-2 text-xs uppercase tracking-[0.18em]"
-                      style={{ color: 'var(--text-tertiary)' }}
+                      style={{ color: 'var(--text-secondary)' }}
                     >
                       Riesgos asociados
                     </div>
@@ -346,7 +346,7 @@ export default function IdentidadPage() {
                         return (
                           <div
                             key={risk}
-                            className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm text-white"
+                            className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm" style={{ color: 'var(--text-secondary)' }}
                           >
                             {risk || 'Riesgo ' + (index + 1)}
                           </div>

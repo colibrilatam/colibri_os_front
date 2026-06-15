@@ -32,18 +32,18 @@ export default function ActionsManagement({ data }) {
     <div className="rounded-2xl glass-effect border-glass p-6 shadow-xl">
       
       {/* HEADER */}
-      <h3 className="text-lg text-white font-semibold mb-4">
+      <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
         Gestión de acciones
       </h3>
 
       {/* 🔵 ACTUAL */}
       <div className="mb-6">
-        <h4 className="text-lg text-white font-semibold mb-3">
+        <h4 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
           En curso
         </h4>
 
         <div className="rounded-xl bg-zinc-900/50 p-4 space-y-3">
-          <p className="text-base text-white font-medium">
+          <p className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>
             {current.pacTitle}
           </p>
 
@@ -52,7 +52,7 @@ export default function ActionsManagement({ data }) {
               key={m.id}
               className="flex items-center justify-between text-base"
             >
-              <span className="text-zinc-300">{m.name}</span>
+              <span style={{ color: 'var(--text-secondary)' }}>{m.name}</span>
 
               <span
                 className={`px-2 py-1 rounded-full text-sm ${statusConfig[m.status].color}`}
@@ -64,7 +64,7 @@ export default function ActionsManagement({ data }) {
 
           {/* Evidence */}
           <div className="flex items-center justify-between text-base border-t border-zinc-800 pt-2">
-            <span className="text-zinc-300">
+            <span style={{ color: 'var(--text-secondary)' }}>
               Evidencia: {current.evidence.name}
             </span>
 
@@ -79,12 +79,12 @@ export default function ActionsManagement({ data }) {
 
       {/* 🟣 SIGUIENTE */}
       <div>
-        <h4 className="text-lg text-white font-semibold mb-3">
+        <h4 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
           Próximas acciones
         </h4>
 
         <div className="rounded-xl bg-zinc-900/30 p-4 space-y-2 opacity-80">
-          <p className="text-base text-zinc-400 font-medium">
+          <p className="text-base font-medium" style={{ color: 'var(--text-secondary)' }}>
             {next.pacTitle}
           </p>
 
@@ -93,7 +93,7 @@ export default function ActionsManagement({ data }) {
               key={m.id}
               className="flex items-center justify-between text-base"
             >
-              <span className="text-zinc-500">{m.name}</span>
+              <span style={{ color: 'var(--text-tertiary)' }}>{m.name}</span>
 
               <span
                 className={`px-2 py-1 rounded-full text-sm ${statusConfig[m.status].color}`}
