@@ -78,8 +78,9 @@ html {
   --bg-sunken: var(--gray-100);
   --bg-overlay: rgba(0, 51, 102, 0.08);
   --theme-secondary-background: rgba(255, 255, 255, 0.08);
+  --bg-accent: #00997536;
 
-  /* FONDOS GLASS EFFECT */
+  /* FONDOS GLASS EFFECT*/
   --theme-dark-surface-background: rgba(3, 0, 31, 0.253);
   --theme-surface-background:
     rgba(1, 0, 32, 0.116);
@@ -88,6 +89,7 @@ html {
   --text-primary: #FFFFFF;
   --text-secondary: #A8A8AA;
   --text-tertiary: #7A8A9C;
+   --text-accent: #009975;
   --text-inverse: var(--color-deep-blue);
   --text-link: var(--color-turquoise);
   --text-link-hover: var(--color-deep-blue);
@@ -359,7 +361,7 @@ a {
 .glass-effect {
   background: var(--theme-surface-background);
   backdrop-filter: blur(12px);
-  box-shadow: 0px 14px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 10px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Variación más oscura */
@@ -371,6 +373,10 @@ a {
 
 .glass-effect-secondary{
   background: var(--theme-secondary-background);
+}
+
+.glass-effect-accent{
+  background: var(--bg-accent);
 }
 
 /* .glass-effect-dark {
@@ -626,7 +632,6 @@ a {
   font-size: var(--text-lg);
   font-weight: var(--font-weight-medium);
   line-height: var(--leading-normal);
-  color: #f1f5f9;
   /* slate-100 */
 }
 
@@ -634,7 +639,6 @@ a {
   font-size: var(--text-xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-normal);
-  color: #f8fafc;
   /* slate-50 */
 }
 
@@ -647,7 +651,6 @@ a {
   font-size: var(--text-lg);
   font-weight: var(--font-weight-normal);
   line-height: var(--leading-loose);
-  color: #e2e8f0;
   /* slate-200 */
 }
 
@@ -660,7 +663,6 @@ a {
   font-size: var(--text-base);
   font-weight: var(--font-weight-normal);
   line-height: var(--leading-normal);
-  color: #cbd5e1;
   /* slate-300 */
 }
 
@@ -754,7 +756,6 @@ a {
   font-size: var(--text-sm);
   font-weight: var(--font-weight-normal);
   line-height: var(--leading-normal);
-  color: #cbd5e1;
   /* slate-300 */
 }
 

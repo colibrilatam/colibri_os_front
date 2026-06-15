@@ -70,9 +70,9 @@ export default function ThemeLoader() {
       user.theme.primaryButtonBackground || '',
     );
 
-    root.style.setProperty('--theme-text-primary', user.theme.textPrimary || '');
+    root.style.setProperty('--text-accent', user.theme.accentColor || '');
 
-    root.style.setProperty('--theme-text-secondary', user.theme.textSecondary || '');
+    root.style.setProperty('--bg-accent', user.theme.accentSurface || '');
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
   }, [user]);
 

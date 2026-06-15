@@ -27,6 +27,7 @@ export const unimetTheme = {
   surfaceBackground: '#FFFFFF',
   darkSurfaceBackground: '#f6f6f6',
   surfaceBorder: '#E5E7EB',
+  accentSurface: '#f5830a26',
 
   primaryColor: '#1A2B6B',
   secondaryColor: '#1E5799',
@@ -41,7 +42,7 @@ export const unimetTheme = {
 
   textPrimary: '#1A2B6B',
   textSecondary: '#667085',
-  textTertiary: '#cbd5e1',
+  textTertiary: '#a0a4aa',
   textOnDark: '#FFFFFF',
 
   fontFamily: 'Roboto, sans-serif',
