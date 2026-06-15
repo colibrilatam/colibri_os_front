@@ -12,7 +12,8 @@ import {
   Link2,
   Folder,
   Layers,
-  Building2 ,SearchCheck 
+  Building2,
+  SearchCheck,
 } from 'lucide-react';
 import Button from './Button';
 import { useRouter } from 'next/navigation';
@@ -95,12 +96,6 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       excludeRoles: null,
     },
     {
-      href: `/dashboard/${id}/evaluations`,
-      label: 'Evaluador',
-      icon: SearchCheck  ,
-      excludeRoles: null,
-    },
-    {
       href: '/user/nft',
       label: 'NFTs',
       icon: Folder,
@@ -148,7 +143,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       )}
       {/* Mobile */}
       <aside
-        className={`flex flex-col justify-between glass-effect fixed lg:hidden w-64  text-white p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
+        className={`flex flex-col justify-between surface-dark border-theme-right fixed lg:hidden w-64 p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -161,8 +156,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
           </button>
 
           <div className="mt-6">
-            <h2 className="text-xl font-bold mb-2">Colibrí OS</h2>
-            <p className="text-base text-gray-400 mb-6">Rol: {rol}</p>
+            <h2 className="text-h3 mb-2">Colibrí OS</h2>
+            <p className="text-helper mb-6">Rol: {rol}</p>
 
             <nav className="flex flex-col gap-2">
               {links.map((link) => {
@@ -175,8 +170,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
                     onClick={handleNavClick}
                     className={`px-4 py-2 rounded transition-colors flex items-center gap-3 ${
                       isActive(link.href)
-                        ? 'bg-blue-600 font-semibold'
-                        : 'text-gray-300 hover:bg-gray-800'
+                        ? 'sidebar-item-active'
+                        : 'sidebar-item'
                     }`}
                   >
                     <Icon size={20} />
@@ -187,24 +182,28 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             </nav>
           </div>
         </div>
-       
-          <div  className="flex flex-col gap-4">
-            <TourButton tourName={capaActual} ></TourButton>
-          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
+
+        <div className="flex flex-col gap-4">
+          <TourButton tourName={capaActual}></TourButton>
+          <Button
+            color="blue"
+            content="Contactar al emprendedor"
+            onClick={handleContact}
+          ></Button>
           <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
         </div>
       </aside>
 
       {/* Desktop */}
       <aside
-        className={` border-right hidden lg:flex flex-col glass-effect-dark text-white h-screen overflow-y-auto fixed left-0 top-0 z-50 transition-all duration-300 ${
+        className={`border-theme-right surface-dark hidden lg:flex flex-col h-screen overflow-y-auto fixed left-0 top-0 z-50 transition-all duration-300 ${
           sidebarDesktopExpanded ? 'w-64 p-4' : 'w-24 p-3'
         }`}
       >
         {/* Botón de toggle */}
         <button
           onClick={() => setSidebarDesktopExpanded(!sidebarDesktopExpanded)}
-          className="p-3 hover:bg-gray-800 rounded-lg transition-colors flex justify-center mb-4"
+          className="p-3 rounded-lg hover:surface-secondary transition-colors flex justify-center"
           title={sidebarDesktopExpanded ? 'Contraer' : 'Expandir'}
         >
           <Menu size={24} />
@@ -213,8 +212,8 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         {/* Header */}
         {sidebarDesktopExpanded && (
           <div className="mb-6">
-            <h2 className="text-xl font-bold mb-2">Colibrí OS</h2>
-            <p className="text-base text-gray-400">Rol: {rol}</p>
+            <h2 className="text-h3 mb-2">Colibrí OS</h2>
+            <p className="text-helper">Rol: {rol}</p>
           </div>
         )}
 
@@ -227,10 +226,10 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
                 key={link.href}
                 href={link.href}
                 className={`p-3 rounded transition-colors flex items-center gap-3 ${
-                  isActive(link.href)
-                    ? 'bg-blue-600 font-semibold'
-                    : 'text-gray-300 hover:bg-gray-800'
-                } ${sidebarDesktopExpanded ? 'justify-start' : 'justify-center'}`}
+                  isActive(link.href) ? 'sidebar-item-active' : 'sidebar-item'
+                } ${
+                  sidebarDesktopExpanded ? 'justify-start' : 'justify-center'
+                }`}
                 title={!sidebarDesktopExpanded ? link.label : ''}
               >
                 <Icon size={20} className="shrink-0" />
@@ -242,10 +241,18 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
           })}
         </nav>
         {sidebarDesktopExpanded && (
-          <div  className="flex flex-col gap-4">
-            <TourButton tourName={capaActual} ></TourButton>
-          <Button color="blue" content="Contactar al emprendedor" onClick={handleContact}></Button>
-          <Button color="red" content="Cerrar sesión" onClick={handleLogout} />
+          <div className="flex flex-col gap-4">
+            <TourButton tourName={capaActual}></TourButton>
+            <Button
+              color="blue"
+              content="Contactar al emprendedor"
+              onClick={handleContact}
+            ></Button>
+            <Button
+              color="red"
+              content="Cerrar sesión"
+              onClick={handleLogout}
+            />
           </div>
         )}
       </aside>
