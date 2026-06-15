@@ -25,6 +25,9 @@ import TourButton from './tutoriales/TourButton';
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
+  const theme = useUserStore((state) => state.theme);
+  const user = useUserStore((state) => state.user);
+  console.log(user);
   const sidebarDesktopExpanded = useUserStore(
     (state) => state.sidebarDesktopExpanded,
   );
@@ -159,7 +162,6 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             <h2 className="text-h3 mb-2">Colibrí OS</h2>
             {/*<p className="text-helper mb-6">Rol: {rol}</p>*/}
 
-
             <nav className="flex flex-col gap-2">
               {links.map((link) => {
                 if (!link) return null;
@@ -213,7 +215,9 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         {/* Header */}
         {sidebarDesktopExpanded && (
           <div className="mb-6">
-            <h2 className="text-h3 mb-2">Colibrí OS</h2>
+            <h2 className="text-h3 flex justify-center mb-2">
+              {user.theme ? 'UNIMET' : 'Colibrí OS'}
+            </h2>
             {/*<p className="text-helper">Rol: {rol}</p>*/}
           </div>
         )}
