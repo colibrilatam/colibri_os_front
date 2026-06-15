@@ -13,6 +13,7 @@ export const unimetTheme = {
 
   surfaceBackground: '#FFFFFF',
   darkSurfaceBackground: '#f3f3f3',
+  accentSurface: '#f5830a26',
 
   /* BORDES */
   surfaceBorder: '#E5E7EB',
@@ -23,7 +24,8 @@ export const unimetTheme = {
   /* COLORES DE TEXTO */
   textPrimary: '#1A2B6B',
   textSecondary: '#667085',
-  textTertiary: '#CBD5E1',
+  textTertiary: '#a0a4aa',
+  accentColor: '#F5820A',
 
   /* TIPOGRAFÍA */
   fontFamily: 'Roboto, sans-serif',
@@ -44,11 +46,11 @@ export const unimetTheme = {
   surfaceBackground: '#FFFFFF',
   darkSurfaceBackground: '#f6f6f6',
   surfaceBorder: '#E5E7EB',
-  accentSurface: '#f5830a26',
+  
 
   primaryColor: '#1A2B6B',
   secondaryColor: '#1E5799',
-  accentColor: '#F5820A',
+  
 
   primaryButtonBackground: '#F5820A',
   primaryButtonText: '#FFFFFF',

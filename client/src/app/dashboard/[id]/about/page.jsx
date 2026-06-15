@@ -149,14 +149,14 @@ export default function ProjectSection() {
             </div>
 
             {dbProject.tagline && (
-              <p className="text-body-lg text-accent-cyan">{dbProject.tagline}</p>
+              <p className="text-body-lg text-(--text-accent)">{dbProject.tagline}</p>
             )}
 
             <div className="flex flex-wrap gap-2">
-              <Badge>{getProjectStatusLabel(dbProject.status)}</Badge>
+              <Badge variant="emerald">{getProjectStatusLabel(dbProject.status)}</Badge>
 
               {dbProject.trajectoryStatus && (
-                <Badge variant="cyan">
+                <Badge variant="emerald">
                   {getTrajectoryStatusLabel(dbProject.trajectoryStatus)}
                 </Badge>
               )}
@@ -202,11 +202,11 @@ export default function ProjectSection() {
                 px-3 py-1.5 rounded-full
                 bg-cyan-500/10
                 border border-cyan-500/20
-                text-cyan-300
+                text-(--text-accent)
                 transition-all duration-200
-                hover:bg-cyan-500/20
-                hover:border-cyan-400/40
-                hover:text-cyan-200
+                glass-effect-accent
+                hover:border-(--text-accent)
+                hover:text-(--text-accent)
                 hover:scale-[1.02]
                 cursor-pointer
               "
@@ -558,9 +558,9 @@ function LinkCard({ label, url, copyMode = false }) {
         <button
           onClick={handleCopy}
           className="
-            text-accent-cyan
+            text-(--text-accent)
             transition-all duration-200
-            hover:text-cyan-200
+            hover:text-(--text-accent)
             cursor-pointer
           "
         >
@@ -584,11 +584,11 @@ function Badge({ children, variant = 'default' }) {
   const variants = {
     default: 'bg-slate-500/10 text-slate-300 border-slate-500/20',
 
-    cyan: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/20',
+    cyan: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20',
 
-    emerald: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20',
+    emerald: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
 
-    amber: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
+    amber: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
   };
 
   return (
