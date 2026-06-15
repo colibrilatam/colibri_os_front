@@ -4,7 +4,7 @@ import { setCookie } from '@/lib/cookies';
 import { userService } from '@/services/user';
 import { authService } from '@/services/authService';
 import { handleRequest } from '@/lib/handleRequest';
-import { COMPANY_THEME, unimetTheme } from '@/lib/themeMock';
+import { unimetTheme } from '@/lib/themeMock';
 
 export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
@@ -60,6 +60,11 @@ export const useLogin = () => {
     const { data: userData, error: userError } = await handleRequest(() =>
       userService.profile(),
     );
+
+    if (userData) {
+      userData.theme = unimetTheme;
+    }
+    setUser(userData);
     setRol(userData.role);
     return { data: demoLoginData, error: demoLoginError };
   };

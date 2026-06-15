@@ -216,7 +216,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         {sidebarDesktopExpanded && (
           <div className="mb-6">
             <h2 className="text-h3 flex justify-center mb-2">
-              {user.theme ? 'UNIMET' : 'Colibrí OS'}
+              {user?.theme ? 'UNIMET' : 'Colibrí OS'}
             </h2>
             {/*<p className="text-helper">Rol: {rol}</p>*/}
           </div>
