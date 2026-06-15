@@ -119,7 +119,7 @@ export default function Header({ isHome = false }) {
   //console.log(dbProject);
 
   return (
-    <header className=" lg:m-2  border-glass rounded-2xl glass-effect-dark px-4 py-2 flex justify-between  min-h-16 lg:min-h-auto content-center items-center">
+    <header className=" lg:m-2  border-glass rounded-2xl glass-effect px-4 py-2 flex justify-between  min-h-16 lg:min-h-auto content-center items-center">
       <div className=" flex items-center gap-0 lg:items-center lg:gap-4 content-center  w-full ">
         {isHome && (
           <div className="flex items-center justify-between w-full">
@@ -153,31 +153,31 @@ export default function Header({ isHome = false }) {
                   src={dbProject.projectImageUrl}
                   alt={dbProject.projectName}
                   fill
-                  className="object-cover"
+                  className="object-cover border border-black rounded-full"
                 />
                 :
                 <div className="text-sm text-slate-500 p-8 rounded-full">Sin imagen</div>
                 }
               </div>
-              <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-slate-50">
+              <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-(--text-primary)">
                 {dbProject.projectName}
               </h1>
             </div>
 
-            <div className="hidden mt-2 md:mt-3 lg:flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-300">
+            <div className="hidden mt-2 md:mt-3 lg:flex flex-wrap items-center gap-2 text-xs sm:text-sm text-(--text-primary)">
               {/*  <span className="rounded-full border border-slate-700 px-2 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm text-slate-300">
                   ID {project.id}
                 </span> */}
-              <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
+              <span className="rounded-full border border-(--text-accent) text-(--text-accent) glass-effect-accent font-bold glass-effect-dark px-2 sm:px-3 py-0.5 sm:py-1">
                 {tramoData.code} - {tramoData.name}
               </span>
-              <span className="rounded-full border border-emerald-800/60 bg-emerald-950/60 px-2 sm:px-3 py-0.5 sm:py-1 text-emerald-300">
+              <span className="rounded-full font-bold border border-(--text-accent) glass-effect-accent px-2 sm:px-3 py-0.5 sm:py-1 text-(--text-accent)">
                 {projectStatus[dbProject.status]}
               </span>
-              <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
+              <span className="rounded-full border border-(--text-primary) glass-effect-dark px-2 sm:px-3 py-0.5 sm:py-1">
                 {dbProject.industry}
               </span>
-              <span className="rounded-full border border-slate-700 bg-slate-800 px-2 sm:px-3 py-0.5 sm:py-1">
+              <span className="rounded-full border border-(--text-primary) glass-effect-dark px-2 sm:px-3 py-0.5 sm:py-1">
                 {dbProject.country}
               </span>
             </div>
@@ -185,12 +185,12 @@ export default function Header({ isHome = false }) {
 
           {/* Sección derecha: Índice Colibrí y Última actualización */}
           <div className="md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
-            <div className="w-fit rounded-2xl border border-slate-800 bg-slate-950/60 px-3 md:px-4 py-2 md:py-3">
-              <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
+            <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3">
+              <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
                 Índice Colibrí
               </div>
               <div className="mt-1 flex items-end gap-2">
-                <div className="text-lg md:text-2xl font-semibold text-slate-50">
+                <div className="text-lg md:text-2xl font-semibold text-(--text-primary)">
                   {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
@@ -199,11 +199,11 @@ export default function Header({ isHome = false }) {
               </div>
             </div>
 
-            <div className="w-fit rounded-2xl border border-slate-800 bg-slate-950/60 px-3 md:px-4 py-2 md:py-3 text-right md:text-right">
-              <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-slate-500">
+            <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3 text-right md:text-right">
+              <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
                 Última actualización
               </div>
-              <div className="mt-1 text-sm md:text-base text-slate-200">
+              <div className="mt-1 font-bold text-sm md:text-base text-(--text-primary)">
                 {dbProject.updatedAt ? formatDateSafe(dbProject.updatedAt) : formatDateSafe(reputationSnapshot.calculatedAt)}
               </div>
             </div>
