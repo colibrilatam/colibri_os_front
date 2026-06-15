@@ -1,21 +1,38 @@
-export const COMPANY_THEME = {
-  pageBackground: 'linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%)',
-
-  surfaceBackground: 'rgba(255, 255, 255, 0.95)', //EJEMPLO
-
-  surfaceBorder: 'rgba(26, 43, 107, 0.15)', //EJEMPLO
-
-  primaryButtonBackground: 'linear-gradient(to right, #F5820A, #E86F00)',
-
-  textPrimary: '#1A2B6B',
-
-  textSecondary: '#333333',
-
+export const unimetTheme = {
   logoUrl:
     'https://www.unimet.edu.ve/wp-content/uploads/2023/07/Logo-footer.png',
+
+  faviconUrl:
+    'https://www.unimet.edu.ve/wp-content/uploads/2023/08/cropped-favicon-270x270.png',
+
+  heroImage:
+    'https://www.unimet.edu.ve/wp-content/uploads/2025/06/UNIMET-El-futuro-no-se-espera-se-disena.jpeg',
+
+  /* FONDOS */
+  pageBackground: 'linear-gradient(180deg,#FFFFFF 0%,#F5F5F5 100%)',
+
+  surfaceBackground: '#FFFFFF',
+  darkSurfaceBackground: '#F6F6F6',
+
+  /* BORDES */
+  surfaceBorder: '#E5E7EB',
+
+  /* ACCIONES */
+  primaryButtonBackground: '#F5820A',
+
+  /* COLORES DE TEXTO */
+  textPrimary: '#1A2B6B',
+  textSecondary: '#667085',
+  textTertiary: '#CBD5E1',
+
+  /* TIPOGRAFÍA */
+  fontFamily: 'Roboto, sans-serif',
+
+  /* COLOR DE ACENTO GLOBAL */
+  accentColor: '#F5820A',
 };
 
-export const unimetTheme = {
+/* export const unimetTheme = {
   logoUrl:
     'https://www.unimet.edu.ve/wp-content/uploads/2023/07/Logo-footer.png',
 
@@ -60,4 +77,4 @@ export const unimetTheme = {
 
   heroImage:
     'https://www.unimet.edu.ve/wp-content/uploads/2025/06/UNIMET-El-futuro-no-se-espera-se-disena.jpeg',
-};
+}; */
