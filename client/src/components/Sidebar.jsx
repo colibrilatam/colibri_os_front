@@ -150,14 +150,15 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         <div>
           <button
             onClick={onClose}
-            className="z-50 p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center justify-center"
+            className="z-50 p-2 glass-effect-dark rounded-lg transition-colors flex items-center justify-center"
           >
             <Menu size={24} />
           </button>
 
           <div className="mt-6">
             <h2 className="text-h3 mb-2">Colibrí OS</h2>
-            <p className="text-helper mb-6">Rol: {rol}</p>
+            {/*<p className="text-helper mb-6">Rol: {rol}</p>*/}
+
 
             <nav className="flex flex-col gap-2">
               {links.map((link) => {
@@ -196,14 +197,14 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
 
       {/* Desktop */}
       <aside
-        className={`border-theme-right surface-dark hidden lg:flex flex-col h-screen overflow-y-auto fixed left-0 top-0 z-50 transition-all duration-300 ${
+        className={`border-theme-right surface hidden lg:flex flex-col h-screen overflow-y-auto fixed left-0 top-0 z-50 transition-all duration-300 ${
           sidebarDesktopExpanded ? 'w-64 p-4' : 'w-24 p-3'
         }`}
       >
         {/* Botón de toggle */}
         <button
           onClick={() => setSidebarDesktopExpanded(!sidebarDesktopExpanded)}
-          className="p-3 rounded-lg hover:surface-secondary transition-colors flex justify-center"
+          className="p-3 mb-2 rounded-lg glass-effect-dark hover:surface-secondary text-(--text-primary) transition-colors flex justify-center "
           title={sidebarDesktopExpanded ? 'Contraer' : 'Expandir'}
         >
           <Menu size={24} />
@@ -213,7 +214,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         {sidebarDesktopExpanded && (
           <div className="mb-6">
             <h2 className="text-h3 mb-2">Colibrí OS</h2>
-            <p className="text-helper">Rol: {rol}</p>
+            {/*<p className="text-helper">Rol: {rol}</p>*/}
           </div>
         )}
 

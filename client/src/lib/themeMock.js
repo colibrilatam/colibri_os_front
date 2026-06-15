@@ -12,7 +12,7 @@ export const unimetTheme = {
   pageBackground: 'linear-gradient(180deg,#FFFFFF 0%,#F5F5F5 100%)',
 
   surfaceBackground: '#FFFFFF',
-  darkSurfaceBackground: '#F6F6F6',
+  darkSurfaceBackground: '#f3f3f3',
 
   /* BORDES */
   surfaceBorder: '#E5E7EB',
