@@ -53,7 +53,7 @@ export function FiltersBar({
 }) {
   return (
     <section className="px-6 py-5">
-      <div className="rounded-2xl border border-white/8 bg-white/3 p-4 backdrop-blur-sm">
+      <div className="rounded-2xl border border-white/8 glass-effect p-4 backdrop-blur-sm">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="relative w-full max-w-xl">

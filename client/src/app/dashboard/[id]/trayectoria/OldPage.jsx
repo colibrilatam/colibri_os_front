@@ -522,7 +522,7 @@ const CargaPac = ({ pac, rol }) => {
         >
           <div className="flex justify-between items-start mb-3">
             <div>
-              <p className="text-body-lg text-(--text-tertiary)">{item.title}</p>
+              <p className="text-body-lg text-(--text-secondary)">{item.title}</p>
               <p className="text-helper text-(--text-tertiary)">{item.desc}</p>
             </div>
 

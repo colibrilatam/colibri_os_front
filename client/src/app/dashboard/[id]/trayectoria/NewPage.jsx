@@ -518,7 +518,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="text-body-lg text-(--text-tertiary)">{instruction}</p>
+                <p className="text-body-lg text-(--text-secondary)">{instruction}</p>
                 <p className="text-helper text-(--text-tertiary)">{ma.microActionDefinition?.microActionType}</p>
               </div>
               <StatusBadge status={ma.status} />

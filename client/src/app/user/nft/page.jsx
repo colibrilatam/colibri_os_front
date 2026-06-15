@@ -93,7 +93,7 @@ export default function NftPage(){
   },
   {
     label: "Ruta de apoyo",
-    value: "Desde N1 · Semilla de Luz",
+    value: "Desde T1 · Fase Fundacional",
   },
   {
     label: "Región foco",
@@ -131,7 +131,7 @@ export default function NftPage(){
                         </div>
                 <div className="mt-4 glass-effect rounded-2xl p-4">
                 <ProgressBar className="text-(--text-primary)" color="orange" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
-                <p className="mt-4 text-(--text-secondary)">Has asignado <span className="text-(--text-primary) font-bold"> 3/10 becas Semilla de luz. </span> Aún tienes 7 becas pendientes, asígnalas para aumentar tu reputación</p>
+                <p className="mt-4 text-(--text-secondary)">Has asignado <span className="text-(--text-primary) font-bold"> 3/10 becas Fase fundacional. </span> Aún tienes 7 becas pendientes, asígnalas para aumentar tu reputación</p>
                 </div>
                             <div className="w-full justify-center flex">
                 <button className="cursor-pointer font-semibold text-sm primary-button rounded-2xl p-4 text-(--text-primary) w-fit mt-4" 

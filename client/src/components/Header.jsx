@@ -69,7 +69,7 @@ export default function Header({ isHome = false }) {
             {auth ? (
               <div className="flex gap-4">
                 {rol === 'mecenas_semilla' && (
-                  <Link className="hover:text-gray-200" href="/login">
+                  <Link className="hover:text-gray-200" href="/user/nft">
                     <button className="rounded-xl bg-linear-to-r primary-button px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
                       NFTs
                     </button>
