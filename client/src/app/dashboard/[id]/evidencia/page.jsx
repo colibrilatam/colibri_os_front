@@ -178,7 +178,7 @@ export default function EvidenciaSection() {
         className="
   flex flex-wrap items-center gap-4
   p-4 rounded-2xl
-  glass-effect border-glass w-full
+  surface-container w-full
 "
       >
         {/* STATUS */}
@@ -256,11 +256,10 @@ export default function EvidenciaSection() {
         <div className="pt-2">
           <button
             onClick={() => setFilterIC(!filterIC)}
-            className={`px-3 py-1 rounded-full text-xs border transition ${
-              filterIC
-                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500'
-                : 'border-slate-700 text-slate-400'
-            }`}
+            className={`
+  px-3 py-1 rounded-full text-xs transition
+  ${filterIC ? 'filter-chip-active' : 'filter-chip'}
+`}
           >
             Solo IC válido
           </button>
@@ -273,14 +272,7 @@ export default function EvidenciaSection() {
         <div className="flex items-center justify-between">
           <h2 className="text-h3">Evidencias</h2>
 
-          <div
-            className="
-        px-3 py-1 rounded-full
-        bg-cyan-500/10
-        border border-cyan-500/20
-        text-cyan-300 text-sm
-      "
-          >
+          <div className="counter-badge px-3 py-1 rounded-full text-sm">
             {filtered.length} evidencias
           </div>
         </div>
@@ -323,11 +315,10 @@ export default function EvidenciaSection() {
         {filtered.length === 0 && (
           <div
             className="
-      p-10 rounded-2xl
-      border border-dashed border-slate-700
-      text-center text-slate-400
-      glass-effect
-    "
+    p-10 rounded-2xl
+    text-center
+    empty-state
+  "
           >
             No se encontraron evidencias con los filtros actuales.
           </div>
@@ -356,8 +347,8 @@ function EvidenceCard({ evidence, isActive, onClick }) {
     h-[220px]
     flex flex-col justify-between
     p-4 rounded-xl cursor-pointer transition
-    glass-effect border-glass
-    ${isActive ? 'border-cyan-400 bg-cyan-400/10' : 'hover:bg-white/5'}
+    card-surface
+${isActive ? 'card-active' : ''}
   `}
     >
       <div className="flex justify-between mb-2">
@@ -375,13 +366,11 @@ function EvidenceCard({ evidence, isActive, onClick }) {
         </span>
 
         {evidence.isValidForIc && (
-          <span className="text-accent-emerald">Impacta IC</span>
+          <span className="badge-success">Impacta IC</span>
         )}
       </div>
 
-      {lastEval && (
-        <p className="text-xs text-accent-amber mt-1">⭐ {lastEval.score}</p>
-      )}
+      {lastEval && <p className="text-helper mt-1">⭐ {lastEval.score}</p>}
 
       <div className="flex justify-between mt-2 text-legend">
         <span>{evidence.evaluations?.length || 0} eval</span>
@@ -469,7 +458,7 @@ function EvidenceDetail({ evidence }) {
       {/* DEFINITION */}
       {evidence.microActionInstance?.microActionDefinition && (
         <Section title="Microacción Definición">
-          <p className="text-white">
+          <p className="text-data--label">
             {formatRouteCode(
               evidence.microActionInstance.microActionDefinition.code,
             )}
@@ -511,11 +500,7 @@ function EvidenceDetail({ evidence }) {
       )}
 
       {/* LINK */}
-      <a
-        href={evidence.canonicalUri}
-        target="_blank"
-        className="text-accent-cyan"
-      >
+      <a href={evidence.canonicalUri} target="_blank" className="text-body">
         Ver archivo →
       </a>
     </div>
@@ -525,34 +510,33 @@ function EvidenceDetail({ evidence }) {
 /* ================= UI ================= */
 
 const Section = ({ title, children }) => (
-  <div className="border-t border-slate-800 pt-4">
+  <div className="border-top pt-4">
     <h3 className="text-micro-label mb-2">{title}</h3>
     {children}
   </div>
 );
 
 const Metric = ({ label, value }) => (
-  <div className="p-4 rounded-xl border border-slate-800 bg-white/5">
-    <p className="text-xs text-slate-400">{label}</p>
-    <p className="text-lg text-white font-semibold">{value}</p>
+  <div className="surface-container p-4 rounded-xl">
+    <p className="text-micro-label">{label}</p>
+
+    <p className="text-value-card font-semibold">{value}</p>
   </div>
 );
 
 const Info = ({ label, value }) => (
   <div>
-    <p className="text-slate-500 text-xs">{label}</p>
-    <p className="text-white">{value}</p>
+    <p className="text-micro-label">{label}</p>
+
+    <p className="text-data--label">{value}</p>
   </div>
 );
 const FilterChip = ({ children, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`px-3 py-1 rounded-full text-xs border transition
-      ${
-        active
-          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
-          : 'border-slate-700 text-slate-400 hover:bg-white/5'
-      }
+    className={`
+      px-3 py-1 rounded-full text-xs transition
+      ${active ? 'filter-chip-active' : 'filter-chip'}
     `}
   >
     {children}
@@ -561,22 +545,19 @@ const FilterChip = ({ children, active, onClick }) => (
 
 const StatusBadge = ({ status }) => {
   const map = {
-    approved: 'bg-emerald-500/20 text-emerald-400',
-    submitted: 'bg-yellow-500/20 text-yellow-400',
-    draft: 'bg-slate-500/20 text-slate-400',
-    rejected: 'bg-red-500/20 text-red-400',
-    under_review: 'bg-purple-500/20 text-purple-400',
+    approved: 'badge-success',
+    submitted: 'badge-warning',
+    draft: 'badge-default',
+    rejected: 'badge-danger',
+    under_review: 'badge-purple',
   };
-
   return (
-    <span className={`text-xs px-2 py-1 rounded ${map[status]}`}>
+    <span className={`badge ${map[status]}`}>
       {getEvidenceStatusLabel(status)}
     </span>
   );
 };
 
 const TypeBadge = ({ type }) => (
-  <span className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
-    {getEvidenceTypeLabel(type)}
-  </span>
+  <span className="badge badge-default">{getEvidenceTypeLabel(type)}</span>
 );
