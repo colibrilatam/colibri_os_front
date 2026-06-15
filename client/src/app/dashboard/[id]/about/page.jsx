@@ -200,8 +200,7 @@ export default function ProjectSection() {
                     className="
                 flex items-center gap-2
                 px-3 py-1.5 rounded-full
-                bg-cyan-500/10
-                border border-cyan-500/20
+                border border-(--text-accent)
                 text-(--text-accent)
                 transition-all duration-200
                 glass-effect-accent
