@@ -51,6 +51,8 @@ export default function TramoDashboard() {
   };
   /* ========================= */
 
+  console.log(tramoInfo);
+
   return (
     <div className="min-h-screen mx-auto overflow-x-hidden">
       {/* HEADER */}
@@ -63,9 +65,9 @@ export default function TramoDashboard() {
       >
         <div  className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <p className="text-overline">Cabecera analítica del tramo</p>
+            <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>Cabecera analítica del tramo</p>
 
-            <h1 className="text-h1">
+            <h1 className="text-h1" style={{ color: 'var(--text-primary)' }}>
               {tramo.code} · {tramo.name}
             </h1>
 
@@ -79,14 +81,14 @@ export default function TramoDashboard() {
         </div>
       </motion.div>
 
-      <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-(--text-primary) gap-4 flex flex-col'>
+      <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-[var(--text-primary)] gap-4 flex flex-col'>
         <div id="incertidumbre" className=" rounded-2xl p-1 lg:p-4">
           <h3 className='text-red-500/70 font-bold'>{currentTramoMockData.incertidumbre}</h3>
-          <div className='text-(--text-primary) text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
-          <div className=' max-w-3xl text-(--text-secondary) text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
+          <div className='text-[var(--text-primary)] text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
+          <div className=' max-w-3xl text-[var(--text-secondary)] text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
         </div>
         <div id="riesgos" className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
-          <h3 className="m-4 ">Riesgos</h3>
+          <h3 className="m-4" style={{ color: 'var(--text-primary)' }}>Riesgos</h3>
           <div className='flex flex-col lg:flex-row gap-2 justify-between'>
             
             {currentTramoMockData.riesgosPrincipales.map((r, i) => (
@@ -97,8 +99,8 @@ export default function TramoDashboard() {
                   <p className="text-center  text-red-400/80 text-lg font-bold">{r.nombre}</p>
                 </div>
 
-                <div className='text-start w-full my-4 text-(--text-primary) text-lg'>{r.descripcionCorta}</div>
-                <div className='text-start w-full text-(--text-secondary) text-lg leading-relaxed'>{r.descripcionLarga}</div>
+                <div className='text-start w-full my-4 text-[var(--text-primary)] text-lg'>{r.descripcionCorta}</div>
+                <div className='text-start w-full text-[var(--text-secondary)] text-lg leading-relaxed'>{r.descripcionLarga}</div>
 
               </div>
             ))}
@@ -107,8 +109,8 @@ export default function TramoDashboard() {
         </div>
       </div>
 
-      { tramoInfo && <div id="tramos" className="glass-effect border-glass text-(--text-primary) text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
-        <h3 className="my-4">Incertidumbres y riesgos de todos los tramos</h3>
+      { tramoInfo && <div id="tramos" className="glass-effect border-glass text-[var(--text-primary)] text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
+        <h3 className="my-4" style={{ color: 'var(--text-primary)' }}>Incertidumbres y riesgos de todos los tramos</h3>
         <AllTranches elements={tramoInfo}  />
       </div>}
 
@@ -288,8 +290,8 @@ export default function TramoDashboard() {
 
 const InfoBox = ({ label, value }) => (
   <div className="glass-effect border-glass px-3 py-2 sm:px-4 sm:py-2 rounded-xl">
-    <p className="text-micro-label">{label}</p>
-    <p className="text-body-lg">{value}</p>
+    <p className="text-micro-label" style={{ color: 'var(--text-tertiary)' }}>{label}</p>
+    <p className="text-body-lg" style={{ color: 'var(--text-primary)' }}>{value}</p>
   </div>
 );
 

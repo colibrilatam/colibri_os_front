@@ -18,16 +18,16 @@ export default function EstadoTramo({ tramo }) {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg text-white font-semibold">Estado del tramo</h3>
+        <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Estado del tramo</h3>
 
-        <span className="text-base text-zinc-300">
+        <span className="text-base" style={{ color: 'var(--text-secondary)' }}>
           {elapsedDays} / {totalDays} días
         </span>
       </div>
 
       {/* Nombre */}
       <div className="mb-3">
-        <h2 className="text-xl font-semibold text-white">{name}</h2>
+        <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{name}</h2>
       </div>
 
       {/* Progress */}
@@ -41,7 +41,7 @@ export default function EstadoTramo({ tramo }) {
           />
         </div>
 
-        <div className="flex justify-between text-xs text-zinc-400">
+        <div className="flex justify-between text-xs" style={{ color: 'var(--text-tertiary)' }}>
           <span>Progreso</span>
           <span>{progressPercent}%</span>
         </div>
