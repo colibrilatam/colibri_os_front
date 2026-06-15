@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { isTokenExpired } from './auth';
 import { setCookie, deleteCookie } from './cookies';
+import { resetTheme } from './theme';
 
 export const useUserStore = create(
   persist(
@@ -63,6 +64,7 @@ export const useUserStore = create(
         if (typeof window !== 'undefined') {
           deleteCookie('token');
           deleteCookie('isGuest');
+          resetTheme();
         }
         set({
           token: null,
