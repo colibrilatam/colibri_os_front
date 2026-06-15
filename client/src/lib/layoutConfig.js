@@ -11,7 +11,7 @@ export const routeConfig = {
     {
       path: '/dashboard',
       protected: true,
-      roles: ['entrepreneur', 'mentor'],
+      roles: ['entrepreneur', 'mentor', 'mecenas_semilla'],
       header: 'project',
       padding: 'pt-0',
     },
