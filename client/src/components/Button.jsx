@@ -32,11 +32,11 @@ export default function Button({
     >
       <div className="relative group">
         <button
-          className="relative inline-block p-px font-semibold leading-6 text-white bg-gray-800 shadow-2xl cursor-pointer rounded-xl shadow-zinc-900 transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95"
+          className="relative inline-block p-px font-semibold border leading-6 border-gray-500 text-white primary-button shadow-2xl cursor-pointer rounded-xl shadow-zinc-900 transition-transform duration-300 ease-in-out hover:scale-105 active:scale-95"
           onClick={handleClick}
         >
           <span
-            className={`relative z-10 block px-6 py-3 rounded-xl  border border-gray-500 glass-effect${color && `-${color}`}`}
+            className={`relative z-10 block px-6 py-3 rounded-xl    glass-effect${color && `-${color}`}`}
           >
             <div className="relative z-10 flex items-center space-x-2">
               <span className="transition-all duration-500">{content}</span>
