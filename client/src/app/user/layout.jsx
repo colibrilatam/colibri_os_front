@@ -2,6 +2,7 @@
 import Header from "@/components/Header";
 import { useUserStore } from "@/lib/store";
 import { useRouter } from "next/navigation";
+import ThemeLoader from "@/components/ThemeLoader";
 
 export default function UserLayout({ children }) {
   
@@ -20,13 +21,14 @@ export default function UserLayout({ children }) {
 */  
   return (
     <div>
-        
+         <ThemeLoader ></ThemeLoader>
         <div className="  z-49 p-1 w-svw ">
         
-        
+       
                             <Header isHome={true}></Header>
                         </div>
         {children}
+        
       
     </div>
   );

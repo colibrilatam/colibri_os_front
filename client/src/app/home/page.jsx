@@ -224,7 +224,7 @@ export default function HomePage() {
         <div className="mx-6 mb-2 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
         {loading ? (
-          <div className="px-6 py-10 text-sm text-slate-400">
+          <div className="px-6 py-10 text-sm" style={{ color: 'var(--text-secondary)' }}>
             Cargando proyectos...
           </div>
         ) : projectsError ? (
@@ -255,10 +255,10 @@ export default function HomePage() {
       {/* <pre>{JSON.stringify(projects, null, 2)}</pre> */}
       <footer className="border-t border-white/8 px-6 py-6">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <p className="text-xs text-slate-600">
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
             © 2025 Colibrí · Portafolio de proyectos
           </p>
-          <p className="text-xs text-slate-600">v1.0</p>
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>v1.0</p>
         </div>
       </footer>
     </main>

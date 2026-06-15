@@ -24,14 +24,14 @@ export function HeroSection({ stats }) {
             Plataforma activa
           </span>
 
-          <h1 className="text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl" style={{ color: 'var(--text-primary)' }}>
             Descubre proyectos{' '}
             <span className="bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
               en evolución
             </span>
           </h1>
 
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-slate-500 md:text-lg">
+          <p className="mt-5 max-w-xl text-base leading-relaxed md:text-lg" style={{ color: 'var(--text-secondary)' }}>
             Monitoreá el avance, estado e índice Colibrí de cada proyecto del
             portafolio. Filtros, métricas y trazabilidad en un solo lugar.
           </p>
@@ -52,11 +52,11 @@ export function HeroSection({ stats }) {
               key={statItem.label}
               className="min-w-0 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm shadow-[0_8px_24px_rgba(0,0,0,0.14)]"
             >
-              <div className="text-2xl font-bold leading-none text-white md:text-3xl">
+              <div className="text-2xl font-bold leading-none md:text-3xl" style={{ color: 'var(--text-primary)' }}>
                 {statItem.value}
               </div>
 
-              <div className="mt-2 text-[12px] leading-5 text-slate-400">
+              <div className="mt-2 text-[12px] leading-5" style={{ color: 'var(--text-tertiary)' }}>
                 {statItem.label}
               </div>
             </div>

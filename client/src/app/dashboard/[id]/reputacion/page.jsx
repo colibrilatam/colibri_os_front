@@ -79,15 +79,15 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
             <div id="radar">
             <div className="mb-5 flex flex-col lg:flex-row items-start justify-between gap-4">
               <div>
-                <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
+                <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-tertiary)' }}>
                   Composición sintética
                 </div>
-                <h2 className="text-xl font-semibold text-slate-50">Radar reputacional</h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Radar reputacional</h2>
+                <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                   Lectura visual y sintética de las 5 dimensiones del IC
                 </p>
               </div>
-              <span className="mr-10 rounded-full border border-cyan-800/70 bg-cyan-950/40 px-3 py-1 text-xs text-cyan-300">
+              <span className="mr-10 rounded-full border border-(--text-accent) glass-effect-accent px-3 py-1 text-xs text-(--text-accent)">
                 5 dimensiones
               </span>
             </div>
@@ -96,26 +96,26 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,211,238,0.15),transparent_40%)]" />
               <RadarChart values={radarValues} max={100}  categoryIconPaths={categoryIconPaths}/>
             </div>
-             <p className="mt-4 text-sm leading-relaxed text-slate-400">
+             <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
               El radar opera como síntesis visual. No sustituye el desglose auditable por dimensión.
             </p>
             </div>
 
             <div id="balance" className='mt-4 lg:p-4 lg:py-10 p-4 glass-effect border-glass rounded-2xl'>
-              <h3>Balance reputacional</h3>
+              <h3 style={{ color: 'var(--text-primary)' }}>Balance reputacional</h3>
               <div className="flex flex-col lg:flex-row gap-2 my-6">
                 <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
-                  <div className="text-(--text-tertiary) uppercase tracking-[0.22em]">legimitidad</div>
-                  <div className="text-2xl font-bold">78</div>
-                  <p className="text-(--text-secondary)">Alta capacidad de ejecución y evidencia verificable</p>
+                  <div className="text-[var(--text-tertiary)] uppercase tracking-[0.22em]">legimitidad</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>78</div>
+                  <p className="text-[var(--text-secondary)]">Alta capacidad de ejecución y evidencia verificable</p>
                 </div>
                 <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
-                  <div className="text-(--text-tertiary) uppercase tracking-[0.22em]">diferenciación</div>
-                  <div className="text-2xl font-bold">43</div>
-                  <p className="text-(--text-secondary)">La trayectoria aún necesita estabilidad y colaboración sistémica.</p>
+                  <div className="text-[var(--text-tertiary)] uppercase tracking-[0.22em]">diferenciación</div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>43</div>
+                  <p className="text-[var(--text-secondary)]">La trayectoria aún necesita estabilidad y colaboración sistémica.</p>
                 </div>
               </div>
-              <div className="text-slate-300 text-lg">El proyecto ya demuestra legitimdad operativa. El siguiente salto reputacional depende de fortalecer constancia, colaboración y sostenibilidad.</div>
+              <div className="text-lg" style={{ color: 'var(--text-secondary)' }}>El proyecto ya demuestra legitimdad operativa. El siguiente salto reputacional depende de fortalecer constancia, colaboración y sostenibilidad.</div>
             </div>
 
             </div>
@@ -124,12 +124,12 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
           <div id="arquitectura" className="flex flex-col gap-2 w-full">
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <div className="mb-2 text-xs uppercase tracking-[0.22em] text-slate-400">
+                  <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-tertiary)' }}>
                     Arquitectura reputacional
                   </div>
-                  <h2 className="text-xl font-semibold text-slate-50">Composición del Índice Colibrí</h2>
-                
-                <div className="text-sm mt-1 text-slate-400">
+                  <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Composición del Índice Colibrí</h2>
+
+                <div className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
                   El IC separa variables que validan ejecución real de aquellas que explican diferenciación y sostenibilidad reputacional.
                 </div>
                 </div>
@@ -146,10 +146,10 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="shrink-0">{categoryIconPaths[0]}</svg> <h3>Variables de Legitimidad</h3></div>
-                  <div className="text-2xl font-bold">78</div>
+              className="shrink-0">{categoryIconPaths[0]}</svg> <h3 style={{ color: 'var(--text-primary)' }}>Variables de Legitimidad</h3></div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>78</div>
                 </div>
-                <p className='my-4 text-sm text-(--text-secondary)'>Validan ejecución real, evidencia verificable y consistencia operativa observable.</p>
+                <p className='my-4 text-sm text-[var(--text-secondary)]'>Validan ejecución real, evidencia verificable y consistencia operativa observable.</p>
               <div className="space-y-1">
                 {dimensionesLegitimidad.map((dimension, index) => (
                   <DimensionRow
@@ -180,10 +180,10 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="shrink-0">{categoryIconPaths[5]}</svg> <h3>Variables de Diferenciación</h3></div>
-                  <div className="text-2xl font-bold">43</div>
+              className="shrink-0">{categoryIconPaths[5]}</svg> <h3 style={{ color: 'var(--text-primary)' }}>Variables de Diferenciación</h3></div>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>43</div>
                 </div>
-                <p className='my-4 text-sm text-(--text-secondary)'>Explican estabilidad reputacional, colaboracional sistémica y sostenibilidad del vuelo emprendedor.</p>
+                <p className='my-4 text-sm text-[var(--text-secondary)]'>Explican estabilidad reputacional, colaboracional sistémica y sostenibilidad del vuelo emprendedor.</p>
               <div className="space-y-1">
                 {dimensionesDiferenciacion.map((dimension, index) => (
                   <DimensionRow
@@ -276,12 +276,12 @@ function DimensionRow({description, svgIcon, label, raw, weight, weighted, max =
             >
               {iconSvg}
             </svg>
-            <div className=" text-sm font-medium text-slate-100">{label}</div>
+            <div className=" text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{label}</div>
           </div>
           <div className="flex-1 mt-2">
-            <div className="gap-2 mb-2 flex items-center justify-between text-sm text-slate-400">
+            <div className="gap-2 mb-2 flex items-center justify-between text-sm" style={{ color: 'var(--text-secondary)' }}>
               <span>{description}</span>
-              <span className="text-(--text-primary)" >{Math.round(pct)}%</span>
+              <span className="text-[var(--text-primary)]" >{Math.round(pct)}%</span>
             </div>
             <div className="h-3 overflow-hidden rounded-full border border-slate-700 bg-slate-800">
               <div
@@ -294,11 +294,11 @@ function DimensionRow({description, svgIcon, label, raw, weight, weighted, max =
 
         <div className="grid grid-cols-2 gap-3 lg:w-[200px] lg:grid-cols-1 lg:gap-2 lg:text-right">
           <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Peso</div>
-            <div className="text-base font-medium text-slate-200">{Math.round(weight * 100)}%</div>
+            <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--text-tertiary)' }}>Peso</div>
+            <div className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>{Math.round(weight * 100)}%</div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Aporte actual</div>
+            <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--text-tertiary)' }}>Aporte actual</div>
             <div className="text-base font-bold text-green-500">{weighted.toFixed(2)}</div>
           </div>
         </div>
@@ -312,11 +312,11 @@ function EventItem({ date, title, impact, description }) {
     <div className="rounded-2xl glass-effect-dark border-glass p-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div>
-          <div className="text-sm font-medium text-slate-100">{title}</div>
-          <div className="mt-1 text-sm text-slate-400">{description}</div>
+          <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{title}</div>
+          <div className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>{description}</div>
         </div>
         <div className="shrink-0 text-left md:text-right">
-          <div className="text-sm text-slate-300">{date}</div>
+          <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>{date}</div>
           <div className={`mt-1 text-xs uppercase tracking-[0.18em]   ${impact === "PAC aprobado" ? "text-green-300" : "text-cyan-300"}`}>{impact}</div>
         </div>
       </div>

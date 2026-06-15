@@ -14,6 +14,7 @@ import { useUserStore } from '@/lib/store';
 
 import { getRouteConfig } from '@/lib/layoutConfig';
 
+
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
 
@@ -46,10 +47,7 @@ export default function ClientLayout({ children }) {
   }
 
   // Usuario sin permisos
-  if (
-    route.roles?.length > 0 &&
-    !route.roles.includes(userRole)
-  ) {
+  if (route.roles?.length > 0 && !route.roles.includes(userRole)) {
     return (
       <ErrorScreen
         error={{
@@ -66,10 +64,8 @@ export default function ClientLayout({ children }) {
       {route.header === 'main' && <MainHeader />}
 
       {/* {route.header === 'project' && <Header />} */}
-
-      <main className={route.padding}>
-        {children}
-      </main>
+      
+      <main className={route.padding}>{children}</main>
     </OnbordaWrapper>
   );
 }

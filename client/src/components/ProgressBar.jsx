@@ -36,6 +36,7 @@ export default function ProgressBar({
     red: "#FF4D6D",
     emerald: "#009975",
     cyan: "#00CFCF",
+    orange: "#F5820A",
     multicolor: getMulticolorGradient(porcentajeReal)
   };
 
@@ -57,7 +58,7 @@ export default function ProgressBar({
           fontSize: 'var(--text-sm)', 
           color: 'var(--text-secondary)' 
         }}>
-          {label && <span className="text-(--text-secondary)">{label}</span>}
+          {label && <span className="text-(--text-primary)">{label}</span>}
           {mostrarPorcentaje && <span>{Math.round(porcentajeReal)}%</span>}
         </div>
       )}

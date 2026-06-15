@@ -80,9 +80,9 @@ export function FiltersBar({
               />
             </div>
 
-            <div className="shrink-0 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-xs text-slate-400">
+            <div className="shrink-0 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-xs" style={{ color: 'var(--text-tertiary)' }}>
               Mostrando{' '}
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>
                 {resultCount}
               </span>{' '}
               {resultCount === 1 ? 'proyecto' : 'proyectos'}
@@ -92,7 +92,7 @@ export function FiltersBar({
           <div className="mt-4 space-y-4">
             {/* INDUSTRIA */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-400 mr-2">INDUSTRIA:</span>
+              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>INDUSTRIA:</span>
 
               {allIndustries.map((industry) => {
                 const isActive = selectedIndustry === industry;
@@ -116,7 +116,7 @@ export function FiltersBar({
 
             {/* PAÍS */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-400 mr-2">PAÍS:</span>
+              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>PAÍS:</span>
               <button
                 onClick={() => onCountryChange(null)}
                 className={`px-3 py-1.5 rounded-full text-xs ${
@@ -151,7 +151,7 @@ export function FiltersBar({
 
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-6">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-400 mr-2">
+              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>
                 TRAMO
               </span>
 
@@ -173,7 +173,7 @@ export function FiltersBar({
             <div className="hidden h-8 w-px bg-white/10 xl:block" />
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs text-slate-400 mr-2">
+              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>
                 ESTADO
               </span>
 

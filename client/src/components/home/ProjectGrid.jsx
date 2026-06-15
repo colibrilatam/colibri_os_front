@@ -23,9 +23,9 @@ export function ProjectGrid({ projects }) {
           </svg>
         </div>
 
-        <p className="text-sm font-medium text-slate-300">Sin resultados</p>
+        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Sin resultados</p>
 
-        <p className="mt-1 max-w-xs text-xs text-slate-500">
+        <p className="mt-1 max-w-xs text-xs" style={{ color: 'var(--text-secondary)' }}>
           No encontramos proyectos que coincidan con los filtros seleccionados.
           Intentá con otros términos.
         </p>

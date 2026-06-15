@@ -45,8 +45,8 @@ export default function Microacciones({ pacs }) {
             onClick={() => setSelectedPac(pac)}
             className="cursor-pointer rounded-xl glass-effect border-glass p-4"
           >
-            <h3 className="text-white font-medium">{pac.title}</h3>
-            <p className="text-sm text-zinc-400 mt-1">
+            <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>{pac.title}</h3>
+            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
               3 microacciones + 1 evidencia
             </p>
           </motion.div>
@@ -60,7 +60,7 @@ export default function Microacciones({ pacs }) {
           animate={{ opacity: 1 }}
           className="rounded-2xl glass-effect border-glass p-6"
         >
-          <h2 className="text-xl text-white font-semibold mb-4">
+          <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
             {selectedPac.title}
           </h2>
 
@@ -73,7 +73,7 @@ export default function Microacciones({ pacs }) {
                   key={ma.id}
                   className="flex justify-between items-center text-base"
                 >
-                  <span className="text-zinc-300">{ma.name}</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>{ma.name}</span>
                   <span
                     className={`px-2 py-1 rounded-full text-sm ${
                       statusConfig[ma.status]
@@ -88,12 +88,12 @@ export default function Microacciones({ pacs }) {
           {/* Evidencia */}
           {filterFn(selectedPac.evidence) && (
             <div className="mt-6 pt-4 border-t border-white/10">
-              <h4 className="text-lg text-white font-semibold mb-2">
+              <h4 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
                 Evidencia
               </h4>
 
               <div className="flex justify-between items-center text-base">
-                <span className="text-zinc-300">
+                <span style={{ color: 'var(--text-secondary)' }}>
                   {selectedPac.evidence.name}
                 </span>
                 <span

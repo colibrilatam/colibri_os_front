@@ -8,29 +8,33 @@ import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json';
 import allTramosMockData from '@/lib/mock/proyectos ficticios/tramo4/allTramosProject.json';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-
-import { useOnborda } from "onborda";
+import ThemeLoader from '@/components/ThemeLoader';
+import { useOnborda } from 'onborda';
+import Footer from '@/components/Footer';
 
 export default function LayoutShell({ children, projectInfo }) {
   const pathname = usePathname();
+
+  const showFooter =
+    pathname.startsWith('/dashboard') || pathname.startsWith('/user');
 
   const hideHeader = pathname.includes('/about');
 
   const capaActual = pathname.split('/').pop();
 
-const { startOnborda, closeOnborda } = useOnborda();
+  const { startOnborda, closeOnborda } = useOnborda();
 
-useEffect(() => {
-  closeOnborda(); // limpiá el estado anterior
+  useEffect(() => {
+    closeOnborda(); // limpiá el estado anterior
 
-  const key = `tutorial_seen_${capaActual}`;
-  const seen = localStorage.getItem(key);
+    const key = `tutorial_seen_${capaActual}`;
+    const seen = localStorage.getItem(key);
 
-  if (!seen) {
-    localStorage.setItem(key, 'true');
-    setTimeout(() => startOnborda(capaActual), 500); // pequeño delay para que el DOM esté listo
-  }
-}, [capaActual]); // se ejecuta cada vez que cambia la ruta
+    if (!seen) {
+      localStorage.setItem(key, 'true');
+      setTimeout(() => startOnborda(capaActual), 500); // pequeño delay para que el DOM esté listo
+    }
+  }, [capaActual]); // se ejecuta cada vez que cambia la ruta
 
   const subioTramo = useUserStore((state) => state.subioTramo);
 
@@ -53,6 +57,7 @@ useEffect(() => {
 
   return (
     <ProjectContext.Provider value={projectInfo}>
+      <ThemeLoader></ThemeLoader>
       <div className=" lg:pt-0 min-h-screen flex flex-col w-full">
         {/* Sidebar */}
         <Sidebar
@@ -67,27 +72,26 @@ useEffect(() => {
           </div>
         )}
         {!sidebarDesktopExpanded && (
-<button
-          onClick={() => setSidebarMobileOpen(!sidebarDesktopExpanded)}
-          className="fixed z-50 md:top-34 top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
-          title={sidebarDesktopExpanded ? 'Cerrar sidebar' : 'Abrir sidebar'}
-        >
-          <svg
-            className="w-12 h-12 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <button
+            onClick={() => setSidebarMobileOpen(!sidebarDesktopExpanded)}
+            className="fixed z-50 md:top-34 top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
+            title={sidebarDesktopExpanded ? 'Cerrar sidebar' : 'Abrir sidebar'}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
+            <svg
+              className="w-12 h-12 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
         )}
-        
 
         <div
           className={`
@@ -100,6 +104,7 @@ useEffect(() => {
             {children}
           </main>
         </div>
+        {showFooter && <Footer />}
       </div>
     </ProjectContext.Provider>
   );

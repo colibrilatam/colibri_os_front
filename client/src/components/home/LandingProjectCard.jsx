@@ -49,7 +49,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
               className="h-8 w-8 rounded-full object-cover shrink-0"
             />
 
-            <h3 className="truncate text-lg font-semibold leading-tight text-white">
+            <h3 className="truncate text-lg font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
               {project.projectName || 'Proyecto sin nombre'}
             </h3>
 
@@ -62,7 +62,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
             </div>
           </div>
 
-          <div className="mt-1 text-sm text-slate-400">
+          <div className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
             {[project.industry, project.country].filter(Boolean).join(' · ')}
           </div>
         </div>
@@ -73,7 +73,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
         <Badge value={project.status} variant="status" />
       </div>
 
-      <div className="mb-3 flex-1 text-sm leading-6 text-slate-300">
+      <div className="mb-3 flex-1 text-sm leading-6" style={{ color: 'var(--text-secondary)' }}>
         {project.shortDescription ||
           project.tagline ||
           'Sin descripción disponible'}
@@ -81,9 +81,9 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
 
       {/* RESPONSABLE + GÉNERO */}
       <div className="mb-5 flex items-center justify-between gap-4">
-        <div className="text-xs text-slate-500">
+        <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
           Responsable:{' '}
-          <span className="text-slate-300">
+          <span style={{ color: 'var(--text-primary)' }}>
             {project.owner?.fullName || 'Sin responsable'}
           </span>
         </div>
@@ -123,9 +123,9 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
       </div>
 
       <div className="mt-auto flex items-center justify-between border-t border-white/8 pt-4">
-        <span className="text-[11px] text-slate-500">
+        <span className="text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
           Actualizado{' '}
-          <time dateTime={project.updatedAt} className="text-slate-400">
+          <time dateTime={project.updatedAt} style={{ color: 'var(--text-secondary)' }}>
             {formatProjectDate(project.updatedAt)}
           </time>
         </span>
