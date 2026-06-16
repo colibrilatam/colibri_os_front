@@ -21,13 +21,13 @@ import NotificationPopup from './NotificationPopup';
 import { useState } from 'react';
 import EntrepreneurCard from './Contact';
 import TourButton from './tutoriales/TourButton';
+import { useProject } from '@/lib/projectContext';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
   const rol = useUserStore((state) => state.rol);
-  const theme = useUserStore((state) => state.theme);
-  const user = useUserStore((state) => state.user);
-  console.log(user);
+  const { dbProject } = useProject();
+  //console.log(dbProject);
   const sidebarDesktopExpanded = useUserStore(
     (state) => state.sidebarDesktopExpanded,
   );
@@ -216,7 +216,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         {sidebarDesktopExpanded && (
           <div className="mb-6">
             <h2 className="text-h3 flex justify-center mb-2">
-              {user?.theme ? 'UNIMET' : 'Colibrí OS'}
+              {dbProject?.projectName ?? 'Colibrí OS'}
             </h2>
             {/*<p className="text-helper">Rol: {rol}</p>*/}
           </div>

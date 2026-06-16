@@ -4,12 +4,13 @@ import { setCookie } from '@/lib/cookies';
 import { userService } from '@/services/user';
 import { authService } from '@/services/authService';
 import { handleRequest } from '@/lib/handleRequest';
-import { unimetTheme } from '@/lib/themeMock';
+import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
 
 export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
+  const theme = bancoVenezuelaTheme;
 
   const handleLogin = async (formData) => {
     try {
@@ -26,7 +27,7 @@ export const useLogin = () => {
 
       setRol(userData.role);
       if (userData) {
-        userData.theme = unimetTheme;
+        userData.theme = theme;
       }
       setUser(userData);
       return { success: true, data };
@@ -62,7 +63,7 @@ export const useLogin = () => {
     );
 
     if (userData) {
-      userData.theme = unimetTheme;
+      userData.theme = theme;
     }
     setUser(userData);
     setRol(userData.role);
