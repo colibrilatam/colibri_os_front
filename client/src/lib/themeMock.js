@@ -26,6 +26,9 @@ export const unimetTheme = {
   textSecondary: '#667085',
   textTertiary: '#a0a4aa',
   accentColor: '#F5820A',
+  primaryContrast: '#FFFFFF',
+
+  accentContrast: '#000000',
 
   /* TIPOGRAFÍA */
   fontFamily: 'Roboto, sans-serif',
@@ -52,7 +55,7 @@ export const bancoVenezuelaTheme = {
 
   darkSurfaceBackground: '#F4F7FB',
 
-  accentSurface: 'rgba(0,103,178,0.08)',
+  accentSurface: '#ea065421',
 
   /* BORDES */
 
@@ -70,9 +73,13 @@ export const bancoVenezuelaTheme = {
 
   textTertiary: '#94A3B8',
 
+  primaryContrast: '#FFFFFF',
+
+  accentContrast: '#FFFFFF',
+
   /* COLOR DE ACENTO GLOBAL */
 
-  accentColor: '#FDC900',
+  accentColor: '#EA0654',
 
   /* TIPOGRAFÍA */
 
