@@ -79,7 +79,7 @@ export const bancoVenezuelaTheme = {
 
   /* COLOR DE ACENTO GLOBAL */
 
-  accentColor: '#EA0654',
+  accentColor: '#b60743',
 
   /* TIPOGRAFÍA */
 
