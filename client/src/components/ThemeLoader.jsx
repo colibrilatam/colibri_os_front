@@ -42,6 +42,8 @@ export default function ThemeLoader() {
     root.style.setProperty('--text-secondary', user.theme.textSecondary || '');
     root.style.setProperty('--text-tertiary', user.theme.textTertiary || '');
     root.style.setProperty('--text-accent', user.theme.accentColor || '');
+    root.style.setProperty('--text-accent-contrast', user.theme.accentContrast || '');
+    root.style.setProperty('--text-primary-contrast', user.theme.primaryContrast || '');
 
     /* TIPOGRAFÍA */
     root.style.setProperty('--font-body', user.theme.fontFamily || '');

@@ -208,12 +208,13 @@ export default function ProjectSection() {
                 hover:text-(--text-accent)
                 hover:scale-[1.02]
                 cursor-pointer
+                font-semibold
               "
                     title="Contactar fundador"
                   >
                     <MessageCircle size={14} />
 
-                    <span className="text-xs font-medium">
+                    <span className="text-xs font-semibold">
                       Contactar fundador
                     </span>
                   </button>
