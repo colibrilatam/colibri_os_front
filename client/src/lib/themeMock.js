@@ -26,6 +26,9 @@ export const unimetTheme = {
   textSecondary: '#667085',
   textTertiary: '#a0a4aa',
   accentColor: '#F5820A',
+  primaryContrast: '#FFFFFF',
+
+  accentContrast: '#000000',
 
   /* TIPOGRAFÍA */
   fontFamily: 'Roboto, sans-serif',
@@ -34,49 +37,51 @@ export const unimetTheme = {
   accentColor: '#F5820A',
 };
 
-/* export const unimetTheme = {
+export const bancoVenezuelaTheme = {
   logoUrl:
-    'https://www.unimet.edu.ve/wp-content/uploads/2023/07/Logo-footer.png',
+    'https://www.bancodevenezuela.com/wp-content/uploads/2023/03/logonuevo.png',
 
   faviconUrl:
-    'https://www.unimet.edu.ve/wp-content/uploads/2023/08/cropped-favicon-270x270.png',
-
-  pageBackground: 'linear-gradient(180deg,#FFFFFF 0%,#F5F5F5 100%)',
-
-  surfaceBackground: '#FFFFFF',
-  darkSurfaceBackground: '#f6f6f6',
-  surfaceBorder: '#E5E7EB',
-  
-
-  primaryColor: '#1A2B6B',
-  secondaryColor: '#1E5799',
-  
-
-  primaryButtonBackground: '#F5820A',
-  primaryButtonText: '#FFFFFF',
-
-  secondaryButtonBackground: '#FFFFFF',
-  secondaryButtonBorder: '#1A2B6B',
-  secondaryButtonText: '#1A2B6B',
-
-  textPrimary: '#1A2B6B',
-  textSecondary: '#667085',
-  textTertiary: '#a0a4aa',
-  textOnDark: '#FFFFFF',
-
-  fontFamily: 'Roboto, sans-serif',
-
-  cardBackground: '#FFFFFF',
-  cardBorder: '#E5E7EB',
-  cardRadius: '16px',
-  cardShadow: '0 8px 20px rgba(0,0,0,.08)',
-
-  metricBackground: '#F8FAFC',
-
-  successColor: '#22C55E',
-  warningColor: '#F59E0B',
-  dangerColor: '#EF4444',
+    'https://www.bancodevenezuela.com/wp-content/uploads/2022/07/cropped-popup-192x192.png',
 
   heroImage:
-    'https://www.unimet.edu.ve/wp-content/uploads/2025/06/UNIMET-El-futuro-no-se-espera-se-disena.jpeg',
-}; */
+    'https://www.bancodevenezuela.com/wp-content/uploads/2026/05/IMG_4842.jpeg',
+
+  /* FONDOS */
+
+  pageBackground: 'linear-gradient(180deg, #FFFFFF 0%, #F4F7FB 100%)',
+
+  surfaceBackground: '#FFFFFF',
+
+  darkSurfaceBackground: '#F4F7FB',
+
+  accentSurface: '#ea065421',
+
+  /* BORDES */
+
+  surfaceBorder: '#D9E2EC',
+
+  /* ACCIONES */
+
+  primaryButtonBackground: 'linear-gradient(90deg,#0067B2 0%,#00579A 100%)',
+
+  /* COLORES DE TEXTO */
+
+  textPrimary: '#0067B2',
+
+  textSecondary: '#5B6777',
+
+  textTertiary: '#94A3B8',
+
+  primaryContrast: '#FFFFFF',
+
+  accentContrast: '#FFFFFF',
+
+  /* COLOR DE ACENTO GLOBAL */
+
+  accentColor: '#EA0654',
+
+  /* TIPOGRAFÍA */
+
+  fontFamily: 'Nunito, sans-serif',
+};
