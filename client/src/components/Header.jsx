@@ -13,22 +13,23 @@ import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
-import { unimetTheme } from '@/lib/themeMock';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
-  const logoSrc = unimetTheme?.logoUrl ? unimetTheme.logoUrl : "/Imagotipo Colibri OS.svg";
 
   const contextData = useProject();
 
   const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
-  console.log(user)
+  const logoSrc =
+    user?.theme?.logoUrl &&
+    user?.role === 'mecenas_semilla' &&
+    user.theme.logoUrl;
+  //console.log(user);
 
   useEffect(() => {
     setAuth(isAuthenticated());
   }, []);
 
-  
   const router = useRouter();
 
   if (isHome) {
@@ -40,29 +41,25 @@ export default function Header({ isHome = false }) {
               onClick={() => router.push('/home')}
               className="cursor-pointer flex items-center gap-4"
             >
-              { user && user.theme && user.theme.logoUrl ? (
+              {logoSrc ? (
                 <img
-                src={logoSrc}
-                alt="Colibrí Logo"
-                className="h-20 w-44 object-contain"
-              ></img>
-               
-              )
-              : 
-              (
-               <>
-                <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
-           
-                <img
-                  src="/Imagotipo Colibri OS.svg"
+                  src={logoSrc}
                   alt="Colibrí Logo"
-                  className="h-11 w-11 object-contain"
-                />
-              </div>
-              <span className="text-lg font-bold text-(--text-primary)">
-                Colibrí OS
-              </span>
-              </>
+                  className="h-20 w-44 object-contain"
+                ></img>
+              ) : (
+                <>
+                  <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
+                    <img
+                      src="/Imagotipo Colibri OS.svg"
+                      alt="Colibrí Logo"
+                      className="h-11 w-11 object-contain"
+                    />
+                  </div>
+                  <span className="text-lg font-bold text-(--text-primary)">
+                    Colibrí OS
+                  </span>
+                </>
               )}
             </div>
             {/* Menú desplegable */}
@@ -100,7 +97,7 @@ export default function Header({ isHome = false }) {
   }
 
   // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios.
- 
+
   const {
     tramoData,
     dbProject,
@@ -109,12 +106,11 @@ export default function Header({ isHome = false }) {
     mockProject,
   } = contextData;
 
-  if(mockProject !== null){
-  const { project, currentState, reputationSnapshot } = mockProject;
+  if (mockProject !== null) {
+    const { project, currentState, reputationSnapshot } = mockProject;
   }
 
-     //console.log("Header - dbProject:", dbProject);
-
+  //console.log("Header - dbProject:", dbProject);
 
   //console.log(dbProject);
 
@@ -148,16 +144,18 @@ export default function Header({ isHome = false }) {
             <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 sm:gap-y-2">
               {/* <NftAvatar size="sm" rounded={true} /> */}
               <div className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center">
-                { dbProject.projectImageUrl ?
-                <Image
-                  src={dbProject.projectImageUrl}
-                  alt={dbProject.projectName}
-                  fill
-                  className="object-cover border border-black rounded-full"
-                />
-                :
-                <div className="text-sm text-slate-500 p-8 rounded-full">Sin imagen</div>
-                }
+                {dbProject.projectImageUrl ? (
+                  <Image
+                    src={dbProject.projectImageUrl}
+                    alt={dbProject.projectName}
+                    fill
+                    className="object-cover border border-black rounded-full"
+                  />
+                ) : (
+                  <div className="text-sm text-slate-500 p-8 rounded-full">
+                    Sin imagen
+                  </div>
+                )}
               </div>
               <h1 className="text-lg sm:text-2xl md:text-3xl font-semibold text-(--text-primary)">
                 {dbProject.projectName}
@@ -191,7 +189,9 @@ export default function Header({ isHome = false }) {
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-(--text-primary)">
-                  {subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName)}
+                  {subioTramo && dbProject.projectName === 'FlujoClave'
+                    ? getProjectIC('FlujoClaveT4')
+                    : getProjectIC(dbProject.projectName)}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
                   / 6.00
@@ -204,7 +204,9 @@ export default function Header({ isHome = false }) {
                 Última actualización
               </div>
               <div className="mt-1 font-bold text-sm md:text-base text-(--text-primary)">
-                {dbProject.updatedAt ? formatDateSafe(dbProject.updatedAt) : formatDateSafe(reputationSnapshot.calculatedAt)}
+                {dbProject.updatedAt
+                  ? formatDateSafe(dbProject.updatedAt)
+                  : formatDateSafe(reputationSnapshot.calculatedAt)}
               </div>
             </div>
           </div>
