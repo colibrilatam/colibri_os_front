@@ -22,9 +22,11 @@ import { useState } from 'react';
 import EntrepreneurCard from './Contact';
 import TourButton from './tutoriales/TourButton';
 import { useProject } from '@/lib/projectContext';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
+  const { t } = useTranslation();
   const rol = useUserStore((state) => state.rol);
   const { dbProject } = useProject();
   //console.log(dbProject);
@@ -250,12 +252,15 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             <TourButton tourName={capaActual}></TourButton>
             <Button
               color="blue"
-              content="Contactar al emprendedor"
+              /* content="Contactar al emprendedor" */
+              content={t('contactEntrepreneur')}
+
               onClick={handleContact}
             ></Button>
             <Button
               color="red"
-              content="Cerrar sesión"
+              /* content="Cerrar sesión" */
+              content={t('logout')}
               onClick={handleLogout}
             />
           </div>

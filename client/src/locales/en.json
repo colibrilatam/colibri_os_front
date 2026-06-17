@@ -1,0 +1,22 @@
+{
+  "logout": "Logout",
+  "contactEntrepreneur": "Contact Entrepreneur",
+  "startTutorial":"Start tutorial",
+  "evidences": "Evidence",
+  "validated": "Validated",
+  "score": "Score",
+  "impactIC": "IC Impact",
+  "all": "All",
+  "approved": "Approved",
+  "rejected": "Rejected",
+  "draft": "Draft",
+  "pending": "Pending",
+  "category": "Category",
+  "sectionAuthor": "Author",
+  "sectionTimeline": "Timeline",
+  "sectionEvaluation": "Evaluation",
+  "sectionHistory": "History",
+  "viewFile": "View File",
+  "yes": "Yes",
+  "no": "No"
+}

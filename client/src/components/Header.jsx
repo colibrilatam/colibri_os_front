@@ -13,6 +13,7 @@ import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
+import LanguageSwitcher from './common/LanguageSwitcher';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
@@ -90,6 +91,7 @@ export default function Header({ isHome = false }) {
                 </Link>
               </div>
             )}
+            <LanguageSwitcher/>
           </div>
         </div>
       </header>
@@ -134,6 +136,7 @@ export default function Header({ isHome = false }) {
                 Acceder
               </button>
             </div>
+            <LanguageSwitcher/>
           </div>
         )}
         {/* Botón Hamburguesa */}
@@ -210,6 +213,7 @@ export default function Header({ isHome = false }) {
               </div>
             </div>
           </div>
+          <LanguageSwitcher/>
         </div>
       </div>
     </header>
