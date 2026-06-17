@@ -10,7 +10,7 @@ export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
-  const theme = bancoVenezuelaTheme;
+  //const theme = bancoVenezuelaTheme;
 
   const handleLogin = async (formData) => {
     try {
@@ -27,7 +27,9 @@ export const useLogin = () => {
 
       setRol(userData.role);
       if (userData) {
-        userData.theme = theme;
+        if(formData.email === 'mecenas@colibri.com') userData.theme = unimetTheme;
+        if(formData.email === 'BancoDV@colibri.com') userData.theme = bancoVenezuelaTheme;
+        // userData.theme = theme;
       }
       setUser(userData);
       return { success: true, data };
@@ -63,7 +65,7 @@ export const useLogin = () => {
     );
 
     if (userData) {
-      userData.theme = theme;
+      // userData.theme = theme;
     }
     setUser(userData);
     setRol(userData.role);
