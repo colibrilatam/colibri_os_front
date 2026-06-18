@@ -92,7 +92,9 @@ html {
   --text-secondary: #A8A8AA;
   /*OK*/
   --text-tertiary: #7A8A9C;
-   --text-accent: #009975;
+  --text-accent: #009975;
+  --text-accent-contrast: #FFFFFF;
+  --text-primary-contrast: #FFFFFF;
   --text-inverse: var(--color-deep-blue);
   --text-link: var(--color-turquoise);
   --text-link-hover: var(--color-deep-blue);
@@ -259,13 +261,13 @@ html {
 }
 
 .sidebar-item:hover {
-  background: var(--theme-secondary-background);
-  color: var(--text-primary);
+  background: var(--text-accent);
+  color: var(--text-accent-contrast);
 }
 
 .sidebar-item-active {
   background: var(--theme-primary-button);
-  color: var(--text-primary);
+  color: var(--text-primary-contrast);
   font-weight: var(--font-semibold);
 }
 
@@ -983,7 +985,7 @@ a {
 }
 
 .text-accent-amber {
-  color: #fcd34d;
+  color: #cba423;
   /* amber-300 */
 }
 

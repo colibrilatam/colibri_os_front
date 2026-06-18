@@ -58,14 +58,27 @@ export default function NftPage(){
     const { data: allProjects, error: allProjectsError} = await getNftProjectsInfo();
     
     const allProjectsInfo = [];
+    console.log(allProjects)
 
-    for(let i = 0; i < 3;  i++){
+    // Agregar FlujoClave al inicio del portafolio
+    if(allProjects){
+      const flujoClave = allProjects.find(project => project.project.projectName === "FlujoClave")
+
+      const { data:  FCUserData } = await getUserData(flujoClave.project.ownerUserId);
+      const { data:  FCTramoData } = await getTramo(flujoClave.project.currentTramoId);
+      const ic = getProjectIC(flujoClave.project.projectName);
+
+      allProjectsInfo.push({ nftProject: flujoClave, user: FCUserData, tramo: FCTramoData, ic: ic })
+    }
+
+    for(let i = 0; i < 2;  i++){
       const { data:  userData } = await getUserData(allProjects[i].project.ownerUserId);
       const { data:  tramoData } = await getTramo(allProjects[i].project.currentTramoId);
       const ic = getProjectIC(allProjects[i].project.projectName);
 
       allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData, ic: ic })
     }
+    console.log(allProjectsInfo)
     setProjectsInfo(allProjectsInfo)
     setLoading(false);
     
@@ -112,7 +125,7 @@ export default function NftPage(){
             { error && <p className="text-red-500 text-6xl">{error.message}</p>}
                 <div className="flex flex-col  md:justify-between gap-2">
                     <h1 className="text-(--text-primary)">Tu impacto como aliado</h1>
-                    <p className="w-fit font-semibold primary-button border-glass rounded-full p-2 text-(--text-primary)">Portafolio NFT</p>
+                    <p className="w-fit primary-button border-glass rounded-full p-2 text-white">Portafolio NFT</p>
                 </div>
                 <div className="w-full items-center flex justify-center">
                 <img src={svg.src} alt="NFT Avatar" className="p-2 glass-effect-dark w-80 h-80 rounded-full" ></img>
@@ -130,12 +143,12 @@ export default function NftPage(){
                         </ul>
                         </div>
                 <div className="mt-4 glass-effect rounded-2xl p-4">
-                <ProgressBar className="text-(--text-primary)" color="orange" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
+                <ProgressBar className="text-(--text-primary)" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
                 <p className="mt-4 text-(--text-secondary)">Has asignado <span className="text-(--text-primary) font-bold"> 3/10 becas Fase fundacional. </span> Aún tienes 7 becas pendientes, asígnalas para aumentar tu reputación</p>
                 </div>
                             <div className="w-full justify-center flex">
-                <button className="cursor-pointer font-semibold text-sm primary-button rounded-2xl p-4 text-(--text-primary) w-fit mt-4" 
-                >Exportar report de impacto</button>
+                <button className="cursor-pointer font-semibold text-sm primary-button rounded-2xl p-4 text-white w-fit mt-4" 
+                >Exportar reporte de impacto</button>
                 </div>
                     </div>
                     
@@ -179,7 +192,7 @@ export default function NftPage(){
               </td>
 
               {/* NFT · Tramo */}
-              <td className="px-4 py-3 text-(--text-secondary)">
+              <td className="px-4 py-3 text-(--text-primary) font-semibold">
                 <span>{project.tramo.code}</span>
               </td>
 
