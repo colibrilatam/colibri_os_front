@@ -15,6 +15,14 @@ export default async function DataLayout({ children, params }) {
     projectsService.getById(id),
   );
 
+  projectData.shortDescription_en =
+    'Fintech project in the live prototype stage that helps Colombian merchants consolidate collections, reconciliations, and cash flow alerts when operating with multiple payment methods.';
+
+  projectData.tagline_en =
+    'Streamlines reconciliations, collections, and cash flow visibility in real-world operations.';
+
+  //console.log(projectData);
+
   // tramo.json
   const { data: tramoData, error: tramoError } = await handleRequest(() =>
     projectsService.currentTramo(projectData.currentTramoId),
@@ -34,21 +42,7 @@ export default async function DataLayout({ children, params }) {
 
   const { data: microActionInstanceData, error: microActionInstanceError } =
     await handleRequest(() => projectsService.microActionInstance(id));
-  /* console.log(
-    'projectData:',
-    projectData,
-    error,
-    'tramoData:',
-    tramoData,
-    tramoError,
-    'ProjectTramoData:',
-    ProjectTramoData,
-    ProjectTramoError,
-    'nft',
-    projectNftData,
-    projectNftError,
-  ); */
-  //console.log('evidenceData', evidenceData);
+
   // Manejo de errores
   if (error || tramoError || ProjectTramoError || projectNftError) {
     return (
@@ -81,7 +75,17 @@ export default async function DataLayout({ children, params }) {
     }
     projectData.mock = mockProjectMatch || mockProjectsData[0];
   }
-  //console.log('mockProjectMatch', mockProjectMatch);
+  const translatableContent = {
+    project: {
+      tagline: projectData.tagline_en,
+      shortDescription: projectData.shortDescription_en,
+    },
+
+    evidences: {},
+    microActions: {},
+  };
+  
+  
   return (
     <LayoutShell
       projectInfo={{
@@ -92,6 +96,7 @@ export default async function DataLayout({ children, params }) {
         projectNftData: projectNftData,
         evidenceData: evidenceData || null,
         microActionInstanceData: microActionInstanceData || null,
+        translatableContent,
       }}
     >
       {children}

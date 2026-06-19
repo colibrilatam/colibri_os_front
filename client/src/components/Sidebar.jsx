@@ -60,49 +60,49 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const links = [
     {
       href: `/home`,
-      label: 'Inicio',
+      label: t('sidebar.home'),
       icon: Home,
       excludeRoles: ['mecenas_semilla', 'entrepreneur'],
     },
     {
       href: `/dashboard/${id}/about`,
-      label: 'Perfil del proyecto',
+      label: t('sidebar.projectProfile'),
       icon: Building2,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/identidad`,
-      label: 'Identidad',
+      label: t('sidebar.identity'),
       icon: User,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/reputacion`,
-      label: 'Reputacion',
+      label: t('sidebar.reputation'),
       icon: Layers,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/tramo`,
-      label: 'Tramo',
+      label: t('sidebar.segment'),
       icon: AlertCircle,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/trayectoria`,
-      label: 'Trayectoria',
+      label: t('sidebar.trajectory'),
       icon: Map,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/evidencia`,
-      label: 'Evidencia',
+      label: t('sidebar.evidence'),
       icon: Link2,
       excludeRoles: null,
     },
     {
       href: '/user/nft',
-      label: 'NFTs',
+      label: t('sidebar.nfts'),
       icon: Folder,
       roles: ['mecenas_semilla'],
     },
@@ -135,7 +135,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       {notification && (
         <NotificationPopup
           isOpen={notification}
-          message="Datos del emprendedor"
+          message={t('sidebar.entrepreneurData')}
           onClose={handleCloseNotification}
         >
           <EntrepreneurCard
@@ -209,7 +209,9 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         <button
           onClick={() => setSidebarDesktopExpanded(!sidebarDesktopExpanded)}
           className="p-3 mb-2 rounded-lg glass-effect-dark hover:surface-secondary text-(--text-primary) transition-colors flex justify-center "
-          title={sidebarDesktopExpanded ? 'Contraer' : 'Expandir'}
+          title={
+            sidebarDesktopExpanded ? t('sidebar.collapse') : t('sidebar.expand')
+          }
         >
           <Menu size={24} />
         </button>
@@ -253,14 +255,14 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             <Button
               color="blue"
               /* content="Contactar al emprendedor" */
-              content={t('contactEntrepreneur')}
+              content={t('sidebar.contactEntrepreneur')}
 
               onClick={handleContact}
             ></Button>
             <Button
               color="red"
               /* content="Cerrar sesión" */
-              content={t('logout')}
+             content={t('sidebar.logout')}
               onClick={handleLogout}
             />
           </div>

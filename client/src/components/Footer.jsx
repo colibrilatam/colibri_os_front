@@ -1,8 +1,10 @@
 'use client';
 
+import { useTranslation } from '@/hooks/useTranslation';
 import Image from 'next/image';
 
 export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="surface-dark border-theme-top mt-auto">
       <div className="mx-auto max-w-7xl px-6 py-5">
@@ -18,11 +20,11 @@ export default function Footer() {
 
           <div className="text-center md:text-left">
             <div className="text-data--label font-semibold">
-              Powered by Colibrí OS
+              {t('footer.poweredBy')}
             </div>
 
             <div className="text-helper">
-              Estándar Reputacional Colibrí LATAM
+             {t('footer.reputationStandard')}
             </div>
           </div>
         </div>

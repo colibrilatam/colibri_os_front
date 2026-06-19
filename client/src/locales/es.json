@@ -1,22 +1,78 @@
 {
-  "logout": "Cerrar sesión",
-  "contactEntrepreneur": "Contactar emprendedor",
-  "startTutorial":"Iniciar tutorial",
-  "evidences": "Evidencias",
-  "validated": "Validadas",
-  "score": "Score",
-  "impactIC": "Impacto IC",
-  "all": "Todas",
-  "approved": "Aprobadas",
-  "rejected": "Rechazadas",
-  "draft": "Borradores",
-  "pending": "Pendientes",
-  "category": "Categoría",
-  "sectionAuthor": "Autor",
-  "sectionTimeline": "Timeline",
-  "sectionEvaluation": "Evaluación",
-  "sectionHistory": "Historial",
-  "viewFile": "Ver archivo",
-  "yes": "Sí",
-  "no": "No"
+  "sidebar.home": "Inicio",
+  "sidebar.projectProfile": "Perfil del proyecto",
+  "sidebar.identity": "Identidad",
+  "sidebar.reputation": "Reputación",
+  "sidebar.segment": "Tramo",
+  "sidebar.trajectory": "Trayectoria",
+  "sidebar.evidence": "Evidencia",
+  "sidebar.nfts": "NFTs",
+
+  "sidebar.contactEntrepreneur": "Contactar al emprendedor",
+  "sidebar.logout": "Cerrar sesión",
+
+  "sidebar.entrepreneurData": "Datos del emprendedor",
+
+  "sidebar.expand": "Expandir",
+  "sidebar.collapse": "Contraer",
+
+  "sidebar.tour": "Iniciar tutorial",
+
+  "header.logout": "Cerrar sesión",
+  "header.login": "Ingresar",
+  "header.access": "Acceder",
+  "header.colibriIndex": "Índice Colibrí",
+  "header.lastUpdate": "Última actualización",
+
+  "footer.poweredBy": "Desarrollado por Colibrí OS",
+  "footer.reputationStandard": "Estándar Reputacional Colibrí LATAM",
+
+  "about.project": "Proyecto",
+  "about.description": "Descripción",
+
+  "about.projectLeader": "Líder del proyecto",
+
+  "about.contactFounder": "Contactar fundador",
+
+  "about.entrepreneurData": "Datos del emprendedor",
+
+  "about.founder": "Fundador",
+
+  "about.activeTeam": "Equipo activo",
+
+  "about.founderBadge": "Founder",
+
+  "about.joined": "Ingreso",
+
+  "about.participation": "Participación",
+
+  "about.projectWithoutMembers": "El proyecto aún no tiene miembros",
+
+  "about.website": "Sitio web",
+
+  "about.linkedin": "LinkedIn",
+
+  "about.rlabProfile": "Perfil RLAB",
+
+  "about.projectTimeline": "Timeline del proyecto",
+
+  "about.start": "Inicio",
+
+  "about.lastActivity": "Última actividad",
+
+  "about.created": "Creado",
+
+  "about.updated": "Actualizado",
+
+  "about.notAvailable": "No disponible",
+
+  "about.copied": "✅ Copiado",
+
+  "about.copyLink": "Copiar enlace →",
+
+  "about.openLink": "Abrir enlace →",
+
+  "about.women": "Mujeres",
+
+  "about.men": "Hombres"
 }

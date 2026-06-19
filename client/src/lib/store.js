@@ -34,6 +34,17 @@ export const useUserStore = create(
           language,
         }),
 
+      translationsCache: {},
+      setTranslation: (key, value) =>
+        set((state) => ({
+          translationsCache: {
+            ...state.translationsCache,
+            [key]: value,
+          },
+        })),
+
+      getTranslation: (key) => get().translationsCache[key],
+      
       // Token
       token: null,
       setToken: (token) => {
