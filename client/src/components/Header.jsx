@@ -14,10 +14,11 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 import LanguageSwitcher from './common/LanguageSwitcher';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
-
+const { t } = useTranslation();
   const contextData = useProject();
 
   const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
@@ -78,7 +79,7 @@ export default function Header({ isHome = false }) {
                     onClick={() => logout()}
                     className="rounded-xl bg-linear-to-r from-red-600 to-red-800 p-2 lg:px-5 lg:py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
-                    Cerrar sesión
+                   {t('header.logout')}
                   </button>
                 </Link>
               </div>
@@ -86,12 +87,12 @@ export default function Header({ isHome = false }) {
               <div>
                 <Link className="hover:text-gray-200" href="/login">
                   <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
-                    Ingresar
+                   {t('header.login')}
                   </button>
                 </Link>
               </div>
             )}
-            <LanguageSwitcher/>
+           
           </div>
         </div>
       </header>
@@ -133,10 +134,10 @@ export default function Header({ isHome = false }) {
             </div>
             <div>
               <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95">
-                Acceder
+                {t('header.access')}
               </button>
             </div>
-            <LanguageSwitcher/>
+           
           </div>
         )}
         {/* Botón Hamburguesa */}
@@ -188,7 +189,7 @@ export default function Header({ isHome = false }) {
           <div className="md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
             <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3">
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
-                Índice Colibrí
+                  {t('header.colibriIndex')}
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-(--text-primary)">
@@ -204,7 +205,7 @@ export default function Header({ isHome = false }) {
 
             <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3 text-right md:text-right">
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
-                Última actualización
+                  {t('header.lastUpdate')}
               </div>
               <div className="mt-1 font-bold text-sm md:text-base text-(--text-primary)">
                 {dbProject.updatedAt

@@ -21,5 +21,5 @@ export default function TourButton({ tourName }) {
     setSidebarDesktopExpanded(false);
     startOnborda(tourName);
   }
-  return <Button /* content="Iniciar tutorial" */ content={t('startTutorial')} onClick={() => handleClick()} />;
+  return <Button /* content="Iniciar tutorial" */ content={t('sidebar.tour')} onClick={() => handleClick()} />;
 }

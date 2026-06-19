@@ -5,40 +5,25 @@ import { useUserStore } from '@/lib/store';
 export default function LanguageSwitcher() {
   const language = useUserStore((state) => state.language);
   const setLanguage = useUserStore((state) => state.setLanguage);
- // console.log(language)
- // console.log(setLanguage)
+
+  const handleToggleLanguage = () => {
+    setLanguage(language === 'en' ? 'es' : 'en');
+  };
 
   return (
-    <div className="flex gap-2">
-      <button
-        onClick={() => setLanguage('en')}
-        className={`
-          px-3 py-1 rounded-lg transition-all duration-200
-          text-sm
-          ${
-            language === 'en'
-              ? 'btn-primary'
-              : 'card-surface hover-surface text-body'
-          }
-        `}
-      >
-        EN
-      </button>
-
-      <button
-        onClick={() => setLanguage('es')}
-        className={`
-          px-3 py-1 rounded-lg transition-all duration-200
-          text-sm
-          ${
-            language === 'es'
-              ? 'btn-primary'
-              : 'card-surface hover-surface text-body'
-          }
-        `}
-      >
-        ES
-      </button>
-    </div>
+    <button
+      onClick={handleToggleLanguage}
+      className="
+        btn-primary
+        px-3 py-1
+        rounded-lg
+        text-sm
+        transition-all
+        duration-200
+      "
+      title={language === 'en' ? 'Switch to Spanish' : 'Cambiar al Ingles'}
+    >
+      {language === 'en' ? 'ES' : 'EN'}
+    </button>
   );
 }
