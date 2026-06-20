@@ -6,8 +6,10 @@ import { useRequest } from '@/hooks/useRequest';
 import { useUserStore } from '@/lib/store';
 import { userService } from '@/services/user';
 import { useNewProject } from '@/hooks/useNewProject';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function CreateProject() {
+  const { t } = useTranslation('proyecto');
   const router = useRouter();
   
   const { create } = useNewProject();
@@ -22,7 +24,7 @@ export default function CreateProject() {
     
     const { data } = await execute();
     if(error){
-        setFormError("Error al obtener los proyectos");
+        setFormError(t('errorFetchProjects'));
     }
     const { data: userData } = await getUser();
     const projectId = data?.find((p) => p.projectName === "FlujoClave").id || [];
@@ -90,14 +92,13 @@ useEffect(() => {
     const newErrors = { ...errors };
 
     const requiredFields = {
-      projectName: 'El nombre del proyecto es requerido',
-      country: 'El país es requerido',
-      industry: 'La industria es requerida',
-      tagline: 'El tagline es requerido',
-      shortDescription: 'La descripción corta es requerida',
-      startupLinkedinUrl: 'La URL de LinkedIn es requerida',
-      websiteUrl: 'La URL del sitio web es requerida',
-    
+      projectName: t('errorRequiredProjectName'),
+      country: t('errorRequiredCountry'),
+      industry: t('errorRequiredIndustry'),
+      tagline: t('errorRequiredTagline'),
+      shortDescription: t('errorRequiredShortDescription'),
+      startupLinkedinUrl: t('errorRequiredLinkedin'),
+      websiteUrl: t('errorRequiredWebsite'),
     };
 
     const urlFields = ['startupLinkedinUrl', 'websiteUrl', 'rlabProfileUrl'];
@@ -105,7 +106,7 @@ useEffect(() => {
     if (value.trim() === '') {
       newErrors[name] = requiredFields[name];
     } else if (urlFields.includes(name) && !validateUrl(value)) {
-      newErrors[name] = 'La URL no tiene un formato válido';
+      newErrors[name] = t('errorInvalidUrl');
     } else {
       newErrors[name] = '';
     }
@@ -121,7 +122,7 @@ useEffect(() => {
     if (file) {
       const validImageFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
       if (!validImageFormats.includes(file.type)) {
-        newErrors[name] = 'Por favor, selecciona un archivo de imagen válido (JPG, PNG, WebP, GIF, SVG)';
+        newErrors[name] = t('errorInvalidImage');
         setFormData((prev) => ({ ...prev, [name]: null }));
       } else {
         newErrors[name] = '';
@@ -149,7 +150,7 @@ useEffect(() => {
 
     if (!isFormValid()) {
       
-      setFormError('Por favor, corrige los errores en el formulario antes de continuar.');
+      setFormError(t('errorFormInvalid'));
       return 
     }
 
@@ -166,33 +167,33 @@ useEffect(() => {
       const createdProject = await create(payload);
 
       if(createdProject.error){
-        const errorMessage = createdProject.error|| 'Error desconocido';
-        setFormError('Error al crear el proyecto', errorMessage);
+        const errorMessage = createdProject.error || t('errorUnknown');
+        setFormError(t('errorCreateProject'), errorMessage);
         return;
       }
       router.push(`/dashboard/${createdProject.id}/about`);
     } catch (err) {
-      setFormError('Error al crear el proyecto', err.message);
+      setFormError(t('errorCreateProject'), err.message);
     } finally {
       setLoading(false);
     }
   };
 
   const fields = [
-    { name: 'projectName',        label: 'Nombre del proyecto',  type: 'text' },
-    { name: 'country',            label: 'País',                 type: 'text' },
-    { name: 'industry',           label: 'Industria',            type: 'text' },
-    { name: 'tagline',            label: 'Tagline',              type: 'text' },
-    { name: 'shortDescription',   label: 'Descripción corta',    type: 'textarea' },
-    { name: 'startupLinkedinUrl', label: 'LinkedIn de la startup', type: 'text' },
-    { name: 'websiteUrl',         label: 'Sitio web',            type: 'text' },
+    { name: 'projectName',        label: t('fieldProjectName'),  type: 'text' },
+    { name: 'country',            label: t('fieldCountry'),      type: 'text' },
+    { name: 'industry',           label: t('fieldIndustry'),     type: 'text' },
+    { name: 'tagline',            label: t('fieldTagline'),      type: 'text' },
+    { name: 'shortDescription',   label: t('fieldShortDescription'), type: 'textarea' },
+    { name: 'startupLinkedinUrl', label: t('fieldLinkedin'),     type: 'text' },
+    { name: 'websiteUrl',         label: t('fieldWebsite'),      type: 'text' },
   ];
 
   return (
     <div className='p-4 border-glass glass-effect'>
         <div className="mb-4 flex flex-col items-center text-center  p-4 rounded-2xl border-glass glass-effect">
-            <h1 >Crear Proyecto</h1>
-            <p className="max-w-3xl text-(--text-tertiary) text-center hyphens-auto">Registra tu proyecto en Colibrí OS. Una vez creado podrás ingresar al Reputation Lab para gestionarlo.</p>
+            <h1 >{t('title')}</h1>
+            <p className="max-w-3xl text-(--text-tertiary) text-center hyphens-auto">{t('description')}</p>
         </div>
         <form onSubmit={isDemo ? demoHandleSubmit : handleSubmit} className="space-y-5">
         {fields.map(({ name, label, type }) => (
@@ -226,7 +227,7 @@ useEffect(() => {
         ))}
 
         <div>
-          <label className="text-micro-label block mb-2">Imagen del proyecto (opcional)</label>
+          <label className="text-micro-label block mb-2">{t('fieldImage')}</label>
           <input
             type="file"
             name="image"
@@ -237,7 +238,7 @@ useEffect(() => {
             }`}
           />
           {formData.image && (
-            <p className="text-green-500 text-xs mt-1">Archivo seleccionado: {formData.image.name}</p>
+            <p className="text-green-500 text-xs mt-1">{t('fileSelected')} {formData.image.name}</p>
           )}
           {errors['image'] && (
             <p className="text-red-500 text-xs mt-1">{errors['image']}</p>
@@ -257,7 +258,7 @@ useEffect(() => {
                 : 'bg-gray-500 cursor-not-allowed opacity-60'
             }`}
         >
-            {loading ? 'Creando proyecto...' : 'Crear proyecto'}
+            {loading ? t('btnCreating') : t('btnCreate')}
         </button>
 
         <button
@@ -265,7 +266,7 @@ useEffect(() => {
             onClick={() => router.back()}
             className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
         >
-            Volver atrás
+            {t('btnBack')}
         </button>
         </form>
     </div>

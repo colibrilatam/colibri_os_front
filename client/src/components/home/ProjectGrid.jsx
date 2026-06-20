@@ -1,9 +1,11 @@
+import { useTranslation } from "@/hooks/useTranslation";
 import { getProjectTeamStats } from '@/lib/hooks/project.team';
 import { ProjectCard } from './LandingProjectCard';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 
 export function ProjectGrid({ projects }) {
-  //console.log("TTTTTTTT",projects)
+  const { t } = useTranslation('projectGrid');
+
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-24 text-center">
@@ -23,11 +25,10 @@ export function ProjectGrid({ projects }) {
           </svg>
         </div>
 
-        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Sin resultados</p>
+        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{t('noResults')}</p>
 
         <p className="mt-1 max-w-xs text-xs" style={{ color: 'var(--text-secondary)' }}>
-          No encontramos proyectos que coincidan con los filtros seleccionados.
-          Intentá con otros términos.
+          {t('noResultsDescription')}
         </p>
       </div>
     );

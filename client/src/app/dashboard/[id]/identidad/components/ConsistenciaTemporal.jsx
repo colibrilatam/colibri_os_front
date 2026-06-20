@@ -2,35 +2,34 @@
 
 import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
-
-const levelConfig = {
-  Alta: {
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/20',
-    label: 'Alta consistencia',
-    description:
-      'El proyecto ejecuta acciones de forma constante y dentro de los tiempos esperados.',
-  },
-  Media: {
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10',
-    border: 'border-yellow-500/20',
-    label: 'Consistencia media',
-    description:
-      'El proyecto mantiene cierta regularidad, pero presenta retrasos o irregularidades.',
-  },
-  Baja: {
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/20',
-    label: 'Baja consistencia',
-    description:
-      'El proyecto muestra ejecución irregular o fuera de los tiempos esperados.',
-  },
-};
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ConsistenciaTemporal({ data }) {
+  const { t } = useTranslation('identidad');
+
+  const levelConfig = {
+    Alta: {
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-500/10',
+      border: 'border-emerald-500/20',
+      label: t('highConsistency'),
+      description: t('highConsistencyDesc'),
+    },
+    Media: {
+      color: 'text-yellow-400',
+      bg: 'bg-yellow-500/10',
+      border: 'border-yellow-500/20',
+      label: t('mediumConsistency'),
+      description: t('mediumConsistencyDesc'),
+    },
+    Baja: {
+      color: 'text-red-400',
+      bg: 'bg-red-500/10',
+      border: 'border-red-500/20',
+      label: t('lowConsistency'),
+      description: t('lowConsistencyDesc'),
+    },
+  };
   const { level, updatedAt } = data;
 
   const config = levelConfig[level];
@@ -52,7 +51,7 @@ export default function ConsistenciaTemporal({ data }) {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm text-zinc-400">Consistencia temporal</h3>
+        <h3 className="text-sm text-zinc-400">{t('temporalConsistency')}</h3>
 
         {/* Tooltip */}
         <div className="group relative cursor-pointer">
@@ -123,7 +122,7 @@ export default function ConsistenciaTemporal({ data }) {
 
       {/* Footer */}
       <div className="mt-4 text-xs text-zinc-500">
-        Actualizado: {formattedDate}
+        {t('updated')} {formattedDate}
       </div>
     </motion.div>
   );

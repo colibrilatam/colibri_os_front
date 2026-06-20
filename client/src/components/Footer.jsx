@@ -4,7 +4,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import Image from 'next/image';
 
 export default function Footer() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('footer');
   return (
     <footer className="surface-dark border-theme-top mt-auto">
       <div className="mx-auto max-w-7xl px-6 py-5">
@@ -20,11 +20,11 @@ export default function Footer() {
 
           <div className="text-center md:text-left">
             <div className="text-data--label font-semibold">
-              {t('footer.poweredBy')}
+              {t('poweredBy')}
             </div>
 
             <div className="text-helper">
-             {t('footer.reputationStandard')}
+             {t('reputationStandard')}
             </div>
           </div>
         </div>

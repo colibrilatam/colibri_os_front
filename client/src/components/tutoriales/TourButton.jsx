@@ -5,7 +5,7 @@ import { useUserStore } from '@/lib/store';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TourButton({ tourName }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('sidebar');
 
   const setSidebarMobileOpen = useUserStore(
     (state) => state.setSidebarMobileOpen,
@@ -21,5 +21,5 @@ export default function TourButton({ tourName }) {
     setSidebarDesktopExpanded(false);
     startOnborda(tourName);
   }
-  return <Button /* content="Iniciar tutorial" */ content={t('sidebar.tour')} onClick={() => handleClick()} />;
+  return <Button /* content="Iniciar tutorial" */ content={t('tour')} onClick={() => handleClick()} />;
 }

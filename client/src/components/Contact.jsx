@@ -1,5 +1,6 @@
 import { useProject } from "@/lib/projectContext";
 import { useState } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 
 const CopyIcon = () => (
@@ -51,6 +52,7 @@ const CopyField = ({ value }) => {
 };
 
 export default function EntrepreneurCard ({ name, email, phone, linkedin }) {
+  const { t } = useTranslation('contact');
 
   const { dbProject } = useProject();
 
@@ -58,26 +60,26 @@ export default function EntrepreneurCard ({ name, email, phone, linkedin }) {
     <div className="glass-effect border-glass rounded-2xl p-8 w-full shadow-sm flex flex-col gap-5">
       {/* Nombre — no clickeable */}
       <div className="border-b border-stone-100 pb-5 w-fit">
-        <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Emprendedor</p>
+        <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">{t('entrepreneur')}</p>
         <h2 className="text-2xl font-semibold text-white">{dbProject.owner.fullName}</h2>
       </div>
 
       {/* Email */}
       <div>
-        <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">Email</p>
+        <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">{t('email')}</p>
         <CopyField value={dbProject.owner.email} />
       </div>
 
       {/* Teléfono */}
       <div>
-        <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">Teléfono</p>
-        <CopyField value={dbProject.owner.phone ? dbProject.owner.phone : "No registró número de teléfono"} />
+        <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">{t('phone')}</p>
+        <CopyField value={dbProject.owner.phone ? dbProject.owner.phone : t('noPhone')} />
       </div>
 
       {/* LinkedIn */}
       <div>
-        <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">LinkedIn</p>
-        <CopyField value={dbProject.owner.linkedinId ? dbProject.owner.linkedinId : "No registró LinkedIn"} />
+        <p className="text-xs uppercase tracking-widest text-stone-400 mb-2">{t('linkedin')}</p>
+        <CopyField value={dbProject.owner.linkedinId ? dbProject.owner.linkedinId : t('noLinkedin')} />
       </div>
     </div>
   );

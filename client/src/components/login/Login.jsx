@@ -4,10 +4,12 @@ import { useRouter } from 'next/navigation';
 import { useLogin } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
 import { useUserStore } from '@/lib/store';
+import { useTranslation } from '@/hooks/useTranslation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 
 export default function Login({ onLoadingChange }) {
+  const { t } = useTranslation('login');
   const router = useRouter();
   const { handleLogin, userData } = useLogin();
   const setRol = useUserStore((state) => state.setRol);
@@ -29,15 +31,15 @@ export default function Login({ onLoadingChange }) {
     const newErrors = { ...errors };
 
     if (name === 'email') {
-      if (value.trim() === '') newErrors.email = 'El email es requerido';
+      if (value.trim() === '') newErrors.email = t('errorRequiredEmail');
       else if (!validateEmail(value))
-        newErrors.email = 'El email no tiene un formato válido';
+        newErrors.email = t('errorInvalidEmail');
       else newErrors.email = '';
     }
 
     if (name === 'password') {
       newErrors.password =
-        value.trim() === '' ? 'La contraseña es requerida' : '';
+        value.trim() === '' ? t('errorRequiredPassword') : '';
     }
 
     setErrors(newErrors);
@@ -51,9 +53,7 @@ export default function Login({ onLoadingChange }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid()) {
-      setServerError(
-        'Por favor, corrige los errores en el formulario antes de continuar.',
-      );
+      setServerError(t('errorFormInvalid'));
       return;
     }
     setLoading(true);
@@ -70,9 +70,7 @@ export default function Login({ onLoadingChange }) {
     const userResult = await userData();
 
     if (userResult.error) {
-      setServerError(
-        'Error obteniendo información del usuario. Por favor, vuelva a iniciar sesión.',
-      );
+      setServerError(t('errorUserInfo'));
       setLoading(false);
       onLoadingChange?.(false);
       return;
@@ -92,9 +90,7 @@ export default function Login({ onLoadingChange }) {
       const { data: allProjectsResponse, error: allProjectsError } =
         await getAllProjects();
       if (allProjectsError) {
-        setServerError(
-          'Error obteniendo proyectos. Por favor, vuelva a iniciar sesión.',
-        );
+        setServerError(t('errorFetchProjects'));
         setLoading(false);
         onLoadingChange?.(false);
         return;
@@ -123,7 +119,7 @@ export default function Login({ onLoadingChange }) {
       )}
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label className="text-micro-label block mb-2">Email</label>
+          <label className="text-micro-label block mb-2">{t('email')}</label>
           <input
             name="email"
             value={formData.email}
@@ -139,7 +135,7 @@ export default function Login({ onLoadingChange }) {
         </div>
 
         <div>
-          <label className="text-micro-label block mb-2">Contraseña</label>
+          <label className="text-micro-label block mb-2">{t('password')}</label>
           <input
             type="password"
             name="password"
@@ -169,7 +165,7 @@ export default function Login({ onLoadingChange }) {
   }
 `}
         >
-          Iniciar sesión
+          {t('loginSubmit')}
         </button>
       </form>
     </>

@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Button from './Button';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function NotificationPopup({ message, children, isOpen: initialIsOpen = true, onClose }) {
+  const { t } = useTranslation('notificationPopup');
   const [isOpen, setIsOpen] = useState(initialIsOpen);
 
   const handleClose = () => {
@@ -25,7 +27,7 @@ export default function NotificationPopup({ message, children, isOpen: initialIs
           <button
             onClick={handleClose}
             className="border border-red-900 absolute p-2 border-r-0 border-t-0 rounded-lg top-0 right-0 text-red-800 hover:text-red-500 text-2xl font-bold leading-none cursor-pointer"
-            aria-label="Cerrar"
+            aria-label={t('close')}
           >
             ✕
           </button>
@@ -41,7 +43,7 @@ export default function NotificationPopup({ message, children, isOpen: initialIs
 
           {/* Botón Aceptar */}
           <div className="flex justify-center mt-4">
-            <Button content="Cerrar" onClick={handleClose} color="blue" />
+            <Button content={t('close')} onClick={handleClose} color="blue" />
           </div>
         </div>
       </div>

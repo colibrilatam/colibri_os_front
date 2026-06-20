@@ -80,7 +80,7 @@ const getRoleInTeamLabel = (role) => {
 };
 
 export default function ProjectSection() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('about');
   const { execute: getMembers, error: getMembersError } = useRequest(
     projectsService.getProjectMembers,
   );
@@ -132,7 +132,7 @@ export default function ProjectSection() {
           {/* INFO */}
           <div className="space-y-3">
             <div>
-              <p className="text-overline">{t('about.project')}</p>
+              <p className="text-overline">{t('project')}</p>
 
               <h2 className="text-h2">{dbProject.projectName}</h2>
             </div>
@@ -172,7 +172,7 @@ export default function ProjectSection() {
       {/* ================= DESCRIPTION ================= */}
       {dbProject.shortDescription && (
         <div className="space-y-2">
-          <p className="text-overline">{t('about.description')}</p>
+          <p className="text-overline">{t('description')}</p>
 
           <p className="text-body">
             {translatedContent?.project?.shortDescription ||
@@ -184,7 +184,7 @@ export default function ProjectSection() {
       {/* ================= OWNER ================= */}
       {dbProject.owner && (
         <div className="space-y-4">
-          <p className="text-overline"> {t('about.projectLeader')}</p>
+          <p className="text-overline"> {t('projectLeader')}</p>
 
           <div className="glass-effect-white rounded-2xl p-5 border border-slate-800">
             <div className="flex items-center justify-between gap-4">
@@ -207,17 +207,17 @@ export default function ProjectSection() {
                 cursor-pointer
                 font-semibold
               "
-                    title={t('about.contactFounder')}
+                    title={t('contactFounder')}
                   >
                     <MessageCircle size={14} />
 
                     <span className="text-xs font-semibold">
-                      {t('about.contactFounder')}
+                      {t('contactFounder')}
                     </span>
                   </button>
                 </div>
 
-                <p className="text-helper mt-1"> {t('about.founder')}</p>
+                <p className="text-helper mt-1"> {t('founder')}</p>
               </div>
 
               {dbProject.owner.avatar && (
@@ -260,7 +260,7 @@ export default function ProjectSection() {
             "
           >
             <div className="flex items-center gap-3">
-              <p className="text-overline">{t('about.activeTeam')}</p>
+              <p className="text-overline">{t('activeTeam')}</p>
 
               <div
                 className={`
@@ -386,7 +386,7 @@ export default function ProjectSection() {
                           {member.isFounder && (
                             <MiniBadge variant="amber">
                               {' '}
-                              {t('about.founder')}
+                              {t('founder')}
                             </MiniBadge>
                           )}
 
@@ -399,12 +399,12 @@ export default function ProjectSection() {
                       {/* FOOTER */}
                       <div className="mt-4 flex justify-between text-legend">
                         <span>
-                          {t('about.joined')}: {formatDate(member.joinedAt)}
+                          {t('joined')}: {formatDate(member.joinedAt)}
                         </span>
 
                         {member.participationWeight && (
                           <span>
-                            {t('about.participation')}{' '}
+                            {t('participation')}{' '}
                             {member.participationWeight}%
                           </span>
                         )}
@@ -429,21 +429,21 @@ export default function ProjectSection() {
               hover:border-slate-700
             "
         >
-          {t('about.projectWithoutMembers')}
+          {t('projectWithoutMembers')}
         </div>
       )}
 
       {/* ================= LINKS ================= */}
       <div className="grid md:grid-cols-3 gap-4">
-        <LinkCard label={t('about.website')} url={dbProject.websiteUrl} />
+        <LinkCard label={t('website')} url={dbProject.websiteUrl} />
 
         <LinkCard
-          label={t('about.linkedin')}
+          label={t('linkedin')}
           url={dbProject.startupLinkedinUrl}
         />
 
         <LinkCard
-          label={t('about.rlabProfile')}
+          label={t('rlabProfile')}
           url={`/dashboard/${dbProject.id}/about`}
           copyMode
         />
@@ -455,22 +455,22 @@ export default function ProjectSection() {
 
         <div className="grid md:grid-cols-4 gap-4">
           <TimelineCard
-            label={t('about.start')}
+            label={t('start')}
             value={formatDate(dbProject.openedAt)}
           />
 
           <TimelineCard
-            label={t('about.lastActivity')}
+            label={t('lastActivity')}
             value={formatDate(dbProject.lastActivityAt)}
           />
 
           <TimelineCard
-            label={t('about.created')}
+            label={t('created')}
             value={formatDate(dbProject.createdAt)}
           />
 
           <TimelineCard
-            label={t('about.updated')}
+            label={t('updated')}
             value={formatDate(dbProject.updatedAt)}
           />
         </div>
@@ -490,7 +490,7 @@ function TimelineCard({ label, value }) {
 }
 
 function LinkCard({ label, url, copyMode = false }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('about');
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -516,7 +516,7 @@ function LinkCard({ label, url, copyMode = false }) {
       <p className="text-micro-label mb-3">{label}</p>
 
       {!url ? (
-        <p className="text-body--muted"> {t('about.notAvailable')}</p>
+        <p className="text-body--muted"> {t('notAvailable')}</p>
       ) : copyMode ? (
         <button
           onClick={handleCopy}
@@ -527,7 +527,7 @@ function LinkCard({ label, url, copyMode = false }) {
             cursor-pointer
           "
         >
-          {copied ? t('about.copied') : t('about.copyLink')}
+          {copied ? t('copied') : t('copyLink')}
         </button>
       ) : (
         <a
@@ -536,7 +536,7 @@ function LinkCard({ label, url, copyMode = false }) {
           rel="noopener noreferrer"
           className="text-accent-cyan break-all"
         >
-          {t('about.openLink')}
+          {t('openLink')}
         </a>
       )}
     </div>

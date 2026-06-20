@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 const trancheChipStyles = {
   T1: 'data-[active=true]:border-blue-400/60 data-[active=true]:bg-blue-500/20 data-[active=true]:text-blue-300 data-[active=true]:shadow-[0_0_0_1px_rgba(96,165,250,0.15)]',
   T2: 'data-[active=true]:border-cyan-400/60 data-[active=true]:bg-cyan-500/20 data-[active=true]:text-cyan-300 data-[active=true]:shadow-[0_0_0_1px_rgba(34,211,238,0.15)]',
@@ -23,17 +25,6 @@ const statusChipStyles = {
 const baseChipClasses =
   'inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-400 transition-all duration-150 hover:border-white/20 hover:bg-white/[0.07] hover:text-slate-200 cursor-pointer select-none';
 
-function getStatusLabel(statusValue) {
-  const statusLabelMap = {
-    active: 'Activo',
-    inactive: 'Inactivo',
-    closed: 'Cerrado',
-    suspended: 'Suspendido',
-  };
-
-  return statusLabelMap[statusValue] || statusValue;
-}
-
 export function FiltersBar({
   search,
   onSearchChange,
@@ -51,6 +42,20 @@ export function FiltersBar({
   onCountryChange,
   onIndustryChange,
 }) {
+  const { t } = useTranslation('filtersBar');
+
+  function getStatusLabel(statusValue) {
+    const statusLabelMap = {
+      active: t('statusActive'),
+      inactive: t('statusInactive'),
+      closed: t('statusClosed'),
+      suspended: t('statusSuspended'),
+    };
+
+    if (statusValue === 'Todos') return t('allStatuses');
+    return statusLabelMap[statusValue] || statusValue;
+  }
+
   return (
     <section className="px-6 py-5">
       <div className="rounded-2xl border border-white/8 glass-effect p-4 backdrop-blur-sm">
@@ -75,24 +80,24 @@ export function FiltersBar({
                 type="text"
                 value={search}
                 onChange={(event) => onSearchChange(event.target.value)}
-                placeholder="Buscar proyecto por nombre, descripción, industria o responsable…"
+                placeholder={t('searchPlaceholder')}
                 className="w-full rounded-xl border border-white/10 bg-white/4 py-2.5 pl-10 pr-4 text-sm text-slate-200 placeholder:text-slate-500 shadow-inner shadow-black/10 transition-all duration-150 focus:border-cyan-500/50 focus:bg-white/6 focus:outline-none focus:ring-2 focus:ring-cyan-500/10"
               />
             </div>
 
             <div className="shrink-0 rounded-full border border-white/10 bg-white/4 px-3 py-1.5 text-xs" style={{ color: 'var(--text-tertiary)' }}>
-              Mostrando{' '}
+              {t('showing')}{' '}
               <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>
                 {resultCount}
               </span>{' '}
-              {resultCount === 1 ? 'proyecto' : 'proyectos'}
+              {resultCount === 1 ? t('projectSingular') : t('projectPlural')}
             </div>
           </div>
 
           <div className="mt-4 space-y-4">
             {/* INDUSTRIA */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>INDUSTRIA:</span>
+              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>{t('industryLabel')}</span>
 
               {allIndustries.map((industry) => {
                 const isActive = selectedIndustry === industry;
@@ -108,7 +113,7 @@ export function FiltersBar({
                 : 'bg-white/10 text-slate-300 hover:bg-white/20'
             }`}
                   >
-                    {industry}
+                    {industry === 'Todas' ? t('allIndustries') : industry}
                   </button>
                 );
               })}
@@ -116,7 +121,7 @@ export function FiltersBar({
 
             {/* PAÍS */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>PAÍS:</span>
+              <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>{t('countryLabel')}</span>
               <button
                 onClick={() => onCountryChange(null)}
                 className={`px-3 py-1.5 rounded-full text-xs ${
@@ -125,7 +130,7 @@ export function FiltersBar({
                     : 'bg-white/10 text-slate-300'
                 }`}
               >
-                Todos
+                {t('allCountries')}
               </button>
 
               {allCountries.map((country) => {
@@ -152,7 +157,7 @@ export function FiltersBar({
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:gap-6">
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>
-                TRAMO
+                {t('tramoLabel')}
               </span>
 
               {allTranches.map((tranche) => (
@@ -174,7 +179,7 @@ export function FiltersBar({
 
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs mr-2" style={{ color: 'var(--text-tertiary)' }}>
-                ESTADO
+                {t('statusLabel')}
               </span>
 
               {allStatuses.map((status) => (

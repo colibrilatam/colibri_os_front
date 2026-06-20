@@ -26,7 +26,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
-  const { t } = useTranslation();
+  const { t } = useTranslation('sidebar');
   const rol = useUserStore((state) => state.rol);
   const { dbProject } = useProject();
   //console.log(dbProject);
@@ -60,49 +60,49 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const links = [
     {
       href: `/home`,
-      label: t('sidebar.home'),
+      label: t('home'),
       icon: Home,
       excludeRoles: ['mecenas_semilla', 'entrepreneur'],
     },
     {
       href: `/dashboard/${id}/about`,
-      label: t('sidebar.projectProfile'),
+      label: t('projectProfile'),
       icon: Building2,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/identidad`,
-      label: t('sidebar.identity'),
+      label: t('identity'),
       icon: User,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/reputacion`,
-      label: t('sidebar.reputation'),
+      label: t('reputation'),
       icon: Layers,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/tramo`,
-      label: t('sidebar.segment'),
+      label: t('segment'),
       icon: AlertCircle,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/trayectoria`,
-      label: t('sidebar.trajectory'),
+      label: t('trajectory'),
       icon: Map,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/evidencia`,
-      label: t('sidebar.evidence'),
+      label: t('evidence'),
       icon: Link2,
       excludeRoles: null,
     },
     {
       href: '/user/nft',
-      label: t('sidebar.nfts'),
+      label: t('nfts'),
       icon: Folder,
       roles: ['mecenas_semilla'],
     },
@@ -135,7 +135,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       {notification && (
         <NotificationPopup
           isOpen={notification}
-          message={t('sidebar.entrepreneurData')}
+          message={t('entrepreneurData')}
           onClose={handleCloseNotification}
         >
           <EntrepreneurCard
@@ -210,7 +210,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
           onClick={() => setSidebarDesktopExpanded(!sidebarDesktopExpanded)}
           className="p-3 mb-2 rounded-lg glass-effect-dark hover:surface-secondary text-(--text-primary) transition-colors flex justify-center "
           title={
-            sidebarDesktopExpanded ? t('sidebar.collapse') : t('sidebar.expand')
+            sidebarDesktopExpanded ? t('collapse') : t('expand')
           }
         >
           <Menu size={24} />
@@ -255,14 +255,14 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             <Button
               color="blue"
               /* content="Contactar al emprendedor" */
-              content={t('sidebar.contactEntrepreneur')}
+              content={t('contactEntrepreneur')}
 
               onClick={handleContact}
             ></Button>
             <Button
               color="red"
               /* content="Cerrar sesión" */
-             content={t('sidebar.logout')}
+             content={t('logout')}
               onClick={handleLogout}
             />
           </div>

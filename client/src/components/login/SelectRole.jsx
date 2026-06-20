@@ -1,9 +1,11 @@
 "use client"
 import { useUserStore } from "@/lib/store";
+import { useTranslation } from "@/hooks/useTranslation";
 import { HelpCircle } from "lucide-react";
 import NotificationPopup from "../NotificationPopup";
 
 export default function SelectRole({ onSelectRole }) {
+  const { t } = useTranslation('login');
 
   const { isDemo, setIsDemo } = useUserStore();
 
@@ -27,16 +29,16 @@ export default function SelectRole({ onSelectRole }) {
       <div className="rounded-2xl border border-white/10 bg-white/5 p-6 flex flex-col justify-between hover:bg-white/10 hover:scale-[1.02] transition-all duration-200">
         <div>
           <div className="text-3xl mb-4">🚀</div>
-          <p className="text-h2 mb-2">Emprendedor</p>
+          <p className="text-h2 mb-2">{t('entrepreneur')}</p>
           <p className="text-body--muted mb-4">
-            Construí, validá y demostrá tu proyecto con evidencia real.
+            {t('entrepreneurDesc')}
           </p>
         </div>
         <button
           onClick={() => onSelectRole('entrepreneur')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
-          Continuar como Emprendedor
+          {t('continueEntrepreneur')}
         </button>
       </div>
 
@@ -44,16 +46,16 @@ export default function SelectRole({ onSelectRole }) {
       <div className="rounded-2xl border border-white/10 bg-white/5 p-6 flex flex-col justify-between hover:bg-white/10 hover:scale-[1.02] transition-all duration-200">
         <div>
           <div className="text-3xl mb-4">🤝</div>
-          <p className="text-h2 mb-2">Mecenas</p>
+          <p className="text-h2 mb-2">{t('patron')}</p>
           <p className="text-body--muted mb-4">
-            Apoyá proyectos con impacto sin tomar participación.
+            {t('patronDesc')}
           </p>
         </div>
         <button
           onClick={() => onSelectRole('mecenas_semilla')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
-          Continuar como Mecenas
+          {t('continuePatron')}
         </button>
       </div>
       </div>

@@ -9,7 +9,7 @@ import { formatDateSafe } from '@/lib/hooks/date';
 import { useProject } from '@/lib/projectContext';
 import { useUserStore } from '@/lib/store';
 
-import { projectStatus } from '@/lib/types/projectStatus';
+// import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
@@ -18,7 +18,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
-const { t } = useTranslation();
+const { t } = useTranslation('header');
   const contextData = useProject();
 
   const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
@@ -46,7 +46,7 @@ const { t } = useTranslation();
               {logoSrc ? (
                 <img
                   src={logoSrc}
-                  alt="Colibrí Logo"
+                  alt={t('altLogo')}
                   className="h-20 w-44 object-contain"
                 ></img>
               ) : (
@@ -54,12 +54,12 @@ const { t } = useTranslation();
                   <div className="bg-white rounded-full h-12 w-12 flex items-center justify-center overflow-hidden shadow-md">
                     <img
                       src="/Imagotipo Colibri OS.svg"
-                      alt="Colibrí Logo"
+                      alt={t('altLogo')}
                       className="h-11 w-11 object-contain"
                     />
                   </div>
                   <span className="text-lg font-bold text-(--text-primary)">
-                    Colibrí OS
+                    {t('colibriOs')}
                   </span>
                 </>
               )}
@@ -70,7 +70,7 @@ const { t } = useTranslation();
                 {rol === 'mecenas_semilla' && (
                   <Link className="hover:text-gray-200" href="/user/nft">
                     <button className="rounded-xl bg-linear-to-r primary-button px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
-                      NFTs
+                      {t('nfts')}
                     </button>
                   </Link>
                 )}
@@ -79,7 +79,7 @@ const { t } = useTranslation();
                     onClick={() => logout()}
                     className="rounded-xl bg-linear-to-r from-red-600 to-red-800 p-2 lg:px-5 lg:py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
-                   {t('header.logout')}
+                   {t('logout')}
                   </button>
                 </Link>
               </div>
@@ -87,7 +87,7 @@ const { t } = useTranslation();
               <div>
                 <Link className="hover:text-gray-200" href="/login">
                   <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
-                   {t('header.login')}
+                   {t('login')}
                   </button>
                 </Link>
               </div>
@@ -125,16 +125,16 @@ const { t } = useTranslation();
             <div className="flex items-center gap-2">
               <img
                 src="/colibri-icon.png"
-                alt="Colibrí Logo"
+                alt={t('altLogo')}
                 className="h-6 w-6"
               />
               <span className="text-sm font-semibold text-slate-50">
-                Colibrí OS
+                {t('colibriOs')}
               </span>
             </div>
             <div>
               <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95">
-                {t('header.access')}
+                {t('access')}
               </button>
             </div>
            
@@ -157,7 +157,7 @@ const { t } = useTranslation();
                   />
                 ) : (
                   <div className="text-sm text-slate-500 p-8 rounded-full">
-                    Sin imagen
+                    {t('noImage')}
                   </div>
                 )}
               </div>
@@ -174,7 +174,7 @@ const { t } = useTranslation();
                 {tramoData.code} - {tramoData.name}
               </span>
               <span className="rounded-full font-bold border border-(--text-accent) glass-effect-accent px-2 sm:px-3 py-0.5 sm:py-1 text-(--text-accent)">
-                {projectStatus[dbProject.status]}
+                {t('status' + dbProject.status.charAt(0).toUpperCase() + dbProject.status.slice(1))}
               </span>
               <span className="rounded-full border border-(--text-primary) glass-effect-dark px-2 sm:px-3 py-0.5 sm:py-1">
                 {dbProject.industry}
@@ -189,7 +189,7 @@ const { t } = useTranslation();
           <div className="md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
             <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3">
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
-                  {t('header.colibriIndex')}
+                  {t('colibriIndex')}
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-(--text-primary)">
@@ -198,14 +198,14 @@ const { t } = useTranslation();
                     : getProjectIC(dbProject.projectName)}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
-                  / 6.00
+                  {t('scoreSuffix')}
                 </div>
               </div>
             </div>
 
             <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3 text-right md:text-right">
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
-                  {t('header.lastUpdate')}
+                  {t('lastUpdate')}
               </div>
               <div className="mt-1 font-bold text-sm md:text-base text-(--text-primary)">
                 {dbProject.updatedAt

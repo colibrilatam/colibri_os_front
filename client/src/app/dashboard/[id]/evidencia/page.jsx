@@ -11,6 +11,7 @@ import {
 } from '@/lib/mappers/evidence-labels';
 import { useProject } from '@/lib/projectContext';
 import { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -54,6 +55,7 @@ const parseRouteCode = (code) => {
 /* ================= COMPONENT ================= */
 
 export default function EvidenciaSection() {
+  const { t } = useTranslation('evidencia');
   const { evidenceData } = useProject();
 
   const evidences = evidenceData || [];
@@ -157,7 +159,7 @@ export default function EvidenciaSection() {
   }, [filtered, selected]);
 
   if (!evidences.length) {
-    return <div className="p-10 text-slate-400">No hay evidencias</div>;
+    return <div className="p-10 text-slate-400">{t('noEvidences')}</div>;
   }
 
   return (
@@ -167,10 +169,10 @@ export default function EvidenciaSection() {
         id="metricas"
         className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full"
       >
-        <Metric label="Evidencias" value={metrics.total} />
-        <Metric label="Validadas" value={metrics.validated} />
-        <Metric label="Impacto IC" value={metrics.ic} />
-        <Metric label="Score" value={metrics.avgScore} />
+        <Metric label={t('metricEvidences')} value={metrics.total} />
+        <Metric label={t('metricValidated')} value={metrics.validated} />
+        <Metric label={t('metricImpact')} value={metrics.ic} />
+        <Metric label={t('metricScore')} value={metrics.avgScore} />
       </div>
 
       {/* ================= FILTERS ================= */}
@@ -183,15 +185,15 @@ export default function EvidenciaSection() {
       >
         {/* STATUS */}
         <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-helper whitespace-nowrap">Estado</p>
+          <p className="text-helper whitespace-nowrap">{t('filterStatus')}</p>
 
           <div className="flex flex-wrap gap-2">
             {[
-              { label: 'Todas', value: 'all' },
-              { label: 'Pendientes', value: 'pending' },
-              { label: 'Aprobadas', value: 'approved' },
-              { label: 'Rechazadas', value: 'rejected' },
-              { label: 'Borradores', value: 'draft' },
+              { label: t('filterAll'), value: 'all' },
+              { label: t('filterPending'), value: 'pending' },
+              { label: t('filterApproved'), value: 'approved' },
+              { label: t('filterRejected'), value: 'rejected' },
+              { label: t('filterDraft'), value: 'draft' },
             ].map((item) => (
               <FilterChip
                 key={item.value}
@@ -206,14 +208,14 @@ export default function EvidenciaSection() {
 
         {/* TRAMO */}
         <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-helper whitespace-nowrap">Tramo</p>
+          <p className="text-helper whitespace-nowrap">{t('filterTramo')}</p>
 
           <div className="flex flex-wrap gap-2">
             <FilterChip
               active={tramoFilter === 'all'}
               onClick={() => setTramoFilter('all')}
             >
-              Todos
+              {t('filterAllTramos')}
             </FilterChip>
 
             {[1, 2, 3, 4, 5, 6].map((t) => (
@@ -230,14 +232,14 @@ export default function EvidenciaSection() {
 
         {/* CATEGORIA */}
         <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-helper whitespace-nowrap">Categoría</p>
+          <p className="text-helper whitespace-nowrap">{t('filterCategory')}</p>
 
           <div className="flex flex-wrap gap-2">
             <FilterChip
               active={categoriaFilter === 'all'}
               onClick={() => setCategoriaFilter('all')}
             >
-              Todas
+              {t('filterAllCategories')}
             </FilterChip>
 
             {[1, 2, 3, 4, 5, 6, 7].map((c) => (
@@ -261,7 +263,7 @@ export default function EvidenciaSection() {
   ${filterIC ? 'filter-chip-active' : 'filter-chip'}
 `}
           >
-            Solo IC válido
+            {t('filterOnlyIC')}
           </button>
         </div>
       </div>
@@ -270,10 +272,10 @@ export default function EvidenciaSection() {
       <div id="lista" className="space-y-4 w-full">
         {/* HEADER */}
         <div className="flex items-center justify-between">
-          <h2 className="text-h3">Evidencias</h2>
+          <h2 className="text-h3">{t('listTitle')}</h2>
 
           <div className="counter-badge px-3 py-1 rounded-full text-sm">
-            {filtered.length} evidencias
+            {filtered.length} {t('counterEvidences')}
           </div>
         </div>
 
@@ -320,7 +322,7 @@ export default function EvidenciaSection() {
     empty-state
   "
           >
-            No se encontraron evidencias con los filtros actuales.
+            {t('emptyFilter')}
           </div>
         )}
       </div>
@@ -338,6 +340,7 @@ export default function EvidenciaSection() {
 /* ================= CARD ================= */
 
 function EvidenceCard({ evidence, isActive, onClick }) {
+  const { t } = useTranslation('evidencia');
   const lastEval = getLastEvaluation(evidence.evaluations);
 
   return (
@@ -366,15 +369,15 @@ ${isActive ? 'card-active' : ''}
         </span>
 
         {evidence.isValidForIc && (
-          <span className="badge-success">Impacta IC</span>
+          <span className="badge-success">{t('impactsIC')}</span>
         )}
       </div>
 
       {lastEval && <p className="text-helper mt-1">⭐ {lastEval.score}</p>}
 
       <div className="flex justify-between mt-2 text-legend">
-        <span>{evidence.evaluations?.length || 0} eval</span>
-        <span>{evidence.versions?.length || 0} ver</span>
+        <span>{evidence.evaluations?.length || 0} {t('evalSuffix')}</span>
+        <span>{evidence.versions?.length || 0} {t('verSuffix')}</span>
       </div>
     </div>
   );
@@ -383,13 +386,14 @@ ${isActive ? 'card-active' : ''}
 /* ================= DETAIL ================= */
 
 function EvidenceDetail({ evidence }) {
+  const { t } = useTranslation('evidencia');
   const lastEval = getLastEvaluation(evidence.evaluations);
 
   return (
     <div className="p-6 rounded-2xl glass-effect border-glass space-y-6">
       {/* HEADER */}
       <div className="flex justify-between items-center">
-        <h2 className="text-h3">Evidencia</h2>
+        <h2 className="text-h3">{t('detailTitle')}</h2>
 
         <div className="flex gap-2">
           <TypeBadge type={evidence.evidenceType} />
@@ -403,53 +407,53 @@ function EvidenceDetail({ evidence }) {
       {/* META */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         <Info
-          label="Validación"
+          label={t('labelValidation')}
           value={getValidationStatusLabel(evidence.validationStatus)}
         />
         <Info
-          label="Impacto en IC"
-          value={evidence.isValidForIc ? 'Sí' : 'No'}
+          label={t('labelImpact')}
+          value={evidence.isValidForIc ? t('labelYes') : t('labelNo')}
         />
-        <Info label="Fecha" value={formatDate(evidence.createdAt)} />
-        <Info label="Versiones" value={evidence.versions?.length || 0} />
-        <Info label="Evaluaciones" value={evidence.evaluations?.length || 0} />
+        <Info label={t('labelDate')} value={formatDate(evidence.createdAt)} />
+        <Info label={t('labelVersions')} value={evidence.versions?.length || 0} />
+        <Info label={t('labelEvaluations')} value={evidence.evaluations?.length || 0} />
         <Info
-          label="Privacidad"
+          label={t('labelPrivacy')}
           value={getPrivacyLevelLabel(evidence.privacyLevel)}
         />
       </div>
 
       {/* AUTHOR */}
-      <Section title="Autor">
+      <Section title={t('sectionAuthor')}>
         <p className="text-body">{evidence.author?.fullName}</p>
         <p className="text-legend">{getUserRoleLabel(evidence.author?.role)}</p>
       </Section>
 
       {/* MICROACTION */}
-      <Section title="Microacción">
+      <Section title={t('sectionMicroaction')}>
         <div className="grid grid-cols-2 gap-4">
           <Info
-            label="Estado"
+            label={t('microStatus')}
             value={getMicroActionInstanceStatusLabel(
               evidence.microActionInstance?.status,
             )}
           />
           <Info
-            label="En tiempo"
+            label={t('microOnTime')}
             value={
               evidence.microActionInstance?.isOnTime === null
                 ? '-'
                 : evidence.microActionInstance?.isOnTime
-                  ? 'Sí'
-                  : 'No'
+                  ? t('labelYes')
+                  : t('labelNo')
             }
           />
           <Info
-            label="Intentos"
+            label={t('microAttempts')}
             value={evidence.microActionInstance?.attemptNumber}
           />
           <Info
-            label="Reabierta"
+            label={t('microReopened')}
             value={evidence.microActionInstance?.reopenedCount}
           />
         </div>
@@ -457,7 +461,7 @@ function EvidenceDetail({ evidence }) {
 
       {/* DEFINITION */}
       {evidence.microActionInstance?.microActionDefinition && (
-        <Section title="Microacción Definición">
+        <Section title={t('sectionMicroactionDefinition')}>
           <p className="text-data--label">
             {formatRouteCode(
               evidence.microActionInstance.microActionDefinition.code,
@@ -470,18 +474,18 @@ function EvidenceDetail({ evidence }) {
       )}
 
       {/* TIMELINE */}
-      <Section title="Timeline">
+      <Section title={t('sectionTimeline')}>
         <div className="text-legend space-y-1">
-          <p>Creado: {formatDate(evidence.createdAt)}</p>
-          <p>Enviado: {formatDate(evidence.submittedAt)}</p>
-          <p>Aprobado: {formatDate(evidence.approvedAt)}</p>
-          <p>Rechazado: {formatDate(evidence.rejectedAt)}</p>
+          <p>{t('timelineCreated')} {formatDate(evidence.createdAt)}</p>
+          <p>{t('timelineSubmitted')} {formatDate(evidence.submittedAt)}</p>
+          <p>{t('timelineApproved')} {formatDate(evidence.approvedAt)}</p>
+          <p>{t('timelineRejected')} {formatDate(evidence.rejectedAt)}</p>
         </div>
       </Section>
 
       {/* EVALUATION */}
       {lastEval && (
-        <Section title="Evaluación">
+        <Section title={t('sectionEvaluation')}>
           <p className="text-value-lg text-accent-amber">⭐ {lastEval.score}</p>
           <p className="text-body--muted">{lastEval.comment}</p>
         </Section>
@@ -489,7 +493,7 @@ function EvidenceDetail({ evidence }) {
 
       {/* VERSIONS */}
       {evidence.versions?.length > 0 && (
-        <Section title="Historial">
+        <Section title={t('sectionHistory')}>
           {evidence.versions.map((v) => (
             <div key={v.id} className="flex justify-between text-legend">
               <span>v{v.versionNumber}</span>
@@ -501,7 +505,7 @@ function EvidenceDetail({ evidence }) {
 
       {/* LINK */}
       <a href={evidence.canonicalUri} target="_blank" className="text-body">
-        Ver archivo →
+        {t('viewFile')}
       </a>
     </div>
   );
