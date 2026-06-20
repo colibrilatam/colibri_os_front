@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUserStore } from '@/lib/store'
+import { useTranslation } from '@/hooks/useTranslation'
 
 export default function GoogleCallback() {
   const router = useRouter();
@@ -20,5 +21,7 @@ export default function GoogleCallback() {
     }
   }, [])
 
-  return <p>Iniciando sesión...</p>
+  const { t } = useTranslation('login');
+
+  return <p>{t('loggingIn')}</p>
 }

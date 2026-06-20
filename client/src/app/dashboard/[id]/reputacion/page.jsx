@@ -1,8 +1,10 @@
 'use client';
 import { useProject } from '@/lib/projectContext';
+import { useTranslation } from '@/hooks/useTranslation';
 //import { IconAccion, IconEvidencia, IconConsistencia, IconColaboracion, IconSostenibilidad } from "@/components/ui/Icons";
 
 export default function ReputacionPage() {
+  const { t } = useTranslation('reputacion');
 
   // contexto
     const { tramoData, dbProject, mockProject } = useProject();
@@ -11,11 +13,11 @@ export default function ReputacionPage() {
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
-    { index: 0, key: "action",        label: "Acción",     description: "Microacciones completadas y calidad de ejecución.",     raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
-    { index: 1, key: "evidence",      label: "Evidencia",   description: "Trazabilidad on-chain y validación de mentores.",     raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
-    { index: 2, key: "consistency",   label: "Consistencia",   description: "Frecuencia, ritmo y estabilidad del progreso.",  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
-    { index: 3, key: "collaboration", label: "Colaboración",   description: "Apoyo a otros y participación en el ecosistema."  ,   raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
-    { index: 4, key: "sustainability",label: "Sostenibilidad", description: "Alineación con ODS e indicadores de impacto social."  , raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
+    { index: 0, key: "action",        label: t("dimensionAction"),     description: t("dimensionActionDesc"),     raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
+    { index: 1, key: "evidence",      label: t("dimensionEvidence"),   description: t("dimensionEvidenceDesc"),   raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
+    { index: 2, key: "consistency",   label: t("dimensionConsistency"),   description: t("dimensionConsistencyDesc"),  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
+    { index: 3, key: "collaboration", label: t("dimensionCollaboration"),   description: t("dimensionCollaborationDesc"), raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
+    { index: 4, key: "sustainability",label: t("dimensionSustainability"), description: t("dimensionSustainabilityDesc"), raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
   // Calculo del aporte ponderado de cada dimensión al IC total, ajustado al máximo del tramo actual
   ].map((d) => ({ ...d, weighted: parseFloat(((1 * d.weight) * (d.raw / 100)).toFixed(2)) }));
 
@@ -80,15 +82,15 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
             <div className="mb-5 flex flex-col lg:flex-row items-start justify-between gap-4">
               <div>
                 <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-tertiary)' }}>
-                  Composición sintética
+                  {t('syntheticComposition')}
                 </div>
-                <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Radar reputacional</h2>
+                <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{t('radarTitle')}</h2>
                 <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-                  Lectura visual y sintética de las 5 dimensiones del IC
+                  {t('radarDescription')}
                 </p>
               </div>
               <span className="mr-10 rounded-full border border-(--text-accent) glass-effect-accent px-3 py-1 text-xs text-(--text-accent)">
-                5 dimensiones
+                {t('fiveDimensions')}
               </span>
             </div>
 
@@ -97,25 +99,25 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               <RadarChart values={radarValues} max={100}  categoryIconPaths={categoryIconPaths}/>
             </div>
              <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-              El radar opera como síntesis visual. No sustituye el desglose auditable por dimensión.
+              {t('radarNote')}
             </p>
             </div>
 
             <div id="balance" className='mt-4 lg:p-4 lg:py-10 p-4 glass-effect border-glass rounded-2xl'>
-              <h3 style={{ color: 'var(--text-primary)' }}>Balance reputacional</h3>
+              <h3 style={{ color: 'var(--text-primary)' }}>{t('balanceTitle')}</h3>
               <div className="flex flex-col lg:flex-row gap-2 my-6">
                 <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
-                  <div className="text-[var(--text-tertiary)] uppercase tracking-[0.22em]">legimitidad</div>
+                  <div className="text-[var(--text-tertiary)] uppercase tracking-[0.22em]">{t('legitimacyLabel')}</div>
                   <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>78</div>
-                  <p className="text-[var(--text-secondary)]">Alta capacidad de ejecución y evidencia verificable</p>
+                  <p className="text-[var(--text-secondary)]">{t('legitimacyText')}</p>
                 </div>
                 <div className="p-4 bg-white/4 border-glass rounded-2xl flex flex-col">
-                  <div className="text-[var(--text-tertiary)] uppercase tracking-[0.22em]">diferenciación</div>
+                  <div className="text-[var(--text-tertiary)] uppercase tracking-[0.22em]">{t('differentiationLabel')}</div>
                   <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>43</div>
-                  <p className="text-[var(--text-secondary)]">La trayectoria aún necesita estabilidad y colaboración sistémica.</p>
+                  <p className="text-[var(--text-secondary)]">{t('differentiationText')}</p>
                 </div>
               </div>
-              <div className="text-lg" style={{ color: 'var(--text-secondary)' }}>El proyecto ya demuestra legitimdad operativa. El siguiente salto reputacional depende de fortalecer constancia, colaboración y sostenibilidad.</div>
+              <div className="text-lg" style={{ color: 'var(--text-secondary)' }}>{t('balanceConclusion')}</div>
             </div>
 
             </div>
@@ -125,12 +127,12 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
             <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
                   <div className="mb-2 text-xs uppercase tracking-[0.22em]" style={{ color: 'var(--text-tertiary)' }}>
-                    Arquitectura reputacional
+                    {t('architectureLabel')}
                   </div>
-                  <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Composición del Índice Colibrí</h2>
+                  <h2 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{t('architectureTitle')}</h2>
 
                 <div className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-                  El IC separa variables que validan ejecución real de aquellas que explican diferenciación y sostenibilidad reputacional.
+                  {t('architectureDescription')}
                 </div>
                 </div>
               </div>
@@ -146,10 +148,10 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="shrink-0">{categoryIconPaths[0]}</svg> <h3 style={{ color: 'var(--text-primary)' }}>Variables de Legitimidad</h3></div>
+              className="shrink-0">{categoryIconPaths[0]}</svg> <h3 style={{ color: 'var(--text-primary)' }}>{t('legitimacyVariables')}</h3></div>
                   <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>78</div>
                 </div>
-                <p className='my-4 text-sm text-[var(--text-secondary)]'>Validan ejecución real, evidencia verificable y consistencia operativa observable.</p>
+                <p className='my-4 text-sm text-[var(--text-secondary)]'>{t('legitimacyVariablesDesc')}</p>
               <div className="space-y-1">
                 {dimensionesLegitimidad.map((dimension, index) => (
                   <DimensionRow
@@ -180,10 +182,10 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="shrink-0">{categoryIconPaths[5]}</svg> <h3 style={{ color: 'var(--text-primary)' }}>Variables de Diferenciación</h3></div>
+              className="shrink-0">{categoryIconPaths[5]}</svg> <h3 style={{ color: 'var(--text-primary)' }}>{t('differentiationVariables')}</h3></div>
                   <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>43</div>
                 </div>
-                <p className='my-4 text-sm text-[var(--text-secondary)]'>Explican estabilidad reputacional, colaboracional sistémica y sostenibilidad del vuelo emprendedor.</p>
+                <p className='my-4 text-sm text-[var(--text-secondary)]'>{t('differentiationVariablesDesc')}</p>
               <div className="space-y-1">
                 {dimensionesDiferenciacion.map((dimension, index) => (
                   <DimensionRow
@@ -255,6 +257,7 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
 }
 
 function DimensionRow({description, svgIcon, label, raw, weight, weighted, max = 100, index, categoryIconPaths, iconColor }) {
+  const { t } = useTranslation('reputacion');
   const pct = (raw / max) * 100;
   const iconSvg = categoryIconPaths[svgIcon];
 
@@ -294,11 +297,11 @@ function DimensionRow({description, svgIcon, label, raw, weight, weighted, max =
 
         <div className="grid grid-cols-2 gap-3 lg:w-[200px] lg:grid-cols-1 lg:gap-2 lg:text-right">
           <div>
-            <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--text-tertiary)' }}>Peso</div>
+            <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--text-tertiary)' }}>{t('weight')}</div>
             <div className="text-base font-medium" style={{ color: 'var(--text-primary)' }}>{Math.round(weight * 100)}%</div>
           </div>
           <div>
-            <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--text-tertiary)' }}>Aporte actual</div>
+            <div className="text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--text-tertiary)' }}>{t('currentContribution')}</div>
             <div className="text-base font-bold text-green-500">{weighted.toFixed(2)}</div>
           </div>
         </div>

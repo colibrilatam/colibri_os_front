@@ -7,8 +7,10 @@ import { useProject } from '@/lib/projectContext';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
 import { useUserStore } from '@/lib/store';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function IdentidadPage() {
+  const { t } = useTranslation('identidad');
 
   const subioTramo = useUserStore((state) => state.subioTramo);
 
@@ -49,13 +51,13 @@ export default function IdentidadPage() {
       {/* Header */}
       <div id="estado" className=" w-full glass-effect border-glass rounded-2xl p-4 lg:p-6">
         <div className="text-center max-w-5xl mx-auto">
-          <h1 className="text-h3 mb-3" style={{ color: 'var(--text-primary)' }}>Estado actual del Proyecto</h1>
+          <h1 className="text-h3 mb-3" style={{ color: 'var(--text-primary)' }}>{t('projectStatus')}</h1>
 
           <p className="text-body leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
             <span className="text-(--text-accent) font-medium">
               {dbProject.projectName}
             </span>{' '}
-            transita actualmente{' '}
+            {t('transitsCurrently')}{' '}
             {tramoData.code === 'T4' ? (
               <span className="text-(--text-accent) font-medium">T4</span>
             ) : (
@@ -63,23 +65,23 @@ export default function IdentidadPage() {
                 <span className="text-(--text-accent) font-medium">
                   {tramoData.code}
                 </span>{' '}
-                hacia{' '}
+                {t('towards')}{' '}
                 <span className="text-(--text-accent) font-medium">
                   {`T${parseInt(tramoData.code?.replace('T', ''), 10) + 1}` ||
                     'Tn+1'}
                 </span>
               </>
             )}
-            , con una señal reputacional de{' '}
+            {t('withReputationalSignal')}{' '}
             <span className="text-(--text-accent) font-medium">
               {ic}/ 6.00
             </span>
-            , mientras reduce la incertidumbre{' '}
+            {t('whileReducingUncertainty')}{' '}
             <span className="text-accent-amber font-medium">
               {getUncertaintyLabel(tramoData.uncertaintyType) ||
                 '[INCERTIDUMBRE DEL TRAMO]'}
             </span>{' '}
-            y los siguientes riesgos:{' '}
+            {t('andFollowingRisks')}{' '}
             {tramoData.associatedRisks.map((risk) => {
               return (
                 <span key={risk} className="text-accent-amber font-medium">
@@ -88,7 +90,7 @@ export default function IdentidadPage() {
                 </span>
               );
             })}{' '}
-            mientras y avanza con señales verificables propias del tramo.
+            {t('advancingWithSignals')}
           </p>
         </div>
       </div>
@@ -106,7 +108,7 @@ export default function IdentidadPage() {
                   className="mb-2 text-xs uppercase tracking-[0.22em]"
                   style={{ color: 'var(--text-secondary)' }}
                 >
-                  Identidad reputacional
+                  {t('reputationalIdentity')}
                 </div>
                 <h2
                   style={{
@@ -115,7 +117,7 @@ export default function IdentidadPage() {
                     color: 'var(--text-primary)',
                   }}
                 >
-                  NFT Colibrí dinámico
+                  {t('dynamicNft')}
                 </h2>
                 <span
                   className="m-2 rounded-full border border-(--text-accent) glass-effect-accent px-3 py-1"
@@ -124,7 +126,7 @@ export default function IdentidadPage() {
                     color: 'var(--text-accent)',
                   }}
                 >
-                  Estado visual {tramoData.code}
+                  {t('visualStatus')} {tramoData.code}
                 </span>
               </div>
 
@@ -144,7 +146,7 @@ export default function IdentidadPage() {
                     <div className="text-sm text-[var(--text-secondary)]">
                       <span className="text-[var(--text-primary)] font-medium">
                         {tramoData.code} ·{' '}
-                        {tramoData.name || 'Nombre del tramo'}
+                        {tramoData.name || t('tramoNameFallback')}
                       </span>
                     </div>
 
@@ -169,7 +171,7 @@ export default function IdentidadPage() {
                       className="mb-2 text-xs uppercase tracking-[0.22em]"
                       style={{ color: 'var(--text-secondary)' }}
                     >
-                      Señal reputacional actual
+                      {t('currentSignal')}
                     </div>
                     <div className="flex items-end gap-3">
                       <div
@@ -207,7 +209,7 @@ export default function IdentidadPage() {
                           <span className="text-accent-emerald font-medium">
                             {tramoData.code}
                           </span>{' '}
-                          en tránsito hacia{' '}
+                          {t('inTransitTowards')}{' '}
                           <span className="text-accent-emerald font-medium">
                             {`T${
                               parseInt(tramoData.code?.replace('T', ''), 10) + 1
@@ -223,7 +225,7 @@ export default function IdentidadPage() {
                       progreso={PacProgress}
                       color="multicolor"
                       tamaño="lg"
-                      label="Lectura sobre escala completa"
+                      label={t('fullScaleReading')}
                       mostrarPorcentaje={true}
                     />
                   </div>
@@ -237,7 +239,7 @@ export default function IdentidadPage() {
                     className="mb-2 text-xs uppercase tracking-[0.22em]"
                     style={{ color: 'var(--text-secondary)' }}
                   >
-                    Estado actual del avance
+{t('currentProgress')}
                   </div>
 
                   <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
@@ -246,7 +248,7 @@ export default function IdentidadPage() {
                         className="mb-2 text-xs uppercase tracking-[0.18em]"
                         style={{ color: 'var(--text-tertiary)' }}
                       >
-                        PAC actual
+                        {t('currentPac')}
                       </div>
                       <div
                         style={{
@@ -264,7 +266,7 @@ export default function IdentidadPage() {
                         className="mb-2 text-xs uppercase tracking-[0.18em]"
                         style={{ color: 'var(--text-tertiary)' }}
                       >
-                        PACs aprobados
+                        {t('approvedPacs')}
                       </div>
                       <div
                         style={{
@@ -283,7 +285,7 @@ export default function IdentidadPage() {
                           className="mb-2 text-xs uppercase tracking-[0.18em]"
                           style={{ color: 'var(--text-tertiary)' }}
                         >
-                          Microacciones acumuladas
+                          {t('accumulatedMicroActions')}
                         </div>
                         <div
                           style={{
@@ -303,7 +305,7 @@ export default function IdentidadPage() {
                           className="mb-2 text-xs uppercase tracking-[0.18em]"
                           style={{ color: 'var(--text-tertiary)' }}
                         >
-                          Evidencias aprobadas
+                          {t('approvedEvidences')}
                         </div>
                         <div
                           style={{
@@ -326,19 +328,19 @@ export default function IdentidadPage() {
                       className="mb-3 text-xs uppercase tracking-[0.22em]"
                       style={{ color: 'var(--text-secondary)' }}
                     >
-                      Incertidumbre dominante
+                      {t('dominantUncertainty')}
                     </div>
 
                     <div className="mb-4 rounded-xl bg-red-600/30 border border-red-600 px-4 py-2 text-center text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
                       {getUncertaintyLabel(tramoData.uncertaintyType) ||
-                        'No definida'}
+                        t('notDefined')}
                     </div>
 
                     <div
                       className="mb-2 text-xs uppercase tracking-[0.18em]"
                       style={{ color: 'var(--text-secondary)' }}
                     >
-                      Riesgos asociados
+                      {t('associatedRisks')}
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -348,7 +350,7 @@ export default function IdentidadPage() {
                             key={risk}
                             className="rounded-xl bg-red-600/30 border border-red-800/50 px-3 py-2 text-center text-sm" style={{ color: 'var(--text-secondary)' }}
                           >
-                            {risk || 'Riesgo ' + (index + 1)}
+                            {risk || t('riskFallback') + ' ' + (index + 1)}
                           </div>
                         );
                       })}

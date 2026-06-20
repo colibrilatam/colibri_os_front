@@ -10,12 +10,13 @@ import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
 import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 import {useUserStore} from '@/lib/store';
 import { useNewProject } from '@/hooks/useNewProject';
 
 export default function LoginRegisterPage() {
-  
+  const { t } = useTranslation('login');
   
   const setIsDemo = useUserStore((state) => state.setIsDemo);
   useEffect(() => {
@@ -49,9 +50,7 @@ export default function LoginRegisterPage() {
     const { data, error } = await handleDemoLogin('mentor');
     if (data) {
       setLoading(false);
-      setPopupMessage(
-        '¡Iniciaste sesión como invitado! Tu acceso será limitado.',
-      );
+      setPopupMessage(t('guestLoginMessage'));
       setIsPopupOpen(true);
     } else {
       console.log(data, error);
@@ -73,7 +72,7 @@ export default function LoginRegisterPage() {
       <Button
         className="absolute top-4 left-4"
         color="green"
-        content="Volver"
+        content={t('back')}
         redirect="https://colibrilatam.com/index.html"
       ></Button>
 
@@ -89,22 +88,22 @@ export default function LoginRegisterPage() {
       <div
         className={`w-full ${isSelectRole ? 'max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl' : 'max-w-md'} mt-12 lg:mt-2 glass-effect-dark border-glass rounded-2xl p-6 sm:p-8 sm:p-10`}
       >
-        <p className="text-overline text-center mb-2">Acceso al sistema</p>
+        <p className="text-overline text-center mb-2">{t('systemAccess')}</p>
 
         <h1 className="text-h1 text-center mb-2">
           {isLogin
-            ? 'Iniciar sesión'
+            ? t('loginTitle')
             : isSelectRole
-              ? 'Elegir rol'
-              : 'Crear cuenta'}
+              ? t('selectRoleTitle')
+              : t('registerTitle')}
         </h1>
 
         <p className="text-body--muted text-center mb-8">
           {isLogin
-            ? 'Ingresá a Colibrí OS'
+            ? t('loginSubtitle')
             : isSelectRole
-              ? 'Elegí cómo querés participar'
-              : 'Elige tu rol, verifica tu NFT y entra al panel del Reputation Lab'}
+              ? t('selectRoleSubtitle')
+              : t('registerSubtitle')}
         </p>
 
         {/* Vistas */}
@@ -125,7 +124,7 @@ export default function LoginRegisterPage() {
               onClick={handleGuestLoginClick}
               className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
             >
-              Entrar como invitado
+              {t('guestLogin')}
             </button>
           </>
         )}
@@ -144,12 +143,12 @@ export default function LoginRegisterPage() {
         )}
 
         <p className="text-center text-body--muted mt-6">
-          {isLogin ? '¿No tenés cuenta?' : '¿Ya tenés cuenta?'}{' '}
+          {isLogin ? t('noAccount') : t('hasAccount')}{' '}
           <button
             onClick={() => setView(isLogin ? 'selectRole' : 'login')}
             className="text-[var(--text-link)] font-semibold cursor-pointer"
           >
-            {isLogin ? 'Registrate' : 'Iniciá sesión'}
+            {isLogin ? t('registerLink') : t('loginLink')}
           </button>
         </p>
       </div>

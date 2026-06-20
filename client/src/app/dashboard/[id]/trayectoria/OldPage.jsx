@@ -18,8 +18,10 @@ import { useUserStore } from '@/lib/store';
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function OldTrayectoria() {
+  const { t } = useTranslation('trayectoria');
 
   const convertDate = (date) => {
     console.log(date)
@@ -241,7 +243,7 @@ return formatedDate;
       {/*<button className='bg-red-500 p-10' onClick={() => { setNotification(true); console.log("activar", notification)}}>ACTIVAR</button>*/}
       {notification && (
         <NotificationPopup
-          message="¡Felicitaciones! Completaste el Tramo 3. Tu Colibrí ha evolucionado"
+          message={t('notificationCompleted')}
           isOpen={notification}
           onClose={() => setNotification(false)}
         >
@@ -251,17 +253,17 @@ return formatedDate;
 
       {/* HEADER */}
       <div id="cabecera" className="glass-effect border-glass rounded-2xl p-6">
-        <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>Trayectoria operativa del tramo</p>
+        <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('operationalPath')}</p>
 
         <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData.code} · {tramoData.name}</h2>
 
         <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{tramoData.description}</p>
 
         <div className="flex gap-3 mt-4 flex-wrap">
-          <Metric label="PAC actual" value={metrics.currentPac} /> 
-          <Metric label="PACs cerrados" value={metrics.totalPacs} />
-          <Metric label="Microacciones" value={metrics.microactions} />
-          <Metric label="Evidencias" value={metrics.evidences} />
+          <Metric label={t('metricCurrentPac')} value={metrics.currentPac} /> 
+          <Metric label={t('metricClosedPacs')} value={metrics.totalPacs} />
+          <Metric label={t('metricMicroactions')} value={metrics.microactions} />
+          <Metric label={t('metricEvidences')} value={metrics.evidences} />
         </div>
       </div>
 
@@ -269,14 +271,14 @@ return formatedDate;
       <div id="timeline" className="overflow-x-hidden glass-effect border-glass rounded-2xl p-6">
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
           <div>
-            <p className="text-overline mb-1" style={{ color: 'var(--text-tertiary)' }}>Secuencia operativa por PAC</p>
-            <h3 className="text-h3" style={{ color: 'var(--text-primary)' }}>Timeline estructural del tramo</h3>
+            <p className="text-overline mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('operativeSequence')}</p>
+            <h3 className="text-h3" style={{ color: 'var(--text-primary)' }}>{t('structuralTimeline')}</h3>
           </div>
 
           <div className="flex items-center gap-4 text-legend">
-            <LegendDot color="success" label="completado" />
-            <LegendDot color="info" label="actual" />
-            <LegendDot color="neutral" label="pendiente" />
+            <LegendDot color="success" label={t('legendCompleted')} />
+            <LegendDot color="info" label={t('legendCurrent')} />
+            <LegendDot color="neutral" label={t('legendPending')} />
           </div>
         </div>
 
@@ -319,28 +321,28 @@ return formatedDate;
       <div className="grid md:grid-cols-2 gap-6">
         {/* DETALLE PAC */}
         <div id="detalle" className="glass-effect border-glass rounded-2xl p-6">
-          <p className="text-overline mb-2" style={{ color: 'var(--text-tertiary)' }}>Detalle del PAC seleccionado</p>
+          <p className="text-overline mb-2" style={{ color: 'var(--text-tertiary)' }}>{t('detailSelectedPac')}</p>
           <div className="grid gap-4">
             {/* TITULO */}
             <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>Título del PAC</p>
+              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>{t('pacTitle')}</p>
 
               <p className="text-body-lg mb-4 text-(--text-tertiary)">{selectedPac.title}</p>
 
-              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>Objetivo estructural</p>
+              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>{t('pacObjective')}</p>
 
               <p className="text-body" style={{ color: 'var(--text-secondary)' }}>{selectedPac.detail.objective}</p>
             </div>
             <div className="glass-effect border-glass p-4 rounded-xl">
-              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>Corte temporal</p>
+              <p className="text-micro-label mb-2" style={{ color: 'var(--text-tertiary)' }}>{t('temporalCut')}</p>
 
               <div className="flex justify-between text-body text-(--text-secondary)">
-                <span>Inicio</span>
+                <span>{t('labelStart')}</span>
                 <span>{selectedPac.detail.timeline.start}</span>
               </div>
 
               <div className="flex justify-between text-body text-(--text-secondary)">
-                <span>Cierre</span>
+                <span>{t('labelClose')}</span>
                 <span>{selectedPac.detail.timeline.end}</span>
               </div>
             </div>
@@ -349,7 +351,7 @@ return formatedDate;
 
         {/* CARGA OPERATIVA DEL PAC (interactivo para T3-C7) */}
         <div id="carga" className="glass-effect border-glass rounded-2xl p-6">
-          <h4 className="text-micro-label mb-4" style={{ color: 'var(--text-tertiary)' }}>Carga operativa del PAC</h4>
+            <h4 className="text-micro-label mb-4" style={{ color: 'var(--text-tertiary)' }}>{t('operationalLoad')}</h4>
 
           {selectedPac.code === 'T3-C7' ? (
             <DynamicCargaPac
@@ -376,6 +378,7 @@ const DynamicCargaPac = ({
   onCompleteEvidence,
   rol,
 }) => {
+  const { t } = useTranslation('trayectoria');
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
@@ -390,8 +393,7 @@ const DynamicCargaPac = ({
       <div className="space-y-4">
         <div className="rounded-xl p-4 border border-glass-green bg-[rgba(0,153,117,0.08)]">
           <p className="text-body text-[var(--status-success)]">
-            ✅ PAC completado. ¡Felicidades! Has completado todas las
-            microacciones y la evidencia.
+            {t('doneMessage')}
           </p>
         </div>
       </div>
@@ -443,13 +445,13 @@ const DynamicCargaPac = ({
 
             {isCompleted && (
               <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
-                ✔ Microacción completada
+                {t('microactionCompleted')}
               </div>
             )}
 
             {!isCompleted && isCurrent && (
               <div className="mt-3 text-[var(--status-info)] text-body flex items-center gap-2">
-                ⏳ Pendiente de carga
+                {t('statusPendingLoad')}
               </div>
             )}
           </div>
@@ -486,7 +488,7 @@ const DynamicCargaPac = ({
             />
           </>
         ) : (
-          <p>Evidencia pendiente</p>
+          <p>{t('evidencePending')}</p>
         )}
       </div>
     </div>
@@ -495,6 +497,7 @@ const DynamicCargaPac = ({
 
 /* Componente CargaPac original para PACs no dinámicos */
 const CargaPac = ({ pac, rol }) => {
+  const { t } = useTranslation('trayectoria');
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
@@ -567,23 +570,23 @@ const CargaPac = ({ pac, rol }) => {
           {isDone && (
             <div className="flex flex-col gap-2">
               <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
-                ✔ Documento validado
+                {t('docValidated')}
               </div>
               <a href="/evidencia.pdf" download>
-                <div className="text-[var(--text-secondary)] cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de microacción</div>
+                <div className="text-[var(--text-secondary)] cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">{t('downloadPdfMicro')}</div>
               </a>
             </div>
           )}
 
           {isCurrent && (
             <div className="mt-3 text-[var(--status-info)] text-body flex items-center gap-2">
-              ⏳ Archivo en revisión / proceso
+              {t('statusFileReview')}
             </div>
           )}
 
           {isPending && (
             <div className="mt-3 text-[var(--status-warning)] text-body flex items-center gap-2">
-              ⚠️ Pendiente de carga
+              {t('statusPendingLoad')}
             </div>
           )}
         </div>
@@ -602,7 +605,7 @@ const CargaPac = ({ pac, rol }) => {
           <div className="flex flex-col gap-2">
             <p className="text-(--text-primary)">{evidenceText.done}</p>
             <a href="/evidencia.pdf" download>
-              <div className="text-[var(--text-secondary)] cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">Descargar PDF de evidencia</div>
+              <div className="text-[var(--text-secondary)] cursor-pointer w-fit glass-effect-green font-bold border-glass p-3 rounded-full">{t('downloadPdfEvidence')}</div>
             </a>
           </div>
         }
@@ -620,10 +623,11 @@ const StatusBadge = ({ status }) => {
     pending: 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]',
   };
 
+  const { t } = useTranslation('trayectoria');
   const label = {
-    done: 'Completado',
-    current: 'En tránsito',
-    pending: 'Pendiente',
+    done: t('statusCompleted'),
+    current: t('statusInTransit'),
+    pending: t('statusPendingLabel'),
   };
 
   return (
@@ -646,6 +650,7 @@ const Metric = ({ label, value }) => (
 );
 
 const PacCard = ({ pac, isSelected, onClick, index }) => {
+  const { t } = useTranslation('trayectoria');
   const isDone = pac.status === 'done';
   const isCurrent = pac.status === 'current';
   const isPending = pac.status === 'pending';
@@ -688,7 +693,7 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
       </div>
 
       <p className="text-legend text-(--text-tertiary)">
-        {isDone ? 'Completado' : isCurrent ? 'En tránsito' : 'Pendiente'}
+        {isDone ? t('statusCompleted') : isCurrent ? t('statusInTransit') : t('statusPendingLabel')}
       </p>
     </motion.div>
   );

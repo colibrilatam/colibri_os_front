@@ -8,6 +8,7 @@ import { ProjectGrid } from '@/components/home/ProjectGrid';
 import { useRequest } from '@/hooks/useRequest';
 import { projectsService } from '@/services/project';
 import Header from '@/components/Header';
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function HomePage() {
   const [projects, setProjects] = useState([]);
@@ -21,6 +22,9 @@ export default function HomePage() {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
   const [projectsError, setProjectsError] = useState('');
+
+  const { t: tHome } = useTranslation('homePage');
+  const { t: tFilters } = useTranslation('filtersBar');
 
   // Hook personalizado para manejar la solicitud de proyectos
   const { execute, loading, error } = useRequest(projectsService.getAll);
@@ -96,7 +100,7 @@ export default function HomePage() {
       }
     });
 
-    const tranches = [ {value: "Todos", label: "Todos"} , ...Array.from(trancheMap.values()).sort(
+    const tranches = [ {value: "Todos", label: tFilters('allTranches')} , ...Array.from(trancheMap.values()).sort(
       (a, b) => a.sortOrder - b.sortOrder,
     )];
 
@@ -108,7 +112,7 @@ export default function HomePage() {
     if (hasProjectsWithoutTranche) {
       tranches.push({
         value: 'SIN_TRAMO',
-        label: 'Sin tramo',
+        label: tFilters('sinTramo'),
         sortOrder: 9999,
       });
     }
@@ -225,7 +229,7 @@ export default function HomePage() {
 
         {loading ? (
           <div className="px-6 py-10 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            Cargando proyectos...
+            {tHome('loading')}
           </div>
         ) : projectsError ? (
           <div className="px-6 py-10 text-sm text-red-400">{projectsError}</div>
@@ -256,9 +260,9 @@ export default function HomePage() {
       <footer className="border-t border-white/8 px-6 py-6">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
           <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-            © 2025 Colibrí · Portafolio de proyectos
+            {tHome('copyright')}
           </p>
-          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>v1.0</p>
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{tHome('version')}</p>
         </div>
       </footer>
     </main>

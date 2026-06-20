@@ -5,8 +5,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AllTranches({ navigationArrows = true, initialSlide = 0, elements}){
+  const { t } = useTranslation('tramo');
 console.log(elements)
     return(
         <Swiper
@@ -37,12 +39,12 @@ console.log(elements)
                         <div className="glass-effect-dark border-glass rounded-2xl p-2 flex flex-col items-center justify-between">
                             <div>{e.code} - {e.name}</div>
                             <div className="text-(--text-secondary)">
-                                {e.isCurrent && !elements[i + 1].isUnlocked ? "En proceso" : e.isUnlocked ? "Completado" : "Pendiente"}
+                                {e.isCurrent && !elements[i + 1].isUnlocked ? t('inProgress') : e.isUnlocked ? t('completed') : t('pending')}
                             </div>
                         </div>
-                        <div className='font-bold' style={{ color: 'var(--text-primary)' }}>Incertidumbre</div>
+                        <div className='font-bold' style={{ color: 'var(--text-primary)' }}>{t('uncertainty')}</div>
                         <div className='text-[var(--text-secondary)] p-4 glass-effect-dark border-glass rounded-2xl'>{getUncertaintyLabel(e.uncertaintyType)}</div>
-                        <div className='font-bold' style={{ color: 'var(--text-primary)' }}>Riesgos</div>
+                        <div className='font-bold' style={{ color: 'var(--text-primary)' }}>{t('risks')}</div>
                         <div className="flex flex-col gap-2">
                         {e.associatedRisks.map((r, i) => (
                           <div key={i} className="text-[var(--text-secondary)] text-center p-4 glass-effect-dark border-glass rounded-2xl">

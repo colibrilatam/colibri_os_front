@@ -1,8 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function EstadoTramo({ tramo }) {
+  const { t } = useTranslation('trayectoria');
   const { name, progress, elapsedDays, totalDays } = tramo;
 
   const progressPercent = Math.round(progress * 100);
@@ -18,7 +20,7 @@ export default function EstadoTramo({ tramo }) {
 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Estado del tramo</h3>
+        <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{t('tramoState')}</h3>
 
         <span className="text-base" style={{ color: 'var(--text-secondary)' }}>
           {elapsedDays} / {totalDays} días
@@ -42,7 +44,7 @@ export default function EstadoTramo({ tramo }) {
         </div>
 
         <div className="flex justify-between text-xs" style={{ color: 'var(--text-tertiary)' }}>
-          <span>Progreso</span>
+          <span>{t('progressLabel')}</span>
           <span>{progressPercent}%</span>
         </div>
       </div>

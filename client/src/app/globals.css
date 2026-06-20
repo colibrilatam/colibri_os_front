@@ -401,6 +401,16 @@ html {
 }
 
 
+.btn-primary {
+  background: var(--theme-primary-button);
+  color: var(--text-on-primary);
+  border: 1px solid transparent;
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
 /* ============================================================
    TIPOGRAFÍA BASE
    ============================================================ */

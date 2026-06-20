@@ -1,8 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function NFTColibri({ nft }) {
+  const { t } = useTranslation('identidad');
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -28,13 +30,13 @@ export default function NFTColibri({ nft }) {
       <div className="space-y-4 text-sm">
         {/* Owner */}
         <div className="flex justify-between">
-          <span className="text-zinc-400">Owner</span>
+          <span className="text-zinc-400">{t('owner')}</span>
           <span className="text-white font-medium">{nft.owner}</span>
         </div>
 
         {/* Wallet */}
         <div className="flex justify-between">
-          <span className="text-zinc-400">Wallet</span>
+          <span className="text-zinc-400">{t('wallet')}</span>
           <span className="font-mono text-zinc-300 truncate max-w-[140px]">
             {nft.wallet}
           </span>
@@ -42,19 +44,19 @@ export default function NFTColibri({ nft }) {
 
         {/* Network */}
         <div className="flex justify-between">
-          <span className="text-zinc-400">Network</span>
+          <span className="text-zinc-400">{t('network')}</span>
           <span className="text-white">{nft.network}</span>
         </div>
 
         {/* Token ID */}
         <div className="flex justify-between">
-          <span className="text-zinc-400">Token ID</span>
+          <span className="text-zinc-400">{t('tokenId')}</span>
           <span className="text-white">{nft.tokenId}</span>
         </div>
 
         {/* Status */}
         <div className="flex items-center justify-between">
-          <span className="text-zinc-400">Estado</span>
+          <span className="text-zinc-400">{t('status')}</span>
           <span className="rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-medium text-emerald-400">
             {nft.status}
           </span>
@@ -68,7 +70,7 @@ export default function NFTColibri({ nft }) {
 
       {/* Footer */}
       <button className="mt-6 w-full rounded-lg bg-white/5 py-2 text-sm font-medium text-white transition hover:bg-white/10">
-        Ver detalles
+        {t('viewDetails')}
       </button>
     </motion.div>
   );

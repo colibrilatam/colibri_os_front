@@ -8,6 +8,7 @@ import { useProject } from '@/lib/projectContext';
 import AllTranches from './components/AllTranches';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -15,7 +16,7 @@ const fadeUp = {
 };
 
 export default function TramoDashboard() {
-
+  const { t } = useTranslation('tramo');
   
   const [ tramoInfo, setTramoInfo ] = useState(null);
   // contexto
@@ -65,7 +66,7 @@ export default function TramoDashboard() {
       >
         <div  className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>Cabecera analítica del tramo</p>
+            <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('analyticHeader')}</p>
 
             <h1 className="text-h1" style={{ color: 'var(--text-primary)' }}>
               {tramo.code} · {tramo.name}
@@ -75,7 +76,7 @@ export default function TramoDashboard() {
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            <InfoBox  label="Incertidumbre dominante" value={currentTramoMockData.incertidumbre} />
+            <InfoBox  label={t('dominantUncertainty')} value={currentTramoMockData.incertidumbre} />
             {/* <InfoBox label="Ventana" value={ventana} /> */}
           </div>
         </div>
@@ -88,7 +89,7 @@ export default function TramoDashboard() {
           <div className=' max-w-3xl text-[var(--text-secondary)] text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
         </div>
         <div id="riesgos" className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
-          <h3 className="m-4" style={{ color: 'var(--text-primary)' }}>Riesgos</h3>
+          <h3 className="m-4" style={{ color: 'var(--text-primary)' }}>{t('risks')}</h3>
           <div className='flex flex-col lg:flex-row gap-2 justify-between'>
             
             {currentTramoMockData.riesgosPrincipales.map((r, i) => (
@@ -110,7 +111,7 @@ export default function TramoDashboard() {
       </div>
 
       { tramoInfo && <div id="tramos" className="glass-effect border-glass text-[var(--text-primary)] text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
-        <h3 className="my-4" style={{ color: 'var(--text-primary)' }}>Incertidumbres y riesgos de todos los tramos</h3>
+        <h3 className="my-4" style={{ color: 'var(--text-primary)' }}>{t('allTranchesTitle')}</h3>
         <AllTranches elements={tramoInfo}  />
       </div>}
 

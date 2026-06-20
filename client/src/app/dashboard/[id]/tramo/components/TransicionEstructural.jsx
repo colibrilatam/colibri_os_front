@@ -9,26 +9,28 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TransicionEstructural({ data, selectedIndex, onSelectIndex }) {
+  const { t } = useTranslation('tramo');
   const selectedItem = data[selectedIndex];
 
   // Preparar datos para recharts
   const chartData = [
     {
-      name: 'Antes del PAC',
+      name: t('beforePAC'),
       valor: selectedItem.progression[0]
     },
     {
-      name: 'Después del PAC',
+      name: t('afterPAC'),
       valor: selectedItem.progression[2]
     }
   ];
 
   return (
     <div className="min-w-3/6 h-fit glass-effect border-glass p-6 rounded-2xl shadow-md">
-      <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--text-primary)' }} className="font-semibold mb-6">Transición Estructural por PAC</h2>
-      <p style={{ fontSize: 'var(--text-lg)', color: 'var(--text-secondary)' }} className="mb-6">Comparativa antes y después de ejecutar un Protocolo de Acción Colibrí</p>
+      <h2 style={{ fontSize: 'var(--text-3xl)', color: 'var(--text-primary)' }} className="font-semibold mb-6">{t('structuralTransition')}</h2>
+      <p style={{ fontSize: 'var(--text-lg)', color: 'var(--text-secondary)' }} className="mb-6">{t('comparativeDesc')}</p>
       
       {/* Selector de gráficos */}
       <div className="flex gap-3 mb-8 flex-wrap">
@@ -63,7 +65,7 @@ export default function TransicionEstructural({ data, selectedIndex, onSelectInd
               style={{ fontSize: 'var(--text-sm)' }}
               domain={[0, 100]}
               ticks={[0, 25, 50, 75, 100]}
-              label={{ value: 'Puntaje', angle: -90, position: 'insideLeft' }}
+              label={{ value: t('score'), angle: -90, position: 'insideLeft' }}
             />
             <Tooltip 
               contentStyle={{
@@ -87,7 +89,7 @@ export default function TransicionEstructural({ data, selectedIndex, onSelectInd
               strokeWidth={3}
               dot={{ fill: 'var(--color-turquoise)', r: 6 }}
               activeDot={{ r: 8 }}
-              name="Evolución"
+              name={t('evolution')}
             />
           </LineChart>
         </ResponsiveContainer>

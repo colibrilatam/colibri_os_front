@@ -7,8 +7,10 @@ import { useEffect, useState } from 'react';
 import { userService } from '@/services/user';
 import { useRequest } from '@/hooks/useRequest';
 import { getUserRoleLabel } from '@/lib/mappers/evidence-labels';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function MainHeader() {
+  const { t } = useTranslation('mainHeader');
   const router = useRouter();
 
   const { logout, user: authUser } = useUserStore();
@@ -36,8 +38,8 @@ export default function MainHeader() {
     router.push('/login');
   };
 
-  const displayName = profile?.fullName || 'Usuario';
-  const displayRole = getUserRoleLabel(profile?.role) || 'Evaluador';
+  const displayName = profile?.fullName || t('userFallback');
+  const displayRole = getUserRoleLabel(profile?.role) || t('evaluatorFallback');
 
   const avatarLetter = displayName
   .trim()
@@ -88,12 +90,12 @@ export default function MainHeader() {
           >
             <img
               src="/Imagotipo Colibri OS.svg"
-              alt="Colibrí"
+              alt={t('altLogo')}
               className="h-10 w-10 object-contain"
             />
           </div>
 
-          <h1 className="text-lg font-semibold text-white">Colibrí OS</h1>
+          <h1 className="text-lg font-semibold text-white">{t('colibriOs')}</h1>
         </div>
 
         {/* RIGHT */}
@@ -151,7 +153,7 @@ export default function MainHeader() {
               "
             >
               <LogOut size={14} />
-              <span>Salir</span>
+              <span>{t('logout')}</span>
             </button>
           </div>
         </div>

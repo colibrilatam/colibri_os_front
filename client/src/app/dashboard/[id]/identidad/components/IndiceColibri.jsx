@@ -2,29 +2,31 @@
 
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
-
-const trendConfig = {
-  up: {
-    icon: ArrowUpRight,
-    label: 'Subiendo',
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-500/10',
-  },
-  stable: {
-    icon: ArrowRight,
-    label: 'Estancado',
-    color: 'text-yellow-500',
-    bg: 'bg-yellow-500/10',
-  },
-  down: {
-    icon: ArrowRight,
-    label: 'Bajando',
-    color: 'text-red-500',
-    bg: 'bg-red-500/10',
-  },
-};
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function IndiceColibri({ data }) {
+  const { t } = useTranslation('identidad');
+
+  const trendConfig = {
+    up: {
+      icon: ArrowUpRight,
+      label: t('trendUp'),
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-500/10',
+    },
+    stable: {
+      icon: ArrowRight,
+      label: t('trendStable'),
+      color: 'text-yellow-500',
+      bg: 'bg-yellow-500/10',
+    },
+    down: {
+      icon: ArrowRight,
+      label: t('trendDown'),
+      color: 'text-red-500',
+      bg: 'bg-red-500/10',
+    },
+  };
   const { value, trend, lastUpdated } = data;
 
   const trendData = trendConfig[trend];
@@ -48,7 +50,7 @@ export default function IndiceColibri({ data }) {
 
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-sm font-medium text-zinc-400">Índice Colibrí</h3>
+        <h3 className="text-sm font-medium text-zinc-400">{t('colibriIndex')}</h3>
 
         <div
           className={`flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${trendData.bg} ${trendData.color}`}
@@ -114,7 +116,7 @@ export default function IndiceColibri({ data }) {
 
       {/* Footer */}
       <div className="mt-4 text-xs text-zinc-500">
-        Última actualización: {formattedDate}
+        {t('lastUpdate')} {formattedDate}
       </div>
     </motion.div>
   );
