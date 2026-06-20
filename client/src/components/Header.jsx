@@ -64,6 +64,7 @@ const { t } = useTranslation('header');
                 </>
               )}
             </div>
+            <div className="flex flex-row gap-10">
             {/* Menú desplegable */}
             {auth ? (
               <div className="flex gap-4">
@@ -92,7 +93,8 @@ const { t } = useTranslation('header');
                 </Link>
               </div>
             )}
-           
+            <LanguageSwitcher></LanguageSwitcher>
+           </div>
           </div>
         </div>
       </header>
