@@ -63,7 +63,15 @@
     "copyLink": "Copiar enlace →",
     "openLink": "Abrir enlace →",
     "women": "Mujeres",
-    "men": "Hombres"
+    "men": "Hombres",
+    "statusActive": "Activo",
+    "statusInactive": "Inactivo",
+    "statusClosed": "Cerrado",
+    "statusSuspended": "Suspendido",
+    "trajectoryOnTrack": "En trayectoria",
+    "trajectoryAtRisk": "En riesgo",
+    "trajectoryStalled": "Estancado",
+    "trajectoryCompleted": "Completado"
   },
 
   "login": {

@@ -25,30 +25,26 @@ const formatDate = (date) => {
   }).format(new Date(date));
 };
 
-export const projectStatusLabels = {
-  active: 'Activo',
-  inactive: 'Inactivo',
-  closed: 'Cerrado',
-  suspended: 'Suspendido',
-};
-
-export const trajectoryStatusLabels = {
-  on_track: 'En trayectoria',
-  at_risk: 'En riesgo',
-  stalled: 'Estancado',
-  completed: 'Completado',
-};
-
-const getProjectStatusLabel = (status) => {
+const getProjectStatusLabel = (t, status) => {
+  const labels = {
+    active: t('statusActive'),
+    inactive: t('statusInactive'),
+    closed: t('statusClosed'),
+    suspended: t('statusSuspended'),
+  };
   const normalized = status?.toLowerCase().trim();
-
-  return projectStatusLabels[normalized] || status;
+  return labels[normalized] || status;
 };
 
-const getTrajectoryStatusLabel = (status) => {
+const getTrajectoryStatusLabel = (t, status) => {
+  const labels = {
+    on_track: t('trajectoryOnTrack'),
+    at_risk: t('trajectoryAtRisk'),
+    stalled: t('trajectoryStalled'),
+    completed: t('trajectoryCompleted'),
+  };
   const normalized = status?.toLowerCase().trim();
-
-  return trajectoryStatusLabels[normalized] || status;
+  return labels[normalized] || status;
 };
 
 export const userRoleLabels = {
@@ -145,12 +141,12 @@ export default function ProjectSection() {
 
             <div className="flex flex-wrap gap-2">
               <Badge variant="emerald">
-                {getProjectStatusLabel(dbProject.status)}
+                {getProjectStatusLabel(t, dbProject.status)}
               </Badge>
 
               {dbProject.trajectoryStatus && (
                 <Badge variant="emerald">
-                  {getTrajectoryStatusLabel(dbProject.trajectoryStatus)}
+                  {getTrajectoryStatusLabel(t, dbProject.trajectoryStatus)}
                 </Badge>
               )}
 
