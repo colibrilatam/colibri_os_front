@@ -22,9 +22,11 @@ import { useState } from 'react';
 import EntrepreneurCard from './Contact';
 import TourButton from './tutoriales/TourButton';
 import { useProject } from '@/lib/projectContext';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
+  const { t } = useTranslation('sidebar');
   const rol = useUserStore((state) => state.rol);
   const { dbProject } = useProject();
   //console.log(dbProject);
@@ -58,49 +60,49 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const links = [
     {
       href: `/home`,
-      label: 'Inicio',
+      label: t('home'),
       icon: Home,
       excludeRoles: ['mecenas_semilla', 'entrepreneur'],
     },
     {
       href: `/dashboard/${id}/about`,
-      label: 'Perfil del proyecto',
+      label: t('projectProfile'),
       icon: Building2,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/identidad`,
-      label: 'Identidad',
+      label: t('identity'),
       icon: User,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/reputacion`,
-      label: 'Reputacion',
+      label: t('reputation'),
       icon: Layers,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/tramo`,
-      label: 'Tramo',
+      label: t('segment'),
       icon: AlertCircle,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/trayectoria`,
-      label: 'Trayectoria',
+      label: t('trajectory'),
       icon: Map,
       excludeRoles: null,
     },
     {
       href: `/dashboard/${id}/evidencia`,
-      label: 'Evidencia',
+      label: t('evidence'),
       icon: Link2,
       excludeRoles: null,
     },
     {
       href: '/user/nft',
-      label: 'NFTs',
+      label: t('nfts'),
       icon: Folder,
       roles: ['mecenas_semilla'],
     },
@@ -133,7 +135,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       {notification && (
         <NotificationPopup
           isOpen={notification}
-          message="Datos del emprendedor"
+          message={t('entrepreneurData')}
           onClose={handleCloseNotification}
         >
           <EntrepreneurCard
@@ -207,7 +209,9 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         <button
           onClick={() => setSidebarDesktopExpanded(!sidebarDesktopExpanded)}
           className="p-3 mb-2 rounded-lg glass-effect-dark hover:surface-secondary text-(--text-primary) transition-colors flex justify-center "
-          title={sidebarDesktopExpanded ? 'Contraer' : 'Expandir'}
+          title={
+            sidebarDesktopExpanded ? t('collapse') : t('expand')
+          }
         >
           <Menu size={24} />
         </button>
@@ -250,12 +254,15 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
             <TourButton tourName={capaActual}></TourButton>
             <Button
               color="blue"
-              content="Contactar al emprendedor"
+              /* content="Contactar al emprendedor" */
+              content={t('contactEntrepreneur')}
+
               onClick={handleContact}
             ></Button>
             <Button
               color="red"
-              content="Cerrar sesión"
+              /* content="Cerrar sesión" */
+             content={t('logout')}
               onClick={handleLogout}
             />
           </div>

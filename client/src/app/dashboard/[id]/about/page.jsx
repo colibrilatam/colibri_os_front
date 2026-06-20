@@ -12,7 +12,8 @@ import { useProject } from '@/lib/projectContext';
 import { usePathname } from 'next/navigation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
-
+import { useTranslation } from '@/hooks/useTranslation';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
 const formatDate = (date) => {
   if (!date) return '-';
@@ -24,30 +25,26 @@ const formatDate = (date) => {
   }).format(new Date(date));
 };
 
-export const projectStatusLabels = {
-  active: 'Activo',
-  inactive: 'Inactivo',
-  closed: 'Cerrado',
-  suspended: 'Suspendido',
-};
-
-export const trajectoryStatusLabels = {
-  on_track: 'En trayectoria',
-  at_risk: 'En riesgo',
-  stalled: 'Estancado',
-  completed: 'Completado',
-};
-
-const getProjectStatusLabel = (status) => {
+const getProjectStatusLabel = (t, status) => {
+  const labels = {
+    active: t('statusActive'),
+    inactive: t('statusInactive'),
+    closed: t('statusClosed'),
+    suspended: t('statusSuspended'),
+  };
   const normalized = status?.toLowerCase().trim();
-
-  return projectStatusLabels[normalized] || status;
+  return labels[normalized] || status;
 };
 
-const getTrajectoryStatusLabel = (status) => {
+const getTrajectoryStatusLabel = (t, status) => {
+  const labels = {
+    on_track: t('trajectoryOnTrack'),
+    at_risk: t('trajectoryAtRisk'),
+    stalled: t('trajectoryStalled'),
+    completed: t('trajectoryCompleted'),
+  };
   const normalized = status?.toLowerCase().trim();
-
-  return trajectoryStatusLabels[normalized] || status;
+  return labels[normalized] || status;
 };
 
 export const userRoleLabels = {
@@ -78,47 +75,35 @@ const getRoleInTeamLabel = (role) => {
   return roleInTeamLabels[normalized] || role;
 };
 
-
-
 export default function ProjectSection() {
+  const { t } = useTranslation('about');
+  const { execute: getMembers, error: getMembersError } = useRequest(
+    projectsService.getProjectMembers,
+  );
 
-  const { execute: getMembers, error: getMembersError } = useRequest(projectsService.getProjectMembers);
+  const [projectMembers, setProjectMembers] = useState([]);
 
-  const [ projectMembers, setProjectMembers ] = useState([]);
-
-  const { dbProject } = useProject();
-
+  const { dbProject, translatedContent } = useProject();
+  //console.log(translatedContent);
   const pathname = usePathname();
   const projectId = pathname.split('/')[2];
 
   useEffect(() => {
-    const getData =  async() =>{
-      const { data: projectMembersData } = await getMembers(projectId).catch(err => {
-  console.error(err);
-  // set some error state
-});
-    setProjectMembers(projectMembersData);
-    }
+    const getData = async () => {
+      const { data: projectMembersData } = await getMembers(projectId).catch(
+        (err) => {
+          console.error(err);
+          // set some error state
+        },
+      );
+      setProjectMembers(projectMembersData);
+    };
     getData();
-    
   }, [projectId]);
 
   const [isOpen, setIsOpen] = useState(false);
 
- /* const activeMembers = useMemo(() => {
-    return project.members.filter((member) => member.isActive);
-  }, [project.members]);*/
-
   const [openEntrepreneurCard, setOpenEntrepreneurCard] = useState(false);
-
-  //if (!project) return null;
-
-  //const activeMembers = project.members?.filter((m) => m.isActive) || [];
-  /*const ownerMember = useMemo(() => {
-    return project.members.find(
-      (member) => member.userId === project.ownerUserId,
-    );
-  }, [project.members]);*/
 
   return (
     <section className="glass-effect border-glass rounded-3xl p-6 md:p-8 space-y-8">
@@ -143,21 +128,25 @@ export default function ProjectSection() {
           {/* INFO */}
           <div className="space-y-3">
             <div>
-              <p className="text-overline">Proyecto</p>
+              <p className="text-overline">{t('project')}</p>
 
               <h2 className="text-h2">{dbProject.projectName}</h2>
             </div>
 
             {dbProject.tagline && (
-              <p className="text-body-lg text-(--text-accent)">{dbProject.tagline}</p>
+              <p className="text-body-lg text-(--text-accent)">
+                {translatedContent?.project?.tagline || dbProject.tagline_en}
+              </p>
             )}
 
             <div className="flex flex-wrap gap-2">
-              <Badge variant="emerald">{getProjectStatusLabel(dbProject.status)}</Badge>
+              <Badge variant="emerald">
+                {getProjectStatusLabel(t, dbProject.status)}
+              </Badge>
 
               {dbProject.trajectoryStatus && (
                 <Badge variant="emerald">
-                  {getTrajectoryStatusLabel(dbProject.trajectoryStatus)}
+                  {getTrajectoryStatusLabel(t, dbProject.trajectoryStatus)}
                 </Badge>
               )}
 
@@ -171,29 +160,33 @@ export default function ProjectSection() {
             </div>
           </div>
         </div>
+        <div className="self-start">
+          <LanguageSwitcher />
+        </div>
       </div>
 
       {/* ================= DESCRIPTION ================= */}
       {dbProject.shortDescription && (
         <div className="space-y-2">
-          <p className="text-overline">Descripción</p>
+          <p className="text-overline">{t('description')}</p>
 
-          <p className="text-body">{dbProject.shortDescription}</p>
+          <p className="text-body">
+            {translatedContent?.project?.shortDescription ||
+              dbProject.shortDescription_en}
+          </p>
         </div>
       )}
 
       {/* ================= OWNER ================= */}
       {dbProject.owner && (
         <div className="space-y-4">
-          <p className="text-overline">Lider del proyecto</p>
+          <p className="text-overline"> {t('projectLeader')}</p>
 
           <div className="glass-effect-white rounded-2xl p-5 border border-slate-800">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <p className="text-value-card">
-                    {dbProject.owner.fullName}
-                  </p>
+                  <p className="text-value-card">{dbProject.owner.fullName}</p>
 
                   <button
                     onClick={() => setOpenEntrepreneurCard(true)}
@@ -210,19 +203,17 @@ export default function ProjectSection() {
                 cursor-pointer
                 font-semibold
               "
-                    title="Contactar fundador"
+                    title={t('contactFounder')}
                   >
                     <MessageCircle size={14} />
 
                     <span className="text-xs font-semibold">
-                      Contactar fundador
+                      {t('contactFounder')}
                     </span>
                   </button>
                 </div>
 
-                <p className="text-helper mt-1">
-                  Fundador
-                </p>
+                <p className="text-helper mt-1"> {t('founder')}</p>
               </div>
 
               {dbProject.owner.avatar && (
@@ -265,7 +256,7 @@ export default function ProjectSection() {
             "
           >
             <div className="flex items-center gap-3">
-              <p className="text-overline">Equipo activo</p>
+              <p className="text-overline">{t('activeTeam')}</p>
 
               <div
                 className={`
@@ -277,51 +268,50 @@ export default function ProjectSection() {
               </div>
             </div>
 
-                  {dbProject.members[0].gender && (
-            <div className="flex items-center gap-4">
-              {/* WOMEN */}
-              <div className="flex items-center gap-1">
-                <span className="text-[11px] font-semibold text-fuchsia-300">
-                  {
-                    dbProject.members.filter(
-                      (member) => member.gender === 'female', // Asegúrate de que el campo de género en tu base de datos
-                    ).length
-                  }
-                </span>
+            {dbProject.members[0].gender && (
+              <div className="flex items-center gap-4">
+                {/* WOMEN */}
+                <div className="flex items-center gap-1">
+                  <span className="text-[11px] font-semibold text-fuchsia-300">
+                    {
+                      dbProject.members.filter(
+                        (member) => member.gender === 'female', // Asegúrate de que el campo de género en tu base de datos
+                      ).length
+                    }
+                  </span>
 
-                {/* FEMALE ICON */}
-                <Image
-                  src={femaleIcon}
-                  alt="Mujeres"
-                  width={22}
-                  height={22}
-                  className="object-contain"
-                />
+                  {/* FEMALE ICON */}
+                  <Image
+                    src={femaleIcon}
+                    alt="Mujeres"
+                    width={22}
+                    height={22}
+                    className="object-contain"
+                  />
+                </div>
+
+                {/* MEN */}
+                <div className="flex items-center gap-1">
+                  <span className="text-[11px] font-semibold text-cyan-300">
+                    {
+                      dbProject.members.filter(
+                        (member) => member.gender === 'male', // Asegúrate de que el campo de género en tu base de datos
+                      ).length
+                    }
+                  </span>
+
+                  {/* MALE ICON */}
+                  <Image
+                    src={maleIcon}
+                    alt="Hombres"
+                    width={22}
+                    height={22}
+                    className="object-contain"
+                  />
+                </div>
               </div>
-
-              {/* MEN */}
-              <div className="flex items-center gap-1">
-                <span className="text-[11px] font-semibold text-cyan-300">
-                  {
-                    dbProject.members.filter(
-                      (member) => member.gender === 'male', // Asegúrate de que el campo de género en tu base de datos
-                    ).length
-                  }
-                </span>
-
-                {/* MALE ICON */}
-                <Image
-                  src={maleIcon}
-                  alt="Hombres"
-                  width={22}
-                  height={22}
-                  className="object-contain"
-                />
-              </div>
-            </div>
             )}
           </div>
-          
 
           {/* COLLAPSIBLE CONTENT */}
           <div
@@ -336,10 +326,11 @@ export default function ProjectSection() {
           >
             <div className="overflow-hidden">
               <div className="grid md:grid-cols-2 gap-4 pt-2">
-                {projectMembers.length > 0 && projectMembers.map((member) => (
-                  <div
-                    key={member.id}
-                    className="
+                {projectMembers.length > 0 &&
+                  projectMembers.map((member) => (
+                    <div
+                      key={member.id}
+                      className="
                       glass-effect-white
                       border border-slate-800
                       rounded-2xl p-4
@@ -347,11 +338,11 @@ export default function ProjectSection() {
                       hover:border-cyan-500/30
                       hover:bg-white/[0.04]
                     "
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      {/* LEFT */}
-                      <div className="flex gap-4 items-start">
-                        {/* AVATAR 
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        {/* LEFT */}
+                        <div className="flex gap-4 items-start">
+                          {/* AVATAR 
                         {member.user?.avatar ? (
                           <img
                             src={member.user.avatar}
@@ -374,48 +365,55 @@ export default function ProjectSection() {
                           </div>
                         )}*/}
 
-                        {/* INFO */}
-                        <div>
-                          <p className="text-value-card">
-                            {member.user?.fullName}
-                          </p>
+                          {/* INFO */}
+                          <div>
+                            <p className="text-value-card">
+                              {member.user?.fullName}
+                            </p>
 
-                          <p className="text-helper mt-1">
-                            {getRoleInTeamLabel(member.roleInTeam)}
-                          </p>
+                            <p className="text-helper mt-1">
+                              {getRoleInTeamLabel(member.roleInTeam)}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* BADGES */}
+                        <div className="flex flex-col items-end gap-1">
+                          {member.isFounder && (
+                            <MiniBadge variant="amber">
+                              {' '}
+                              {t('founder')}
+                            </MiniBadge>
+                          )}
+
+                          {/* {member.isPrimaryOperator && (
+                          <MiniBadge variant="cyan">Operador</MiniBadge>
+                        )} */}
                         </div>
                       </div>
 
-                      {/* BADGES */}
-                      <div className="flex flex-col items-end gap-1">
-                        {member.isFounder && (
-                          <MiniBadge variant="amber">Founder</MiniBadge>
-                        )}
+                      {/* FOOTER */}
+                      <div className="mt-4 flex justify-between text-legend">
+                        <span>
+                          {t('joined')}: {formatDate(member.joinedAt)}
+                        </span>
 
-                        {/* {member.isPrimaryOperator && (
-                          <MiniBadge variant="cyan">Operador</MiniBadge>
-                        )} */}
+                        {member.participationWeight && (
+                          <span>
+                            {t('participation')}{' '}
+                            {member.participationWeight}%
+                          </span>
+                        )}
                       </div>
                     </div>
-
-                    {/* FOOTER */}
-                    <div className="mt-4 flex justify-between text-legend">
-                      <span>Ingreso: {formatDate(member.joinedAt)}</span>
-
-                      {member.participationWeight && (
-                        <span>Participación {member.participationWeight}%</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>
         </div>
-      ) : 
-      (
+      ) : (
         <div
-        className="
+          className="
               flex items-center justify-between
               text-slate-400
               text-xl
@@ -426,46 +424,22 @@ export default function ProjectSection() {
               hover:bg-white/5
               hover:border-slate-700
             "
-        >El proyecto aún no tiene miembros</div>
-      )
-      }
-      {/* ================= METRICS ================= */}
-      {/* <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          label="Estado"
-          value={getProjectStatusLabel(project.status)}
-        />
-
-        <MetricCard
-          label="Trayectoria"
-          value={
-            project.trajectoryStatus
-              ? getTrajectoryStatusLabel(project.trajectoryStatus)
-              : '-'
-          }
-        />
-
-        <MetricCard
-          label="PAC actual"
-          value={project.projectPacs?.[0]?.pac?.code || '-'}
-        />
-
-        <MetricCard
-          label="Actividad"
-          value={formatDate(project.lastActivityAt)}
-        />
-      </div> */}
+        >
+          {t('projectWithoutMembers')}
+        </div>
+      )}
 
       {/* ================= LINKS ================= */}
       <div className="grid md:grid-cols-3 gap-4">
-       
-          <LinkCard label="Sitio web" url={dbProject.websiteUrl} />
-       
-          <LinkCard label="LinkedIn" url={dbProject.startupLinkedinUrl} />
-       
+        <LinkCard label={t('website')} url={dbProject.websiteUrl} />
 
         <LinkCard
-          label="Perfil RLAB"
+          label={t('linkedin')}
+          url={dbProject.startupLinkedinUrl}
+        />
+
+        <LinkCard
+          label={t('rlabProfile')}
           url={`/dashboard/${dbProject.id}/about`}
           copyMode
         />
@@ -476,17 +450,23 @@ export default function ProjectSection() {
         <p className="text-overline">Timeline del proyecto</p>
 
         <div className="grid md:grid-cols-4 gap-4">
-          <TimelineCard label="Inicio" value={formatDate(dbProject.openedAt)} />
+          <TimelineCard
+            label={t('start')}
+            value={formatDate(dbProject.openedAt)}
+          />
 
           <TimelineCard
-            label="Última actividad"
+            label={t('lastActivity')}
             value={formatDate(dbProject.lastActivityAt)}
           />
 
-          <TimelineCard label="Creado" value={formatDate(dbProject.createdAt)} />
+          <TimelineCard
+            label={t('created')}
+            value={formatDate(dbProject.createdAt)}
+          />
 
           <TimelineCard
-            label="Actualizado"
+            label={t('updated')}
             value={formatDate(dbProject.updatedAt)}
           />
         </div>
@@ -494,18 +474,6 @@ export default function ProjectSection() {
     </section>
   );
 }
-
-/* ================= UI ================= */
-
-/*function MetricCard({ label, value }) {
-  return (
-    <div className="glass-effect-white border border-slate-800 rounded-2xl p-4">
-      <p className="text-micro-label">{label}</p>
-
-      <p className="text-value-card mt-3">{value}</p>
-    </div>
-  );
-}*/
 
 function TimelineCard({ label, value }) {
   return (
@@ -517,17 +485,8 @@ function TimelineCard({ label, value }) {
   );
 }
 
-/*function InfoItem({ label, value }) {
-  return (
-    <div>
-      <p className="text-micro-label">{label}</p>
-
-      <p className="text-body mt-2">{value}</p>
-    </div>
-  );
-}*/
-
 function LinkCard({ label, url, copyMode = false }) {
+  const { t } = useTranslation('about');
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -553,7 +512,7 @@ function LinkCard({ label, url, copyMode = false }) {
       <p className="text-micro-label mb-3">{label}</p>
 
       {!url ? (
-        <p className="text-body--muted">No disponible</p>
+        <p className="text-body--muted"> {t('notAvailable')}</p>
       ) : copyMode ? (
         <button
           onClick={handleCopy}
@@ -564,7 +523,7 @@ function LinkCard({ label, url, copyMode = false }) {
             cursor-pointer
           "
         >
-          {copied ? '✅ Copiado' : 'Copiar enlace →'}
+          {copied ? t('copied') : t('copyLink')}
         </button>
       ) : (
         <a
@@ -573,7 +532,7 @@ function LinkCard({ label, url, copyMode = false }) {
           rel="noopener noreferrer"
           className="text-accent-cyan break-all"
         >
-          Abrir enlace →
+          {t('openLink')}
         </a>
       )}
     </div>

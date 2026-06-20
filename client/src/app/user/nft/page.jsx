@@ -8,27 +8,29 @@ import { useState,  useEffect } from "react";
 import { nftService } from "@/services/nft";
 import { projectsService } from "@/services/project";
 import LoadingScreen from "@/components/LoadingScreen";
+import { useTranslation } from "@/hooks/useTranslation";
 import { getProjectIC } from "@/lib/hooks/createIcMap";
 
 
 const STATUS_CONFIG = {
   "active": {
-    label: "Activo",
+    labelKey: "active",
     className: "bg-blue-100 text-blue-600 border border-blue-300",
   },
   "closed": {
-    label: "Cerrado",
+    labelKey: "closed",
     className: "bg-green-100 text-green-700 border border-green-300",
   },
   "suspended": {
-    label: "Suspendido",
+    labelKey: "suspended",
     className: "bg-gray-800 text-white",
   },
 };
 
 function StatusBadge({ estado }) {
+  const { t } = useTranslation('userNft');
   const config = STATUS_CONFIG[estado] ?? {
-    label: estado.toUpperCase(),
+    labelKey: null,
     className: "bg-gray-100 text-gray-600 border border-gray-300",
   };
 
@@ -36,12 +38,13 @@ function StatusBadge({ estado }) {
     <span
       className={`inline-block rounded-full px-3 py-0.5 text-xs font-semibold whitespace-nowrap ${config.className}`}
     >
-      {config.label}
+      {config.labelKey ? t(config.labelKey) : estado?.toUpperCase()}
     </span>
   );
 }
 
 export default function NftPage(){
+  const { t } = useTranslation('userNft');
 
   const [ error, setError ] = useState(null);
 
@@ -93,24 +96,24 @@ export default function NftPage(){
 
     const stats = [
   {
-    label: "NFTs adquiridos",
-    value: "10 NFTs Totales",
+    label: t("nftsAdquiridos"),
+    value: t("nftsTotales"),
   },
   {
-    label: "Becas Activadas",
-    value: "03 personas becadas",
+    label: t("becasActivadas"),
+    value: t("personasBecadas"),
   },
   {
-    label: "Becas Pendientes",
-    value: "07 por asignar",
+    label: t("becasPendientes"),
+    value: t("porAsignar"),
   },
   {
-    label: "Ruta de apoyo",
-    value: "Desde T1 · Fase Fundacional",
+    label: t("rutaDeApoyo"),
+    value: t("rutaDeApoyoValue"),
   },
   {
-    label: "Región foco",
-    value: "Argentina, Chile y LATAM",
+    label: t("regionFoco"),
+    value: t("regionFocoValue"),
   },
 ];
 
@@ -124,15 +127,15 @@ export default function NftPage(){
            
             { error && <p className="text-red-500 text-6xl">{error.message}</p>}
                 <div className="flex flex-col  md:justify-between gap-2">
-                    <h1 className="text-(--text-primary)">Tu impacto como aliado</h1>
-                    <p className="w-fit primary-button border-glass rounded-full p-2 text-white">Portafolio NFT</p>
+                    <h1 className="text-(--text-primary)">{t("tuImpacto")}</h1>
+                    <p className="w-fit primary-button border-glass rounded-full p-2 text-white">{t("portafolioNft")}</p>
                 </div>
                 <div className="w-full items-center flex justify-center">
                 <img src={svg.src} alt="NFT Avatar" className="p-2 glass-effect-dark w-80 h-80 rounded-full" ></img>
                 </div>
                 <div className="p-2 flex flex-col md:justify-between gap-2 mt-4">
                     <div className="glass-effect rounded-2xl p-4 text-(--text-secondary) w-full gap-6 flex flex-col">
-                        <h3 className="text-(--text-primary)">Portafolio de proyectos</h3>
+                        <h3 className="text-(--text-primary)">{t("portafolioProyectos")}</h3>
                         <ul className="space-y-2">
                             {stats.map(({ label, value }) => (
                                 <li key={label}>
@@ -143,12 +146,12 @@ export default function NftPage(){
                         </ul>
                         </div>
                 <div className="mt-4 glass-effect rounded-2xl p-4">
-                <ProgressBar className="text-(--text-primary)" progreso={30} tamaño="lg" label="Impacto Colibrí - Aliado Semilla" mostrarPorcentaje={false} />
-                <p className="mt-4 text-(--text-secondary)">Has asignado <span className="text-(--text-primary) font-bold"> 3/10 becas Fase fundacional. </span> Aún tienes 7 becas pendientes, asígnalas para aumentar tu reputación</p>
+                <ProgressBar className="text-(--text-primary)" progreso={30} tamaño="lg" label={t("impactoColibri")} mostrarPorcentaje={false} />
+                <p className="mt-4 text-(--text-secondary)">{t("hasAssigned")} <span className="text-(--text-primary) font-bold">{t("assignedBecas")}</span> {t("pendingBecasMessage")}</p>
                 </div>
                             <div className="w-full justify-center flex">
-                <button className="cursor-pointer font-semibold text-sm primary-button rounded-2xl p-4 text-white w-fit mt-4" 
-                >Exportar reporte de impacto</button>
+                <button className="cursor-pointer font-semibold text-sm primary-button rounded-2xl p-4 text-white w-fit mt-4">
+                {t("exportarReporte")}</button>
                 </div>
                     </div>
                     
@@ -156,18 +159,18 @@ export default function NftPage(){
             </div>
             <div className=" p-4 w-full rounded-2xl glass-effect border-glass">
               
-                <h1 className="font-bold mb-6 text-(--text-primary)">Portafolio de colibrís becados</h1>
+                <h1 className="font-bold mb-6 text-(--text-primary)">{t("portafolioBecados")}</h1>
                 <div className="w-full overflow-x-auto rounded-2xl glass-effect border-glass">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 text-left text-(--text-secondary)">
-            <th className="px-4 py-3 font-semibold">Proyecto</th>
+            <th className="px-4 py-3 font-semibold">{t("proyecto")}</th>
             <th className="hidden px-4 py-3 font-semibold md:table-cell">
-              Emprendedor
+              {t("emprendedor")}
             </th>
-            <th className="px-4 py-3 font-semibold">Tramo</th>
-            <th className="px-4 py-3 font-semibold">IC</th>
-            <th className="px-4 py-3 font-semibold">Estado</th>
+            <th className="px-4 py-3 font-semibold">{t("tramo")}</th>
+            <th className="px-4 py-3 font-semibold">{t("ic")}</th>
+            <th className="px-4 py-3 font-semibold">{t("estado")}</th>
             <th className="px-4 py-3" />
           </tr>
         </thead>
@@ -212,7 +215,7 @@ export default function NftPage(){
                   href={`/dashboard/${project.nftProject.projectId}/about`}
                   className="font-semibold primary-button p-2 border-glass rounded-full text-sm font-medium text-blue-500 hover:text-blue-700 hover:underline whitespace-nowrap"
                 >
-                  Ver en R-Lab
+                  {t("verRLab")}
                 </a>
               </td>
             </tr>

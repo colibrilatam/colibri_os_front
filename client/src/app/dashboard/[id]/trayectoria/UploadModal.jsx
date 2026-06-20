@@ -5,6 +5,7 @@ import NotificationPopup from "@/components/NotificationPopup";
 import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
 import {evidencesService} from "@/services/evidences";
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function UploadModal({
   isOpen,
@@ -40,6 +41,7 @@ export default function UploadModal({
     fileName: null,
   });
 
+  const { t } = useTranslation('trayectoria');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [ success, setSuccess ] = useState(null);
@@ -51,7 +53,7 @@ export default function UploadModal({
     if (file) {
       // Validar que el archivo sea estrictamente un PDF
     if (file.type !== "application/pdf") {
-      setError("El archivo seleccionado no es un PDF. Por favor, sube un formato válido.");
+      setError(t('errorNotPdf'));
       // Limpiamos el input por si acaso
       e.target.value = ""; 
       return;
@@ -76,12 +78,12 @@ export default function UploadModal({
 
   const validateForm = () => {
     if (!formData.file && type !== 'microaction') {
-      setError('Por favor, adjunta un archivo antes de enviar.');
+      setError(t('errorAttachFile'));
       return false;
     }
 
     if (type === 'microaction' && !formData.executionNotes.trim()) {
-      setError('Por favor, completa las notas de ejecución antes de enviar.');
+      setError(t('errorCompleteNotes'));
       return false;
     }
 
@@ -114,7 +116,7 @@ export default function UploadModal({
           const { data: responseData, error } = await updateMicroAction(ma.id, body);
           if(error){
             console.log(error)
-            setError(error.message || error || 'Error al enviar. Intenta nuevamente.');
+            setError(error.message || error || t('errorSendTryAgain'));
             return;
           }
   }
@@ -232,14 +234,14 @@ export default function UploadModal({
     
     } catch (err) {
       // El error se muestra en la UI y el modal permanece abierto
-      setError(err.message || 'Error al enviar. Intenta nuevamente.');
+      setError(err.message || t('errorSendTryAgain'));
     } finally {
       setLoading(false);
     }
   };
 
   const isMicroaction = type === 'microaction';
-  const title = isMicroaction ? 'Cargar o actualizar microacción' : 'Cargar o actualizar evidencia';
+  const title = isMicroaction ? t('uploadTitleMicro') : t('uploadTitleEvidence');
   const nextStatus = isMicroaction && data?.status ? newStatusMap[data.status] : null;
 
   return (
@@ -294,11 +296,11 @@ export default function UploadModal({
             {/* executionNotes Input - Solo para microacciones */}
             {isMicroaction && (
               <div className="space-y-2">
-                <label className="text-body-lg font-medium">Notas de ejecución *</label>
+                <label className="text-body-lg font-medium">{t('uploadNotesLabel')}</label>
                 <textarea
                   value={formData.executionNotes}
                   onChange={handleexecutionNotesChange}
-                  placeholder="Describe el progreso y cualquier observación relevante..."
+                  placeholder={t('uploadNotesPlaceholder')}
                   className="w-full text-white bg-zinc-800 border border-glass rounded-xl p-3 h-24 resize-none focus:outline-none focus:border-[var(--color-turquoise)] transition"
                   disabled={loading}
                 />
@@ -311,9 +313,9 @@ export default function UploadModal({
             
             <div className="space-y-2">
               <label className="text-body-lg font-medium">
-                Archivo {isMicroaction ? 'de evidencia' : ''} *
+                {t('uploadFileLabel')}
               </label>
-              <p className="text-(--text-tertiary)">Solo archivos en formato .PDF</p>
+              <p className="text-(--text-tertiary)">{t('uploadOnlyPdf')}</p>
               <div className="relative">
                 <input
                   type="file"
@@ -330,7 +332,7 @@ export default function UploadModal({
               </div>
               {formData.fileName && (
                 <p className="text-helper text-[var(--status-success)]">
-                  ✓ Archivo seleccionado: {formData.fileName}
+                  {t('uploadFileSelected')} {formData.fileName}
                 </p>
               )}
             </div>
@@ -344,7 +346,7 @@ export default function UploadModal({
                 className="flex-1 px-4 py-2 rounded-lg border border-glass text-white
                   hover:bg-white/10 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Cancelar
+                {t('btnCancel')}
               </button>
               <button
                 onClick={() => handleSubmit(data)}
@@ -362,10 +364,10 @@ export default function UploadModal({
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                     />
-                    Enviando...
+                    {t('btnSending')}
                   </>
                 ) : (
-                  'Enviar'
+                  t('btnSend')
                 )}
               </button>
             </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const statusConfig = {
   pendiente: 'bg-zinc-700 text-zinc-300',
@@ -11,6 +12,7 @@ const statusConfig = {
 };
 
 export default function Microacciones({ pacs }) {
+  const { t } = useTranslation('trayectoria');
   const [selectedPac, setSelectedPac] = useState(null);
   const [filter, setFilter] = useState('all');
 
@@ -47,7 +49,7 @@ export default function Microacciones({ pacs }) {
           >
             <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>{pac.title}</h3>
             <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-              3 microacciones + 1 evidencia
+              {t('microactionSummary')}
             </p>
           </motion.div>
         ))}
@@ -89,7 +91,7 @@ export default function Microacciones({ pacs }) {
           {filterFn(selectedPac.evidence) && (
             <div className="mt-6 pt-4 border-t border-white/10">
               <h4 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
-                Evidencia
+                {t('sectionEvidence')}
               </h4>
 
               <div className="flex justify-between items-center text-base">

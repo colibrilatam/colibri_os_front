@@ -1,9 +1,13 @@
+import { useTranslation } from "@/hooks/useTranslation";
+
 export function HeroSection({ stats }) {
+  const { t } = useTranslation('heroSection');
+
   const summaryStats = [
-    { label: 'Proyectos activos', value: stats.activeProjects },
-    { label: 'Tramos en curso', value: stats.tramosEnCurso },
-    { label: 'Países activos', value: stats.paisesActivos },
-    { label: 'Actualizaciones hoy', value: stats.actualizacionesHoy },
+    { label: t('statActiveProjects'), value: stats.activeProjects },
+    { label: t('statTramosInProgress'), value: stats.tramosEnCurso },
+    { label: t('statActiveCountries'), value: stats.paisesActivos },
+    { label: t('statUpdatesToday'), value: stats.actualizacionesHoy },
   ];
 
   return (
@@ -21,27 +25,26 @@ export function HeroSection({ stats }) {
         <div className="flex-1 text-center md:text-left">
           <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-cyan-400">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
-            Plataforma activa
+            {t('platformActive')}
           </span>
 
           <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl" style={{ color: 'var(--text-primary)' }}>
-            Descubre proyectos{' '}
+            {t('discoverProjects')}{' '}
             <span className="bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              en evolución
+              {t('inEvolution')}
             </span>
           </h1>
 
           <p className="mt-5 max-w-xl text-base leading-relaxed md:text-lg" style={{ color: 'var(--text-secondary)' }}>
-            Monitoreá el avance, estado e índice Colibrí de cada proyecto del
-            portafolio. Filtros, métricas y trazabilidad en un solo lugar.
+            {t('description')}
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
             <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95">
-              Explorar proyectos
+              {t('exploreProjects')}
             </button>
             <button className="rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-slate-300 transition-all duration-150 hover:border-white/25 hover:bg-white/10 active:scale-95">
-              Ver métricas globales
+              {t('viewGlobalMetrics')}
             </button>
           </div>
         </div>

@@ -1,8 +1,11 @@
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function SlopeChart({ xLabels, yLabels, levels, title }) {
+  const { t } = useTranslation('slopeChart');
+
   if (!xLabels || xLabels.length !== 2 || !yLabels || !levels || levels.length !== 3) {
-    return <div style={{ color: 'red' }}>Error: Propiedades inválidas para SlopeChart</div>;
+    return <div style={{ color: 'red' }}>{t('invalidProps')}</div>;
   }
 
   const [label1, label2] = xLabels;
@@ -110,7 +113,7 @@ export default function SlopeChart({ xLabels, yLabels, levels, title }) {
       {/* Etiquetas del eje X (debajo) */}
       <div className="flex justify-between px-4 mt-8">
         <span style={{ fontSize: 'var(--text-base)', color: 'white', fontWeight: 'bold' }}>{label1}</span>
-        <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>Progreso</span>
+        <span style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>{t('progress')}</span>
         <span style={{ fontSize: 'var(--text-base)', color: 'white', fontWeight: 'bold' }}>{label2}</span>
       </div>
 
@@ -124,7 +127,7 @@ export default function SlopeChart({ xLabels, yLabels, levels, title }) {
           alignItems: 'center',
         }}
       >
-        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>Rango de valores:</span>
+        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', fontWeight: 'bold' }}>{t('rangeLabel')}</span>
         {Array.from({ length: Math.min(yLabels.length, 5) }).map((_, index) => (
           <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <div
@@ -136,7 +139,7 @@ export default function SlopeChart({ xLabels, yLabels, levels, title }) {
               }}
             />
             <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
-              {yLabels[index] !== undefined ? `Val: ${yLabels[index]}` : ''}
+              {yLabels[index] !== undefined ? `${t('valuePrefix')} ${yLabels[index]}` : ''}
             </span>
           </div>
         ))}

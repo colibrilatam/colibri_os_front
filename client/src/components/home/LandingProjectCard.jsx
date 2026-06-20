@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/Badge';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from "@/hooks/useTranslation";
 import logoAvatar from '../../../public/logos/logo-avatar.jpg';
 // 👇 IMPORTÁ LOS ICONOS
 import maleIcon from '../../../public/icons/male-blue.png';
@@ -18,7 +19,8 @@ function formatProjectDate(dateString) {
 // FUNCION QUE VERIFICA AUTENTTICACION DE USUARIO Y REDIRIGE A LOGIN O A RLAB
 
 export function ProjectCard({ project, ic, maleCount, femaleCount}) {
-  const projectTrancheLabel = project.projectTranche || 'Sin tramo';
+  const { t } = useTranslation('projectCard');
+  const projectTrancheLabel = project.projectTranche || t('noTramo');
   const router = useRouter();
 
   function getICColor(value) {
@@ -50,7 +52,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
             />
 
             <h3 className="truncate text-lg font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
-              {project.projectName || 'Proyecto sin nombre'}
+              {project.projectName || t('noName')}
             </h3>
 
             <div className="absolute top-4 right-5 z-10">
@@ -76,15 +78,15 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
       <div className="mb-3 flex-1 text-sm leading-6" style={{ color: 'var(--text-secondary)' }}>
         {project.shortDescription ||
           project.tagline ||
-          'Sin descripción disponible'}
+          t('noDescription')}
       </div>
 
       {/* RESPONSABLE + GÉNERO */}
       <div className="mb-5 flex items-center justify-between gap-4">
         <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
-          Responsable:{' '}
+          {t('responsibleLabel')}{' '}
           <span style={{ color: 'var(--text-primary)' }}>
-            {project.owner?.fullName || 'Sin responsable'}
+            {project.owner?.fullName || t('noResponsible')}
           </span>
         </div>
 
@@ -98,7 +100,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
 
             <Image
               src={femaleIcon}
-              alt="Mujeres"
+              alt={t('altWomen')}
               width={22}
               height={22}
               className="object-contain"
@@ -113,7 +115,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
 
             <Image
               src={maleIcon}
-              alt="Hombres"
+              alt={t('altMen')}
               width={22}
               height={22}
               className="object-contain"
@@ -124,7 +126,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
 
       <div className="mt-auto flex items-center justify-between border-t border-white/8 pt-4">
         <span className="text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
-          Actualizado{' '}
+          {t('updatedPrefix')}{' '}
           <time dateTime={project.updatedAt} style={{ color: 'var(--text-secondary)' }}>
             {formatProjectDate(project.updatedAt)}
           </time>
@@ -134,7 +136,7 @@ export function ProjectCard({ project, ic, maleCount, femaleCount}) {
           onClick={() => router.push(`/dashboard/${project.id}/about`)}
           className="bg-linear-to-r from-cyan-500 to-blue-500  border border-cyan-700 rounded-2xl p-2 group/btn flex items-center gap-1 text-xs font-bold text-white transition-all duration-150 hover:text-cyan-200 cursor-pointer active:scale-95"
         >
-          Ver en R-Lab
+          {t('viewRLab')}
           <svg
             className="h-3 w-3 translate-x-0 transition-transform duration-150 group-hover/btn:translate-x-0.5"
             fill="none"

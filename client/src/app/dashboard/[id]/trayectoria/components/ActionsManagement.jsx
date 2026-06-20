@@ -1,31 +1,34 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
-const statusConfig = {
+const createStatusConfig = (t) => ({
   pending: {
-    label: 'Pendiente',
+    label: t('statusPendingLabel'),
     color: 'bg-zinc-700 text-zinc-300',
   },
   in_progress: {
-    label: 'En progreso',
+    label: t('statusInProgress'),
     color: 'bg-blue-500/10 text-blue-400',
   },
   submitted: {
-    label: 'Enviada',
+    label: t('statusSubmitted'),
     color: 'bg-yellow-500/10 text-yellow-400',
   },
   validated: {
-    label: 'Validada',
+    label: t('statusValidated'),
     color: 'bg-emerald-500/10 text-emerald-400',
   },
   locked: {
-    label: 'Bloqueada',
+    label: t('blocked'),
     color: 'bg-zinc-800 text-zinc-500',
   },
-};
+});
 
 export default function ActionsManagement({ data }) {
+  const { t } = useTranslation('trayectoria');
+  const statusConfig = createStatusConfig(t);
   const { current, next } = data;
 
   return (
@@ -33,13 +36,13 @@ export default function ActionsManagement({ data }) {
       
       {/* HEADER */}
       <h3 className="text-lg font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-        Gestión de acciones
+        {t('actionManagement')}
       </h3>
 
       {/* 🔵 ACTUAL */}
       <div className="mb-6">
         <h4 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
-          En curso
+          {t('inCourse')}
         </h4>
 
         <div className="rounded-xl bg-zinc-900/50 p-4 space-y-3">
@@ -65,7 +68,7 @@ export default function ActionsManagement({ data }) {
           {/* Evidence */}
           <div className="flex items-center justify-between text-base border-t border-zinc-800 pt-2">
             <span style={{ color: 'var(--text-secondary)' }}>
-              Evidencia: {current.evidence.name}
+              {t('evidencePrefix')} {current.evidence.name}
             </span>
 
             <span
@@ -80,7 +83,7 @@ export default function ActionsManagement({ data }) {
       {/* 🟣 SIGUIENTE */}
       <div>
         <h4 className="text-lg font-semibold mb-3" style={{ color: 'var(--text-primary)' }}>
-          Próximas acciones
+          {t('nextActions')}
         </h4>
 
         <div className="rounded-xl bg-zinc-900/30 p-4 space-y-2 opacity-80">

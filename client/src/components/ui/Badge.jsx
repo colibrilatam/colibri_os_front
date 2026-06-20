@@ -1,3 +1,5 @@
+import { useTranslation } from "@/hooks/useTranslation";
+
 const trancheStyleMap = {
   T1: "bg-blue-500/20 text-blue-300 border-blue-400/60",
   T2: "bg-sky-500/15 text-sky-300 border-sky-500/30",
@@ -13,28 +15,29 @@ const statusStyleMap = {
   suspended: "bg-violet-500/15 text-violet-300 border-violet-500/30",
 };
 
-function getBadgeLabel(value, variant) {
-  if (variant === "status") {
-    const statusLabelMap = {
-      active: "Activo",
-      inactive: "Inactivo",
-      closed: "Cerrado",
-      suspended: "Suspendido",
-    };
-
-    return statusLabelMap[value] || value || "Sin estado";
-  }
-
-  if (variant === "tranche") {
-    return value || "Sin tramo";
-  }
-
-  return value;
-}
-
 export function Badge({ value, variant }) {
+  const { t } = useTranslation('badge');
   const isTrancheVariant = variant === "tranche";
   const fallbackStyle = "bg-white/10 text-white/60 border-white/20";
+
+  function getBadgeLabel(value, variant) {
+    if (variant === "status") {
+      const statusLabelMap = {
+        active: t('statusActive'),
+        inactive: t('statusInactive'),
+        closed: t('statusClosed'),
+        suspended: t('statusSuspended'),
+      };
+
+      return statusLabelMap[value] || value || t('noStatus');
+    }
+
+    if (variant === "tranche") {
+      return value || t('noTramo');
+    }
+
+    return value;
+  }
 
   const badgeStyleClass = isTrancheVariant
     ? trancheStyleMap[value] ?? fallbackStyle

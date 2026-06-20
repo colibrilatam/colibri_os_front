@@ -29,6 +29,23 @@ export const useUserStore = create(
       setTheme: (theme) => set({ theme }),
       clearTheme: () => set({ theme: null }),
 
+      language: 'en',
+      setLanguage: (language) =>
+        set({
+          language,
+        }),
+
+      translationsCache: {},
+      setTranslation: (key, value) =>
+        set((state) => ({
+          translationsCache: {
+            ...state.translationsCache,
+            [key]: value,
+          },
+        })),
+
+      getTranslation: (key) => get().translationsCache[key],
+      
       // Token
       token: null,
       setToken: (token) => {
@@ -69,10 +86,11 @@ export const useUserStore = create(
         set({
           token: null,
           rol: null,
-          user:null,
+          user: null,
           theme: null,
           isGuest: false,
           sidebarDesktopExpanded: false,
+          language: 'en',
         });
       },
 

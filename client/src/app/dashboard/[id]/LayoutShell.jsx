@@ -11,6 +11,8 @@ import { useEffect } from 'react';
 import ThemeLoader from '@/components/ThemeLoader';
 import { useOnborda } from 'onborda';
 import Footer from '@/components/Footer';
+import { useTranslatedObject } from '@/hooks/useTranslatedObject';
+import { useTranslatedContent } from '@/hooks/useTranslatedContent';
 
 export default function LayoutShell({ children, projectInfo }) {
   const pathname = usePathname();
@@ -55,8 +57,19 @@ export default function LayoutShell({ children, projectInfo }) {
     (state) => state.setSidebarMobileOpen,
   );
 
+  const language = useUserStore((state) => state.language);
+
+  const translatedContent =
+  useTranslatedContent(
+    projectInfo.translatableContent,
+  );
   return (
-    <ProjectContext.Provider value={projectInfo}>
+    <ProjectContext.Provider
+      value={{
+        ...projectInfo,
+        translatedContent,
+      }}
+    >
       <ThemeLoader></ThemeLoader>
       <div className=" lg:pt-0 min-h-screen flex flex-col w-full">
         {/* Sidebar */}
