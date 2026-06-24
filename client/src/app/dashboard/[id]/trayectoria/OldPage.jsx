@@ -14,11 +14,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 //import { pacConfig } from './components/pacConfig';
-import { useUserStore } from '@/lib/store';
+
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function OldTrayectoria() {
   const { t } = useTranslation('trayectoria');

@@ -1,10 +1,11 @@
 import { login } from '@/services/authService';
-import { useUserStore } from '@/lib/store';
+
 import { setCookie } from '@/lib/cookies';
 import { userService } from '@/services/user';
 import { authService } from '@/services/authService';
 import { handleRequest } from '@/lib/handleRequest';
 import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
+import { useUserStore } from '@/lib/store';
 
 export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useUserStore } from '@/lib/store';
+import { useUserStore } from "@/lib/store";
 
 export default function LanguageSwitcher() {
   const language = useUserStore((state) => state.language);

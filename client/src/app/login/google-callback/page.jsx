@@ -1,8 +1,8 @@
 'use client'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useUserStore } from '@/lib/store'
 import { useTranslation } from '@/hooks/useTranslation'
+import { useUserStore } from '@/lib/store';
 
 export default function GoogleCallback() {
   const router = useRouter();

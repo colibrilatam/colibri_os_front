@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRegister } from '@/hooks/useRegister';
-import { useUserStore } from '@/lib/store';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 import { useEffect, useState, useMemo } from 'react';
+import { useUserStore } from '@/lib/store';
 
 // Clave para guardar datos en localStorage (opcional)
 const STORAGE_KEY = 'register_form_backup';

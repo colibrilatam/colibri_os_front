@@ -1,14 +1,13 @@
-"use client"
-import Header from "@/components/Header";
-import { useUserStore } from "@/lib/store";
-import { useRouter } from "next/navigation";
-import ThemeLoader from "@/components/ThemeLoader";
+'use client';
+import Header from '@/components/Header';
+import { useRouter } from 'next/navigation';
+import ThemeLoader from '@/components/ThemeLoader';
+import { useUserStore } from '@/lib/store';
 
 export default function UserLayout({ children }) {
-  
-    const { isAuthenticated } = useUserStore();
-    const router = useRouter();
-/*
+  const { isAuthenticated } = useUserStore();
+  const router = useRouter();
+  /*
     if(!isAuthenticated()) return (
         <div className="flex flex-col w-lvw h-lvh items-center justify-center gap-6 glass-effect-red ">
             <div className="glass-effect p-4 gap-6 items-center flex flex-col rounded-2xl border-glass">
@@ -18,18 +17,14 @@ export default function UserLayout({ children }) {
             </div>
         </div>
     )
-*/  
+*/
   return (
     <div>
-         <ThemeLoader ></ThemeLoader>
-        <div className="  z-49 p-1 w-svw ">
-        
-       
-                            <Header isHome={true}></Header>
-                        </div>
-        {children}
-        
-      
+      <ThemeLoader></ThemeLoader>
+      <div className="  z-49 p-1 w-svw ">
+        <Header isHome={true}></Header>
+      </div>
+      {children}
     </div>
   );
 }
