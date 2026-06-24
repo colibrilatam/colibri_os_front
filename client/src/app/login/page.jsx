@@ -12,8 +12,9 @@ import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
-import {useUserStore} from '@/lib/store';
+
 import { useNewProject } from '@/hooks/useNewProject';
+import { useUserStore } from '@/lib/store';
 
 export default function LoginRegisterPage() {
   const { t } = useTranslation('login');

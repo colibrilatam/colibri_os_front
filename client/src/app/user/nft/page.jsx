@@ -1,6 +1,5 @@
 "use client"
 import ProgressBar from "@/components/ProgressBar";
-import { useUserStore } from "@/lib/store"
 import svg from "@/../public/base_aliado_semilla.svg"
 import { useRequest } from "@/hooks/useRequest";
 import { userService } from "@/services/user";

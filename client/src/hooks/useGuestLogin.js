@@ -1,5 +1,6 @@
-import { useUserStore } from '@/lib/store'
+
 import { setCookie } from '@/lib/cookies'
+import { useUserStore } from '@/lib/store'
 
 export const useGuestLogin = () => {
   const setIsGuest = useUserStore((state) => state.setIsGuest)

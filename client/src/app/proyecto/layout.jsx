@@ -3,7 +3,6 @@ import ErrorScreen from "@/components/ErrorScreen";
 import { authService } from "@/services/authService";
 import { redirect } from "next/navigation";
 import { projectsService } from "@/services/project";
-import { useUserStore } from "@/lib/store";
 
 export default async function ProjectLayout({ children }){
 

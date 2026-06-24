@@ -1,8 +1,9 @@
 "use client"
-import { useUserStore } from "@/lib/store";
+
 import { useTranslation } from "@/hooks/useTranslation";
 import { HelpCircle } from "lucide-react";
 import NotificationPopup from "../NotificationPopup";
+import { useUserStore } from "@/lib/store";
 
 export default function SelectRole({ onSelectRole }) {
   const { t } = useTranslation('login');

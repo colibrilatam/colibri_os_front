@@ -1,8 +1,8 @@
 'use client';
 
-import { useUserStore } from '@/lib/store';
 import { useEffect } from 'react';
 import { applyTheme } from '@/lib/theme';
+import { useUserStore } from '@/lib/store';
 
 export default function ThemeLoader() {
   const user = useUserStore((state) => state.user);

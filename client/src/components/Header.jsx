@@ -7,7 +7,6 @@ import { useEffect } from 'react';
 // contexto
 import { formatDateSafe } from '@/lib/hooks/date';
 import { useProject } from '@/lib/projectContext';
-import { useUserStore } from '@/lib/store';
 
 // import { projectStatus } from '@/lib/types/projectStatus';
 import { useRouter } from 'next/navigation';
@@ -15,6 +14,7 @@ import Image from 'next/image';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 import LanguageSwitcher from './common/LanguageSwitcher';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);

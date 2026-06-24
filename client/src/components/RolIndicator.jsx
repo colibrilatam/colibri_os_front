@@ -1,7 +1,7 @@
 'use client';
 
-import { useUserStore } from '@/lib/store';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function RolIndicator() {
   const { t } = useTranslation('rolIndicator');
