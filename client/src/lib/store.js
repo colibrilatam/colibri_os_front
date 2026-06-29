@@ -125,10 +125,28 @@ export const useUserStore = create(
         set((state) => ({
           sidebarDesktopExpanded: !state.sidebarDesktopExpanded,
         })),
+
+      // Story Protocol Client
+      storyClient: null,
+      setStoryClient: (storyClient) => set({ storyClient }),
+      storyClientError: null,
+      setStoryClientError: (storyClientError) => set({ storyClientError }),
+      storyClientLoading: false,
+      setStoryClientLoading: (storyClientLoading) =>
+        set({ storyClientLoading }),
     }),
 
     {
       name: 'app-state', // key en localStorage
+      partialize: (state) => {
+        const {
+          storyClient,
+          storyClientError,
+          storyClientLoading,
+          ...rest
+        } = state;
+        return rest;
+      },
     },
   ),
 );
