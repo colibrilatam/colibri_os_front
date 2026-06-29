@@ -1,0 +1,1 @@
+throw new Error('Optional wagmi dependency is not installed');

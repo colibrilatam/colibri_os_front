@@ -1,5 +1,6 @@
 import './globals.css';
 import ClientLayout from './ClientLayout';
+import Providers from './Providers';
 
 export const metadata = {
   title: 'Colibrí OS',
@@ -10,7 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body>
-        <ClientLayout>{children}</ClientLayout>
+        <Providers>
+          <ClientLayout>{children}</ClientLayout>
+        </Providers>
       </body>
     </html>
   );
