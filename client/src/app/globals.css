@@ -8,7 +8,13 @@ html {
 }
 
 .primary-button {
+  color: var(--text-primary-contrast);
   background: var(--theme-primary-button);
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding: 4px 8px;
+  font-size: var(--text-md);
+  max-width: fit-content;
 }
 
 :root {
@@ -512,7 +518,6 @@ pre {
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #09111d;
-    --foreground: #ededed;
   }
 }
 
@@ -534,7 +539,6 @@ body {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  color: var(--foreground);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
