@@ -22,6 +22,11 @@ const nextConfig = {
     };
     return config;
   },
+  turbopack: {
+    resolveAlias: {
+      ...Object.fromEntries(optionalWagmiDeps.map((dep) => [dep, stub])),
+    },
+  },
   images: {
     remotePatterns: [
       {
