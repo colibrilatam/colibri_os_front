@@ -1,7 +1,7 @@
 'use client';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import { useUserStore } from '@/lib/store';
+
 import { ProjectContext } from '@/lib/projectContext';
 import mockProjectDataT4 from '@/lib/mock/proyectos ficticios/flujoClaveT4.json';
 import tramoMockData from '@/lib/mock/proyectos ficticios/tramo4/tramo.json';
@@ -13,6 +13,7 @@ import { useOnborda } from 'onborda';
 import Footer from '@/components/Footer';
 import { useTranslatedObject } from '@/hooks/useTranslatedObject';
 import { useTranslatedContent } from '@/hooks/useTranslatedContent';
+import { useUserStore } from '@/lib/store';
 
 export default function LayoutShell({ children, projectInfo }) {
   const pathname = usePathname();

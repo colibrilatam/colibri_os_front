@@ -1,9 +1,10 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import { useUserStore } from '@/lib/store';
+
 import LoadingScreen from '@/components/LoadingScreen';
 import ErrorScreen from '@/components/ErrorScreen';
+import { useUserStore } from '@/lib/store';
 
 export default function DashboardLayout({ children }) {
   const isAuthenticated = useSyncExternalStore(

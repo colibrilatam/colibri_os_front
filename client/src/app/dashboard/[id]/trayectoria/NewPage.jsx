@@ -5,7 +5,6 @@ import { useProject } from '@/lib/projectContext';
 import { useEffect, useState, useMemo } from "react";
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useUserStore } from '@/lib/store';
 import { useTranslation } from '@/hooks/useTranslation';
 import Evolution from "./components/Evolution";
 
@@ -19,6 +18,7 @@ import Loading from "./loading";
 import UploadModal from "./UploadModal";
 import NotificationPopup from "@/components/NotificationPopup";
 import ProgressBar from "@/components/ProgressBar";
+import { useUserStore } from "@/lib/store";
 
 export default function NewTrayectoria() {
   const { t } = useTranslation('trayectoria');

@@ -10,9 +10,9 @@ import ErrorScreen from '@/components/ErrorScreen';
 import LoadingScreen from '@/components/LoadingScreen';
 
 import OnbordaWrapper from '@/lib/tutorial/layout';
-import { useUserStore } from '@/lib/store';
 
 import { getRouteConfig } from '@/lib/layoutConfig';
+import { useUserStore } from '@/lib/store';
 
 
 export default function ClientLayout({ children }) {
@@ -27,7 +27,7 @@ export default function ClientLayout({ children }) {
   );
 
   const userRole = useUserStore((state) => state.rol);
-
+console.log(userRole)
   // Loading mientras hidrata Zustand
   if (route.protected && isAuthenticated === null) {
     return <LoadingScreen />;

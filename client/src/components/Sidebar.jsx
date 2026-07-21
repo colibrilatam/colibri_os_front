@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useUserStore } from '@/lib/store';
 import {
   Menu,
   Home,
@@ -23,6 +22,7 @@ import EntrepreneurCard from './Contact';
 import TourButton from './tutoriales/TourButton';
 import { useProject } from '@/lib/projectContext';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();

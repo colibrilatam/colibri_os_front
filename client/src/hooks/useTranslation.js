@@ -1,9 +1,9 @@
 'use client';
 import { useMemo } from 'react';
-import { useUserStore } from '@/lib/store';
 
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
+import { useUserStore } from '@/lib/store';
 
 const dictionaries = {
   en,

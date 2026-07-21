@@ -12,8 +12,10 @@ import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
-import {useUserStore} from '@/lib/store';
+
 import { useNewProject } from '@/hooks/useNewProject';
+import { useUserStore } from '@/lib/store';
+import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
 export default function LoginRegisterPage() {
   const { t } = useTranslation('login');
@@ -75,6 +77,9 @@ export default function LoginRegisterPage() {
         content={t('back')}
         redirect="https://colibrilatam.com/index.html"
       ></Button>
+      <div className="absolute top-4 right-4">
+      <LanguageSwitcher />
+      </div>
 
       {/* Popup */}
       {isPopupOpen && (

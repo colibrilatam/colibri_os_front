@@ -2,12 +2,12 @@
 
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useUserStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { userService } from '@/services/user';
 import { useRequest } from '@/hooks/useRequest';
 import { getUserRoleLabel } from '@/lib/mappers/evidence-labels';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function MainHeader() {
   const { t } = useTranslation('mainHeader');

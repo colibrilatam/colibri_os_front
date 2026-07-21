@@ -6,8 +6,9 @@ import ProgressBar from '@/components/ProgressBar';
 import { useProject } from '@/lib/projectContext';
 import { getProjectIC } from '@/lib/hooks/createIcMap';
 import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
-import { useUserStore } from '@/lib/store';
+
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function IdentidadPage() {
   const { t } = useTranslation('identidad');

@@ -1,8 +1,8 @@
 'use client';
 import { useOnborda } from 'onborda';
 import Button from '@/components/Button';
-import { useUserStore } from '@/lib/store';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useUserStore } from '@/lib/store';
 
 export default function TourButton({ tourName }) {
   const { t } = useTranslation('sidebar');

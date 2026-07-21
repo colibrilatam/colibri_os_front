@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLogin } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
-import { useUserStore } from '@/lib/store';
 import { useTranslation } from '@/hooks/useTranslation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
+import { useUserStore } from '@/lib/store';
 
 export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
