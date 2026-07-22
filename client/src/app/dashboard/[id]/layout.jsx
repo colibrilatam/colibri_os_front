@@ -27,6 +27,9 @@ export default async function DataLayout({ children, params }) {
   const { data: tramoData, error: tramoError } = await handleRequest(() =>
     projectsService.currentTramo(projectData.currentTramoId),
   );
+   const { data: reputationData, error: reputationDataError } = await handleRequest(() =>
+    projectsService.projectReputation({projectId: projectData.id, userId: projectData.ownerUserId}),
+  );
 
   // allTramosProject.json
   const { data: ProjectTramoData, error: ProjectTramoError } =
@@ -44,10 +47,10 @@ export default async function DataLayout({ children, params }) {
     await handleRequest(() => projectsService.microActionInstance(id));
 
   // Manejo de errores
-  if (error || tramoError || ProjectTramoError || projectNftError) {
+  if (error || tramoError || ProjectTramoError || projectNftError ||reputationDataError) {
     return (
       <ErrorScreen
-        error={error || tramoError || ProjectTramoError || projectNftError}
+        error={error || tramoError || ProjectTramoError || projectNftError || reputationDataError}
         back="/home"
       />
     );
@@ -97,6 +100,7 @@ export default async function DataLayout({ children, params }) {
         evidenceData: evidenceData || null,
         microActionInstanceData: microActionInstanceData || null,
         translatableContent,
+        reputationData
       }}
     >
       {children}
