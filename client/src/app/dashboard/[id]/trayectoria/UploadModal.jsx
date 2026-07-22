@@ -21,10 +21,7 @@ export default function UploadModal({
     validated: 'completed',
     completed: 'closed',
   }
-}) {
-    
-    //console.log(data)
-    
+}) {  
 
     const { execute: updateMicroAction } = useRequest(projectsService.updateMicroAction);
     const { execute: requestUpload } = useRequest(projectsService.requestUploadSignature);
@@ -292,10 +289,16 @@ export default function UploadModal({
                 </motion.div>
               )}
             </AnimatePresence>*/}
+            {}
 
             {/* executionNotes Input - Solo para microacciones */}
             {isMicroaction && (
               <div className="space-y-2">
+                <div>
+                  <div className="text-[var(--text-tertiary)]">{t('labelInstruction')}</div>
+                  <p>{data.microActionDefinition.instruction}</p>
+                  <div className="text-[var(--text-tertiary)]">{data.microActionDefinition.microActionType}</div>
+                </div>
                 <label className="text-body-lg font-medium">{t('uploadNotesLabel')}</label>
                 <textarea
                   value={formData.executionNotes}
