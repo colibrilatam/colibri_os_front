@@ -122,7 +122,7 @@ export default function IdentidadPage() {
                   {t('dynamicNft')}
                 </h2>
                 <span
-                  className="m-2 rounded-full border border-(--text-accent) glass-effect-accent px-3 py-1"
+                  className="m-2 font-bold rounded-full border border-(--text-accent) glass-effect-accent px-3 py-1"
                   style={{
                     fontSize: 'var(--text-xs)',
                     color: 'var(--text-accent)',

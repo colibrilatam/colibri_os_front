@@ -408,15 +408,15 @@ export default function NewTrayectoria() {
               <div className="glass-effect border-glass p-4 rounded-xl">
                 <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacTitle')}</p>
 
-                <p className="text-body-lg mb-4 text-(--text-tertiary)">{selectedPac.pac.title}</p>
+                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPac.pac.title}</p>
 
                 <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacObjective')}</p>
 
-                <p className="text-body-lg mb-4 text-(--text-tertiary)">{selectedPac.pac.objectiveLine}</p>
+                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPac.pac.objectiveLine}</p>
 
                 <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacClosureRule')}</p>
 
-                <p className="text-body-lg mb-4 text-(--text-tertiary)">{selectedPac.pac.closureRule}</p>
+                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPac.pac.closureRule}</p>
 
                 <div className="flex flex-row gap-4 items-center">
                   <p className="text-lg text-(--text-primary) mb-2">{t('pacWeight')}</p>
@@ -521,7 +521,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
           >
             <div className="flex justify-between items-start mb-3">
               <div>
-                <p className="text-body-lg text-(--text-secondary)">{instruction}</p>
+                <p className="text-body-lg text-(--text-primary)">{instruction}</p>
                 <p className="text-helper text-(--text-tertiary)">{ma.microActionDefinition?.microActionType}</p>
               </div>
               <StatusBadge status={ma.status} />
@@ -580,7 +580,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
           <div className="flex flex-col gap-4">
             <div className="flex flex-row w-full justify-between items-start">
               <div>
-                <p className="text-body-lg font-medium text-(--text-tertiary)">{evidencesData.description}</p>
+                <p className="text-body-lg font-medium text-(--text-primary)">{evidencesData.description}</p>
                 <p className="text-helper text-[var(--text-tertiary)]">{t('evidenceLabel')}</p>
               </div>
               <StatusBadge status={evidencesData.status} />
@@ -693,7 +693,7 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
     <div>
       <div className="flex justify-between items-start ">
         <div>
-          <p className="text-value-card text-(--text-tertiary)">{`T${pac.pac.code[4]}-C${pac.pac.code[6]}`}</p>
+          <p className="text-value-card text-(--text-primary)">{`T${pac.pac.code[4]}-C${pac.pac.code[6]}`}</p>
           <p className="mb-4 text-(--text-secondary)">{pac.pac.title}</p>
         </div>
         <StatusDot status={pac.status} />
