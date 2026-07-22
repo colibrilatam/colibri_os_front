@@ -25,6 +25,7 @@ export default function IdentidadPage() {
     mockProject,
     projectNftData,
     evidenceData,
+    reputationData
   } = useProject();
 
   //console.log("IdentidadPage - dbProject:", dbProject);
@@ -44,7 +45,7 @@ export default function IdentidadPage() {
   const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
-  const PacProgress = Math.round((ic % 1) * 100);
+  const PacProgress = Math.round((reputationData.icPublic % 1) * 100);
 
   return (
     <main className="h-fit glass-effect border-glass rounded-2xl">
@@ -75,7 +76,7 @@ export default function IdentidadPage() {
             )}
             {t('withReputationalSignal')}{' '}
             <span className="text-(--text-accent) font-medium">
-              {ic}/ 6.00
+              {reputationData.icPublic}/ 6.00
             </span>
             {t('whileReducingUncertainty')}{' '}
             <span className="text-accent-amber font-medium">
@@ -183,7 +184,7 @@ export default function IdentidadPage() {
                         }}
                       >
                         {/* {reputationSnapshot.icPublic} */}
-                        {ic}
+                        {reputationData.icPublic}
                       </div>
                       <div
                         style={{

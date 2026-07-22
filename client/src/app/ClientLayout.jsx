@@ -27,7 +27,6 @@ export default function ClientLayout({ children }) {
   );
 
   const userRole = useUserStore((state) => state.rol);
-console.log(userRole)
   // Loading mientras hidrata Zustand
   if (route.protected && isAuthenticated === null) {
     return <LoadingScreen />;

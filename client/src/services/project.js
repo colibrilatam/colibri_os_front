@@ -68,4 +68,7 @@ export const projectsService = {
 
   changeActiveTranche: (projectId, tramoId, changeReason) => 
     fetcher(`/tramos/project/${projectId}/change`, {method: 'POST', body: JSON.stringify({newTramoId: tramoId, changeReason})}),
+
+  projectReputation: (data) => 
+    fetcher(`/reputation/calculate`, {method: 'POST',body: JSON.stringify(data)}),
 };
