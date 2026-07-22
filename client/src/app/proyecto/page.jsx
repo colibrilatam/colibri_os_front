@@ -72,6 +72,7 @@ useEffect(() => {
     image: ''
   });
 
+  console.log(errors)
 
 
   const [loading, setLoading] = useState(false);
@@ -140,6 +141,8 @@ useEffect(() => {
     const requiredFields = ['projectName', 'country', 'industry', 'tagline', 'shortDescription', 'startupLinkedinUrl', 'websiteUrl'];
     const hasRequiredFields = requiredFields.every((field) => formData[field].trim() !== '');
     const hasNoErrors = Object.values(errors).every((e) => e === '');
+    const errorsMessages = {hasRequiredFields: '', hasNoErrors: ''};
+    if(!hasRequiredFields) errorsMessages.hasRequiredFields = 'Campos obligatorios incompletos';
     return hasRequiredFields && hasNoErrors;
   };
 
@@ -180,13 +183,13 @@ useEffect(() => {
   };
 
   const fields = [
-    { name: 'projectName',        label: t('fieldProjectName'),  type: 'text' },
-    { name: 'country',            label: t('fieldCountry'),      type: 'text' },
-    { name: 'industry',           label: t('fieldIndustry'),     type: 'text' },
-    { name: 'tagline',            label: t('fieldTagline'),      type: 'text' },
-    { name: 'shortDescription',   label: t('fieldShortDescription'), type: 'textarea' },
-    { name: 'startupLinkedinUrl', label: t('fieldLinkedin'),     type: 'text' },
-    { name: 'websiteUrl',         label: t('fieldWebsite'),      type: 'text' },
+    { name: 'projectName',        label: t('fieldProjectName'),  type: 'text', isRequired: true },
+    { name: 'country',            label: t('fieldCountry'),      type: 'text', isRequired: true },
+    { name: 'industry',           label: t('fieldIndustry'),     type: 'text', isRequired: true },
+    { name: 'tagline',            label: t('fieldTagline'),      type: 'text', isRequired: true },
+    { name: 'shortDescription',   label: t('fieldShortDescription'), type: 'textarea', isRequired: true },
+    { name: 'startupLinkedinUrl', label: t('fieldLinkedin'),     type: 'text', isRequired: true },
+    { name: 'websiteUrl',         label: t('fieldWebsite'),      type: 'text', isRequired: true },
   ];
 
   return (
@@ -196,9 +199,9 @@ useEffect(() => {
             <p className="max-w-3xl text-(--text-tertiary) text-center hyphens-auto">{t('description')}</p>
         </div>
         <form onSubmit={isDemo ? demoHandleSubmit : handleSubmit} className="space-y-5">
-        {fields.map(({ name, label, type }) => (
+        {fields.map(({ name, label, type, isRequired }) => (
             <div key={name}>
-            <label className="text-micro-label block mb-2">{label}</label>
+            <label className="text-micro-label block mb-2">{label}{isRequired && <span className="text-red-500">*</span>}</label>
             {type === 'textarea' ? (
                 <textarea
                 name={name}

@@ -109,6 +109,7 @@ const { t } = useTranslation('header');
     projectNftData,
     projectTramoData,
     mockProject,
+    reputationData
   } = contextData;
 
   if (mockProject !== null) {
@@ -197,7 +198,7 @@ const { t } = useTranslation('header');
                 <div className="text-lg md:text-2xl font-semibold text-(--text-primary)">
                   {subioTramo && dbProject.projectName === 'FlujoClave'
                     ? getProjectIC('FlujoClaveT4')
-                    : getProjectIC(dbProject.projectName)}
+                    : reputationData.icPublic}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
                   {t('scoreSuffix')}

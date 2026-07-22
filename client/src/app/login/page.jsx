@@ -8,7 +8,6 @@ import SelectRole from '@/components/login/SelectRole';
 import GoogleButton from '@/components/login/GoogleButton';
 import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
-import NftLink from '@/components/login/NftLink';
 import Button from '@/components/Button';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
@@ -26,7 +25,7 @@ export default function LoginRegisterPage() {
   }, [])
   
   
-  const [view, setView] = useState('login'); // login | selectRole | register | nftLink
+  const [view, setView] = useState('login'); // login | selectRole | register
   const [selectedRole, setSelectedRole] = useState('');
   const [loading, setLoading] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -43,7 +42,7 @@ export default function LoginRegisterPage() {
   // cambio de rol
   const handleSelectRole = (role) => {
     setSelectedRole(role);
-    setView('nftLink');
+    setView('register');
   };
 
   // google auth
@@ -113,13 +112,6 @@ export default function LoginRegisterPage() {
 
         {/* Vistas */}
         {isSelectRole && <SelectRole onSelectRole={handleSelectRole} />}
-        {view === 'nftLink' && (
-          <NftLink
-            role={selectedRole}
-            onBack={() => setView('selectRole')}
-            onSuccess={() => setView('register')}
-          />
-        )}
 
         {isLogin && (
           <>

@@ -133,6 +133,7 @@ export default function ProjectSection() {
               <h2 className="text-h2">{dbProject.projectName}</h2>
             </div>
 
+<div className="glass-effect p-4 rounded-2xl">
             {dbProject.tagline && (
               <p className="text-body-lg text-(--text-accent)">
                 {translatedContent?.project?.tagline || dbProject.tagline_en}
@@ -155,8 +156,9 @@ export default function ProjectSection() {
               )}
 
               {dbProject.country && (
-                <Badge variant="emerald">{dbProject.country}</Badge>
+                <Badge variant="amber">{dbProject.country}</Badge>
               )}
+            </div>
             </div>
           </div>
         </div>
@@ -170,7 +172,7 @@ export default function ProjectSection() {
         <div className="space-y-2">
           <p className="text-overline">{t('description')}</p>
 
-          <p className="text-body">
+          <p className="text-(--text-secondary)">
             {translatedContent?.project?.shortDescription ||
               dbProject.shortDescription_en}
           </p>
@@ -182,11 +184,11 @@ export default function ProjectSection() {
         <div className="space-y-4">
           <p className="text-overline"> {t('projectLeader')}</p>
 
-          <div className="glass-effect-white rounded-2xl p-5 border border-slate-800">
+          <div className="glass-effect-white  rounded-2xl p-5 border border-slate-800">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <p className="text-value-card">{dbProject.owner.fullName}</p>
+                  <p className="text-(--text-primary)">{dbProject.owner.fullName}</p>
 
                   <button
                     onClick={() => setOpenEntrepreneurCard(true)}
@@ -480,7 +482,7 @@ function TimelineCard({ label, value }) {
     <div className="glass-effect-white border border-slate-800 rounded-2xl p-4">
       <p className="text-micro-label">{label}</p>
 
-      <p className="text-body mt-2">{value}</p>
+      <p className="text-(--text-secondary) mt-2">{value}</p>
     </div>
   );
 }

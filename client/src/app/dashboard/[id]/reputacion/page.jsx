@@ -7,17 +7,17 @@ export default function ReputacionPage() {
   const { t } = useTranslation('reputacion');
 
   // contexto
-    const { tramoData, dbProject, mockProject } = useProject();
+    const { tramoData, dbProject, mockProject, reputationData } = useProject();
   const { project, reputationSnapshot, pacProgress } = mockProject;
  
 
   // Construir array de dimensiones a partir de los scores del reputationSnapshot
   const dimensions = [
-    { index: 0, key: "action",        label: t("dimensionAction"),     description: t("dimensionActionDesc"),     raw: reputationSnapshot.actionScore,        weight: 0.25, color: "orange" },
-    { index: 1, key: "evidence",      label: t("dimensionEvidence"),   description: t("dimensionEvidenceDesc"),   raw: reputationSnapshot.evidenceScore,      weight: 0.25, color: "blue" },
-    { index: 2, key: "consistency",   label: t("dimensionConsistency"),   description: t("dimensionConsistencyDesc"),  raw: reputationSnapshot.consistencyScore,   weight: 0.20, color: "green" },
-    { index: 3, key: "collaboration", label: t("dimensionCollaboration"),   description: t("dimensionCollaborationDesc"), raw: reputationSnapshot.collaborationScore, weight: 0.15, color: "purple" },
-    { index: 4, key: "sustainability",label: t("dimensionSustainability"), description: t("dimensionSustainabilityDesc"), raw: reputationSnapshot.sustainabilityScore,weight: 0.15, color: "red" },
+    { index: 0, key: "action",        label: t("dimensionAction"),     description: t("dimensionActionDesc"),     raw: reputationData.actionScore,        weight: 0.25, color: "orange" },
+    { index: 1, key: "evidence",      label: t("dimensionEvidence"),   description: t("dimensionEvidenceDesc"),   raw: reputationData.evidenceScore,      weight: 0.25, color: "blue" },
+    { index: 2, key: "consistency",   label: t("dimensionConsistency"),   description: t("dimensionConsistencyDesc"),  raw: reputationData.consistencyScore,   weight: 0.20, color: "green" },
+    { index: 3, key: "collaboration", label: t("dimensionCollaboration"),   description: t("dimensionCollaborationDesc"), raw: reputationData.collaborationScore, weight: 0.15, color: "purple" },
+    { index: 4, key: "sustainability",label: t("dimensionSustainability"), description: t("dimensionSustainabilityDesc"), raw: reputationData.sustainabilityScore,weight: 0.15, color: "red" },
   // Calculo del aporte ponderado de cada dimensión al IC total, ajustado al máximo del tramo actual
   ].map((d) => ({ ...d, weighted: parseFloat(((1 * d.weight) * (d.raw / 100)).toFixed(2)) }));
 
@@ -32,11 +32,11 @@ const dimensionesDiferenciacion = dimensions.filter(d =>
   
 
   const radarValues = [
-    reputationSnapshot.actionScore,
-    reputationSnapshot.evidenceScore,
-    reputationSnapshot.consistencyScore,
-    reputationSnapshot.collaborationScore,
-    reputationSnapshot.sustainabilityScore,
+    reputationData.actionScore,
+    reputationData.evidenceScore,
+    reputationData.consistencyScore,
+    reputationData.collaborationScore,
+    reputationData.sustainabilityScore,
   ];
 
   // Paths SVG nativos de cada icono (sin foreignObject)
@@ -326,6 +326,7 @@ function EventItem({ date, title, impact, description }) {
     </div>
   );
 }
+
 
 function RadarChart({ values, max = 100, categoryIconPaths }) {
   const size = 320;
