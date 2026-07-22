@@ -35,6 +35,7 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
   const isDemo = useUserStore((state) => state.isDemo);
   const setIsDemo = useUserStore((state) => state.setIsDemo);
   const setToken = useUserStore((state) => state.setToken);
+  const setRol = useUserStore((state) => state.setRol);
   const { handleDemoLogin } = useLogin();
 
   const [ generalError, setGeneralError ] = useState('');
@@ -118,6 +119,7 @@ useEffect(() => {
     const result = await handleRegister({ ...data, role: selectedRole });
 
     if (result.success) {
+      setRol(selectedRole);
       sessionStorage.removeItem(STORAGE_KEY);
       console.log(result);
       setToken(result.data.token);
@@ -249,7 +251,7 @@ useEffect(() => {
       <button
         type="button"
         onClick={onBack}
-        className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
+        className=" w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
       >
         {t('backAlt')}
       </button>
