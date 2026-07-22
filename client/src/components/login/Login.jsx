@@ -81,10 +81,11 @@ export default function Login({ onLoadingChange }) {
       router.push('/user/nft');
       return;
     }
-    if (userResult.data.role === 'mentor') {
+    if (userResult.data.role === 'mentor' || userResult.data.role === 'evaluator') {
       router.push('/evaluations');
       return;
     }
+    
     // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
     if (userResult.data.role === 'entrepreneur') {
       const { data: allProjectsResponse, error: allProjectsError } =
