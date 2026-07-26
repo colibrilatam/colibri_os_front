@@ -1,21 +1,23 @@
-import { fetcher } from '@/lib/fetcher';
-import { handleRequest } from '@/lib/handleRequest';
-import { userService } from './user';
-
-
+import { apiClient } from '@/lib/api';
 
 export const nftService = {
+    getStats: async (userId) => {
+        const response = await apiClient.get(`/mecenas-semilla/dashboard/${userId}`);
+        return response.data;
+    },
 
-    getStats: (userId) =>
-        fetcher(`/mecenas-semilla/dashboard/${userId}`),
+    create: async (data, userId) => {
+        const response = await apiClient.post(`/mecenas-semilla/buy-nfts/${userId}`, data);
+        return response.data;
+    },
 
-    create: (data, userId) => 
-        fetcher(`/mecenas-semilla/buy-nfts/${userId}`, { method: 'POST', body: JSON.stringify(data) }),
+    createNftProject: async (data, projectId) => {
+        const response = await apiClient.post(`/nft-projects/${projectId}`, data);
+        return response.data;
+    },
 
-    createNftProject: (data, projectId) =>
-        fetcher(`/nft-projects/${projectId}`, { method: 'POST', body: JSON.stringify(data) }),
-
-    getNftProjects: () =>
-        fetcher('/nft-projects'),
-       
-}
+    getNftProjects: async () => {
+        const response = await apiClient.get('/nft-projects');
+        return response.data;
+    },
+};

@@ -1,13 +1,28 @@
-import { fetcher } from '@/lib/fetcher';
+import { apiClient } from '@/lib/api';
 
 export const evidencesService = {
-    createEvidence: (data) => fetcher('/evidence', { method: 'POST', body: JSON.stringify(data) }),
+    createEvidence: async (data) => {
+        const response = await apiClient.post('/evidence', data);
+        return response.data;
+    },
 
-    submit: (evidenceId) => fetcher(`/evidence/${evidenceId}/submit`, { method: 'POST' }),
+    submit: async (evidenceId) => {
+        const response = await apiClient.post(`/evidence/${evidenceId}/submit`);
+        return response.data;
+    },
     
-    createEvaluation: (data) => fetcher('/evaluations', { method: 'POST', body: JSON.stringify(data) }),
+    createEvaluation: async (data) => {
+        const response = await apiClient.post('/evaluations', data);
+        return response.data;
+    },
 
-    getActiveRubrics: () => fetcher('/evaluations/rubrics/active', { method: 'GET' }),
+    getActiveRubrics: async () => {
+        const response = await apiClient.get('/evaluations/rubrics/active');
+        return response.data;
+    },
 
-    closeEvaluation: (data) => fetcher('/evaluations/finalize', { method: 'POST', body: JSON.stringify(data) }),
-}
+    closeEvaluation: async (data) => {
+        const response = await apiClient.post('/evaluations/finalize', data);
+        return response.data;
+    },
+};

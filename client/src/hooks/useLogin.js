@@ -1,9 +1,6 @@
-import { login } from '@/services/authService';
-
-import { setCookie } from '@/lib/cookies';
-import { userService } from '@/services/user';
 import { authService } from '@/services/authService';
-import { handleRequest } from '@/lib/handleRequest';
+import { userService } from '@/services/user';
+import { ApiError } from '@/lib/api/errors';
 import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
 import { useUserStore } from '@/lib/store';
 
@@ -11,39 +8,40 @@ export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
-  //const theme = bancoVenezuelaTheme;
 
   const handleLogin = async (formData) => {
     try {
-      const data = await login({
+      const data = await authService.login({
         email: formData.email,
         password: formData.password,
       });
-
-      setCookie('token', data.token);
+      console.log(data)
       setToken(data.token);
-      const { data: userData, error: userError } = await handleRequest(() =>
-        userService.profile(),
-      );
+
+      const userData = await userService.profile();
 
       setRol(userData.role);
       if (userData) {
         if(formData.email === 'mecenas@colibri.com') userData.theme = unimetTheme;
         if(formData.email === 'BancoDV@colibri.com') userData.theme = bancoVenezuelaTheme;
-        // userData.theme = theme;
       }
       setUser(userData);
       return { success: true, data };
     } catch (err) {
-      const message = err.response?.data?.message || 'Error al iniciar sesión';
+      console.log(err)
+      const message = err instanceof ApiError ? err.message : 'Error al iniciar sesión';
       return { success: false, error: message };
     }
   };
 
   const userData = async () => {
-    const { data, error } = await handleRequest(() => userService.profile());
-    if (error) return { error };
-    return { data };
+    try {
+      const data = await userService.profile();
+      return { data, error: null };
+    } catch (err) {
+      const error = err instanceof ApiError ? err : { message: 'Error al obtener perfil', code: 'UNKNOWN_ERROR' };
+      return { data: null, error };
+    }
   };
 
   const handleDemoLogin = async (rol) => {
@@ -52,25 +50,25 @@ export const useLogin = () => {
     else if (rol === 'mecenas') email = 'mecenas@colibri.com';
     else if (rol === 'mentor') email = 'mentor@colibri.com';
 
-    const { data: demoLoginData, error: demoLoginError } = await handleRequest(
-      () =>
-        authService.login({
-          email,
-          password: 'Test@1234',
-        }),
-    );
-    setCookie('token', demoLoginData.token);
-    setToken(demoLoginData.token);
-    const { data: userData, error: userError } = await handleRequest(() =>
-      userService.profile(),
-    );
+    try {
+      const demoLoginData = await authService.login({
+        email,
+        password: 'Test@1234',
+      });
 
-    if (userData) {
-      // userData.theme = theme;
+      setToken(demoLoginData.token);
+      const userData = await userService.profile();
+
+      if (userData) {
+        // userData.theme = theme;
+      }
+      setUser(userData);
+      setRol(userData.role);
+      return { data: demoLoginData, error: null };
+    } catch (err) {
+      const error = err instanceof ApiError ? err : { message: 'Error en login demo', code: 'UNKNOWN_ERROR' };
+      return { data: null, error };
     }
-    setUser(userData);
-    setRol(userData.role);
-    return { data: demoLoginData, error: demoLoginError };
   };
 
   return { handleLogin, userData, handleDemoLogin };

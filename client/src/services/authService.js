@@ -1,18 +1,15 @@
-import api from "@/lib/axios";
-import { fetcher } from "@/lib/fetcher";
+import { apiClient } from '@/lib/api';
 
 export const authService = {
-    register: (data) =>
-        fetcher('/auth/signup', { method: 'POST', body: JSON.stringify(data) }),
+    register: async (data) => {
+        const response = await apiClient.post('/auth/signup', data);
+        return response.data;
+    },
 
-    login: (data) =>
-        fetcher('/auth/signin', { method: 'POST', body: JSON.stringify(data) }),
-
-    userData: () => fetcher('/users/profile'),
+    login: async (data) => {
+        console.log('hola')
+        const response = await apiClient.post('/auth/signin', data);
+console.log('holaasdasd')
+       return response.data;
+    },
 };
-
-export const register = (data) => 
-    api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/signup`, data).then(r => r.data);
-
-export const login = (data) => 
-    api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/signin`, data).then(r => r.data);

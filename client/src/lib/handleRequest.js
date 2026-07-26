@@ -1,4 +1,4 @@
-import { ApiError } from './fetcher';
+import { ApiError } from '@/lib/api/errors';
 
 export async function handleRequest(fn) {
   try {
@@ -6,7 +6,6 @@ export async function handleRequest(fn) {
     return { data, error: null };
   } catch (error) {
     if (error instanceof ApiError) {
-      
       return {
         data: null,
         error: error
