@@ -1,74 +1,121 @@
-import { fetcher } from '@/lib/fetcher';
+import { apiClient } from '@/lib/api';
 
 export const projectsService = {
-  getAll: () =>
-    fetcher('/projects'),
+  getAll: async () => {
+    const response = await apiClient.get('/projects');
+    return response.data;
+  },
 
-  getById: (id) =>
-    fetcher(`/projects/${id}`),
-  // cache , { next: { revalidate: 30 } }
+  getById: async (id) => {
+    const response = await apiClient.get(`/projects/${id}`);
+    return response.data;
+  },
 
-  create: (data) =>
-    fetcher('/projects', { method: 'POST', body: JSON.stringify(data) }),
+  create: async (data) => {
+    const response = await apiClient.post('/projects', data);
+    return response.data;
+  },
 
-  update: (id, data) =>
-    fetcher(`/projects/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  update: async (id, data) => {
+    const response = await apiClient.put(`/projects/${id}`, data);
+    return response.data;
+  },
 
-  delete: (id) =>
-    fetcher(`/projects/${id}`, { method: 'DELETE' }),
+  delete: async (id) => {
+    const response = await apiClient.delete(`/projects/${id}`);
+    return response.data;
+  },
 
-  currentTramo: (id) => 
-    fetcher(`/tramos/${id}`),
+  currentTramo: async (id) => {
+    const response = await apiClient.get(`/tramos/${id}`);
+    return response.data;
+  },
 
-  projectTramoData: (id) => 
-    fetcher(`/tramos/project/${id}`),
+  projectTramoData: async (id) => {
+    const response = await apiClient.get(`/tramos/project/${id}`);
+    return response.data;
+  },
 
-  nft: (id) =>
-    fetcher(`/nft-projects/by-project/${id}`),
+  nft: async (id) => {
+    const response = await apiClient.get(`/nft-projects/by-project/${id}`);
+    return response.data;
+  },
 
-  evidences: (id) => 
-    fetcher(`/evidence/project/${id}`, ),
+  evidences: async (id) => {
+    const response = await apiClient.get(`/evidence/project/${id}`);
+    return response.data;
+  },
 
-  microActionInstance: (id) => 
-    fetcher(`/micro-action-instances/project/${id}`),
+  microActionInstance: async (id) => {
+    const response = await apiClient.get(`/micro-action-instances/project/${id}`);
+    return response.data;
+  },
 
-  getMicroActionDefinition: (pacId) => 
-    fetcher(`/micro-action-definitions?pacId=${pacId}`),
+  getMicroActionDefinition: async (pacId) => {
+    const response = await apiClient.get(`/micro-action-definitions?pacId=${pacId}`);
+    return response.data;
+  },
 
-  getAllTramos: () => 
-    fetcher(`/tramos`),
+  getAllTramos: async () => {
+    const response = await apiClient.get(`/tramos`);
+    return response.data;
+  },
 
-  getProjectMembers: (idProject) => 
-    fetcher(`/projects/${idProject}/members`),
+  getProjectMembers: async (idProject) => {
+    const response = await apiClient.get(`/projects/${idProject}/members`);
+    return response.data;
+  },
 
-  updateMicroAction: (id, data) => 
-    fetcher(`/micro-action-instances/${id}`, {method: 'PATCH', body: JSON.stringify(data)}),
+  updateMicroAction: async (id, data) => {
+    const response = await apiClient.patch(`/micro-action-instances/${id}`, data);
+    return response.data;
+  },
 
-  requestUploadSignature: (data) => 
-    fetcher(`/evidence/request-upload-signature`, {method: 'POST', body: JSON.stringify(data)}),
+  requestUploadSignature: async (data) => {
+    const response = await apiClient.post(`/evidence/request-upload-signature`, data);
+    return response.data;
+  },
 
-  confirmUpload: (data) => 
-    fetcher(`/evidence/confirm-upload`, {method: 'POST', body: JSON.stringify(data)}),
+  confirmUpload: async (data) => {
+    const response = await apiClient.post(`/evidence/confirm-upload`, data);
+    return response.data;
+  },
 
-  updatePacStatus: (pacId ,data) => 
-    fetcher(`/projects/pac/${pacId}`, {method: 'PATCH', body: JSON.stringify(data)}),
+  updatePacStatus: async (pacId, data) => {
+    const response = await apiClient.patch(`/projects/pac/${pacId}`, data);
+    return response.data;
+  },
 
+  categories: async (tramoId) => {
+    const response = await apiClient.get(`/categories?tramoId=${tramoId}`);
+    return response.data;
+  },
 
-  categories: (tramoId) => 
-    fetcher(`/categories?tramoId=${tramoId}`),
+  getPacs: async (categoryId) => {
+    const response = await apiClient.get(`/pacs?categoryId=${categoryId}`);
+    return response.data;
+  },
 
-  getPacs: (categoryId) => 
-    fetcher(`/pacs?categoryId=${categoryId}`),
+  createProjectPac: async (projectId, pacId) => {
+    const response = await apiClient.post(`/projects/${projectId}/pac/${pacId}`);
+    return response.data;
+  },
 
-  createProjectPac: (projectId, pacId) => 
-    fetcher(`/projects/${projectId}/pac/${pacId}`, {method: 'POST'}),
+  createMicroActionInstance: async (data) => {
+    const response = await apiClient.post(`/micro-action-instances`, data);
+    return response.data;
+  },
 
-  createMicroActionInstance: (data) =>
-    fetcher(`/micro-action-instances`, {method: 'POST', body: JSON.stringify(data)}),
+  changeActiveTranche: async (projectId, tramoId, changeReason) => {
+    const response = await apiClient.post(`/tramos/project/${projectId}/change`, {
+      newTramoId: tramoId,
+      changeReason,
+    });
+    return response.data;
+  },
 
-  changeActiveTranche: (projectId, tramoId, changeReason) => 
-    fetcher(`/tramos/project/${projectId}/change`, {method: 'POST', body: JSON.stringify({newTramoId: tramoId, changeReason})}),
-
-  projectReputation: (data) => 
-    fetcher(`/reputation/calculate`, {method: 'POST',body: JSON.stringify(data)}),
+  projectReputation: async (data) => {
+    const response = await apiClient.post(`/reputation/calculate`, data);
+    return response.data;
+  },
 };

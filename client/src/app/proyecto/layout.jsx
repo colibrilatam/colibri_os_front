@@ -1,12 +1,12 @@
 import { handleRequest } from "@/lib/handleRequest";
 import ErrorScreen from "@/components/ErrorScreen";
-import { authService } from "@/services/authService";
+import { userService } from "@/services/user";
 import { redirect } from "next/navigation";
 import { projectsService } from "@/services/project";
 
 export default async function ProjectLayout({ children }){
 
-    const { data: user, error } = await handleRequest(() => authService.userData());
+    const { data: user, error } = await handleRequest(() => userService.profile());
     const { data: projectData, error: projectError } = await handleRequest(() => projectsService.getAll());
 
     // DEMO

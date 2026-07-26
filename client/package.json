@@ -6,7 +6,9 @@
     "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "cross-env NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/api/v1 vitest",
+    "test:run": "cross-env NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/api/v1 vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -27,8 +29,14 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.0",
-    "prettier": "^3.8.1"
+    "jsdom": "^29.1.1",
+    "msw": "^2.15.0",
+    "prettier": "^3.8.1",
+    "vitest": "^4.1.10"
   }
 }

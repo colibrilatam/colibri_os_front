@@ -6,6 +6,7 @@ import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
 import {evidencesService} from "@/services/evidences";
 import { useTranslation } from '@/hooks/useTranslation';
+import { uploadToCloudinary } from "@/lib/api/cloudinary";
 
 export default function UploadModal({
   isOpen,
@@ -138,20 +139,7 @@ export default function UploadModal({
         }
 
         // PASO 2 - Subir archivo a Cloudinary con firma
-        const CloudinaryformData = new FormData();
-        CloudinaryformData.append("file", formData.file); // File object o blob
-        CloudinaryformData.append("signature", requestSignatureResponse.signature);
-        CloudinaryformData.append("timestamp", requestSignatureResponse.timestamp);
-        CloudinaryformData.append("api_key", requestSignatureResponse.apiKey);
-        CloudinaryformData.append("folder", requestSignatureResponse.folder);
-        CloudinaryformData.append("public_id", requestSignatureResponse.publicId);
-
-        const cloudinaryResponse = await fetch(`https://api.cloudinary.com/v1_1/${requestSignatureResponse.cloudName}/raw/upload`, {
-          method: "POST",
-          body: CloudinaryformData,
-        });
-
-        const cloudinaryData = await cloudinaryResponse.json();
+        const cloudinaryData = await uploadToCloudinary(formData.file, requestSignatureResponse);
 
         // PASO 3 - Confirmar subida al backend
         const { data: confirmUploadResponse, error: confirmUploadError } = await confirmUpload({

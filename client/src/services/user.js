@@ -1,7 +1,13 @@
-import { fetcher } from "@/lib/fetcher";
+import { apiClient } from '@/lib/api';
 
 export const userService = {
-    profile: () => fetcher('/users/profile'),
+    profile: async () => {
+        const response = await apiClient.get('/users/profile');
+        return response.data;
+    },
 
-    userData: (userId) => fetcher(`/users/${userId}`),
-}
+    userData: async (userId) => {
+        const response = await apiClient.get(`/users/${userId}`);
+        return response.data;
+    },
+};
