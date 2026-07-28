@@ -116,9 +116,10 @@ const { t } = useTranslation('header');
     const { project, currentState, reputationSnapshot } = mockProject;
   }
 
-  //console.log("Header - dbProject:", dbProject);
-
-  //console.log(dbProject);
+  const effectiveName = subioTramo && dbProject.projectName === "FlujoClave" ? "FlujoClaveT4" : dbProject.projectName;
+  const icFromProject = getProjectIC(effectiveName);
+  console.log(icFromProject)
+  const ic = icFromProject !== null ? Number(icFromProject) : reputationData.icPublic;
 
   return (
     <header className=" lg:m-2  border-glass rounded-2xl glass-effect px-4 py-2 flex justify-between  min-h-16 lg:min-h-auto content-center items-center">
@@ -196,9 +197,7 @@ const { t } = useTranslation('header');
               </div>
               <div className="mt-1 flex items-end gap-2">
                 <div className="text-lg md:text-2xl font-semibold text-(--text-primary)">
-                  {subioTramo && dbProject.projectName === 'FlujoClave'
-                    ? getProjectIC('FlujoClaveT4')
-                    : reputationData.icPublic}
+                  {ic}
                 </div>
                 <div className="pb-0.5 text-xs md:text-sm text-slate-400">
                   {t('scoreSuffix')}
