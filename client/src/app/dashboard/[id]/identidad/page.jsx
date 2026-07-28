@@ -42,10 +42,13 @@ export default function IdentidadPage() {
   
   // información de tramo actual
 
-  const ic = subioTramo && dbProject.projectName === "FlujoClave" ? getProjectIC("FlujoClaveT4") : getProjectIC(dbProject.projectName);
+  const effectiveName = subioTramo && dbProject.projectName === "FlujoClave" ? "FlujoClaveT4" : dbProject.projectName;
+  const icFromProject = getProjectIC(effectiveName);
+  console.log(icFromProject)
+  const ic = icFromProject !== null ? Number(icFromProject) : reputationData.icPublic;
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
-  const PacProgress = Math.round((reputationData.icPublic % 1) * 100);
+  const PacProgress = Math.round((ic % 1) * 100);
 
   return (
     <main className="h-fit glass-effect border-glass rounded-2xl">
@@ -76,7 +79,7 @@ export default function IdentidadPage() {
             )}
             {t('withReputationalSignal')}{' '}
             <span className="text-(--text-accent) font-medium">
-              {reputationData.icPublic}/ 6.00
+              {ic}/ 6.00
             </span>
             {t('whileReducingUncertainty')}{' '}
             <span className="text-accent-amber font-medium">
@@ -184,7 +187,7 @@ export default function IdentidadPage() {
                         }}
                       >
                         {/* {reputationSnapshot.icPublic} */}
-                        {reputationData.icPublic}
+                        {ic}
                       </div>
                       <div
                         style={{
