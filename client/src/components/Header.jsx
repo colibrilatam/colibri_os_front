@@ -26,7 +26,6 @@ const { t } = useTranslation('header');
     user?.theme?.logoUrl &&
     user?.role === 'mecenas_semilla' &&
     user.theme.logoUrl;
-  //console.log(user);
 
   useEffect(() => {
     setAuth(isAuthenticated());
@@ -118,7 +117,6 @@ const { t } = useTranslation('header');
 
   const effectiveName = subioTramo && dbProject.projectName === "FlujoClave" ? "FlujoClaveT4" : dbProject.projectName;
   const icFromProject = getProjectIC(effectiveName);
-  console.log(icFromProject)
   const ic = icFromProject !== null ? Number(icFromProject) : reputationData.icPublic;
 
   return (

@@ -25,7 +25,6 @@ export default function OldTrayectoria() {
   const { t } = useTranslation('trayectoria');
 
   const convertDate = (date) => {
-    console.log(date)
     // 1. Convertimos el string en un objeto de fecha real de JavaScript
   const newDate = new Date(date);
 

@@ -9,7 +9,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export default function AllTranches({ navigationArrows = true, initialSlide = 0, elements}){
   const { t } = useTranslation('tramo');
-console.log(elements)
     return(
         <Swiper
                   modules={[Navigation]}

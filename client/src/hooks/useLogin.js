@@ -15,7 +15,6 @@ export const useLogin = () => {
         email: formData.email,
         password: formData.password,
       });
-      console.log(data)
       setToken(data.token);
 
       const userData = await userService.profile();

@@ -234,7 +234,6 @@ export default function NewTrayectoria() {
     initialize();
   }, []);
 
-  console.log(inProgressPacActions.microactions)
 
 
 

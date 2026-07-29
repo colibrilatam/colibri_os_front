@@ -52,7 +52,6 @@ export default function TramoDashboard() {
   };
   /* ========================= */
 
-  console.log(tramoInfo);
 
   return (
     <div className="min-h-screen mx-auto overflow-x-hidden">

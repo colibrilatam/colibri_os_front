@@ -44,7 +44,6 @@ export default function IdentidadPage() {
 
   const effectiveName = subioTramo && dbProject.projectName === "FlujoClave" ? "FlujoClaveT4" : dbProject.projectName;
   const icFromProject = getProjectIC(effectiveName);
-  console.log(icFromProject)
   const ic = icFromProject !== null ? Number(icFromProject) : reputationData.icPublic;
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto

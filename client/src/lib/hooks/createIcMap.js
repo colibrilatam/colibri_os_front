@@ -14,13 +14,11 @@ function clampIC(value) {
   return Math.min(5.99, Math.max(0.1, value));
 }
 export function getProjectIC(name) {
-  console.log(name)
   const normalized = (name || '').toLowerCase();
 
   const match = projectIC.find((p) => p.projectName.toLowerCase() === normalized);
 
   const value = match ? clampIC(match.ic) : null;
-  console.log(value)
   if (value === null) return null;
 
   return value.toFixed(2); // "1.47"
