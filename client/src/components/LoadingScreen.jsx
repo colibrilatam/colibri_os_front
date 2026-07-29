@@ -1,7 +1,7 @@
 'use client';
 import { useTranslation } from "@/hooks/useTranslation";
 
-export default function LoadingScreen() {
+export default function LoadingScreen({ message = null }) {
   const { t } = useTranslation('loadingScreen');
   return (
     <div className="overflow-hidden absolute z-2 p-4 flex items-center justify-center w-full h-full min-w-lvw min-h-lvh bg-slate-900/40 rounded-2xl">
@@ -14,8 +14,12 @@ export default function LoadingScreen() {
 
         {/* Loading Text */}
         <div className="text-center">
-          <p className="text-lg font-semibold text-(--text-secondary)">{t('loading')}</p>
-          <p className="text-sm text-(--text-secondary) mt-1">{t('pleaseWait')}</p>
+          <p className="text-lg font-semibold text-(--text-secondary)">
+            {message || t('loading')}
+          </p>
+          {!message && (
+            <p className="text-sm text-(--text-secondary) mt-1">{t('pleaseWait')}</p>
+          )}
         </div>
       </div>
     </div>

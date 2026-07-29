@@ -11,7 +11,7 @@ import { useUserStore } from '@/lib/store';
 export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
   const router = useRouter();
-  const { handleLogin, userData } = useLogin();
+  const { handleLogin, userData, retrying } = useLogin();
   const setRol = useUserStore((state) => state.setRol);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -115,7 +115,14 @@ export default function Login({ onLoadingChange }) {
     <>
       {loading && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded-lg">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+          <div className="flex flex-col items-center gap-3">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+            {retrying && (
+              <p className="text-white text-sm text-center max-w-xs">
+                {t('retryMessage')}
+              </p>
+            )}
+          </div>
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-5">

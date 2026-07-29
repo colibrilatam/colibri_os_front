@@ -1,6 +1,8 @@
+import { useState, useEffect, useCallback } from 'react';
 import { authService } from '@/services/authService';
 import { userService } from '@/services/user';
 import { ApiError } from '@/lib/api/errors';
+import { setRetryListener } from '@/lib/api';
 import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
 import { useUserStore } from '@/lib/store';
 
@@ -8,6 +10,12 @@ export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
+  const [retrying, setRetrying] = useState(false);
+
+  useEffect(() => {
+    setRetryListener(setRetrying);
+    return () => setRetryListener(null);
+  }, []);
 
   const handleLogin = async (formData) => {
     try {
@@ -27,7 +35,6 @@ export const useLogin = () => {
       setUser(userData);
       return { success: true, data };
     } catch (err) {
-      console.log(err)
       const message = err instanceof ApiError ? err.message : 'Error al iniciar sesión';
       return { success: false, error: message };
     }
@@ -70,5 +77,5 @@ export const useLogin = () => {
     }
   };
 
-  return { handleLogin, userData, handleDemoLogin };
+  return { handleLogin, userData, handleDemoLogin, retrying };
 };

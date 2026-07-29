@@ -5,7 +5,7 @@ import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
 
-const DEFAULT_TIMEOUT = 30000;
+const DEFAULT_TIMEOUT = 60000;
 const MAX_RETRIES = 2;
 const RETRY_DELAYS = [1000, 2000];
 
@@ -25,9 +25,14 @@ const apiClient = axios.create({
 });
 
 let logoutCallback = null;
+let retryListener = null;
 
 export function setLogoutCallback(callback) {
   logoutCallback = callback;
+}
+
+export function setRetryListener(callback) {
+  retryListener = callback;
 }
 
 apiClient.interceptors.request.use(
@@ -95,6 +100,9 @@ apiClient.interceptors.response.use(
         if (typeof config.onRetry === 'function') {
           config.onRetry(retryCount, MAX_RETRIES);
         }
+        if (typeof retryListener === 'function') {
+          retryListener(true);
+        }
 
         await sleep(delay);
 
@@ -103,9 +111,15 @@ apiClient.interceptors.response.use(
           const { startTime } = config.metadata || {};
           const duration = Date.now() - (startTime || Date.now());
           logResponse(requestId, response.status, method, url, duration);
+          if (typeof retryListener === 'function') {
+            retryListener(false);
+          }
           return response;
         } catch (retryError) {
           if (retryCount >= MAX_RETRIES) {
+            if (typeof retryListener === 'function') {
+              retryListener(false);
+            }
             const finalError = ApiError.fromAxiosError(retryError, requestId);
             logError(requestId, finalError, method, url);
             throw finalError;
