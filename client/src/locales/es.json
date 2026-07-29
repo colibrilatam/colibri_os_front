@@ -451,8 +451,11 @@
   "errorScreen": {
     "title": "¡Algo salió mal!",
     "description": "Ocurrió un error al cargar la página. Por favor, intenta de nuevo.",
+    "timeoutTitle": "El servidor está despertando...",
+    "timeoutDescription": "Esto puede tomar unos segundos. Por favor, reintentá en un momento.",
     "back": "Volver",
-    "retry": "↻ Reintentar"
+    "retry": "↻ Reintentar",
+    "retrying": "Reintentando..."
   },
 
   "loadingScreen": {

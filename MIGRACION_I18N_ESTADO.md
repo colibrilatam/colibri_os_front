@@ -1,131 +1,325 @@
-# Plan de Migración a Columnas Multi-idioma - Estado Actual
+# Migracion a Columnas Multi-idioma (i18n)
 
-## ✅ Completado
+## Resumen
 
-### 1. Hook Creado
-- **Archivo**: `hooks/useLocalizedField.js`
-- **Funcionalidad**: Selecciona automáticamente el campo localizado según el idioma del usuario
-- **Fallback**: Si no existe el valor en el idioma actual, usa inglés, luego el campo original
+Se implemento un sistema para consumir las nuevas columnas multi-idioma (`_es` / `_en`) agregadas en las tablas del backend, reemplazando las antiguas columnas unificadas (`name`, `description`, `title`, etc.).
 
-```javascript
-// Uso básico en componentes
-const tramoName = useLocalizedField(tramoData, 'name');
-const pacTitle = useLocalizedField(pac, 'title');
+**Estrategia elegida**: Hook personalizado (`useLocalizedField`) que selecciona automaticamente el campo correcto segun el idioma del usuario.
+
+---
+
+## Arquitectura
+
+### Sistema de i18n existente
+
+| Capa | Mecanismo | Ubicacion |
+|---|---|---|
+| Textos estaticos de la UI | `useTranslation` con archivos JSON | `locales/es.json`, `locales/en.json` |
+| Contenido dinamico (legacy) | `useTranslatedContent` (traduccion bajo demanda) | `hooks/useTranslatedContent.js` |
+| Idioma del usuario | Zustand store | `lib/store.js` → `useUserStore.language` |
+
+### Nueva capa agregada
+
+```
+┌────────────────────────────────────┐
+│         Backend (TypeORM)          │
+│  name_es  │  name_en  │  code │ ...│
+└────────────────────┬───────────────┘
+                     │ API REST
+                     ▼
+┌────────────────────────────────────┐
+│   useLocalizedField(obj, field)    │
+│                                    │
+│   language === 'es'                │
+│     → obj.field_es                 │
+│   language === 'en'                │
+│     → obj.field_en                 │
+│   Fallback:                        │
+│     field_actual → field_en → ''   │
+└────────────────────────────────────┘
+                     │
+                     ▼
+┌────────────────────────────────────┐
+│         Componentes React          │
+│  {tramoName} {pacTitle} {etc...}   │
+└────────────────────────────────────┘
 ```
 
-### 2. Componentes Actualizados
+---
 
-#### Header.jsx
-- ✅ Import de `useLocalizedField`
-- ✅ Actualizado: `tramoData.name` → `tramoName` (línea 176)
+## Archivos Creados
 
-#### identidad/page.jsx
-- ✅ Import de `useLocalizedField`
-- ✅ Actualizado: `tramoData.name` → `tramoName` (línea 153)
+### `hooks/useLocalizedField.js`
 
-#### tramo/page.jsx
-- ✅ Import de `useLocalizedField`
-- ✅ Actualizado: `currentState.currentTramoName` → `tramoName` (línea 51)
-
-#### trayectoria/NewPage.jsx
-- ✅ Import de `useLocalizedField`
-- ✅ Actualizado: `selectedPac.pac.title` → `useLocalizedField(selectedPac.pac, 'title')` (línea 410)
-- ✅ Actualizado: `selectedPac.pac.objectiveLine` → `useLocalizedField(selectedPac.pac, 'objectiveLine')` (línea 414)
-- ✅ Actualizado: `pac.pac.title` → `useLocalizedField(pac.pac, 'title')` (línea 697)
-
-#### trayectoria/components/Microacciones.jsx
-- ✅ Import de `useLocalizedField`
-- ✅ Actualizado: `pac.title` → `pacTitle` con hook (línea 50)
-- ✅ Actualizado: `selectedPac.title` → `useLocalizedField(selectedPac, 'title')` (línea 66)
-
-### 3. Hooks Index
-- ✅ Exportado `useLocalizedField` y `getLocalizedValue` en `hooks/index.js`
-
-## ⚠️ Pendiente
-
-### 1. Tabla Projects (IMPORTANTE)
-**Estado**: La tabla `projects` AÚN no tiene columnas `_es/_en`
-
-**Campos afectados**:
-- `projectName` → necesitará `name_es`/`name_en`
-- `tagline` → necesitará `tagline_es`/`tagline_en`
-- `shortDescription` → necesitará `shortDescription_es`/`shortDescription_en`
-
-**Archivos que necesitan actualización cuando se migre projects**:
-- `components/home/LandingProjectCard.jsx` (líneas 48, 55, 79-80)
-- `components/Header.jsx` (líneas 118, 156, 167)
-- `components/Sidebar.jsx` (línea 222)
-- `app/dashboard/[id]/about/page.jsx` (líneas 118, 133, 137-139, 171-177)
-- `app/home/page.jsx` (líneas 167-169)
-- `app/dashboard/[id]/identidad/page.jsx` (líneas 45, 62)
-- `app/dashboard/[id]/layout.jsx` (líneas 69, 75, 83-84)
-- `app/user/nft/page.jsx` (líneas 66, 70, 78, 184)
-- `app/proyecto/page.jsx` (líneas 30, 40, 43-44, 53, 56-57, 65, 68-69)
-
-**Nota**: En `layout.jsx` hay valores hardcodeados temporalmente (líneas 18-22) que deben eliminarse cuando se migre la tabla projects.
-
-### 2. Otros Componentes con Datos de Tramos/PACs
-**Pendiente verificar**:
-- `app/dashboard/[id]/trayectoria/OldPage.jsx` (líneas 258, 260)
-- `app/evaluations/[evaluationId]/page.jsx`
-- `app/evaluations/page.jsx`
-- `app/evaluations/components/EvaluationCard.jsx`
-
-### 3. Limpieza de Código Temporal
-- Eliminar `useTranslatedContent` si ya no es necesario (las columnas ya vienen traducidas del backend)
-- Eliminar hardcodeos en `layout.jsx` líneas 18-22 cuando projects tenga columnas _es/_en
-
-## 📋 Entidades con Columnas Multi-idioma (Backend)
-
-### ✅ Ya migradas (columnas antiguas eliminadas):
-- **tramos**: name_es, name_en, description_es, description_en, eligibility_rule_es, eligibility_rule_en
-- **pacs**: title_es, title_en, objective_line_es, objective_line_en
-- **categories**: name_es, name_en, description_es, description_en
-- **rubrics**: name_es, name_en, description_es, description_en
-- **micro_action_definitions**: instruction_es, instruction_en
-
-### ⏳ Pendiente migrar:
-- **projects**: projectName, tagline, shortDescription
-
-## 🎯 Siguientes Pasos
-
-1. **Migrar tabla projects** en el backend (agregar columnas name_es, name_en, tagline_es, tagline_en, shortDescription_es, shortDescription_en)
-
-2. **Actualizar componentes de projects** usando el hook `useLocalizedField`:
-   ```javascript
-   const projectName = useLocalizedField(project, 'name');
-   const projectTagline = useLocalizedField(project, 'tagline');
-   const projectDescription = useLocalizedField(project, 'shortDescription');
-   ```
-
-3. **Probar con ambos idiomas** (ES/EN) para verificar que los campos se muestran correctamente
-
-4. **Eliminar código temporal**:
-   - Hardcodeos en layout.jsx
-   - useTranslatedContent si ya no es necesario
-
-## 🔧 Uso del Hook
+Hook y funcion utilitaria para obtener campos localizados.
 
 ```javascript
-import { useLocalizedField } from '@/hooks/useLocalizedField';
-
-// En un componente React
-function MiComponente({ tramo }) {
-  const tramoName = useLocalizedField(tramo, 'name');
-  const tramoDescription = useLocalizedField(tramo, 'description');
-  
-  return <h1>{tramoName}</h1>;
+// Hook - dentro de componentes React
+export function useLocalizedField(obj, fieldBase) {
+  const language = useUserStore((state) => state.language);
+  if (!obj || !fieldBase) return '';
+  const localizedValue = obj[`${fieldBase}_${language}`];
+  if (!localizedValue) {
+    return obj[`${fieldBase}_en`] || obj[fieldBase] || '';
+  }
+  return localizedValue;
 }
 
-// Fuera de componentes (usando la función utilitaria)
-import { getLocalizedValue } from '@/hooks/useLocalizedField';
-
-const name = getLocalizedValue(tramo, 'name', 'es');
+// Utilitaria - fuera de componentes (maps, callbacks, etc.)
+export function getLocalizedValue(obj, fieldBase, language) {
+  if (!obj || !fieldBase) return '';
+  const localizedValue = obj[`${fieldBase}_${language}`];
+  if (!localizedValue) {
+    return obj[`${fieldBase}_en`] || obj[fieldBase] || '';
+  }
+  return localizedValue;
+}
 ```
 
-## 📝 Notas
+**Por que dos versiones?**
+- `useLocalizedField`: Hook de React, se suscribe al store de idioma. Solo puede usarse en el nivel superior de componentes.
+- `getLocalizedValue`: Funcion pura, recibe el idioma como parametro. Se usa dentro de `.map()`, callbacks y componentes hijos donde no se quiere/crea un hook.
 
-- El hook maneja automáticamente el fallback: idioma actual → inglés → campo original
-- El idioma del usuario se obtiene de `useUserStore`
-- No es necesario modificar el backend para las entidades ya migradas
-- Para projects, se requiere migración del backend primero
+---
+
+## Archivos Modificados
+
+### 1. `hooks/index.js`
+Se agregaron los exports del nuevo hook.
+
+```javascript
+export { useLocalizedField, getLocalizedValue } from './useLocalizedField';
+```
+
+### 2. `components/Header.jsx`
+**Cambio**: `tramoData.name` → `tramoName` (localizado)
+
+```diff
++ import { useLocalizedField } from '@/hooks/useLocalizedField';
+
+  export default function Header({ isHome = false }) {
++   const tramoName = useLocalizedField(contextData?.tramoData, 'name');
+
+-   {tramoData.code} - {tramoData.name}
++   {tramoData.code} - {tramoName}
+```
+
+### 3. `app/dashboard/[id]/identidad/page.jsx`
+**Cambio**: `tramoData.name` → `tramoName` (localizado)
+
+```diff
++ import { useLocalizedField } from '@/hooks/useLocalizedField';
+
++ const tramoName = useLocalizedField(tramoData, 'name');
+
+- {tramoData.name || t('tramoNameFallback')}
++ {tramoName || t('tramoNameFallback')}
+```
+
+### 4. `app/dashboard/[id]/tramo/page.jsx`
+**Cambio**: `currentState.currentTramoName` → `tramoName` (localizado desde datos reales)
+
+```diff
++ import { useLocalizedField } from '@/hooks/useLocalizedField';
+
++ const tramoName = useLocalizedField(tramoData, 'name');
+
+  const tramo = {
+    code: currentState.currentTramoCode,
+-   name: currentState.currentTramoName,
++   name: tramoName,
+  };
+```
+
+### 5. `app/dashboard/[id]/trayectoria/NewPage.jsx`
+**Cambios**: PAC title, objectiveLine, tramo name, micro-action instruction
+
+```diff
++ import { useLocalizedField, getLocalizedValue } from '@/hooks/useLocalizedField';
+
+  // Nivel superior del componente principal (antes del return)
++ const selectedPacTitle = useLocalizedField(selectedPac?.pac, 'title');
++ const selectedPacObjective = useLocalizedField(selectedPac?.pac, 'objectiveLine');
++ const tramoNameLocalized = useLocalizedField(tramoData, 'name');
+
+  // En el componente PacCard (componente interno)
+  const PacCard = ({ pac, ... }) => {
++   const pacTitle = useLocalizedField(pac.pac, 'title');
+-   {pac.pac.title}
++   {pacTitle}
+  };
+
+  // En RealCargaPac (componente interno, dentro de .map())
+  const RealCargaPac = ({ ... }) => {
++   const language = useUserStore((state) => state.language);
+
+    {microActions.map((ma) => {
+-     const instruction = ma.microActionDefinition?.instruction || t('noDescription');
++     const instruction = getLocalizedValue(ma.microActionDefinition, 'instruction', language) || t('noDescription');
+    })}
+  };
+```
+
+### 6. `app/dashboard/[id]/trayectoria/components/Microacciones.jsx`
+**Cambio**: `pac.title` → localizado con `getLocalizedValue`
+
+```diff
+- import { useLocalizedField } from '@/hooks/useLocalizedField';
++ import { getLocalizedValue } from '@/hooks/useLocalizedField';
++ import { useUserStore } from '@/lib/store';
+
+  export default function Microacciones({ pacs }) {
++   const language = useUserStore((state) => state.language);
+
+    {pacs.map((pac) => {
+-     // No se puede usar useLocalizedField dentro de .map()
++     const pacTitle = getLocalizedValue(pac, 'title', language);
+-     {pac.title}
++     {pacTitle}
+    })}
+
+-   {selectedPac.title}
++   {getLocalizedValue(selectedPac, 'title', language)}
+```
+
+### 7. `app/dashboard/[id]/layout.jsx`
+**Cambio**: Se agrego comentario documentando el estado temporal.
+
+```diff
++ // NOTA: La tabla projects AUN no tiene columnas _es/_en
++ // Cuando se agreguen, reemplazar estos hardcodeos con:
++ // projectData.name_en, projectData.tagline_en, projectData.shortDescription_en
+  projectData.shortDescription_en = 'Fintech project...';
+  projectData.tagline_en = 'Streamlines reconciliations...';
+```
+
+---
+
+## Entidades del Backend
+
+### Migradas (columnas antiguas eliminadas)
+
+| Tabla | Campos nuevos | Campos eliminados |
+|---|---|---|
+| `tramos` | `name_es`, `name_en`, `description_es`, `description_en`, `eligibility_rule_es`, `eligibility_rule_en` | `name`, `description`, `eligibility_rule` |
+| `pacs` | `title_es`, `title_en`, `objective_line_es`, `objective_line_en` | `title`, `objective_line` |
+| `categories` | `name_es`, `name_en`, `description_es`, `description_en` | `name`, `description` |
+| `rubrics` | `name_es`, `name_en`, `description_es`, `description_en` | `name`, `description` |
+| `micro_action_definitions` | `instruction_es`, `instruction_en` | `instruction` |
+
+### Pendiente de migrar
+
+| Tabla | Campos actuales | Columnas nuevas necesarias |
+|---|---|---|
+| `projects` | `projectName`, `tagline`, `shortDescription` | `name_es`, `name_en`, `tagline_es`, `tagline_en`, `shortDescription_es`, `shortDescription_en` |
+
+---
+
+## Commits
+
+```
+5f4df2b docs: add i18n migration status document
+0f1e334 docs: add note about pending projects table migration
+eb50fd7 feat: migrate components to use localized fields for tramos and PACs
+2a343aa feat: add useLocalizedField hook for multi-language support
+```
+
+---
+
+## Proximos Pasos
+
+### 1. Migrar tabla `projects` en el backend
+
+Crear migracion TypeORM similar a `1785171126021-AddTranslateColumns.ts`:
+- Agregar columnas `name_es`, `name_en`, `tagline_es`, `tagline_en`, `shortDescription_es`, `shortDescription_en`
+- Copiar valores existentes a columnas `_es`
+- Eliminar columnas antiguas
+
+### 2. Actualizar componentes de `projects`
+
+Archivos pendientes (~9 archivos, ~20 usos):
+
+| Archivo | Campos a migrar |
+|---|---|
+| `components/home/LandingProjectCard.jsx` | `projectName`, `shortDescription`, `tagline` |
+| `components/Header.jsx` | `projectName` |
+| `components/Sidebar.jsx` | `projectName` |
+| `app/dashboard/[id]/about/page.jsx` | `projectName`, `tagline`, `shortDescription` |
+| `app/home/page.jsx` | `projectName`, `shortDescription`, `tagline` (filtros de busqueda) |
+| `app/dashboard/[id]/identidad/page.jsx` | `projectName` |
+| `app/dashboard/[id]/layout.jsx` | `projectName` |
+| `app/user/nft/page.jsx` | `projectName` |
+| `app/proyecto/page.jsx` | `projectName`, `tagline`, `shortDescription` |
+
+Patron a aplicar:
+```javascript
+const projectName = useLocalizedField(project, 'name');
+const projectTagline = useLocalizedField(project, 'tagline');
+const projectDescription = useLocalizedField(project, 'shortDescription');
+```
+
+### 3. Verificar otros componentes
+
+- `app/dashboard/[id]/trayectoria/OldPage.jsx` - tramo name/description
+- `app/evaluations/` - datos de proyectos y evidencias
+
+### 4. Limpieza
+
+- Eliminar valores hardcodeados en `layout.jsx` (lineas 18-22)
+- Evaluar si `useTranslatedContent` sigue siendo necesario
+- Eliminar `useTranslatedContent` si las columnas ya vienen traducidas del backend
+
+---
+
+## Reglas de Uso del Hook
+
+### Correcto
+
+```javascript
+// En el nivel superior del componente
+function MiComponente({ tramo, pac }) {
+  const tramoName = useLocalizedField(tramo, 'name');
+  const pacTitle = useLocalizedField(pac, 'title');
+  return <h1>{tramoName} - {pacTitle}</h1>;
+}
+```
+
+```javascript
+// Dentro de .map() usar getLocalizedValue
+function Lista({ items }) {
+  const language = useUserStore((state) => state.language);
+  return items.map(item => (
+    <span key={item.id}>{getLocalizedValue(item, 'name', language)}</span>
+  ));
+}
+```
+
+### Incorrecto
+
+```javascript
+// NO llamar hooks dentro de condicionales
+function Mal({ data }) {
+  if (data) {
+    const name = useLocalizedField(data, 'name'); // ERROR
+  }
+}
+```
+
+```javascript
+// NO llamar hooks dentro de .map()
+function Mal({ items }) {
+  return items.map(item => {
+    const name = useLocalizedField(item, 'name'); // ERROR
+    return <span>{name}</span>;
+  });
+}
+```
+
+---
+
+## Consideraciones Tecnicas
+
+- **Fallback automatico**: Si el campo en el idioma actual no existe, se intenta con ingles, y si tampoco existe se retorna string vacio.
+- **Renders reactivos**: El hook se suscribe al store de Zustand, por lo que al cambiar el idioma los componentes se re-renderizan automaticamente.
+- **Rendimiento**: `getLocalizedValue` es una funcion pura sin overhead de React, ideal para listas grandes.
+- **Compatibilidad**: Mientras la tabla `projects` no se migre, los textos de proyectos seguiran usando las propiedades antiguas. El hook soporta ambos casos via fallback.
