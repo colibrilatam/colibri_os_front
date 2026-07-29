@@ -18,7 +18,6 @@ export default function EvaluationCard({ evaluation }) {
 
   const projectId = params.id;
 
-  console.log(projectId);
   return (
     <Link href={`/evaluations/${evaluation.id}`}>
       <div

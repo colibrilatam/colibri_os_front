@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from '@/hooks/useTranslation';
+import { getLocalizedValue } from '@/hooks/useLocalizedField';
+import { useUserStore } from '@/lib/store';
 
 const statusConfig = {
   pendiente: 'bg-zinc-700 text-zinc-300',
@@ -15,6 +17,7 @@ export default function Microacciones({ pacs }) {
   const { t } = useTranslation('trayectoria');
   const [selectedPac, setSelectedPac] = useState(null);
   const [filter, setFilter] = useState('all');
+  const language = useUserStore((state) => state.language);
 
   const filterFn = (item) => {
     if (filter === 'all') return true;
@@ -40,19 +43,22 @@ export default function Microacciones({ pacs }) {
 
       {/* LISTADO PACs */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {pacs.map((pac) => (
-          <motion.div
-            key={pac.id}
-            whileHover={{ scale: 1.02 }}
-            onClick={() => setSelectedPac(pac)}
-            className="cursor-pointer rounded-xl glass-effect border-glass p-4"
-          >
-            <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>{pac.title}</h3>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
-              {t('microactionSummary')}
-            </p>
-          </motion.div>
-        ))}
+        {pacs.map((pac) => {
+          const pacTitle = getLocalizedValue(pac, 'title', language);
+          return (
+            <motion.div
+              key={pac.id}
+              whileHover={{ scale: 1.02 }}
+              onClick={() => setSelectedPac(pac)}
+              className="cursor-pointer rounded-xl glass-effect border-glass p-4"
+            >
+              <h3 className="font-medium" style={{ color: 'var(--text-primary)' }}>{pacTitle}</h3>
+              <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>
+                {t('microactionSummary')}
+              </p>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* DETALLE PAC */}
@@ -63,7 +69,7 @@ export default function Microacciones({ pacs }) {
           className="rounded-2xl glass-effect border-glass p-6"
         >
           <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>
-            {selectedPac.title}
+            {getLocalizedValue(selectedPac, 'title', language)}
           </h2>
 
           {/* Microacciones */}

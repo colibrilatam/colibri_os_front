@@ -15,7 +15,6 @@ export default function TrayectoriaSection() {
     );
 
 
-    console.log(mockProjectMatch, "mockProjectMatch");
   if(mockProjectMatch) return <OldTrayectoria />
   else return <NewTrayectoria />
 };

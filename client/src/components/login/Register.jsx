@@ -121,7 +121,6 @@ useEffect(() => {
     if (result.success) {
       setRol(selectedRole);
       sessionStorage.removeItem(STORAGE_KEY);
-      console.log(result);
       setToken(result.data.token);
       onSuccess();
     } else {

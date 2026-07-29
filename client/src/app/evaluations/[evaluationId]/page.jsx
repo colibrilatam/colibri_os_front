@@ -390,8 +390,7 @@ const bioSeedEvaluation = {
 export default function EvaluationWorkspace() {
   const params = useParams();
   const evaluationId = params.evaluationId;
-  //console.log('PROJECT ID:', projectId);
-  //console.log('EVALUATION ID:', evaluationId);
+
   const evaluation =
     evaluationId === 'eval-1'
       ? trayectoClaroEvaluation

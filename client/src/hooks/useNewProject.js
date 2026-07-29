@@ -21,7 +21,6 @@ export const useNewProject = () => {
   // Función asíncrona para realizar las peticiones
   const create = async (projectData) => {
     const descriptionEvidence = [];
-    console.log(projectData);
     // Crear el proyecto
     const { data: createdProject, error: createProjectError } = await createProject(projectData);
     if (createProjectError) {
@@ -71,7 +70,6 @@ export const useNewProject = () => {
       console.log(getCategoriesError);
       return { error: 'Error al obtener las categorías del primer tramo' };
     }
-    //console.log(categories);
 
     // Con cada categoría se crea un project_pac
     const fetchPacs = async (categoryId) => {
@@ -96,7 +94,6 @@ export const useNewProject = () => {
       return { error: 'Error al crear project_pac para alguna categoría' };
     }
     const pacs = pacResults.filter(Boolean); // elimina los null (errores)
-    console.log('project_pacs',pacs);
 
     const { data: updatedProject, error: updatePacStatusError } = await updatePacStatus(pacs[0].id, {status: 'in_progress'});
     if(updatePacStatusError){
@@ -124,7 +121,6 @@ export const useNewProject = () => {
     }
 
     const microActionsDefinitions = microActionDefinitions.filter(Boolean);
-    console.log('microaction def',microActionsDefinitions);
 
     // Por cada miroactions_definition se crea un microaction_instance
     const fetchCreateMicroActionInstace = async (microActionDefinitionId) => {
@@ -156,8 +152,6 @@ export const useNewProject = () => {
     }
     const microActionsInstaces = microActionInstancesResult.filter(Boolean);
 
-    console.log('microaction instance', microActionsInstaces);
-    console.log('descriptionEvidence', descriptionEvidence);
     // Se crea una evidencia con el ID de una microaction_instance
     const fetchCreateEvidence = async (microActionInstance, index) => {
       const { data: createdEvidence, error } = await createEvidence({
@@ -184,7 +178,6 @@ export const useNewProject = () => {
     return { error: 'Error al crear evidencia para alguna microaction_instance' };
   }
   const evidences = evidencesResult.filter(Boolean);
-  console.log('evidences', evidences);
   
 
   return createdProject;

@@ -9,6 +9,7 @@ import AllTranches from './components/AllTranches';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useLocalizedField } from '@/hooks/useLocalizedField';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -24,6 +25,9 @@ export default function TramoDashboard() {
   const { project, currentState, pacProgress } = mockProject;
 
   const { execute: getProjectTramoData, error: projectTramoDataError } = useRequest(projectsService.projectTramoData);
+
+  // Campos localizados para tramos
+  const tramoName = useLocalizedField(tramoData, 'name');
 
   useEffect(() => {
 
@@ -48,11 +52,10 @@ export default function TramoDashboard() {
 
   const tramo = {
     code: currentState.currentTramoCode,
-    name: currentState.currentTramoName,
+    name: tramoName,
   };
   /* ========================= */
 
-  console.log(tramoInfo);
 
   return (
     <div className="min-h-screen mx-auto overflow-x-hidden">

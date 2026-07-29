@@ -20,7 +20,6 @@ export function getProjectIC(name) {
   const match = projectIC.find((p) => p.projectName.toLowerCase() === normalized);
 
   const value = match ? clampIC(match.ic) : null;
-  console.log(value)
   if (value === null) return null;
 
   return value.toFixed(2); // "1.47"
