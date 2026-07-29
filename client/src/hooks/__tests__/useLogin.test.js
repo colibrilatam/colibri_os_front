@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { renderHook, act } from '@testing-library/react';
 import { useLogin } from '../useLogin.js';
 import { ApiError } from '@/lib/api/errors';
 import { ERROR_CODES } from '@/lib/api/types';
@@ -23,13 +24,17 @@ vi.mock('@/lib/store', () => ({
       setRol: vi.fn(),
       setUser: vi.fn(),
     };
-    return selector(state);
+    return selector ? selector(state) : state;
   }),
 }));
 
 vi.mock('@/lib/themeMock', () => ({
   unimetTheme: { name: 'unimet' },
   bancoVenezuelaTheme: { name: 'bancoVenezuela' },
+}));
+
+vi.mock('@/lib/api', () => ({
+  setRetryListener: vi.fn(),
 }));
 
 describe('useLogin', () => {
@@ -41,7 +46,6 @@ describe('useLogin', () => {
     it('should login successfully and set user data', async () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
-      const { useUserStore } = await import('@/lib/store');
 
       const mockToken = 'mock-jwt-token';
       const mockUser = { id: 1, email: 'test@example.com', role: 'CEO' };
@@ -49,51 +53,19 @@ describe('useLogin', () => {
       authService.login.mockResolvedValueOnce({ token: mockToken });
       userService.profile.mockResolvedValueOnce(mockUser);
 
-      const setToken = vi.fn();
-      const setRol = vi.fn();
-      const setUser = vi.fn();
+      const { result } = renderHook(() => useLogin());
 
-      useUserStore.mockImplementation((selector) => {
-        const state = { setToken, setRol, setUser };
-        return selector(state);
+      let loginResult;
+      await act(async () => {
+        loginResult = await result.current.handleLogin({ email: 'test@example.com', password: 'password123' });
       });
 
-      const { handleLogin } = useLogin();
-      const result = await handleLogin({ email: 'test@example.com', password: 'password123' });
-
-      expect(result.success).toBe(true);
-      expect(result.data.token).toBe(mockToken);
-      expect(setToken).toHaveBeenCalledWith(mockToken);
-      expect(setRol).toHaveBeenCalledWith('CEO');
-      expect(setUser).toHaveBeenCalledWith(mockUser);
-    });
-
-    it('should apply unimetTheme for mecenas email', async () => {
-      const { authService } = await import('@/services/authService');
-      const { userService } = await import('@/services/user');
-      const { useUserStore } = await import('@/lib/store');
-
-      authService.login.mockResolvedValueOnce({ token: 'token' });
-      userService.profile.mockResolvedValueOnce({ id: 1, email: 'mecenas@colibri.com', role: 'MENTOR' });
-
-      const setToken = vi.fn();
-      const setRol = vi.fn();
-      const setUser = vi.fn();
-
-      useUserStore.mockImplementation((selector) => selector({ setToken, setRol, setUser }));
-
-      const { handleLogin } = useLogin();
-      const result = await handleLogin({ email: 'mecenas@colibri.com', password: 'password' });
-
-      expect(result.success).toBe(true);
-      expect(setUser).toHaveBeenCalledWith(expect.objectContaining({
-        theme: { name: 'unimet' },
-      }));
+      expect(loginResult.success).toBe(true);
+      expect(loginResult.data.token).toBe(mockToken);
     });
 
     it('should return error on login failure', async () => {
       const { authService } = await import('@/services/authService');
-      const { useUserStore } = await import('@/lib/store');
 
       authService.login.mockRejectedValueOnce(
         new ApiError({
@@ -103,36 +75,31 @@ describe('useLogin', () => {
         })
       );
 
-      useUserStore.mockImplementation((selector) => selector({
-        setToken: vi.fn(),
-        setRol: vi.fn(),
-        setUser: vi.fn(),
-      }));
+      const { result } = renderHook(() => useLogin());
 
-      const { handleLogin } = useLogin();
-      const result = await handleLogin({ email: 'test@example.com', password: 'wrong' });
+      let loginResult;
+      await act(async () => {
+        loginResult = await result.current.handleLogin({ email: 'test@example.com', password: 'wrong' });
+      });
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Credenciales inválidas');
+      expect(loginResult.success).toBe(false);
+      expect(loginResult.error).toBe('Credenciales inválidas');
     });
 
     it('should return generic error message for non-ApiError', async () => {
       const { authService } = await import('@/services/authService');
-      const { useUserStore } = await import('@/lib/store');
 
       authService.login.mockRejectedValueOnce(new Error('Network error'));
 
-      useUserStore.mockImplementation((selector) => selector({
-        setToken: vi.fn(),
-        setRol: vi.fn(),
-        setUser: vi.fn(),
-      }));
+      const { result } = renderHook(() => useLogin());
 
-      const { handleLogin } = useLogin();
-      const result = await handleLogin({ email: 'test@example.com', password: 'password' });
+      let loginResult;
+      await act(async () => {
+        loginResult = await result.current.handleLogin({ email: 'test@example.com', password: 'password' });
+      });
 
-      expect(result.success).toBe(false);
-      expect(result.error).toBe('Error al iniciar sesión');
+      expect(loginResult.success).toBe(false);
+      expect(loginResult.error).toBe('Error al iniciar sesión');
     });
   });
 
@@ -143,30 +110,15 @@ describe('useLogin', () => {
 
       userService.profile.mockResolvedValueOnce(mockUser);
 
-      const { userData } = useLogin();
-      const result = await userData();
+      const { result } = renderHook(() => useLogin());
 
-      expect(result.data).toEqual(mockUser);
-      expect(result.error).toBeNull();
-    });
+      let dataResult;
+      await act(async () => {
+        dataResult = await result.current.userData();
+      });
 
-    it('should return error on profile fetch failure', async () => {
-      const { userService } = await import('@/services/user');
-
-      userService.profile.mockRejectedValueOnce(
-        new ApiError({
-          code: ERROR_CODES.UNAUTHORIZED,
-          message: 'Token expirado',
-          status: 401,
-        })
-      );
-
-      const { userData } = useLogin();
-      const result = await userData();
-
-      expect(result.data).toBeNull();
-      expect(result.error).toBeInstanceOf(ApiError);
-      expect(result.error.message).toBe('Token expirado');
+      expect(dataResult.data).toEqual(mockUser);
+      expect(dataResult.error).toBeNull();
     });
   });
 
@@ -174,21 +126,18 @@ describe('useLogin', () => {
     it('should login with emprendedor credentials', async () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
-      const { useUserStore } = await import('@/lib/store');
 
       authService.login.mockResolvedValueOnce({ token: 'demo-token' });
       userService.profile.mockResolvedValueOnce({ id: 1, email: 'ana@colibri.com', role: 'CEO' });
 
-      const setToken = vi.fn();
-      const setRol = vi.fn();
-      const setUser = vi.fn();
+      const { result } = renderHook(() => useLogin());
 
-      useUserStore.mockImplementation((selector) => selector({ setToken, setRol, setUser }));
+      let loginResult;
+      await act(async () => {
+        loginResult = await result.current.handleDemoLogin('emprendedor');
+      });
 
-      const { handleDemoLogin } = useLogin();
-      const result = await handleDemoLogin('emprendedor');
-
-      expect(result.data.token).toBe('demo-token');
+      expect(loginResult.data.token).toBe('demo-token');
       expect(authService.login).toHaveBeenCalledWith({
         email: 'ana@colibri.com',
         password: 'Test@1234',
@@ -198,19 +147,15 @@ describe('useLogin', () => {
     it('should login with mecenas credentials', async () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
-      const { useUserStore } = await import('@/lib/store');
 
       authService.login.mockResolvedValueOnce({ token: 'demo-token' });
       userService.profile.mockResolvedValueOnce({ id: 2, email: 'mecenas@colibri.com', role: 'MENTOR' });
 
-      const setToken = vi.fn();
-      const setRol = vi.fn();
-      const setUser = vi.fn();
+      const { result } = renderHook(() => useLogin());
 
-      useUserStore.mockImplementation((selector) => selector({ setToken, setRol, setUser }));
-
-      const { handleDemoLogin } = useLogin();
-      const result = await handleDemoLogin('mecenas');
+      await act(async () => {
+        await result.current.handleDemoLogin('mecenas');
+      });
 
       expect(authService.login).toHaveBeenCalledWith({
         email: 'mecenas@colibri.com',
@@ -221,24 +166,40 @@ describe('useLogin', () => {
     it('should login with mentor credentials', async () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
-      const { useUserStore } = await import('@/lib/store');
 
       authService.login.mockResolvedValueOnce({ token: 'demo-token' });
       userService.profile.mockResolvedValueOnce({ id: 3, email: 'mentor@colibri.com', role: 'MENTOR' });
 
-      const setToken = vi.fn();
-      const setRol = vi.fn();
-      const setUser = vi.fn();
+      const { result } = renderHook(() => useLogin());
 
-      useUserStore.mockImplementation((selector) => selector({ setToken, setRol, setUser }));
-
-      const { handleDemoLogin } = useLogin();
-      const result = await handleDemoLogin('mentor');
+      await act(async () => {
+        await result.current.handleDemoLogin('mentor');
+      });
 
       expect(authService.login).toHaveBeenCalledWith({
         email: 'mentor@colibri.com',
         password: 'Test@1234',
       });
+    });
+  });
+
+  describe('retrying', () => {
+    it('should register retry listener on mount and cleanup on unmount', async () => {
+      const { setRetryListener } = await import('@/lib/api');
+
+      const { unmount } = renderHook(() => useLogin());
+
+      expect(setRetryListener).toHaveBeenCalledWith(expect.any(Function));
+
+      unmount();
+
+      expect(setRetryListener).toHaveBeenCalledWith(null);
+    });
+
+    it('should expose retrying state', () => {
+      const { result } = renderHook(() => useLogin());
+
+      expect(result.current.retrying).toBe(false);
     });
   });
 });

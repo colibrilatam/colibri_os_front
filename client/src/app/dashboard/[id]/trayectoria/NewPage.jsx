@@ -222,13 +222,18 @@ export default function NewTrayectoria() {
   }
 
   const initialize = async () => {
-  setLoading(true);
-  const { tramoDataResponse, firstPac, sortedPacs } = await getPacsInfo(); // await para esperar el return
-  const {inProgressPacMicroActions, orderedMicroActions} = await getMAInfo(tramoDataResponse, firstPac);
-  const { inProgressPacEvidence } = await getEvidenceInfo(orderedMicroActions, inProgressPacMicroActions);
-  checkCurrentPac(sortedPacs, inProgressPacMicroActions, inProgressPacEvidence);
-  setLoading(false);
-}
+    setLoading(true);
+    try {
+      const { tramoDataResponse, firstPac, sortedPacs } = await getPacsInfo();
+      const {inProgressPacMicroActions, orderedMicroActions} = await getMAInfo(tramoDataResponse, firstPac);
+      const { inProgressPacEvidence } = await getEvidenceInfo(orderedMicroActions, inProgressPacMicroActions);
+      checkCurrentPac(sortedPacs, inProgressPacMicroActions, inProgressPacEvidence);
+    } catch (err) {
+      console.error('Error initializing trayectoria:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // Al montar el componente se ejecuta la función para obtener los datos
   useEffect(() => {

@@ -56,32 +56,34 @@ export default function NftPage(){
 
       async function getData(){
     setLoading(true);
+    try {
+      const { data: allProjects, error: allProjectsError} = await getNftProjectsInfo();
 
-    const { data: allProjects, error: allProjectsError} = await getNftProjectsInfo();
-    
-    const allProjectsInfo = [];
+      const allProjectsInfo = [];
 
-    // Agregar FlujoClave al inicio del portafolio
-    if(allProjects){
-      const flujoClave = allProjects.find(project => project.project.projectName === "FlujoClave")
+      if(allProjects){
+        const flujoClave = allProjects.find(project => project.project.projectName === "FlujoClave")
 
-      const { data:  FCUserData } = await getUserData(flujoClave.project.ownerUserId);
-      const { data:  FCTramoData } = await getTramo(flujoClave.project.currentTramoId);
-      const ic = getProjectIC(flujoClave.project.projectName);
+        const { data:  FCUserData } = await getUserData(flujoClave.project.ownerUserId);
+        const { data:  FCTramoData } = await getTramo(flujoClave.project.currentTramoId);
+        const ic = getProjectIC(flujoClave.project.projectName);
 
-      allProjectsInfo.push({ nftProject: flujoClave, user: FCUserData, tramo: FCTramoData, ic: ic })
+        allProjectsInfo.push({ nftProject: flujoClave, user: FCUserData, tramo: FCTramoData, ic: ic })
+      }
+
+      for(let i = 0; i < 2;  i++){
+        const { data:  userData } = await getUserData(allProjects[i].project.ownerUserId);
+        const { data:  tramoData } = await getTramo(allProjects[i].project.currentTramoId);
+        const ic = getProjectIC(allProjects[i].project.projectName);
+
+        allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData, ic: ic })
+      }
+      setProjectsInfo(allProjectsInfo)
+    } catch (err) {
+      console.error('Error fetching NFT data:', err);
+    } finally {
+      setLoading(false);
     }
-
-    for(let i = 0; i < 2;  i++){
-      const { data:  userData } = await getUserData(allProjects[i].project.ownerUserId);
-      const { data:  tramoData } = await getTramo(allProjects[i].project.currentTramoId);
-      const ic = getProjectIC(allProjects[i].project.projectName);
-
-      allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData, ic: ic })
-    }
-    setProjectsInfo(allProjectsInfo)
-    setLoading(false);
-    
   }
 
   useEffect(() => {
