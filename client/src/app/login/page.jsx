@@ -30,6 +30,7 @@ export default function LoginRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
+  const [popupIsError, setPopupIsError] = useState(false);
   const router = useRouter();
   const { handleDemoLogin } = useLogin();
 
@@ -48,14 +49,19 @@ export default function LoginRegisterPage() {
   // google auth
   const handleGuestLoginClick = async () => {
     setLoading(true);
-    const { data, error } = await handleDemoLogin('mentor');
-    if (data) {
-      setLoading(false);
-      setPopupMessage(t('guestLoginMessage'));
-      setIsPopupOpen(true);
-    } else {
-      console.log(data, error);
-      alert(result);
+    try {
+      const { data, error } = await handleDemoLogin('mentor');
+      if (data) {
+        setPopupMessage(t('guestLoginMessage'));
+        setPopupIsError(false);
+      } else {
+        setPopupMessage(error?.message || t('errorConnection'));
+        setPopupIsError(true);
+      }
+    } catch (err) {
+      setPopupMessage(t('errorConnection'));
+      setPopupIsError(true);
+    } finally {
       setLoading(false);
     }
   };
@@ -63,7 +69,9 @@ export default function LoginRegisterPage() {
   // popup
   const handlePopupClose = () => {
     setIsPopupOpen(false);
-    router.push('/home');
+    if (!popupIsError) {
+      router.push('/home');
+    }
   };
 
   if (loading) return <LoadingScreen />;
