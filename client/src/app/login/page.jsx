@@ -31,8 +31,9 @@ export default function LoginRegisterPage() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [popupIsError, setPopupIsError] = useState(false);
+  const [guestError, setGuestError] = useState('');
   const router = useRouter();
-  const { handleDemoLogin } = useLogin();
+  const { handleDemoLogin, retrying } = useLogin();
 
   const { handleGuestLogin } = useGuestLogin();
 
@@ -46,21 +47,21 @@ export default function LoginRegisterPage() {
     setView('register');
   };
 
-  // google auth
+  // demo login
   const handleGuestLoginClick = async () => {
     setLoading(true);
+    setGuestError('');
     try {
       const { data, error } = await handleDemoLogin('mentor');
       if (data) {
         setPopupMessage(t('guestLoginMessage'));
         setPopupIsError(false);
+        setIsPopupOpen(true);
       } else {
-        setPopupMessage(error?.message || t('errorConnection'));
-        setPopupIsError(true);
+        setGuestError(error?.message || t('errorConnection'));
       }
     } catch (err) {
-      setPopupMessage(t('errorConnection'));
-      setPopupIsError(true);
+      setGuestError(t('errorConnection'));
     } finally {
       setLoading(false);
     }
@@ -74,7 +75,9 @@ export default function LoginRegisterPage() {
     }
   };
 
-  if (loading) return <LoadingScreen />;
+  if (loading) {
+    return <LoadingScreen message={retrying ? t('retryMessage') : null} />;
+  }
 
   return (
     <div className="relative flex items-center justify-center min-h-screen px-4 py-6">
@@ -131,6 +134,9 @@ export default function LoginRegisterPage() {
             >
               {t('guestLogin')}
             </button>
+            {guestError && (
+              <p className="text-red-500 text-sm text-center mt-3">{guestError}</p>
+            )}
           </>
         )}
 

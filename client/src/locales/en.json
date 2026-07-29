@@ -108,6 +108,7 @@
     "errorFetchProjects": "Error fetching projects. Please log in again.",
     "errorUnknown": "Unknown error",
     "errorConnection": "Connection error. Please try again later.",
+    "retryMessage": "The server is waking up. This may take a few seconds...",
     "errorCreateUser": "Error creating user:",
     "loginSubmit": "Log in",
     "registerSubmit": "Register",
@@ -460,7 +461,8 @@
 
   "loadingScreen": {
     "loading": "Loading...",
-    "pleaseWait": "Please wait"
+    "pleaseWait": "Please wait",
+    "retryMessage": "The server is waking up. This may take a few seconds..."
   },
 
   "mainHeader": {

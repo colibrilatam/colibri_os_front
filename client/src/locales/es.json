@@ -108,6 +108,7 @@
     "errorFetchProjects": "Error obteniendo proyectos. Por favor, vuelva a iniciar sesión.",
     "errorUnknown": "Error desconocido",
     "errorConnection": "Error de conexión. Intenta nuevamente más tarde.",
+    "retryMessage": "El servidor está despertando. Esto puede demorar unos segundos...",
     "errorCreateUser": "Error al crear usuario:",
     "loginSubmit": "Iniciar sesión",
     "registerSubmit": "Registrarse",
@@ -460,7 +461,8 @@
 
   "loadingScreen": {
     "loading": "Cargando...",
-    "pleaseWait": "Por favor espera"
+    "pleaseWait": "Por favor espera",
+    "retryMessage": "El servidor está despertando. Esto puede demorar unos segundos..."
   },
 
   "mainHeader": {
