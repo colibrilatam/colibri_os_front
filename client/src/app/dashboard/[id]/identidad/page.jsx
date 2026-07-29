@@ -9,6 +9,7 @@ import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
 
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import { useLocalizedField } from '@/hooks/useLocalizedField';
 
 export default function IdentidadPage() {
   const { t } = useTranslation('identidad');
@@ -27,6 +28,9 @@ export default function IdentidadPage() {
     evidenceData,
     reputationData
   } = useProject();
+
+  // Campos localizados para tramos
+  const tramoName = useLocalizedField(tramoData, 'name');
 
   //console.log("IdentidadPage - dbProject:", dbProject);
 // Métricas - Hay que crear un hook para calcular estas métricas para no repetir este código siempre
@@ -150,7 +154,7 @@ export default function IdentidadPage() {
                     <div className="text-sm text-[var(--text-secondary)]">
                       <span className="text-[var(--text-primary)] font-medium">
                         {tramoData.code} ·{' '}
-                        {tramoData.name || t('tramoNameFallback')}
+                        {tramoName || t('tramoNameFallback')}
                       </span>
                     </div>
 

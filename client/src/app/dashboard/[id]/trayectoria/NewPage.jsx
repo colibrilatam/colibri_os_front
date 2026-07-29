@@ -19,6 +19,7 @@ import UploadModal from "./UploadModal";
 import NotificationPopup from "@/components/NotificationPopup";
 import ProgressBar from "@/components/ProgressBar";
 import { useUserStore } from "@/lib/store";
+import { useLocalizedField, getLocalizedValue } from '@/hooks/useLocalizedField';
 
 export default function NewTrayectoria() {
   const { t } = useTranslation('trayectoria');
@@ -291,6 +292,10 @@ export default function NewTrayectoria() {
     checkCurrentPac(undefined, undefined, evidenceData);
   }
 
+  // Campos localizados para PACs y tramos
+  const selectedPacTitle = useLocalizedField(selectedPac?.pac, 'title');
+  const selectedPacObjective = useLocalizedField(selectedPac?.pac, 'objectiveLine');
+  const tramoNameLocalized = useLocalizedField(tramoData, 'name');
 
   return (
     <div className="relative space-y-6">
@@ -343,7 +348,7 @@ export default function NewTrayectoria() {
       {/* HEADER */}
       <div id="cabecera" className="glass-effect border-glass rounded-2xl p-6">
         <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('operationalPath')}</p>
-        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData?.code} · {tramoData?.name}</h2>
+        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData?.code} · {tramoNameLocalized}</h2>
         <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{currentTramo?.description}</p>
         <div className="flex gap-3 mt-4 flex-wrap">
           <Metric label={t('metricCurrentPac')} value={metrics.currentPac} />
@@ -407,11 +412,11 @@ export default function NewTrayectoria() {
               <div className="glass-effect border-glass p-4 rounded-xl">
                 <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacTitle')}</p>
 
-                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPac.pac.title}</p>
+                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPacTitle}</p>
 
                 <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacObjective')}</p>
 
-                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPac.pac.objectiveLine}</p>
+                <p className="text-body-lg mb-4 text-(--text-primary)">{selectedPacObjective}</p>
 
                 <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacClosureRule')}</p>
 
@@ -491,6 +496,8 @@ export default function NewTrayectoria() {
 // Componente que muestra las microacciones reales del PAC
 const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence, microActionCompleted }) => {
   const { t } = useTranslation('trayectoria');
+  const language = useUserStore((state) => state.language);
+  
   if (!microActions.length) {
     return (
       <div className="rounded-xl p-4 border border-glass-dark bg-white/5">
@@ -506,7 +513,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
         const isCompleted = ma.status === 'completed' || ma.status === 'validated' || ma.status === 'closed';
         const isCurrent =  ma.status === 'submitted' || ma.status === 'in_progress';
         const isPending = ma.status === 'started' || ma.status === 'pending' || ma.status === 'reopened';
-        const instruction = ma.microActionDefinition?.instruction || t('noDescription');
+        const instruction = getLocalizedValue(ma.microActionDefinition, 'instruction', language) || t('noDescription');
 
         return (
           <div
@@ -673,6 +680,8 @@ const Metric = ({ label, value }) => (
 
 const PacCard = ({ pac, isSelected, onClick, index }) => {
   const { t } = useTranslation('trayectoria');
+  const pacTitle = useLocalizedField(pac.pac, 'title');
+  
   return (
   <motion.div
     onClick={onClick}
@@ -693,7 +702,7 @@ const PacCard = ({ pac, isSelected, onClick, index }) => {
       <div className="flex justify-between items-start ">
         <div>
           <p className="text-value-card text-(--text-primary)">{`T${pac.pac.code[4]}-C${pac.pac.code[6]}`}</p>
-          <p className="mb-4 text-(--text-secondary)">{pac.pac.title}</p>
+          <p className="mb-4 text-(--text-secondary)">{pacTitle}</p>
         </div>
         <StatusDot status={pac.status} />
       </div>

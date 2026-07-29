@@ -15,13 +15,17 @@ import { getProjectIC } from '@/lib/hooks/createIcMap';
 import LanguageSwitcher from './common/LanguageSwitcher';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import { useLocalizedField } from '@/hooks/useLocalizedField';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
-const { t } = useTranslation('header');
+  const { t } = useTranslation('header');
   const contextData = useProject();
 
   const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
+  
+  // Campos localizados para tramos
+  const tramoName = useLocalizedField(contextData?.tramoData, 'name');
   const logoSrc =
     user?.theme?.logoUrl &&
     user?.role === 'mecenas_semilla' &&
@@ -173,7 +177,7 @@ const { t } = useTranslation('header');
                   ID {project.id}
                 </span> */}
               <span className="rounded-full border border-(--text-accent) text-(--text-accent) glass-effect-accent font-bold glass-effect-dark px-2 sm:px-3 py-0.5 sm:py-1">
-                {tramoData.code} - {tramoData.name}
+                {tramoData.code} - {tramoName}
               </span>
               <span className="rounded-full font-bold border border-(--text-accent) glass-effect-accent px-2 sm:px-3 py-0.5 sm:py-1 text-(--text-accent)">
                 {t('status' + dbProject.status.charAt(0).toUpperCase() + dbProject.status.slice(1))}
