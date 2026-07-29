@@ -451,8 +451,11 @@
   "errorScreen": {
     "title": "Something went wrong!",
     "description": "An error occurred while loading the page. Please try again.",
+    "timeoutTitle": "The server is waking up...",
+    "timeoutDescription": "This may take a few seconds. Please try again in a moment.",
     "back": "Back",
-    "retry": "↻ Retry"
+    "retry": "↻ Retry",
+    "retrying": "Retrying..."
   },
 
   "loadingScreen": {

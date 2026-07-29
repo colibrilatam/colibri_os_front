@@ -6,14 +6,15 @@ import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
 
 const DEFAULT_TIMEOUT = 30000;
+const MAX_RETRIES = 2;
+const RETRY_DELAYS = [1000, 2000];
 
-/**
- * Instancia axios configurada con:
- * - baseURL desde NEXT_PUBLIC_BACKEND_URL
- * - Timeout de 30s por defecto
- * - Interceptor de request: inyecta token y requestId
- * - Interceptor de response: normaliza errores y maneja 401
- */
+const RETRYABLE_CODES = [ERROR_CODES.TIMEOUT, ERROR_CODES.NETWORK_ERROR];
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   timeout: DEFAULT_TIMEOUT,
@@ -25,19 +26,19 @@ const apiClient = axios.create({
 
 let logoutCallback = null;
 
-/**
- * Registra un callback para logout automático en 401.
- * @param {() => void} callback
- */
 export function setLogoutCallback(callback) {
   logoutCallback = callback;
 }
 
 apiClient.interceptors.request.use(
   async (config) => {
+    if (!config.metadata) {
+      config.metadata = {};
+    }
     const requestId = config.headers['x-request-id'] || generateRequestId();
     config.headers['x-request-id'] = requestId;
-    config.metadata = { requestId, startTime: Date.now() };
+    config.metadata.requestId = requestId;
+    config.metadata.startTime = Date.now();
 
     const token = await getToken();
     if (token) {
@@ -73,9 +74,47 @@ apiClient.interceptors.response.use(
       });
     }
 
-    const apiError = ApiError.fromAxiosError(error, error.config?.metadata?.requestId);
+    const config = error.config;
+    const apiError = ApiError.fromAxiosError(error, config?.metadata?.requestId);
 
-    const { requestId, startTime } = error.config?.metadata || {};
+    if (config && RETRYABLE_CODES.includes(apiError.code)) {
+      const method = config.method || 'GET';
+      const url = config.baseURL + config.url || '';
+      const requestId = config.metadata?.requestId || 'unknown';
+      let retryCount = config.metadata?.retryCount || 0;
+
+      while (retryCount < MAX_RETRIES) {
+        retryCount++;
+        config.metadata.retryCount = retryCount;
+        config.metadata.startTime = Date.now();
+
+        const delay = RETRY_DELAYS[retryCount - 1] || 2000;
+
+        logError(requestId, apiError, method, url);
+
+        if (typeof config.onRetry === 'function') {
+          config.onRetry(retryCount, MAX_RETRIES);
+        }
+
+        await sleep(delay);
+
+        try {
+          const response = await axios.request(config);
+          const { startTime } = config.metadata || {};
+          const duration = Date.now() - (startTime || Date.now());
+          logResponse(requestId, response.status, method, url, duration);
+          return response;
+        } catch (retryError) {
+          if (retryCount >= MAX_RETRIES) {
+            const finalError = ApiError.fromAxiosError(retryError, requestId);
+            logError(requestId, finalError, method, url);
+            throw finalError;
+          }
+        }
+      }
+    }
+
+    const { requestId, startTime } = config?.metadata || {};
     const duration = Date.now() - (startTime || Date.now());
 
     if (apiError.status === 401) {
@@ -85,8 +124,8 @@ apiClient.interceptors.response.use(
       }
     }
 
-    const errMethod = error.config?.method || 'GET';
-    const errUrl = error.config?.baseURL + error.config?.url || '';
+    const errMethod = config?.method || 'GET';
+    const errUrl = config?.baseURL + config?.url || '';
     logError(requestId, apiError, errMethod, errUrl);
     logResponse(requestId, apiError.status || 'ERR', errMethod, errUrl, duration);
 

@@ -5,6 +5,7 @@ import LayoutShell from './LayoutShell';
 import { projectsService } from '@/services/project';
 import { handleRequest } from '@/lib/handleRequest';
 import ErrorScreen from '@/components/ErrorScreen';
+import RetryButton from '@/components/RetryButton';
 
 export default async function DataLayout({ children, params }) {
   // Obtener el ID de la URL
@@ -55,6 +56,7 @@ export default async function DataLayout({ children, params }) {
       <ErrorScreen
         error={error || tramoError || ProjectTramoError || projectNftError || reputationDataError}
         back="/home"
+        reset={<RetryButton />}
       />
     );
   }
