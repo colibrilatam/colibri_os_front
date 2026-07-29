@@ -60,7 +60,6 @@ export default function NftPage(){
     const { data: allProjects, error: allProjectsError} = await getNftProjectsInfo();
     
     const allProjectsInfo = [];
-    console.log(allProjects)
 
     // Agregar FlujoClave al inicio del portafolio
     if(allProjects){
@@ -80,7 +79,6 @@ export default function NftPage(){
 
       allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData, ic: ic })
     }
-    console.log(allProjectsInfo)
     setProjectsInfo(allProjectsInfo)
     setLoading(false);
     

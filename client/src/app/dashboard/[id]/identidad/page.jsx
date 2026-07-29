@@ -9,6 +9,7 @@ import { getUncertaintyLabel } from '@/lib/mappers/uncertainty';
 
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import { useLocalizedField } from '@/hooks/useLocalizedField';
 
 export default function IdentidadPage() {
   const { t } = useTranslation('identidad');
@@ -28,6 +29,9 @@ export default function IdentidadPage() {
     reputationData
   } = useProject();
 
+  // Campos localizados para tramos
+  const tramoName = useLocalizedField(tramoData, 'name');
+
   //console.log("IdentidadPage - dbProject:", dbProject);
 // Métricas - Hay que crear un hook para calcular estas métricas para no repetir este código siempre
   const currentPac = dbProject.projectPacs.find((pac) => pac.status === 'in_progress')?.pac.code[6] || null;
@@ -44,7 +48,6 @@ export default function IdentidadPage() {
 
   const effectiveName = subioTramo && dbProject.projectName === "FlujoClave" ? "FlujoClaveT4" : dbProject.projectName;
   const icFromProject = getProjectIC(effectiveName);
-  console.log(icFromProject)
   const ic = icFromProject !== null ? Number(icFromProject) : reputationData.icPublic;
 
   // Progreso del tramo tomando como referencia el IC actual respecto al IC máximo del proyecto
@@ -151,7 +154,7 @@ export default function IdentidadPage() {
                     <div className="text-sm text-[var(--text-secondary)]">
                       <span className="text-[var(--text-primary)] font-medium">
                         {tramoData.code} ·{' '}
-                        {tramoData.name || t('tramoNameFallback')}
+                        {tramoName || t('tramoNameFallback')}
                       </span>
                     </div>
 

@@ -29,7 +29,6 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { t } = useTranslation('sidebar');
   const rol = useUserStore((state) => state.rol);
   const { dbProject } = useProject();
-  //console.log(dbProject);
   const sidebarDesktopExpanded = useUserStore(
     (state) => state.sidebarDesktopExpanded,
   );

@@ -15,6 +15,9 @@ export default async function DataLayout({ children, params }) {
     projectsService.getById(id),
   );
 
+  // NOTA: La tabla projects AÚN no tiene columnas _es/_en
+  // Cuando se agreguen, reemplazar estos hardcodeos con:
+  // projectData.name_en, projectData.tagline_en, projectData.shortDescription_en
   projectData.shortDescription_en =
     'Fintech project in the live prototype stage that helps Colombian merchants consolidate collections, reconciliations, and cash flow alerts when operating with multiple payment methods.';
 
