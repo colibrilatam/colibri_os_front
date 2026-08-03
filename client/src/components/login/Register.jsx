@@ -32,6 +32,8 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
       message: t('errorPasswordsNotMatch'),
       path: ['confirmPassword'],
     }), [t]);
+
+    
   const isDemo = useUserStore((state) => state.isDemo);
   const setIsDemo = useUserStore((state) => state.setIsDemo);
   const setToken = useUserStore((state) => state.setToken);
@@ -74,8 +76,6 @@ useEffect(() => {
         // Restauramos forzando la validación en cada campo
         setValue('fullName', parsed.fullName, { shouldValidate: true });
         setValue('email', parsed.email, { shouldValidate: true });
-        setValue('password', parsed.password, { shouldValidate: true });
-        setValue('confirmPassword', parsed.confirmPassword, { shouldValidate: true });
         // Forzamos una validación global por si acaso
         trigger();
         console.log('✅ Formulario restaurado y validado');
@@ -98,6 +98,7 @@ useEffect(() => {
   useEffect(() => {
     if (!isDemo) {
       const subscription = watch((value) => {
+        if(value.password || value.confirmPassword) return; // No guardar si hay contraseña para evitar riesgos de seguridad
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(value));
       });
       return () => subscription.unsubscribe();
