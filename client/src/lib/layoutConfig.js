@@ -3,7 +3,7 @@ export const routeConfig = {
     {
       path: '/evaluations',
       protected: true,
-      roles: ['mentor'],
+      roles: ['mentor', 'evaluator'],
       header: 'main',
       padding: 'pt-24',
     },
