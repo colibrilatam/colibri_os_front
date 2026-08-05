@@ -156,7 +156,6 @@ export const useNewProject = () => {
     const fetchCreateEvidence = async (microActionInstance, index) => {
       const { data: createdEvidence, error } = await createEvidence({
         microActionInstanceId: microActionInstance.id,
-        projectId: createdProject.id,
         evidenceType: "file",
         description: descriptionEvidence[index],
         canonicalUri: 'https://docs.google.com/document/d/abc123',

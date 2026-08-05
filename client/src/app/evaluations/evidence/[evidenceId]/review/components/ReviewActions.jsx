@@ -31,17 +31,17 @@ export default function ReviewActions({
 
       // 2. Finalizar evaluación
 
-      await evaluationsService.finalizeEvaluation({
+      await evaluationsService.finalize({
         evaluationId: evaluation.id,
         evaluationResult: decision,
         score: Number(score),
         comment,
       });
-
+router.push('/evaluations');
       } catch (error) {
       console.error(error);
       }
-     router.push('/evaluations');
+     
     }
 
   return (

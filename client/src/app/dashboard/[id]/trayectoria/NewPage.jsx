@@ -46,6 +46,7 @@ export default function NewTrayectoria() {
     microactions: null,
     evidences: null
   });
+  
   // Métricas
   const [selectedPacMetrics, setSelectedPacMetrics] = useState({
     microactions: null,
@@ -199,11 +200,11 @@ export default function NewTrayectoria() {
     const currentPacId = pacsParam.find(p => p.status === "in_progress" || p.status === "pending")
     if(!currentPacId) return;
 
-    if (inProgressPacMicroActions.every((ma) =>
+    if (/*inProgressPacMicroActions.every((ma) =>
       ma.status === 'completed' ||
       ma.status === 'validated' ||
       ma.status === 'closed'
-    ) && inProgressEvidence.status === 'approved') {
+    ) && */inProgressEvidence.status === 'approved') {
 
       
       const { data: updatePacResponse, error: updatePacError } = await updatePacStatus(currentPacId.id, { status: 'completed' });
