@@ -4,6 +4,7 @@ import { getToken, clearToken } from './token.js';
 import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
+import { mergeHeaders } from './headers.js';
 
 const DEFAULT_TIMEOUT = 60000;
 const MAX_RETRIES = 2;
@@ -46,9 +47,14 @@ apiClient.interceptors.request.use(
     config.metadata.startTime = Date.now();
 
     const token = await getToken();
-    if (token) {
+    /* if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
-    }
+    } */
+   // ← Toda la lógica de headers queda acá
+    config.headers = mergeHeaders(config, token);
+
+    // Agregar request-id
+    config.headers['x-request-id'] = requestId;
 
     logRequest(requestId, config.method, config.url);
     return config;

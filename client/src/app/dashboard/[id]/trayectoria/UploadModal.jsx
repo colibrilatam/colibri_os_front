@@ -149,7 +149,6 @@ export default function UploadModal({
           isMaterialChange: false
         })
         if(confirmUploadError){
-          console.log(confirmUploadError)
           setError(confirmUploadError.message || confirmUploadError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
