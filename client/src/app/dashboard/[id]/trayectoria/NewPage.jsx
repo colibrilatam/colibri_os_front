@@ -433,10 +433,6 @@ export default function NewTrayectoria() {
                   <p className=" mb-4 p-1 glass-effect-green border-glass rounded-lg text-(--status-success)">{selectedPac.pac.icWeight}</p>
                 </div>
 
-                <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacProgress')}</p>
-
-                <ProgressBar color='cyan' progreso={selectedPac.progress} />
-
                 {/* METRICAS DEL PAC SELECCIONADO */}
                 {selectedPacMetrics.microactions !== null && metrics.evidences !== null ? (
                   <div className="flex flex-row gap-8 text-center mt-4">
