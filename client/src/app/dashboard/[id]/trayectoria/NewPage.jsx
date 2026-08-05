@@ -154,7 +154,7 @@ export default function NewTrayectoria() {
       microactions: `${currentTramoMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoInfoParam.code[1]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length} / 21`,
     }))
     // Métricas del pac actual
-    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length;
+    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed' || m.status === 'submitted')).length;
     setSelectedPacMetrics( prev => ({
       ...prev,
       microactions: completedSelectedPacMicroactions,
@@ -432,10 +432,6 @@ export default function NewTrayectoria() {
 
                   <p className=" mb-4 p-1 glass-effect-green border-glass rounded-lg text-(--status-success)">{selectedPac.pac.icWeight}</p>
                 </div>
-
-                <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacProgress')}</p>
-
-                <ProgressBar color='cyan' progreso={selectedPac.progress} />
 
                 {/* METRICAS DEL PAC SELECCIONADO */}
                 {selectedPacMetrics.microactions !== null && metrics.evidences !== null ? (
