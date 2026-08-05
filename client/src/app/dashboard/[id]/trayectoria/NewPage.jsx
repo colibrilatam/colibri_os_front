@@ -154,7 +154,7 @@ export default function NewTrayectoria() {
       microactions: `${currentTramoMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoInfoParam.code[1]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length} / 21`,
     }))
     // Métricas del pac actual
-    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length;
+    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed' || m.status === 'submitted')).length;
     setSelectedPacMetrics( prev => ({
       ...prev,
       microactions: completedSelectedPacMicroactions,
