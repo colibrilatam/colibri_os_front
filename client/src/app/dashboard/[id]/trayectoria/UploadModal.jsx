@@ -145,13 +145,10 @@ export default function UploadModal({
         const { data: confirmUploadResponse, error: confirmUploadError } = await confirmUpload({
           evidenceId: data.id,
           cloudinaryPublicId: cloudinaryData.public_id,
-          storageUri: cloudinaryData.url,
-          mimeType: "pdf",
           changeSummary: "Corrección de formato solicitada por el evaluador.",
           isMaterialChange: false
         })
         if(confirmUploadError){
-          console.log(confirmUploadError)
           setError(confirmUploadError.message || confirmUploadError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
