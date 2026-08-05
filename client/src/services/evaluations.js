@@ -35,7 +35,7 @@ export const evaluationsService = {
   },
 
   // Registrar revisión humana
-  humanReview: async (data) => {
+  submitHumanReview: async (data) => {
     const response = await apiClient.post('/evaluations/human-review', data);
     return response.data;
   },

@@ -1,3 +1,4 @@
+import { evaluationsService } from '@/services/evaluations';
 import { useRouter } from 'next/navigation';
 
 export default function ReviewActions({
@@ -18,7 +19,7 @@ export default function ReviewActions({
       comment,
     });
 
-    /* try {
+    try {
       // 1. Registrar revisión humana
 
       await evaluationsService.submitHumanReview({
@@ -37,11 +38,11 @@ export default function ReviewActions({
         comment,
       });
 
-      //router.push('/evaluations');
-    } catch (error) {
+      } catch (error) {
       console.error(error);
-    } */
-  }
+      }
+     router.push('/evaluations');
+    }
 
   return (
     <div className="flex justify-end gap-4">
