@@ -4,7 +4,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { ERROR_CODES } from "@/lib/api/types";
 import { isValidElement } from "react";
 
-export default function ErrorScreen({ error, reset, back = '/home', next = null, redirect = null }) {
+export default function ErrorScreen({ error, reset, back = '/home', next = null, redirect = '/login' }) {
   const { t } = useTranslation('errorScreen');
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function ErrorScreen({ error, reset, back = '/home', next = null,
         </div>
         { next &&
         <button
-          onClick={() => router.push(redirect)}
+          onClick={() => router.push(redirect === '/home' ? '/login' : redirect)}
           className="cursor-pointer px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200"
         >
           {next}

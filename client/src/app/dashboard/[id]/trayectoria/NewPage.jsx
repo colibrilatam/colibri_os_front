@@ -21,6 +21,36 @@ import ProgressBar from "@/components/ProgressBar";
 import { useUserStore } from "@/lib/store";
 import { useLocalizedField, getLocalizedValue } from '@/hooks/useLocalizedField';
 
+// Helper: obtener microacciones de un PAC por su código
+const getMicroActionsForPacCode = (microActionsData, pacCode) => {
+  if (!microActionsData || !pacCode) return [];
+  return microActionsData
+    .filter(ma => ma.microActionDefinition.code.startsWith(`MAD_${pacCode[4]}_${pacCode[6]}`))
+    .sort((a, b) => a.microActionDefinition.code[8] - b.microActionDefinition.code[8]);
+};
+
+// Helper: calcular microacciones y evidencias para un PAC específico
+const computeActionsForPac = (pacOrCode, microActionsData, evidencesData) => {
+  const pacCode = typeof pacOrCode === 'string' ? pacOrCode : pacOrCode?.pac?.code;
+  if (!pacCode || !microActionsData) return { microactions: [], evidences: null };
+
+  //console.log(evidencesData)
+  const pacMicroActions = getMicroActionsForPacCode(microActionsData, pacCode);
+  const pacMicroActionIds = pacMicroActions.map(ma => ma.id);
+  const pacEvidence = evidencesData?.find(e => pacMicroActionIds.includes(e.microActionInstanceId)) || null;
+  //console.log(pacEvidence)
+  return { microactions: pacMicroActions, evidences: pacEvidence };
+};
+
+// Helper: categorizar el estado de una evidencia para unificar su manejo visual
+const getEvidenceCategory = (status) => {
+  if (!status) return 'pending';
+  if (['approved', 'completed'].includes(status)) return 'done';
+  if (['submitted', 'active'].includes(status)) return 'review';
+  if (status === 'rejected') return 'rejected';
+  return 'pending'; // draft, pending, u otros
+};
+
 export default function NewTrayectoria() {
   const { t } = useTranslation('trayectoria');
   // contexto para obtener el id del proyecto
@@ -46,6 +76,12 @@ export default function NewTrayectoria() {
     microactions: null,
     evidences: null
   });
+  // Microacciones y evidencias del PAC seleccionado en la timeline
+  const [selectedPacActions, setSelectedPacActions] = useState({
+    microactions: null,
+    evidences: null
+  });
+
   // Métricas
   const [selectedPacMetrics, setSelectedPacMetrics] = useState({
     microactions: null,
@@ -154,7 +190,7 @@ export default function NewTrayectoria() {
       microactions: `${currentTramoMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoInfoParam.code[1]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length} / 21`,
     }))
     // Métricas del pac actual
-    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed')).length;
+    const completedSelectedPacMicroactions = orderedMicroActions.filter(m => m.microActionDefinition.code.startsWith(`MAD_${inProgressPacParam.pac.code[4]}_${inProgressPacParam.pac.code[6]}`) && (m.status === 'completed' || m.status === 'validated' || m.status === 'closed' || m.status === 'submitted')).length;
     setSelectedPacMetrics( prev => ({
       ...prev,
       microactions: completedSelectedPacMicroactions,
@@ -163,58 +199,56 @@ export default function NewTrayectoria() {
   }
 
   // Obtener información de evidencias
-  const getEvidenceInfo = async (microActionDataParam = microActionData, inProgressPacActionsParam = inProgressPacActions.microactions) => {
+  const getEvidenceInfo = async (microActionDataParam = microActionData, inProgressPacParam = inProgressPac) => {
     const { data: evidencesResponse } = await getEvidences(dbProject.id);
+
 
     //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
     const filteredEvidences = evidencesResponse.filter(evidence =>
       microActionDataParam.some(ma => ma.id === evidence.microActionInstanceId)
     );
-  
 
     setEvidencesData(filteredEvidences.reverse());
 
-    // Guardar la evidencia del PAC actual
-    const inProgressPacEvidence = filteredEvidences.find(e => e.microActionInstanceId === inProgressPacActionsParam[0].id)
+    // Calcular la evidencia del PAC en progreso usando la misma lógica unificada
+    const { evidences: inProgressPacEvidence } = computeActionsForPac(
+      inProgressPacParam,
+      microActionDataParam,
+      filteredEvidences
+    );
     setInProgressPacActions(prev => ({
       ...prev,
       evidences: inProgressPacEvidence
-    }))
+    }));
 
-    // Setear métricas
+    // Setear métricas del tramo
     setMetrics(prev => ({
       ...prev,
-      evidences: `${filteredEvidences.filter((e) => e.status === 'approved').length} / 7`,
-    }))
-    setSelectedPacMetrics(prev => ({
-  ...prev,
-  evidences: `${inProgressPacEvidence.status === 'approved' ? 1 : 0} / 1`
-}))
-    return { inProgressPacEvidence }
+      evidences: `${filteredEvidences.filter((e) => getEvidenceCategory(e.status) === 'done').length} / 7`,
+    }));
+
+    return { inProgressPacEvidence };
   }
 
     // Función para verificar si el PAC actual está completado
-  const checkCurrentPac = async (pacsParam = pacs, inProgressPacMicroActions = inProgressPacActions.microactions, inProgressEvidence = inProgressPacActions.evidences ) => {
+  const checkCurrentPac = async (pacsParam = pacs, inProgressPacMicroActions = inProgressPacActions.microactions, inProgressEvidence = inProgressPacActions.evidences) => {
 
     const currentPacId = pacsParam.find(p => p.status === "in_progress" || p.status === "pending")
-    if(!currentPacId) return;
+    if (!currentPacId) return;
 
-    if (inProgressPacMicroActions.every((ma) =>
+    if (/*inProgressPacMicroActions?.every((ma) =>
       ma.status === 'completed' ||
       ma.status === 'validated' ||
       ma.status === 'closed'
-    ) && inProgressEvidence.status === 'approved') {
+    ) && */getEvidenceCategory(inProgressEvidence?.status) === 'done') {
 
-      
       const { data: updatePacResponse, error: updatePacError } = await updatePacStatus(currentPacId.id, { status: 'completed' });
-
 
       if (updatePacError) {
         console.log(updatePacError)
       };
       setIsPacCompleted(true);
       getPacsInfo();
-      
 
       //}
     }
@@ -226,7 +260,7 @@ export default function NewTrayectoria() {
     try {
       const { tramoDataResponse, firstPac, sortedPacs } = await getPacsInfo();
       const {inProgressPacMicroActions, orderedMicroActions} = await getMAInfo(tramoDataResponse, firstPac);
-      const { inProgressPacEvidence } = await getEvidenceInfo(orderedMicroActions, inProgressPacMicroActions);
+      const { inProgressPacEvidence } = await getEvidenceInfo(orderedMicroActions, firstPac);
       checkCurrentPac(sortedPacs, inProgressPacMicroActions, inProgressPacEvidence);
     } catch (err) {
       console.error('Error initializing trayectoria:', err);
@@ -271,10 +305,20 @@ export default function NewTrayectoria() {
 
  
 
-  const getMicroActionsForPac = (pacCode) => {
-    return microActionData.filter(ma => ma.microActionDefinition.code.startsWith(`MAD_${pacCode[4]}_${pacCode[6]}`))
-      .sort((a, b) => a.microActionDefinition.code[8] - b.microActionDefinition.code[8]);
-  }
+  // Actualizar microacciones y evidencias mostradas cuando cambia el PAC seleccionado
+  useEffect(() => {
+    if (!selectedPac || !microActionData) return;
+
+    const { microactions, evidences } = computeActionsForPac(selectedPac, microActionData, evidencesData);
+    setSelectedPacActions({ microactions, evidences });
+
+    setSelectedPacMetrics({
+      microactions: microactions.filter(m =>
+        m.status === 'completed' || m.status === 'validated' || m.status === 'closed' || m.status === 'submitted'
+      ).length,
+      evidences: getEvidenceCategory(evidences?.status) === 'done' ? '1 / 1' : '0 / 1'
+    });
+  }, [selectedPac, microActionData, evidencesData]);
 
   const openUploadModal = (type, data) => {
     setUploadModal({
@@ -292,9 +336,9 @@ export default function NewTrayectoria() {
     });
   };
 
-  const handleCompletedPac = () => {
-    const { evidenceData } = getEvidenceInfo();
-    checkCurrentPac(undefined, undefined, evidenceData);
+  const handleCompletedPac = async () => {
+    const { inProgressPacEvidence } = await getEvidenceInfo();
+    checkCurrentPac(undefined, undefined, inProgressPacEvidence);
   }
 
   // Campos localizados para PACs y tramos
@@ -433,10 +477,6 @@ export default function NewTrayectoria() {
                   <p className=" mb-4 p-1 glass-effect-green border-glass rounded-lg text-(--status-success)">{selectedPac.pac.icWeight}</p>
                 </div>
 
-                <p className="text-micro-label mb-1" style={{ color: 'var(--text-tertiary)' }}>{t('pacProgress')}</p>
-
-                <ProgressBar color='cyan' progreso={selectedPac.progress} />
-
                 {/* METRICAS DEL PAC SELECCIONADO */}
                 {selectedPacMetrics.microactions !== null && metrics.evidences !== null ? (
                   <div className="flex flex-row gap-8 text-center mt-4">
@@ -476,7 +516,7 @@ export default function NewTrayectoria() {
           </div>
 
           {/* CARGA OPERATIVA DEL PAC - usando datos reales */}
-                { inProgressPacActions &&  inProgressPacActions.microactions && 
+                { selectedPacActions?.microactions &&
           <div id="carga" className="glass-effect border-glass rounded-2xl p-6">
             <h4 className="text-micro-label mb-4" style={{ color: 'var(--text-tertiary)' }}>{t('operationalLoad')}</h4>
             <RealCargaPac
@@ -484,8 +524,8 @@ export default function NewTrayectoria() {
               onUploadEvidence={(ev) => openUploadModal('evidence', ev)}
               microActionCompleted={selectedPacMetrics.microactions === 3}
               pac={selectedPac}
-              microActions={inProgressPacActions.microactions}
-              evidencesData={inProgressPacActions.evidences}
+              microActions={selectedPacActions.microactions}
+              evidencesData={selectedPacActions.evidences}
               rol={rol}
               openDetail={(ma) => {setSelectedMADetail(ma); setMADetail(true);}}
             />
@@ -580,57 +620,87 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
 
       {/* Evidencia del PAC */}
       {evidencesData && (
-        <div
-          className={`
-              mt-6 rounded-xl p-4 border-dashed border text-(--text-primary)
-              ${evidencesData.status === "approved" ? 'border-[var(--status-success)] bg-[rgba(0,153,117,0.05)]' : ''}
-              ${evidencesData.status === "draft" ? 'border-[var(--status-info)] bg-[rgba(0,207,207,0.05)]' : ''}
-              ${evidencesData.status === "pending" ? 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]' : ''}
-            `}
-        >
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-row w-full justify-between items-start">
-              <div>
-                <p className="text-body-lg font-medium text-(--text-primary)">{evidencesData.description}</p>
-                <p className="text-helper text-[var(--text-tertiary)]">{t('evidenceLabel')}</p>
-              </div>
-              <StatusBadge status={evidencesData.status} />
-            </div>
-
-            {/* Botón de carga - para evidencias no aprobadas */}
-            {evidencesData.status !== "approved" && rol === 'entrepreneur' && microActionCompleted && (
-              <button
-                onClick={() => onUploadEvidence(evidencesData)}
-                className="cursor-pointer text-(--text-primary) text-base glass-effect-green border-glass font-bold py-2 px-4 rounded-lg
-                    hover:bg-[rgba(0,207,207,0.25)] transition w-fit"
-              >
-                {t('btnUpload')}
-              </button>
-            )
-            }
-            {evidencesData.status !== "approved" && rol === 'entrepreneur' && !microActionCompleted && (
-              <div className="text-(--text-secondary) text-lg">{t('completeMicroactionsFirst')}</div>
-            )}
-
-            {/* Estado: Aprobada */}
-            {evidencesData.status === "approved" && (
-              <div className="flex flex-col md:flex-row gap-4 justify-between">
-                <div className="text-[var(--status-success)] text-body flex items-center gap-2">
-                  {t('evidenceApproved')}
-                </div>
-                <a href="/evidencia.pdf" download className="glass-effect-green p-2 px-6 border-glass text-lg rounded-full text-(--text-primary)">{t('btnDownloadEvidence')}</a>
-              </div>
-            )}
-
-            {/* Estado: Pendiente de revisión */}
-            {evidencesData.status !== "approved" && (
-              <div className="text-[var(--status-info)] text-body flex items-center gap-2">
-                {t('statusPending')}
-              </div>
-            )}
-          </div>
-        </div>
+        <EvidenceCard
+          evidence={evidencesData}
+          rol={rol}
+          microActionCompleted={microActionCompleted}
+          onUpload={() => onUploadEvidence(evidencesData)}
+        />
       )}
+    </div>
+  );
+};
+
+// Componente unificado para mostrar la evidencia del PAC
+const EvidenceCard = ({ evidence, rol, microActionCompleted, onUpload }) => {
+  const { t } = useTranslation('trayectoria');
+  const category = getEvidenceCategory(evidence?.status);
+
+  const styleMap = {
+    done: 'border-[var(--status-success)] bg-[rgba(0,153,117,0.05)]',
+    review: 'border-[var(--status-info)] bg-[rgba(0,207,207,0.05)]',
+    pending: 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]',
+    rejected: 'border-[var(--status-warning)] bg-[rgba(255,209,102,0.05)]',
+  };
+
+  const messageMap = {
+    done: t('evidenceApproved'),
+    review: t('statusReview'),
+    pending: t('statusPending'),
+    rejected: t('statusRejected'),
+  };
+
+  const needsUpload = category === 'pending' || category === 'rejected';
+  const canUpload = needsUpload && rol === 'entrepreneur' && microActionCompleted;
+  const waitingMicroactions = needsUpload && rol === 'entrepreneur' && !microActionCompleted;
+
+  return (
+    <div className={`mt-6 rounded-xl p-4 border-dashed border text-(--text-primary) ${styleMap[category]}`}>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-row w-full justify-between items-start">
+          <div>
+            <p className="text-body-lg font-medium text-(--text-primary)">{evidence?.description}</p>
+            <p className="text-helper text-[var(--text-tertiary)]">{t('evidenceLabel')}</p>
+          </div>
+          <StatusBadge status={evidence?.status} />
+        </div>
+
+        {/* Botón de carga - para evidencias pendientes o rechazadas */}
+        {canUpload && (
+          <button
+            onClick={onUpload}
+            className="cursor-pointer text-(--text-primary) text-base glass-effect-green border-glass font-bold py-2 px-4 rounded-lg
+                hover:bg-[rgba(0,207,207,0.25)] transition w-fit"
+          >
+            {t('btnUpload')}
+          </button>
+        )}
+        {waitingMicroactions && (
+          <div className="text-(--text-secondary) text-lg">{t('completeMicroactionsFirst')}</div>
+        )}
+
+        {/* Mensaje según estado */}
+        <div className={`
+            text-body flex items-center gap-2
+            ${category === 'done' ? 'text-[var(--status-success)]' : ''}
+            ${category === 'review' ? 'text-[var(--status-info)]' : ''}
+            ${category === 'pending' || category === 'rejected' ? 'text-[var(--status-warning)]' : ''}
+          `}
+        >
+          {messageMap[category]}
+        </div>
+
+        {/* Botón de descarga solo para evidencias aprobadas/completadas */}
+        {category === 'done' && (
+          <a
+            href={evidence?.canonicalUri || "/evidencia.pdf"}
+            download
+            className="glass-effect-green p-2 px-6 border-glass text-lg rounded-full text-(--text-primary) w-fit"
+          >
+            {t('btnDownloadEvidence')}
+          </a>
+        )}
+      </div>
     </div>
   );
 };
@@ -648,12 +718,13 @@ const StatusBadge = ({ status }) => {
     current: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
     in_progress: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
     submitted: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
+    active: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
     started: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
+    draft: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
 
     pending: 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]',
     reopened: 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]',
-
-    draft: 'bg-[rgba(0,207,207,0.2)] text-[var(--status-info)]',
+    rejected: 'bg-[rgba(255,209,102,0.2)] text-[var(--status-warning)]',
   };
   const label = {
     done: t('statusCompleted'),
@@ -664,10 +735,12 @@ const StatusBadge = ({ status }) => {
     started: t('statusStarted'),
     in_progress: t('statusInProgress'),
     submitted: t('statusSubmitted'),
+    active: t('statusActive'),
     validated: t('statusValidated'),
     completed: t('statusCompleted'),
     closed: t('statusClosed'),
-    reopened: t('statusReopened')
+    reopened: t('statusReopened'),
+    rejected: t('statusRejected')
   };
   return (
     <span className={`inline-flex items-center justify-center w-fit h-fit self-start whitespace-nowrap text-badge px-3 py-1 rounded-full ${map[status]}`}>

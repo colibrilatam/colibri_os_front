@@ -117,7 +117,7 @@ useEffect(() => {
   const onSubmitReal = async (data) => {
   try {
     onLoadingChange(true);
-    const result = await handleRegister({ ...data, role: selectedRole });
+    const result = await handleRegister({ ...data});
 
     if (result.success) {
       setRol(selectedRole);
