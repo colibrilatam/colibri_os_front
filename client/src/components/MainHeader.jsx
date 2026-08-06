@@ -8,6 +8,7 @@ import { useRequest } from '@/hooks/useRequest';
 import { getUserRoleLabel } from '@/lib/mappers/evidence-labels';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import LanguageSwitcher from './common/LanguageSwitcher';
 
 export default function MainHeader() {
   const { t } = useTranslation('mainHeader');
@@ -42,12 +43,12 @@ export default function MainHeader() {
   const displayRole = getUserRoleLabel(profile?.role) || t('evaluatorFallback');
 
   const avatarLetter = displayName
-  .trim()
-  .split(' ')
-  .filter(Boolean)
-  .slice(0, 2)
-  .map((word) => word.charAt(0).toUpperCase())
-  .join('');
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join('');
 
   return (
     <header
@@ -141,20 +142,20 @@ export default function MainHeader() {
             </span>
 
             <span className="text-slate-600">•</span>
-
             <button
               onClick={handleLogout}
               className="
-                flex items-center gap-1
-                text-slate-400
-                hover:text-red-300
-                transition-colors
-                cursor-pointer
+              flex items-center gap-1
+              text-slate-400
+              hover:text-red-300
+              transition-colors
+              cursor-pointer
               "
             >
               <LogOut size={14} />
               <span>{t('logout')}</span>
             </button>
+            <LanguageSwitcher />
           </div>
         </div>
       </div>

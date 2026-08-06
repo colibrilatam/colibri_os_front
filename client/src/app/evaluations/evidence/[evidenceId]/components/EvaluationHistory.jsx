@@ -1,7 +1,9 @@
+import Info from '../../../common/Info';
+
 export default function EvaluationHistory({ evaluations = [] }) {
   return (
-    <div className="border rounded-xl p-6">
-      <h2 className="text-h4 mb-5">Historial de evaluaciones</h2>
+    <div className="glass-effect rounded-2xl p-6">
+      <p className="text-overline mb-2">Historial de evaluaciones</p>
 
       {evaluations.length === 0 && (
         <p className="text-helper">No existen evaluaciones previas.</p>
@@ -9,8 +11,10 @@ export default function EvaluationHistory({ evaluations = [] }) {
 
       <div className="flex flex-col gap-4">
         {evaluations.map((evaluation, index) => (
-          <div key={evaluation.id} className="border rounded-lg p-4">
-            <h4 className="font-semibold">Evaluación #{index + 1}</h4>
+          <div key={evaluation.id} className="border-theme rounded-lg p-4">
+            <h4 className="text-body text-primary-theme font-semibold border-theme-bottom pb-3 mb-3">
+              Evaluación #{index + 1}
+            </h4>
 
             <Info label="Resultado" value={evaluation.evaluationResult} />
 
@@ -20,15 +24,6 @@ export default function EvaluationHistory({ evaluations = [] }) {
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div className="mt-2">
-      <p className="text-helper">{label}</p>
-      <p>{value || '-'}</p>
     </div>
   );
 }

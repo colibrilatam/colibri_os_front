@@ -1,11 +1,15 @@
+import { useTranslation } from "@/hooks/useTranslation";
+import Info from "../../../common/Info";
+
 export default function EvidenceInformation({ evidence }) {
+  const { t } = useTranslation('enums');
   return (
-    <div className="border rounded-xl p-6 flex flex-col gap-5">
-      <h2 className="text-h4">Información de la evidencia</h2>
+    <div className="glass-effect rounded-2xl p-6 flex flex-col gap-5">
+      <p className="text-overline mb-2">Información de la evidencia</p>
 
       <Info label="Autor" value={evidence.author?.fullName} />
       <Info label="Proyecto" value={evidence.project?.projectName} />
-      <Info label="Tipo" value={evidence.evidenceType} />
+      <Info label="Tipo" value={t(evidence.evidenceType)} />
       <Info
         label="Fecha de envío"
         value={
@@ -24,7 +28,7 @@ export default function EvidenceInformation({ evidence }) {
           <a
             href={evidence.canonicalUri}
             target="_blank"
-            className="text-primary underline"
+            className="text-accent-cyan text-body"
           >
             Abrir evidencia
           </a>
@@ -34,11 +38,3 @@ export default function EvidenceInformation({ evidence }) {
   );
 }
 
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-helper">{label}</p>
-      <p>{value || '-'}</p>
-    </div>
-  );
-}

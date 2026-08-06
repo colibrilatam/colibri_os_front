@@ -38,9 +38,13 @@ export default function EvidenceDetailPage() {
 
     load();
   }, [evidenceId]);
-  console.log(evidence);
+  //console.log(evidence);
   if (loading) {
-    return <div className="p-6">Cargando...</div>;
+    return (
+      <div className="empty-state rounded-2xl p-12">
+        <p className="text-body">Cargando evidencia...</p>
+      </div>
+    );
   }
 
   if (!evidence) {

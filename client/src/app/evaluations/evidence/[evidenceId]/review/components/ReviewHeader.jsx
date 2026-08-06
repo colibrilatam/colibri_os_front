@@ -1,8 +1,12 @@
+import Info from "@/app/evaluations/common/Info";
+import { useTranslation } from "@/hooks/useTranslation";
+
 export default function ReviewHeader({ evidence }) {
+  const { t } = useTranslation('enums');
   const evaluation = evidence.evaluations?.[0];
 
   return (
-    <section className="border rounded-xl p-6 flex flex-col gap-6">
+    <section className="glass-effect rounded-2xl p-6 flex flex-col gap-6">
       <div>
         <p className="text-overline">Resumen de la evidencia</p>
 
@@ -21,17 +25,8 @@ export default function ReviewHeader({ evidence }) {
 
         <Info label="Rúbrica" value={evaluation?.rubric?.code} />
 
-        <Info label="Tipo de evidencia" value={evidence.evidenceType} />
+        <Info label="Tipo de evidencia" value={t(evidence.evidenceType)} />
       </div>
     </section>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-helper">{label}</p>
-      <p className="font-medium">{value || '-'}</p>
-    </div>
   );
 }
