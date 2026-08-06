@@ -1,7 +1,9 @@
+import Info from '../../../common/Info';
+
 export default function EvidenceVersions({ versions }) {
   return (
-    <div className="border rounded-xl p-6">
-      <h2 className="text-h4 mb-5">Historial de versiones</h2>
+    <div className="glass-effect rounded-2xl p-6">
+      <p className="text-overline mb-2">Historial de versiones</p>
 
       {versions.length === 0 && (
         <p className="text-helper">No existen versiones.</p>
@@ -9,7 +11,7 @@ export default function EvidenceVersions({ versions }) {
 
       <div className="flex flex-col gap-4">
         {versions.map((version) => (
-          <div key={version.id} className="border rounded-lg p-4">
+          <div key={version.id} className="border-theme rounded-lg p-4">
             <Info label="Versión" value={`V${version.versionNumber}`} />
 
             <Info
@@ -23,7 +25,7 @@ export default function EvidenceVersions({ versions }) {
               <a
                 href={version.storageUri}
                 target="_blank"
-                className="text-primary underline"
+                className="text-accent-cyan text-body"
               >
                 Abrir versión
               </a>
@@ -31,15 +33,6 @@ export default function EvidenceVersions({ versions }) {
           </div>
         ))}
       </div>
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div className="mb-2">
-      <p className="text-helper">{label}</p>
-      <p>{value || '-'}</p>
     </div>
   );
 }

@@ -1,7 +1,9 @@
+import Info from '../../../common/Info';
+
 export default function EvidenceMetadata({ evidence }) {
   return (
-    <div className="border rounded-xl p-6 flex flex-col gap-5">
-      <h2 className="text-h4">Metadatos</h2>
+    <div className="glass-effect rounded-2xl p-6 flex flex-col gap-5">
+      <p className="text-overline mb-2">Metadatos</p>
 
       <Info label="Estado" value={evidence.status} />
 
@@ -27,15 +29,6 @@ export default function EvidenceMetadata({ evidence }) {
         label="Actualizada"
         value={new Date(evidence.updatedAt).toLocaleString()}
       />
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-helper">{label}</p>
-      <p>{value || '-'}</p>
     </div>
   );
 }

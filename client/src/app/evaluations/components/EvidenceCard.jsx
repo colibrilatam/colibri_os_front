@@ -1,29 +1,29 @@
+import StatusBadge from '../common/StatusBadge';
+
 export default function EvidenceCard({ evidence, onClick }) {
   return (
     <div
       className="
-        border
-        rounded-xl
-        p-5
-        hover:border-primary
-        hover:shadow-sm
-        transition-all
-      "
+glass-effect
+rounded-2xl
+p-6
+transition-all
+hover:glass-effect-secondary
+"
     >
       {/* Header */}
 
-      <div className="flex justify-between items-start gap-4">
-        <div className="flex flex-col gap-1">
+      <div className="flex items-start justify-between gap-6">
+        <div className="flex-1">
           <p className="text-overline">
             {evidence.evidence.project?.projectName}
           </p>
 
-          <h3 className="text-h5">{evidence.evidence.description}</h3>
+          <h3 className="text-h3 mt-2">{evidence.evidence.description}</h3>
         </div>
-
         <StatusBadge status={evidence.evidence.status} />
       </div>
-
+      <div className="border-theme-bottom pb-5"></div>
       {/* Información */}
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
@@ -57,21 +57,19 @@ export default function EvidenceCard({ evidence, onClick }) {
 
         <Info label="Estado" value="Pendiente" />
       </div>
-
+      <div className="border-theme-top mt-6 pt-5 flex justify-end"></div>
       {/* Footer */}
 
       <div className="flex justify-end mt-6">
         <button
           onClick={onClick}
           className="
-            px-5
-            py-2
-            rounded-lg
-            bg-primary
-            text-white
-            hover:opacity-90
-            transition
-          "
+btn-primary
+rounded-xl
+px-5
+py-2
+cursor-pointer
+"
         >
           Revisar
         </button>
@@ -83,42 +81,10 @@ export default function EvidenceCard({ evidence, onClick }) {
 function Info({ label, value }) {
   return (
     <div>
-      <p className="text-helper">{label}</p>
-      <p className="text-body">{value || '-'}</p>
+      <p className="text-micro-label">{label}</p>
+
+      <p className="text-data--label">{value || '-'}</p>
     </div>
-  );
-}
-
-function StatusBadge({ status }) {
-  const labels = {
-    submitted: 'Pendiente',
-    under_review: 'En revisión',
-    approved: 'Aprobada',
-    rejected: 'Rechazada',
-    draft: 'Borrador',
-  };
-
-  const styles = {
-    submitted: 'bg-yellow-100 text-yellow-700',
-    under_review: 'bg-blue-100 text-blue-700',
-    approved: 'bg-green-100 text-green-700',
-    rejected: 'bg-red-100 text-red-700',
-    draft: 'bg-gray-100 text-gray-700',
-  };
-
-  return (
-    <span
-      className={`
-        px-3
-        py-1
-        rounded-full
-        text-xs
-        font-medium
-        ${styles[status]}
-      `}
-    >
-      {labels[status]}
-    </span>
   );
 }
 

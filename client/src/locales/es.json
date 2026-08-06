@@ -555,5 +555,49 @@
     "statusInactive": "Inactivo",
     "statusClosed": "Cerrado",
     "statusSuspended": "Suspendido"
+  },
+
+  "enums": {
+    "draft": "Borrador",
+    "submitted": "Enviada",
+    "under_review": "En revisión",
+    "approved": "Aprobada",
+    "rejected": "Rechazada",
+
+    "pending": "Pendiente",
+    "ai_reviewed": "Revisada por IA",
+    "human_reviewed": "Revisada por humano",
+    "validated": "Validada",
+
+    "low": "Baja",
+    "medium": "Media",
+    "high": "Alta",
+
+    "public": "Pública",
+    "private": "Privada",
+    "restricted": "Restringida",
+
+    "automatic": "Automática",
+    "human": "Humana",
+    "hybrid": "Híbrida",
+
+    "needs_revision": "Requiere revisión",
+
+    "modified": "Modificar",
+
+    "research": "Investigación",
+    "interview": "Entrevista",
+    "prototype": "Prototipo",
+    "validation": "Validación",
+    "documentation": "Documentación",
+    "pitch": "Presentación",
+    "networking": "Networking",
+    "other": "Otro",
+
+    "text": "Texto",
+    "file": "Archivo",
+    "link": "Enlace",
+    "image": "Imagen",
+    "video": "Video"
   }
 }

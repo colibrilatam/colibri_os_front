@@ -37,23 +37,26 @@ export default function ReviewActions({
         score: Number(score),
         comment,
       });
-router.push('/evaluations');
-      } catch (error) {
+      router.push('/evaluations');
+    } catch (error) {
       console.error(error);
-      }
-     
     }
+  }
 
   return (
     <div className="flex justify-end gap-4">
       <button
         onClick={() => router.back()}
         className="
-          border
-          rounded-lg
-          px-5
-          py-2
-        "
+border-theme
+glass-effect
+rounded-xl
+px-5
+py-3
+cursor-pointer
+hover:glass-effect-secondary
+transition
+"
       >
         Cancelar
       </button>
@@ -62,13 +65,13 @@ router.push('/evaluations');
         onClick={handleSubmit}
         disabled={!decision}
         className="
-          bg-primary
-          text-white
-          rounded-lg
-          px-6
-          py-2
-          disabled:opacity-50
-        "
+btn-primary
+rounded-xl
+px-6
+py-3
+cursor-pointer
+disabled:opacity-40
+"
       >
         Finalizar evaluación
       </button>

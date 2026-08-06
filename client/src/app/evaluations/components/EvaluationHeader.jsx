@@ -7,7 +7,9 @@ export default function EvaluationHeader({ total }) {
         <h1 className="text-h2">Bandeja de revisión</h1>
       </div>
 
-      <div className="text-helper">{total} evidencias pendientes</div>
+      <div className="counter-badge rounded-xl px-4 py-2 text-badge">
+  {total} evidencias pendientes
+</div>
     </div>
   );
 }

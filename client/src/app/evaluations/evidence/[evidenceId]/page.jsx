@@ -40,7 +40,11 @@ export default function EvidenceDetailPage() {
   }, [evidenceId]);
   console.log(evidence);
   if (loading) {
-    return <div className="p-6">Cargando...</div>;
+    return (
+      <div className="empty-state rounded-2xl p-12">
+        <p className="text-body">Cargando evidencia...</p>
+      </div>
+    );
   }
 
   if (!evidence) {

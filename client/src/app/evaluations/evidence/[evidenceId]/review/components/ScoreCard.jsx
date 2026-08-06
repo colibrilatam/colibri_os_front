@@ -1,7 +1,7 @@
 export default function ScoreCard({ score, setScore, decision, setDecision }) {
   return (
     <div className="flex flex-col gap-6">
-      <div>
+      {/* <div>
         <label className="text-helper">Puntaje</label>
 
         <input
@@ -10,15 +10,26 @@ export default function ScoreCard({ score, setScore, decision, setDecision }) {
           max={100}
           value={score}
           onChange={(e) => setScore(e.target.value)}
-          className="mt-2 w-full border rounded-lg px-4 py-2"
+          className="
+mt-2
+w-full
+glass-effect-secondary
+border-theme
+rounded-xl
+px-4
+py-3
+text-primary-theme
+outline-none
+focus:border-cyan-400
+"
         />
-      </div>
+      </div> */}
 
       <div>
         <label className="text-helper">Decisión</label>
 
         <div className="flex gap-6 mt-3">
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-3 cursor-pointer text-body text-primary-theme">
             <input
               type="radio"
               value="approved"
@@ -28,7 +39,7 @@ export default function ScoreCard({ score, setScore, decision, setDecision }) {
             Aprobar
           </label>
 
-          <label className="flex items-center gap-2">
+          <label className="flex items-center gap-3 cursor-pointer text-body text-primary-theme">
             <input
               type="radio"
               value="needs_revision"
@@ -38,7 +49,7 @@ export default function ScoreCard({ score, setScore, decision, setDecision }) {
             Requiere revisión
           </label>
 
-          <label className="flex items-center gap-2">
+          {/* <label className="flex items-center gap-3 cursor-pointer text-body">
             <input
               type="radio"
               value="rejected"
@@ -46,7 +57,7 @@ export default function ScoreCard({ score, setScore, decision, setDecision }) {
               onChange={(e) => setDecision(e.target.value)}
             />
             Rechazar
-          </label>
+          </label> */}
         </div>
       </div>
     </div>

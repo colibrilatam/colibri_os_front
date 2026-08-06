@@ -26,11 +26,13 @@ export default function EvaluationsPage() {
   console.log(evidences);
 
   if (loading) {
-    return <div className="p-6">Cargando...</div>;
+    return <div className="empty-state rounded-xl p-10 text-center">
+  <p className="text-body">Cargando evidencias...</p>
+</div>
   }
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col gap-6 p-6">
+    <div className="flex h-[calc(100vh-6rem)] flex-col gap-6 p-6">
       <EvaluationHeader total={evidences.length} />
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">

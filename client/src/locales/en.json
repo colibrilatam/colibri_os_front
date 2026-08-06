@@ -16,7 +16,7 @@
     "tour": "Start Tutorial"
   },
 
-   "header": {
+  "header": {
     "logout": "Logout",
     "login": "Login",
     "access": "Access",
@@ -555,5 +555,49 @@
     "statusInactive": "Inactive",
     "statusClosed": "Closed",
     "statusSuspended": "Suspended"
+  },
+
+  "enums": {
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "under_review": "Under Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+
+    "pending": "Pending",
+    "ai_reviewed": "AI Reviewed",
+    "human_reviewed": "Human Reviewed",
+    "validated": "Validated",
+
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+
+    "public": "Public",
+    "private": "Private",
+    "restricted": "Restricted",
+
+    "automatic": "Automatic",
+    "human": "Human",
+    "hybrid": "Hybrid",
+
+    "needs_revision": "Needs Revision",
+
+    "modified": "Modified",
+
+    "research": "Research",
+    "interview": "Interview",
+    "prototype": "Prototype",
+    "validation": "Validation",
+    "documentation": "Documentation",
+    "pitch": "Pitch",
+    "networking": "Networking",
+    "other": "Other",
+
+    "text": "Text",
+    "file": "File",
+    "link": "Link",
+    "image": "Image",
+    "video": "Video"
   }
 }
