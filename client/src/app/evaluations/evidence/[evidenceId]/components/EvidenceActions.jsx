@@ -12,12 +12,11 @@ export default function EvidenceActions({ evidence }) {
           router.push(`/evaluations/evidence/${evidence.id}/review`)
         }
         className="
-          bg-primary
-          text-white
-          px-6
-          py-3
-          rounded-lg
-          hover:opacity-90
+        btn-primary
+cursor-pointer
+rounded-xl
+px-6
+py-3
         "
       >
         Iniciar evaluación

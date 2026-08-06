@@ -26,7 +26,7 @@ export default function ReviewPage() {
   //console.log(evaluation);
   //console.log(rubric);
 
-  const [score, setScore] = useState('');
+  const [score, setScore] = useState(10);
   const [decision, setDecision] = useState('');
   const [comment, setComment] = useState('');
 
@@ -75,8 +75,8 @@ export default function ReviewPage() {
       <RubricCard rubric={rubric} />
 
       {/* EVALUACIÓN */}
-      <div className="border rounded-xl p-6 flex flex-col gap-6">
-        <h2 className="text-h4">Evaluación</h2>
+      <div className="glass-effect rounded-2xl p-6 flex flex-col gap-6">
+        <h2 className="text-h3 text-primary-theme">Evaluación</h2>
 
         <ScoreCard
           score={score}

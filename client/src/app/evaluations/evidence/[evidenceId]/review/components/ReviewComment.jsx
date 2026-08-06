@@ -8,11 +8,16 @@ export default function ReviewComment({ comment, setComment }) {
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         className="
-          border
-          rounded-lg
-          p-4
-          resize-none
-        "
+glass-effect-secondary
+border-theme
+rounded-xl
+p-4
+resize-none
+text-primary-theme
+placeholder:text-secondary-theme
+outline-none
+focus:border-cyan-400
+"
         placeholder="Escribe observaciones para el emprendedor..."
       />
     </div>

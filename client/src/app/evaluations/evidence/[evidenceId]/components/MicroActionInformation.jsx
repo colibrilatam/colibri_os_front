@@ -1,4 +1,9 @@
+import { useTranslation } from '@/hooks/useTranslation';
+import Info from '../../../common/Info';
+
 export default function MicroActionInformation({ microAction }) {
+  const { t } = useTranslation('enums');
+
   if (!microAction) {
     return null;
   }
@@ -6,8 +11,8 @@ export default function MicroActionInformation({ microAction }) {
   const definition = microAction.microActionDefinition;
 
   return (
-    <section className="border rounded-xl p-6 flex flex-col gap-6">
-      <h2 className="text-h4">Microacción</h2>
+    <section className="glass-effect rounded-2xl p-6 flex flex-col gap-6">
+      <p className="text-overline mb-2">Microacción</p>
 
       {/* Información de la instancia */}
 
@@ -16,9 +21,12 @@ export default function MicroActionInformation({ microAction }) {
 
         <Info label="PAC" value={definition?.pac?.title_es} />
 
-        <Info label="Tipo de microacción" value={definition?.microActionType} />
+        <Info
+          label="Tipo de microacción"
+          value={t(definition?.microActionType)}
+        />
 
-        <Info label="Estado" value={microAction.status} />
+        <Info label="Estado" value={t(microAction.status)} />
 
         <Info label="Intento" value={microAction.attemptNumber} />
 
@@ -48,13 +56,15 @@ export default function MicroActionInformation({ microAction }) {
 
       {/* Definición */}
 
-      <div className="border-t pt-5 flex flex-col gap-4">
-        <h3 className="text-h5">Definición de la microacción</h3>
+      <div className="border-theme-top pt-5 flex flex-col gap-4">
+        <p className="text-overline mb-2">Definición de la microacción</p>
 
-        <div>
-          <p className="text-helper mb-1">Instrucción</p>
+        <div className="glass-effect-secondary rounded-xl p-5">
+          <p className="text-micro-label mb-3">Instrucción</p>
 
-          <p>{definition?.instruction_es}</p>
+          <p className="text-body text-primary-theme leading-8">
+            {definition?.instruction_es}
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-5">
@@ -65,7 +75,7 @@ export default function MicroActionInformation({ microAction }) {
 
           <Info
             label="Tipo de evidencia esperado"
-            value={definition?.expectedEvidenceType}
+            value={t(definition?.expectedEvidenceType)}
           />
 
           <Info
@@ -114,15 +124,6 @@ export default function MicroActionInformation({ microAction }) {
         </div>
       )}
     </section>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-helper">{label}</p>
-      <p>{value || '-'}</p>
-    </div>
   );
 }
 
