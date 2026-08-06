@@ -38,7 +38,7 @@ export default function EvidenceDetailPage() {
 
     load();
   }, [evidenceId]);
-  console.log(evidence);
+  //console.log(evidence);
   if (loading) {
     return (
       <div className="empty-state rounded-2xl p-12">

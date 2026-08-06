@@ -598,6 +598,12 @@
     "file": "Archivo",
     "link": "Enlace",
     "image": "Imagen",
-    "video": "Video"
+    "video": "Video",
+
+    "started": "Iniciada",
+    "in_progress": "En progreso",
+    "completed": "Completada",
+    "closed": "Cerrada",
+    "reopened": "Reabierta"
   }
 }

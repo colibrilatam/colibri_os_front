@@ -26,7 +26,7 @@ export default function ReviewPage() {
   //console.log(evaluation);
   //console.log(rubric);
 
-  const [score, setScore] = useState('');
+  const [score, setScore] = useState(10);
   const [decision, setDecision] = useState('');
   const [comment, setComment] = useState('');
 

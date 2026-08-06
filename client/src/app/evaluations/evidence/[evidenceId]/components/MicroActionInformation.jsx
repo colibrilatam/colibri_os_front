@@ -2,8 +2,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import Info from '../../../common/Info';
 
 export default function MicroActionInformation({ microAction }) {
-    const { t } = useTranslation('enums');
-  
+  const { t } = useTranslation('enums');
+
   if (!microAction) {
     return null;
   }
@@ -21,7 +21,10 @@ export default function MicroActionInformation({ microAction }) {
 
         <Info label="PAC" value={definition?.pac?.title_es} />
 
-        <Info label="Tipo de microacción" value={definition?.microActionType} />
+        <Info
+          label="Tipo de microacción"
+          value={t(definition?.microActionType)}
+        />
 
         <Info label="Estado" value={t(microAction.status)} />
 
@@ -72,7 +75,7 @@ export default function MicroActionInformation({ microAction }) {
 
           <Info
             label="Tipo de evidencia esperado"
-            value={definition?.expectedEvidenceType}
+            value={t(definition?.expectedEvidenceType)}
           />
 
           <Info

@@ -23,12 +23,14 @@ export default function EvaluationsPage() {
 
     load();
   }, []);
-  console.log(evidences);
+  //console.log(evidences);
 
   if (loading) {
-    return <div className="empty-state rounded-xl p-10 text-center">
-  <p className="text-body">Cargando evidencias...</p>
-</div>
+    return (
+      <div className="empty-state rounded-xl p-10 text-center">
+        <p className="text-body">Cargando evidencias...</p>
+      </div>
+    );
   }
 
   return (

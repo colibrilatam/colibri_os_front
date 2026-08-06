@@ -1,6 +1,9 @@
+import { useTranslation } from '@/hooks/useTranslation';
 import StatusBadge from '../common/StatusBadge';
 
 export default function EvidenceCard({ evidence, onClick }) {
+  const { t } = useTranslation('enums');
+
   return (
     <div
       className="
@@ -31,7 +34,7 @@ hover:glass-effect-secondary
 
         <Info
           label="Tipo de evidencia"
-          value={formatEvidenceType(evidence.evidence.evidenceType)}
+          value={t(evidence.evidence.evidenceType)}
         />
 
         <Info
@@ -43,10 +46,7 @@ hover:glass-effect-secondary
           }
         />
 
-        <Info
-          label="Tipo de evaluación"
-          value={formatEvaluationType(evidence.evaluationType)}
-        />
+        <Info label="Tipo de evaluación" value={t(evidence.evaluationType)} />
 
         <Info
           label="Fecha de envío"
@@ -98,7 +98,7 @@ function formatDate(date) {
   });
 }
 
-function formatEvaluationType(type) {
+/* function formatEvaluationType(type) {
   const map = {
     automatic: 'Automática',
     human: 'Humana',
@@ -106,7 +106,7 @@ function formatEvaluationType(type) {
   };
 
   return map[type] || type;
-}
+} */
 
 function formatEvidenceType(type) {
   const map = {

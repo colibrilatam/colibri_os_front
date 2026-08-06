@@ -1,5 +1,8 @@
+import Toast from '@/app/evaluations/common/Toast';
+import { useToast } from '@/lib/hooks/useToast';
 import { evaluationsService } from '@/services/evaluations';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function ReviewActions({
   evidence,
@@ -8,6 +11,7 @@ export default function ReviewActions({
   decision,
   comment,
 }) {
+  const { toast, showToast, hideToast } = useToast();
   const router = useRouter();
 
   async function handleSubmit() {
@@ -37,17 +41,31 @@ export default function ReviewActions({
         score: Number(score),
         comment,
       });
-      router.push('/evaluations');
+      showToast('success', 'Evaluación finalizada correctamente.');
+
+      setTimeout(() => {
+        router.push('/evaluations');
+      }, 1500);
     } catch (error) {
+      showToast('error', 'No se pudo finalizar la evaluación.');
       console.error(error);
     }
   }
 
+  const isFormValid = decision.trim() !== '' && comment.trim() !== '';
+
   return (
-    <div className="flex justify-end gap-4">
-      <button
-        onClick={() => router.back()}
-        className="
+    <>
+      <Toast
+        open={toast.open}
+        type={toast.type}
+        message={toast.message}
+        onClose={hideToast}
+      />
+      <div className="flex justify-end gap-4">
+        <button
+          onClick={() => router.back()}
+          className="
 border-theme
 glass-effect
 rounded-xl
@@ -57,14 +75,14 @@ cursor-pointer
 hover:glass-effect-secondary
 transition
 "
-      >
-        Cancelar
-      </button>
+        >
+          Cancelar
+        </button>
 
-      <button
-        onClick={handleSubmit}
-        disabled={!decision}
-        className="
+        <button
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+          className="
 btn-primary
 rounded-xl
 px-6
@@ -72,9 +90,10 @@ py-3
 cursor-pointer
 disabled:opacity-40
 "
-      >
-        Finalizar evaluación
-      </button>
-    </div>
+        >
+          Finalizar evaluación
+        </button>
+      </div>
+    </>
   );
 }

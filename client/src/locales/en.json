@@ -598,6 +598,13 @@
     "file": "File",
     "link": "Link",
     "image": "Image",
-    "video": "Video"
+    "video": "Video",
+
+     
+    "started": "Started",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "closed": "Closed",
+    "reopened": "Reopened"
   }
 }
