@@ -7,6 +7,7 @@ import { projectsService } from "@/services/project";
 import {evidencesService} from "@/services/evidences";
 import { useTranslation } from '@/hooks/useTranslation';
 import { uploadToCloudinary } from "@/lib/api/cloudinary";
+import { evaluationsService } from "@/services/evaluations";
 
 export default function UploadModal({
   isOpen,
@@ -28,9 +29,9 @@ export default function UploadModal({
     const { execute: requestUpload } = useRequest(projectsService.requestUploadSignature);
     const { execute: confirmUpload } = useRequest(projectsService.confirmUpload);
     const { execute: submitEvidence } = useRequest(evidencesService.submit);
-    const { execute: createEvaluation } = useRequest(evidencesService.createEvaluation);
-    const { execute: getActiveRubrics } = useRequest(evidencesService.getActiveRubrics);
-    const { execute: closeEvaluation } = useRequest(evidencesService.closeEvaluation);
+    const { execute: createEvaluation } = useRequest(evaluationsService.create);
+    const { execute: getActiveRubrics } = useRequest(evaluationsService.getActiveRubrics);
+    const { execute: closeEvaluation } = useRequest(evaluationsService.finalize);
 
   const [formData, setFormData] = useState({
     file: null,
@@ -145,13 +146,10 @@ export default function UploadModal({
         const { data: confirmUploadResponse, error: confirmUploadError } = await confirmUpload({
           evidenceId: data.id,
           cloudinaryPublicId: cloudinaryData.public_id,
-          storageUri: cloudinaryData.url,
-          mimeType: "pdf",
           changeSummary: "Corrección de formato solicitada por el evaluador.",
           isMaterialChange: false
         })
         if(confirmUploadError){
-          console.log(confirmUploadError)
           setError(confirmUploadError.message || confirmUploadError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
@@ -173,19 +171,18 @@ export default function UploadModal({
           setError(activeRubricsError.message || activeRubricsError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
-        
+        console.log('activeRubricsResponse', activeRubricsResponse)
         // Luego se crea la evaluación con la primer rúbrica
         const { data: createEvaluationResponse, error: createEvaluationError } = await createEvaluation({
           evidenceId: data.id,
           rubricId: activeRubricsResponse[0].id,
-          rubricVersion: "v1.0",
           evaluationType: "hybrid",
           evaluationSourceWeight: 0.5
         })
         // PASO 6 - Solo en DEMO: Cerrar evaluación y aprobar evidencia
         
         
-        const { data: closeEvaluationResponse, error: closeEvaluationError } = await closeEvaluation({
+       /* const { data: closeEvaluationResponse, error: closeEvaluationError } = await closeEvaluation({
           
   evaluationId: createEvaluationResponse.id,
   evaluationResult: "approved",
@@ -202,11 +199,11 @@ export default function UploadModal({
           console.log(closeEvaluationError)
           setError(closeEvaluationError.message || closeEvaluationError || 'Error al enviar. Intenta nuevamente.');
           return;
-        }
+        }*/
 
      
         checkPacStatus();
-        setSuccess('Evidencia aprobada.')
+        //setSuccess('Evidencia aprobada.')
         
 }
       // Solo limpiamos el formulario si la petición fue exitosa
