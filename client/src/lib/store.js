@@ -45,7 +45,7 @@ export const useUserStore = create(
         })),
 
       getTranslation: (key) => get().translationsCache[key],
-      
+
       // Token
       token: null,
       setToken: (token) => {
@@ -90,6 +90,7 @@ export const useUserStore = create(
           theme: null,
           isGuest: false,
           sidebarDesktopExpanded: false,
+          sidebarMobileOpen: false,
           language: 'en',
         });
       },
@@ -111,7 +112,7 @@ export const useUserStore = create(
         return true;
       },
 
-      // Estado del Sidebar
+      // Estado del Sideba: false,
       sidebarMobileOpen: false,
       setSidebarMobileOpen: (isOpen) => set({ sidebarMobileOpen: isOpen }),
       toggleSidebarMobile: () =>
@@ -128,7 +129,12 @@ export const useUserStore = create(
     }),
 
     {
-      name: 'app-state', // key en localStorage
+      name: 'app-state',
+      partialize: (state) => {
+        const { sidebarMobileOpen, ...persistedState } = state;
+
+        return persistedState;
+      },
     },
   ),
 );
