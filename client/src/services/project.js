@@ -12,7 +12,18 @@ export const projectsService = {
   },
 
   create: async (data) => {
-    const response = await apiClient.post('/projects', data);
+    const hasFile = data.image instanceof File;
+    let body;
+    if (hasFile) {
+      body = new FormData();
+      for (const [key, value] of Object.entries(data)) {
+        if (value === null || value === undefined) continue;
+        body.append(key, value);
+      }
+    } else {
+      body = data;
+    }
+    const response = await apiClient.post('/projects', body);
     return response.data;
   },
 
@@ -103,6 +114,11 @@ export const projectsService = {
 
   createMicroActionInstance: async (data) => {
     const response = await apiClient.post(`/micro-action-instances`, data);
+    return response.data;
+  },
+
+  submitMicroAction: async (id) => {
+    const response = await apiClient.post(`/micro-action-instances/${id}/submit`);
     return response.data;
   },
 
