@@ -150,6 +150,9 @@ export default function MainHeader() {
               hover:text-red-300
               transition-colors
               cursor-pointer
+              p-3
+              bg-red-800/50
+              rounded-2xl
               "
             >
               <LogOut size={14} />

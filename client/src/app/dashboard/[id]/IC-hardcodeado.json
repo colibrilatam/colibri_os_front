@@ -1,0 +1,104 @@
+{
+  "id": "5b0dee63-bd7a-4884-b1d9-dc6e80a07fb1",
+  "projectId": "8bc4e6bf-f3a9-4f80-9a96-e1e528e3e0d3",
+  "userId": "7c32cce1-5061-44c6-85df-5c426be5e256",
+  "tramoId": "159583f1-67d8-4a34-877d-99332d0bdc85",
+  "algorithmVersionId": "bd6e6a8d-7f7e-4ea1-a713-33302a8933a0",
+  "actionScore": "4.76",
+  "evidenceScore": "0.00",
+  "consistencyScore": "0.00",
+  "collaborationScore": "0.00",
+  "sustainabilityScore": "0.00",
+  "icRaw": "1.43",
+  "icPublic": "1.43",
+  "eligibilityStatus": "not_eligible",
+  "explanationJson": null,
+  "calculatedAt": "2026-08-17T18:38:33.343Z",
+  "validFrom": "2026-08-17T18:38:33.343Z",
+  "validTo": null,
+  "createdAt": "2026-08-17T18:38:33.357Z",
+  "tramo": {
+    "id": "159583f1-67d8-4a34-877d-99332d0bdc85",
+    "code": "T1",
+    "name_es": "Fase Fundacional",
+    "name_en": "Foundational Phase",
+    "description_es": "El proyecto aún busca forma. El equipo ajusta propósito, enfoque y definición del problema. La incertidumbre está en la coherencia inicial y en la claridad mínima necesaria para comenzar con dirección.",
+    "description_en": "The project is still taking shape. The team adjusts purpose, focus and problem definition. Uncertainty lies in initial coherence and the minimum clarity needed to move forward with direction.",
+    "sortOrder": 1,
+    "executionWindowDays": 90,
+    "uncertaintyType": "Identitaria y de formulación",
+    "primaryRiskType": "humano",
+    "associatedRisks": [
+      "Riesgo Humano",
+      "Riesgo de irrelevancia",
+      "Riesgo narrativo"
+    ],
+    "icFloor": "0.00",
+    "eligibilityRule_es": "El proyecto debe tener al menos una hipótesis de problema documentada.",
+    "eligibilityRule_en": "The project must have at least one documented problem hypothesis.",
+    "publicThreshold": "30.00",
+    "isActive": true,
+    "validFrom": null,
+    "validTo": null,
+    "createdAt": "2026-08-14T16:14:21.796Z",
+    "updatedAt": "2026-08-14T16:14:21.796Z"
+  },
+  "algorithmVersion": {
+    "id": "bd6e6a8d-7f7e-4ea1-a713-33302a8933a0",
+    "code": "IC-v4.0",
+    "description": "Versión activa 2026. Modelo completo con todas las dimensiones calibradas.",
+    "weightAction": "30.00",
+    "weightEvidence": "25.00",
+    "weightConsistency": "20.00",
+    "weightCollaboration": "15.00",
+    "weightSustainability": "10.00",
+    "consistencyFormulaJson": {
+      "type": "sliding_window",
+      "windowDays": 30,
+      "penaltyFactor": 0.8
+    },
+    "collaborationFormulaJson": {
+      "type": "peer_signal",
+      "minPeers": 2,
+      "decayDays": 60
+    },
+    "sustainabilityRubricVersion": "rubric-v2",
+    "effectiveFrom": "2026-01-01T00:00:00.000Z",
+    "effectiveTo": null,
+    "isActive": true,
+    "approvedBy": "admin-seed",
+    "createdAt": "2026-08-14T16:14:22.618Z"
+  },
+  "explanations": [
+    {
+      "id": "1a16baa5-5cd8-45c4-b2be-3d2f638c45e2",
+      "snapshotId": "5b0dee63-bd7a-4884-b1d9-dc6e80a07fb1",
+      "metricKey": "action_score",
+      "sourceEntity": "micro_action_instance",
+      "sourceEntityId": "8bc4e6bf-f3a9-4f80-9a96-e1e528e3e0d3",
+      "contributionValue": "4.7619",
+      "notes": "1 de 21 microacciones completadas",
+      "createdAt": "2026-08-17T18:38:33.357Z"
+    },
+    {
+      "id": "dcb54dd0-4772-4bb1-ade8-2408b666ef93",
+      "snapshotId": "5b0dee63-bd7a-4884-b1d9-dc6e80a07fb1",
+      "metricKey": "evidence_score",
+      "sourceEntity": "evidence",
+      "sourceEntityId": "8bc4e6bf-f3a9-4f80-9a96-e1e528e3e0d3",
+      "contributionValue": "0.0000",
+      "notes": "0 evidencias aprobadas, 0 rechazadas",
+      "createdAt": "2026-08-17T18:38:33.357Z"
+    },
+    {
+      "id": "eb4adee4-0eb9-4c6d-8779-4b4fc11af9a2",
+      "snapshotId": "5b0dee63-bd7a-4884-b1d9-dc6e80a07fb1",
+      "metricKey": "consistency_score",
+      "sourceEntity": "micro_action_instance",
+      "sourceEntityId": "8bc4e6bf-f3a9-4f80-9a96-e1e528e3e0d3",
+      "contributionValue": "0.0000",
+      "notes": "0 de 1 completadas a tiempo",
+      "createdAt": "2026-08-17T18:38:33.357Z"
+    }
+  ]
+}

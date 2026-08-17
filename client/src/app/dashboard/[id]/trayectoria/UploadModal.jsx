@@ -4,10 +4,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import NotificationPopup from "@/components/NotificationPopup";
 import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
-import {evidencesService} from "@/services/evidences";
+import { evidencesService } from "@/services/evidences";
 import { useTranslation } from '@/hooks/useTranslation';
 import { uploadToCloudinary } from "@/lib/api/cloudinary";
 import { evaluationsService } from "@/services/evaluations";
+
+const ALLOWED_MIME_TYPES = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
 
 export default function UploadModal({
   isOpen,
@@ -23,15 +30,16 @@ export default function UploadModal({
     validated: 'completed',
     completed: 'closed',
   }
-}) {  
+}) {
 
     const { execute: updateMicroAction } = useRequest(projectsService.updateMicroAction);
+    const { execute: submitMicroAction } = useRequest(projectsService.submitMicroAction);
     const { execute: requestUpload } = useRequest(projectsService.requestUploadSignature);
     const { execute: confirmUpload } = useRequest(projectsService.confirmUpload);
+    const { execute: createEvidence } = useRequest(evidencesService.createEvidence);
     const { execute: submitEvidence } = useRequest(evidencesService.submit);
     const { execute: createEvaluation } = useRequest(evaluationsService.create);
     const { execute: getActiveRubrics } = useRequest(evaluationsService.getActiveRubrics);
-    const { execute: closeEvaluation } = useRequest(evaluationsService.finalize);
 
   const [formData, setFormData] = useState({
     file: null,
@@ -43,27 +51,24 @@ export default function UploadModal({
   const { t } = useTranslation('trayectoria');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [ success, setSuccess ] = useState(null);
 
   if(!data) return null
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validar que el archivo sea estrictamente un PDF
-    if (file.type !== "application/pdf") {
-      setError(t('errorNotPdf'));
-      // Limpiamos el input por si acaso
-      e.target.value = ""; 
-      return;
-    }
+      if (!ALLOWED_MIME_TYPES.includes(file.type)) {
+        setError(t('errorInvalidFileType') || 'Solo se aceptan archivos PDF o imágenes (JPG, PNG, WebP)');
+        e.target.value = "";
+        return;
+      }
 
       setFormData(prev => ({
         ...prev,
         file,
         fileName: file.name,
       }));
-      setError(null); // Limpiar error cuando selecciona archivo
+      setError(null);
     }
   };
 
@@ -72,17 +77,17 @@ export default function UploadModal({
       ...prev,
       executionNotes: e.target.value,
     }));
-    setError(null); // Limpiar error cuando escribe notas
+    setError(null);
   };
 
   const validateForm = () => {
-    if (!formData.file && type !== 'microaction') {
-      setError(t('errorAttachFile'));
+    if (!formData.file) {
+      setError(t('errorAttachFile') || 'Debés adjuntar un archivo (PDF o imagen)');
       return false;
     }
 
     if (type === 'microaction' && !formData.executionNotes.trim()) {
-      setError(t('errorCompleteNotes'));
+      setError(t('errorCompleteNotes') || 'Completá las notas de ejecución');
       return false;
     }
 
@@ -90,11 +95,9 @@ export default function UploadModal({
   };
 
   const handleSubmit = async (ma) => {
-    //console.log(ma)
     if (!validateForm()) {
       return;
     }
-    
 
     setLoading(true);
     setError(null);
@@ -102,39 +105,94 @@ export default function UploadModal({
     const STATES = ['pending', 'started','in_progress', 'submitted'];
 
     try {
-      
         if(type === 'microaction') {
-          const currentIndex = STATES.indexOf(ma.status);
-          const stepsNeeded = STATES.length - 1 - currentIndex;
-
-          for (let i = 0; i < stepsNeeded; i++) {
-    const body = {
-                executionNotes: formData.executionNotes,
-                status: STATES[currentIndex + i + 1],
-            }
-          const { data: responseData, error } = await updateMicroAction(ma.id, body);
-          if(error){
-            console.log(error)
-            setError(error.message || error || t('errorSendTryAgain'));
+          // PASO 1 - Crear evidence DRAFT vinculada a la MAI
+          const { data: evidenceData, error: createError } = await createEvidence({
+            microActionInstanceId: ma.id,
+            evidenceType: 'file',
+          });
+          if (createError) {
+            setError(createError.message || createError || 'Error al crear la evidencia.');
             return;
           }
-  }
-            
-          microactionRefresh();
-          setSuccess('Actualización enviada correctamente.')
 
-        };
+          // PASO 2 - Solicitar firma de upload
+          const { data: signatureData, error: sigError } = await requestUpload({
+            evidenceId: evidenceData.id,
+            mimeType: formData.file.type,
+            evidenceType: 'file',
+          });
+          if (sigError) {
+            setError(sigError.message || sigError || 'Error al solicitar firma de carga.');
+            return;
+          }
+
+          // PASO 3 - Subir archivo a Cloudinary
+          const cloudinaryData = await uploadToCloudinary(formData.file, signatureData);
+
+          // PASO 4 - Confirmar upload
+          const { error: confirmError } = await confirmUpload({
+            evidenceId: evidenceData.id,
+            cloudinaryPublicId: cloudinaryData.public_id,
+            changeSummary: 'Archivo adjuntado como evidencia de la microacción.',
+            isMaterialChange: true,
+          });
+          if (confirmError) {
+            setError(confirmError.message || confirmError || 'Error al confirmar la carga.');
+            return;
+          }
+
+          // PASO 5 - Enviar evidence a revisión
+          const { error: submitEvError } = await submitEvidence(evidenceData.id);
+          if (submitEvError) {
+            setError(submitEvError.message || submitEvError || 'Error al enviar la evidencia.');
+            return;
+          }
+
+          // PASO 6 - Crear evaluación de evidencia
+          const { data: rubricsData, error: rubricsError } = await getActiveRubrics();
+          if (!rubricsError && rubricsData?.length > 0) {
+            await createEvaluation({
+              evidenceId: evidenceData.id,
+              rubricId: rubricsData[0].id,
+              evaluationType: 'hybrid',
+              evaluationSourceWeight: 0.5,
+            });
+          }
+
+          // PASO 7 - Avanzar estados de la MAI si es necesario
+          const currentIndex = STATES.indexOf(ma.status);
+          const stepsNeeded = STATES.length - 1 - currentIndex;
+          for (let i = 0; i < stepsNeeded; i++) {
+            const { error: updateError } = await updateMicroAction(ma.id, {
+              executionNotes: formData.executionNotes,
+              status: STATES[currentIndex + i + 1],
+            });
+            if (updateError) {
+              setError(updateError.message || updateError || t('errorSendTryAgain'));
+              return;
+            }
+          }
+
+          // PASO 8 - Enviar MAI a evaluación
+          const { error: submitMaError } = await submitMicroAction(ma.id);
+          if (submitMaError) {
+            setError(submitMaError.message || submitMaError || t('errorSendTryAgain'));
+            return;
+          }
+
+          microactionRefresh();
+        }
 
         if(type === 'evidence'){
           // PASO 1 - Solicitar firma al backend
             const requestUploadBody = {
   evidenceId: data.id,
-  mimeType: "application/pdf",
+  mimeType: formData.file.type,
   evidenceType: "file"
 }
         const { data: requestSignatureResponse, error: requestUploadError } = await requestUpload(requestUploadBody);
         if(requestUploadError){
-          console.log(requestUploadError)
           setError(requestUploadError.message || requestUploadError || 'Error al enviar. Intenta nuevamente.');
           return;
         }
@@ -157,65 +215,32 @@ export default function UploadModal({
         // PASO 4 - Enviar evidencia a revisión
         const { data: submitEvidenceResponse, error: submitEvidenceError } = await submitEvidence(data.id);
         if(submitEvidenceError){
-          console.log(submitEvidenceError)
           setError(submitEvidenceError.message || submitEvidenceError || 'Error al enviar. Intenta nuevamente.');
           return;
         };
 
-
         // PASO 5 - Crear evaluación de evidencia
-        // Primero se obtienen todas las rúbricas activas
         const { data: activeRubricsResponse, error: activeRubricsError } = await getActiveRubrics();
-        if(activeRubricsError){
-          console.log(activeRubricsError)
-          setError(activeRubricsError.message || activeRubricsError || 'Error al enviar. Intenta nuevamente.');
-          return;
+        if(!activeRubricsError && activeRubricsResponse?.length > 0){
+          await createEvaluation({
+            evidenceId: data.id,
+            rubricId: activeRubricsResponse[0].id,
+            evaluationType: "hybrid",
+            evaluationSourceWeight: 0.5
+          });
         }
-        console.log('activeRubricsResponse', activeRubricsResponse)
-        // Luego se crea la evaluación con la primer rúbrica
-        const { data: createEvaluationResponse, error: createEvaluationError } = await createEvaluation({
-          evidenceId: data.id,
-          rubricId: activeRubricsResponse[0].id,
-          evaluationType: "hybrid",
-          evaluationSourceWeight: 0.5
-        })
-        // PASO 6 - Solo en DEMO: Cerrar evaluación y aprobar evidencia
-        
-        
-       /* const { data: closeEvaluationResponse, error: closeEvaluationError } = await closeEvaluation({
-          
-  evaluationId: createEvaluationResponse.id,
-  evaluationResult: "approved",
-  score: 99,
-  dimensionScoresJson: {
-    consistency: 82,
-    collaboration: 77,
-    sustainability: 81
-  },
-  comment: "Evidencia aprobada. Excelente trabajo de investigación."
 
-        })
-        if(closeEvaluationError){
-          console.log(closeEvaluationError)
-          setError(closeEvaluationError.message || closeEvaluationError || 'Error al enviar. Intenta nuevamente.');
-          return;
-        }*/
-
-     
         checkPacStatus();
-        //setSuccess('Evidencia aprobada.')
-        
 }
-      // Solo limpiamos el formulario si la petición fue exitosa
+
       setFormData({
         file: null,
         executionNotes: '',
         fileName: null,
       });
       onClose();
-    
+
     } catch (err) {
-      // El error se muestra en la UI y el modal permanece abierto
       setError(err.message || t('errorSendTryAgain'));
     } finally {
       setLoading(false);
@@ -224,7 +249,6 @@ export default function UploadModal({
 
   const isMicroaction = type === 'microaction';
   const title = isMicroaction ? t('uploadTitleMicro') : t('uploadTitleEvidence');
-  const nextStatus = isMicroaction && data?.status ? newStatusMap[data.status] : null;
 
   return (
     <AnimatePresence>
@@ -237,16 +261,6 @@ export default function UploadModal({
             transition={{ duration: 0.2 }}
             className="text-white glass-effect border-glass rounded-2xl p-6 max-w-md w-full space-y-4"
           >
-            {/* Header 
-            <div>
-              <h3 className="text-h3 mb-2">{title}</h3>
-              {nextStatus && (
-                <p className="text-helper text-[var(--text-tertiary)]">
-                  Próximo estado: <span className="font-medium">{nextStatus}</span>
-                </p>
-              )}
-            </div>*/}
-
             {/* Error Message */}
             <AnimatePresence>
               {error && (
@@ -261,22 +275,7 @@ export default function UploadModal({
               )}
             </AnimatePresence>
 
-            {/* Success Message 
-            <AnimatePresence>
-              {success && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="bg-green-500/20 border border-green-500/50 rounded-lg p-3 text-green-300 text-body"
-                >
-                  {success}
-                </motion.div>
-              )}
-            </AnimatePresence>*/}
-            {}
-
-            {/* executionNotes Input - Solo para microacciones */}
+            {/* Instrucción y notas - solo para microacciones */}
             {isMicroaction && (
               <div className="space-y-2">
                 <div>
@@ -295,19 +294,18 @@ export default function UploadModal({
               </div>
             )}
 
-            {/* File Input */}
-            {!isMicroaction && (
-                
-            
+            {/* File Input - siempre visible */}
             <div className="space-y-2">
               <label className="text-body-lg font-medium">
-                {t('uploadFileLabel')}
+                {t('uploadFileLabel') || 'Archivo adjunto'}
               </label>
-              <p className="text-(--text-tertiary)">{t('uploadOnlyPdf')}</p>
+              <p className="text-(--text-tertiary)">
+                {t('uploadPdfOrImage') || 'PDF o imágenes (JPG, PNG, WebP)'}
+              </p>
               <div className="relative">
                 <input
                   type="file"
-                  accept="application/pdf"
+                  accept="application/pdf,image/jpeg,image/png,image/webp"
                   onChange={handleFileChange}
                   disabled={loading}
                   className="w-full text-sm text-white border border-glass rounded-xl p-3
@@ -320,11 +318,10 @@ export default function UploadModal({
               </div>
               {formData.fileName && (
                 <p className="text-helper text-[var(--status-success)]">
-                  {t('uploadFileSelected')} {formData.fileName}
+                  {t('uploadFileSelected') || 'Archivo seleccionado:'} {formData.fileName}
                 </p>
               )}
             </div>
-            )}
 
             {/* Submit Button */}
             <div className="flex gap-3 pt-4">
@@ -338,7 +335,6 @@ export default function UploadModal({
               </button>
               <button
                 onClick={() => handleSubmit(data)}
-
                 disabled={loading}
                 className="flex-1 px-4 py-3 rounded-lg font-bold bg-[rgba(0,207,207,0.2)] 
                   border border-[var(--color-turquoise)] text-[var(--color-turquoise)]
