@@ -5,8 +5,12 @@ import { Eye, History } from 'lucide-react';
 
 import VersionDetailModal from './VersionDetailModal';
 import StatusBadge from '@/app/evaluations/common/StatusBadge';
+import { useRouter } from 'next/navigation';
 
-export default function MicroActionVersions({ versions = [] }) {
+export default function MicroActionVersions({ versions = [], microAction }) {
+  console.log(microAction);
+  //console.log(microAction)
+
   const [selectedVersion, setSelectedVersion] = useState(null);
 
   const sortedVersions = [...versions].sort(
@@ -45,6 +49,7 @@ export default function MicroActionVersions({ versions = [] }) {
               <VersionCard
                 key={version.id}
                 version={version}
+                microAction={microAction}
                 isLatest={index === 0}
                 onView={() => setSelectedVersion(version)}
               />
@@ -63,7 +68,9 @@ export default function MicroActionVersions({ versions = [] }) {
   );
 }
 
-function VersionCard({ version, isLatest, onView }) {
+function VersionCard({ version, isLatest, onView, microAction }) {
+  const router = useRouter();
+
   return (
     <div
       className={`
@@ -136,6 +143,19 @@ function VersionCard({ version, isLatest, onView }) {
             <Eye size={20} />
             Ver detalles
           </button>
+          {version.status === 'pending' && (
+            <button
+              type="button"
+              onClick={() =>
+                router.push(
+                  `/evaluations/micro-action/${microAction.id}/evaluate/${version.id}`,
+                )
+              }
+              className="btn-primary rounded-xl px-5 py-3"
+            >
+              Evaluar versión
+            </button>
+          )}
         </div>
       </div>
     </div>

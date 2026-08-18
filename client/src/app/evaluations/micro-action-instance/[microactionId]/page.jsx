@@ -119,7 +119,10 @@ export default function MicroActionDetailPage() {
           <MicroActionEvidenceList evidences={microAction.evidences} />
 
           {/* Versiones */}
-          <MicroActionVersions versions={microAction.versions || []} />
+          <MicroActionVersions
+            versions={microAction.versions || []}
+            microAction={microAction}
+          />
         </div>
       </div>
     </div>

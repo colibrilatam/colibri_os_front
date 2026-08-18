@@ -17,6 +17,19 @@ export const microActionService = {
     return response.data;
   },
 
+   /**
+   * Actualizar el estado de la version si es aporbada o rechazada.
+   */
+
+  resolveVersion: async (versionId, data) => {
+  const response = await apiClient.patch(
+    `/micro-action-instances/versions/${versionId}`,
+    data,
+  );
+
+  return response.data;
+},
+
   /**
    * Crear una nueva versión de una microacción.
    */
