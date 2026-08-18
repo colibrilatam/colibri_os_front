@@ -5,7 +5,10 @@ import NotificationPopup from "@/components/NotificationPopup";
 import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
 import { evidencesService } from "@/services/evidences";
+import { microActionService } from "@/services/micro-action";
 import { useTranslation } from '@/hooks/useTranslation';
+import { getLocalizedValue } from '@/hooks/useLocalizedField';
+import { useUserStore } from '@/lib/store';
 import { uploadToCloudinary } from "@/lib/api/cloudinary";
 import { evaluationsService } from "@/services/evaluations";
 
@@ -21,6 +24,7 @@ export default function UploadModal({
   onClose,
   type, // 'microaction' | 'evidence'
   data, // microaction o evidence object
+  projectId,
   microactionRefresh,
   checkPacStatus,
   newStatusMap = {
@@ -39,6 +43,7 @@ export default function UploadModal({
     const { execute: createEvidence } = useRequest(evidencesService.createEvidence);
     const { execute: submitEvidence } = useRequest(evidencesService.submit);
     const { execute: createEvaluation } = useRequest(evaluationsService.create);
+    const { execute: createMicroActionVersion } = useRequest(microActionService.createVersion);
     const { execute: getActiveRubrics } = useRequest(evaluationsService.getActiveRubrics);
 
   const [formData, setFormData] = useState({
@@ -49,6 +54,7 @@ export default function UploadModal({
   });
 
   const { t } = useTranslation('trayectoria');
+  const language = useUserStore((state) => state.language);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -85,12 +91,6 @@ export default function UploadModal({
       setError(t('errorAttachFile') || 'Debés adjuntar un archivo (PDF o imagen)');
       return false;
     }
-
-    if (type === 'microaction' && !formData.executionNotes.trim()) {
-      setError(t('errorCompleteNotes') || 'Completá las notas de ejecución');
-      return false;
-    }
-
     return true;
   };
 
@@ -106,78 +106,12 @@ export default function UploadModal({
 
     try {
         if(type === 'microaction') {
-          // PASO 1 - Crear evidence DRAFT vinculada a la MAI
-          const { data: evidenceData, error: createError } = await createEvidence({
-            microActionInstanceId: ma.id,
-            evidenceType: 'file',
+          const { error: createVersionError } = await createMicroActionVersion(data.id, {
+            file: formData.file,
+            executionNotes: formData.executionNotes,
           });
-          if (createError) {
-            setError(createError.message || createError || 'Error al crear la evidencia.');
-            return;
-          }
-
-          // PASO 2 - Solicitar firma de upload
-          const { data: signatureData, error: sigError } = await requestUpload({
-            evidenceId: evidenceData.id,
-            mimeType: formData.file.type,
-            evidenceType: 'file',
-          });
-          if (sigError) {
-            setError(sigError.message || sigError || 'Error al solicitar firma de carga.');
-            return;
-          }
-
-          // PASO 3 - Subir archivo a Cloudinary
-          const cloudinaryData = await uploadToCloudinary(formData.file, signatureData);
-
-          // PASO 4 - Confirmar upload
-          const { error: confirmError } = await confirmUpload({
-            evidenceId: evidenceData.id,
-            cloudinaryPublicId: cloudinaryData.public_id,
-            changeSummary: 'Archivo adjuntado como evidencia de la microacción.',
-            isMaterialChange: true,
-          });
-          if (confirmError) {
-            setError(confirmError.message || confirmError || 'Error al confirmar la carga.');
-            return;
-          }
-
-          // PASO 5 - Enviar evidence a revisión
-          const { error: submitEvError } = await submitEvidence(evidenceData.id);
-          if (submitEvError) {
-            setError(submitEvError.message || submitEvError || 'Error al enviar la evidencia.');
-            return;
-          }
-
-          // PASO 6 - Crear evaluación de evidencia
-          const { data: rubricsData, error: rubricsError } = await getActiveRubrics();
-          if (!rubricsError && rubricsData?.length > 0) {
-            await createEvaluation({
-              evidenceId: evidenceData.id,
-              rubricId: rubricsData[0].id,
-              evaluationType: 'hybrid',
-              evaluationSourceWeight: 0.5,
-            });
-          }
-
-          // PASO 7 - Avanzar estados de la MAI si es necesario
-          const currentIndex = STATES.indexOf(ma.status);
-          const stepsNeeded = STATES.length - 1 - currentIndex;
-          for (let i = 0; i < stepsNeeded; i++) {
-            const { error: updateError } = await updateMicroAction(ma.id, {
-              executionNotes: formData.executionNotes,
-              status: STATES[currentIndex + i + 1],
-            });
-            if (updateError) {
-              setError(updateError.message || updateError || t('errorSendTryAgain'));
-              return;
-            }
-          }
-
-          // PASO 8 - Enviar MAI a evaluación
-          const { error: submitMaError } = await submitMicroAction(ma.id);
-          if (submitMaError) {
-            setError(submitMaError.message || submitMaError || t('errorSendTryAgain'));
+          if (createVersionError) {
+            setError(createVersionError.message || createVersionError || 'Error al enviar. Intenta nuevamente.');
             return;
           }
 
@@ -249,6 +183,7 @@ export default function UploadModal({
 
   const isMicroaction = type === 'microaction';
   const title = isMicroaction ? t('uploadTitleMicro') : t('uploadTitleEvidence');
+  //console.log(data)
 
   return (
     <AnimatePresence>
@@ -280,7 +215,7 @@ export default function UploadModal({
               <div className="space-y-2">
                 <div>
                   <div className="text-[var(--text-tertiary)]">{t('labelInstruction')}</div>
-                  <p>{data.microActionDefinition.instruction}</p>
+                  <p>{getLocalizedValue(data.microActionDefinition, 'instruction', language)}</p>
                   <div className="text-[var(--text-tertiary)]">{data.microActionDefinition.microActionType}</div>
                 </div>
                 <label className="text-body-lg font-medium">{t('uploadNotesLabel')}</label>
