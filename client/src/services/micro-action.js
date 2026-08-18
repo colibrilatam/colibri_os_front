@@ -9,6 +9,18 @@ export const microActionService = {
     return response.data;
   },
 
+  /**
+   * Obtener una microacción completa con sus relaciones.
+   */
+  getById: async (id) => {
+    const response = await apiClient.get(`/micro-action-instances/${id}`);
+    return response.data;
+  },
+
+  /**
+   * Crear una nueva versión de una microacción.
+   */
+
   createVersion: async (instanceId, { file, executionNotes }) => {
     const body = new FormData();
     body.append('file', file);
