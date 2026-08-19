@@ -7,16 +7,19 @@ import VersionDetailModal from './VersionDetailModal';
 import StatusBadge from '@/app/evaluations/common/StatusBadge';
 import { useRouter } from 'next/navigation';
 
-export default function MicroActionVersions({ versions = [], microAction }) {
-  console.log(microAction);
+export default function MicroActionVersions({
+  versions = [],
+  microAction,
+  autor,
+}) {
   //console.log(microAction)
-
   const [selectedVersion, setSelectedVersion] = useState(null);
 
   const sortedVersions = [...versions].sort(
     (a, b) => b.versionNumber - a.versionNumber,
   );
 
+  //console.log(autor)
   return (
     <>
       <section className="glass-effect rounded-2xl p-6 md:p-8">
@@ -62,6 +65,7 @@ export default function MicroActionVersions({ versions = [], microAction }) {
         <VersionDetailModal
           version={selectedVersion}
           onClose={() => setSelectedVersion(null)}
+          autor={autor}
         />
       )}
     </>
@@ -110,7 +114,7 @@ function VersionCard({ version, isLatest, onView, microAction }) {
                 <span className="badge badge-info">Última versión</span>
               )}
 
-              <StatusBadge status={version.status} />
+              <StatusBadge status={version.changeType} />
             </div>
 
             <p className="text-body--muted mt-2">
