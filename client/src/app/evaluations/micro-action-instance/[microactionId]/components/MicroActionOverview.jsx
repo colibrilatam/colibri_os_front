@@ -59,18 +59,6 @@ export default function MicroActionOverview({ microAction }) {
         />
 
         <InfoCard
-          icon={<RotateCcw size={22} />}
-          label="Intento"
-          value={microAction.attemptNumber ?? '-'}
-        />
-
-        <InfoCard
-          icon={<RotateCcw size={22} />}
-          label="Reaperturas"
-          value={microAction.reopenedCount ?? 0}
-        />
-
-        <InfoCard
           icon={<FileText size={22} />}
           label="Cumplimiento"
           value={formatOnTime(microAction.isOnTime)}

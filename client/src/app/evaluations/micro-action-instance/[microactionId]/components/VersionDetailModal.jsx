@@ -11,7 +11,7 @@ import {
   Link as LinkIcon,
 } from 'lucide-react';
 
-export default function VersionDetailModal({ version, onClose }) {
+export default function VersionDetailModal({ version, onClose, autor }) {
   if (!version) return null;
 
   return (
@@ -55,7 +55,7 @@ export default function VersionDetailModal({ version, onClose }) {
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <h2 className="text-h2">Versión {version.versionNumber}</h2>
 
-                <StatusBadge status={version.status} />
+                <StatusBadge status={version.changeType} />
               </div>
 
               <p className="text-body--muted mt-3">
@@ -85,7 +85,7 @@ export default function VersionDetailModal({ version, onClose }) {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Info
               icon={<GitBranch size={21} />}
-              label="Tipo de cambio"
+              label="Estado actual"
               value={version.changeType}
             />
 
@@ -99,6 +99,8 @@ export default function VersionDetailModal({ version, onClose }) {
               icon={<UserRound size={21} />}
               label="Creada por"
               value={
+                autor?.fullName ||
+                autor?.name ||
                 version.createdBy?.fullName ||
                 version.createdBy?.name ||
                 version.createdBy?.email ||
@@ -107,7 +109,7 @@ export default function VersionDetailModal({ version, onClose }) {
               }
             />
 
-            <Info
+            {/*<Info
               icon={<RotateCcw size={21} />}
               label="Número de intento"
               value={version.attemptNumber}
@@ -118,7 +120,7 @@ export default function VersionDetailModal({ version, onClose }) {
               label="Reaperturas"
               value={version.reopenedCount}
             />
-
+*/}
             <Info
               icon={<GitBranch size={21} />}
               label="Versión que reemplaza"
@@ -128,6 +130,7 @@ export default function VersionDetailModal({ version, onClose }) {
                   : 'Ninguna'
               }
             />
+            
           </div>
 
           {/* Estados */}
@@ -141,7 +144,7 @@ export default function VersionDetailModal({ version, onClose }) {
                   <p className="text-micro-label">Estado actual</p>
 
                   <div className="mt-2">
-                    <StatusBadge status={version.status} />
+                    <StatusBadge status={version.changeType} />
                   </div>
                 </div>
 
@@ -171,7 +174,7 @@ export default function VersionDetailModal({ version, onClose }) {
 
             <div className="surface-secondary rounded-xl p-5">
               <p className="text-body">
-                {version.executionNotes ||
+                {version.changeSummary ||
                   'Esta versión no contiene notas de ejecución.'}
               </p>
             </div>
