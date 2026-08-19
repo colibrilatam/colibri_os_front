@@ -18,7 +18,7 @@ export default function EvaluationsPage() {
   const [microActions, setMicroActions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('submitted');
   const [page, setPage] = useState(1);
 
   const [pagination, setPagination] = useState({
