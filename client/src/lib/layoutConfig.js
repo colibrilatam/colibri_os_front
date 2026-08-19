@@ -3,7 +3,7 @@ export const routeConfig = {
     {
       path: '/evaluations',
       protected: true,
-      roles: ['admin','mentor', 'evaluator'],
+      roles: ['admin', 'mentor', 'evaluator', 'entrepreneur'],
       header: 'main',
       padding: 'pt-24',
     },
@@ -11,21 +11,21 @@ export const routeConfig = {
     {
       path: '/dashboard',
       protected: true,
-      roles: ['admin','entrepreneur', 'mentor', 'mecenas_semilla'],
+      roles: ['admin', 'entrepreneur', 'mentor', 'mecenas_semilla'],
       header: 'project',
       padding: 'pt-0',
     },
     {
       path: '/user',
       protected: true,
-      roles: ['admin','entrepreneur', 'mecenas_semilla'],
+      roles: ['admin', 'entrepreneur', 'mecenas_semilla'],
       header: 'project',
       padding: 'pt-0',
     },
     {
       path: '/proyecto',
       protected: true,
-      roles: ['admin','entrepreneur', 'mecenas_semilla'],
+      roles: ['admin', 'entrepreneur', 'mecenas_semilla'],
       header: 'main',
       padding: 'pt-24',
     },
@@ -33,7 +33,7 @@ export const routeConfig = {
     {
       path: '/admin',
       protected: true,
-      roles: ['admin','admin'],
+      roles: ['admin', 'admin'],
       header: 'main',
       padding: 'pt-24',
     },
@@ -53,7 +53,7 @@ export function getRouteConfig(pathname) {
       protected: false,
       header: null,
       padding: '',
-      roles: ['admin',],
+      roles: ['admin'],
     }
   );
 }

@@ -6,6 +6,7 @@ import { projectsService } from '@/services/project';
 import { handleRequest } from '@/lib/handleRequest';
 import ErrorScreen from '@/components/ErrorScreen';
 import RetryButton from '@/components/RetryButton';
+import repData from './IC-hardcodeado.json'
 
 export default async function DataLayout({ children, params }) {
   // Obtener el ID de la URL
@@ -31,9 +32,9 @@ export default async function DataLayout({ children, params }) {
   const { data: tramoData, error: tramoError } = await handleRequest(() =>
     projectsService.currentTramo(projectData.currentTramoId),
   );
-   const { data: reputationData, error: reputationDataError } = await handleRequest(() =>
-    projectsService.projectReputation({projectId: projectData.id, userId: projectData.ownerUserId}),
-  );
+   //const { data: reputationData, error: reputationDataError } = await handleRequest(() =>
+    //projectsService.projectReputation({projectId: projectData.id, userId: projectData.ownerUserId}),
+  //);
 
   // allTramosProject.json
   const { data: ProjectTramoData, error: ProjectTramoError } =
@@ -51,10 +52,10 @@ export default async function DataLayout({ children, params }) {
     await handleRequest(() => projectsService.microActionInstance(id));
 
   // Manejo de errores
-  if (error || tramoError || ProjectTramoError || projectNftError ||reputationDataError) {
+  if (error || tramoError || ProjectTramoError || projectNftError) {
     return (
       <ErrorScreen
-        error={error || tramoError || ProjectTramoError || projectNftError || reputationDataError}
+        error={error || tramoError || ProjectTramoError || projectNftError }
         back="/home"
         reset={<RetryButton />}
       />
@@ -105,7 +106,7 @@ export default async function DataLayout({ children, params }) {
         evidenceData: evidenceData || null,
         microActionInstanceData: microActionInstanceData || null,
         translatableContent,
-        reputationData
+        reputationData: repData
       }}
     >
       {children}

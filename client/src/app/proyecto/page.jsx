@@ -167,10 +167,12 @@ useEffect(() => {
 
     setLoading(true);
     try {
+      console.log(payload)
       const createdProject = await create(payload);
-
+      console.log(createdProject)
       if(createdProject.error){
         const errorMessage = createdProject.error || t('errorUnknown');
+
         setFormError(t('errorCreateProject'), errorMessage);
         return;
       }
@@ -193,12 +195,12 @@ useEffect(() => {
   ];
 
   return (
-    <div className='p-4 border-glass glass-effect'>
+    <div className='p-4 border-glass glass-effect flex flex-col items-center'>
         <div className="mb-4 flex flex-col items-center text-center  p-4 rounded-2xl border-glass glass-effect">
             <h1 >{t('title')}</h1>
             <p className="max-w-3xl text-(--text-tertiary) text-center hyphens-auto">{t('description')}</p>
         </div>
-        <form onSubmit={isDemo ? demoHandleSubmit : handleSubmit} className="space-y-5">
+        <form onSubmit={isDemo ? demoHandleSubmit : handleSubmit} className="space-y-5 max-w-4xl glass-effect p-6 rounded-2xl border-glass">
         {fields.map(({ name, label, type, isRequired }) => (
             <div key={name}>
             <label className="text-micro-label block mb-2">{label}{isRequired && <span className="text-red-500">*</span>}</label>

@@ -192,7 +192,7 @@ export default function Header({ isHome = false }) {
           </div>
 
           {/* Sección derecha: Índice Colibrí y Última actualización */}
-          <div className="md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
+          <div className="hidden md:flex md:max-w-5/12 lg:max-w-2/5 grid gap-2 md:gap-3 grid-cols-2 w-full md:w-auto md:flex-shrink-0">
             <div className="w-fit rounded-2xl border border-(--text-primary) glass-effect-dark px-3 md:px-4 py-2 md:py-3">
               <div className="text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-(--text-secondary)">
                   {t('colibriIndex')}

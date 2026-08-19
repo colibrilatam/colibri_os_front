@@ -3,7 +3,7 @@ import { useRequest } from "@/hooks/useRequest";
 import { projectsService } from "@/services/project";
 import { useProject } from '@/lib/projectContext';
 import { useEffect, useState, useMemo } from "react";
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useTranslation } from '@/hooks/useTranslation';
 import Evolution from "./components/Evolution";
@@ -49,6 +49,17 @@ const getEvidenceCategory = (status) => {
   if (['submitted', 'active'].includes(status)) return 'review';
   if (status === 'rejected') return 'rejected';
   return 'pending'; // draft, pending, u otros
+};
+
+// Helper: formatear fecha a DD/MM/YYYY
+const convertDate = (date) => {
+  if (!date) return '-';
+  const newDate = new Date(date);
+  return new Intl.DateTimeFormat('es-AR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).format(newDate);
 };
 
 export default function NewTrayectoria() {
@@ -101,6 +112,7 @@ export default function NewTrayectoria() {
   });
   const [ MADetail, setMADetail ] = useState(false);
   const [ selectedMADetail, setSelectedMADetail ] = useState(null);
+  const [ versionDetailVersions, setVersionDetailVersions ] = useState(null);
 
   // Obtener el tramo actual
   const currentTramo = useMemo(() => tramoData.code, [tramoData]);
@@ -277,20 +289,6 @@ export default function NewTrayectoria() {
 
 
 
-  const convertDate = (date) => {
-    // 1. Convertimos el string en un objeto de fecha real de JavaScript
-    const newDate = new Date(date);
-
-    // 2. Le damos formato usando el idioma local del usuario
-    const formatedDate = new Intl.DateTimeFormat('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).format(newDate);
-    return formatedDate;
-  }
-
-
   const isMobile = useIsMobile();
 
   const rol = useUserStore((state) => state.rol);
@@ -302,6 +300,7 @@ export default function NewTrayectoria() {
     validated: 'completed',
     completed: 'closed',
   }
+  //console.log(selectedPac, inProgressPac)
 
  
 
@@ -389,6 +388,7 @@ export default function NewTrayectoria() {
         onClose={closeUploadModal}
         type={uploadModal.type}
         data={uploadModal.data}
+        projectId={dbProject.id}
         
         microactionRefresh={() => getMAInfo()}
         checkPacStatus={() => handleCompletedPac()}
@@ -403,7 +403,6 @@ export default function NewTrayectoria() {
           <Metric label={t('metricCurrentPac')} value={metrics.currentPac} />
           <Metric label={t('metricClosedPacs')} value={metrics.totalPacs} />
           <Metric label={t('metricMicroactions')} value={metrics.microactions} />
-          <Metric label={t('metricEvidences')} value={metrics.evidences} />
         </div>
       </div>
 
@@ -528,20 +527,243 @@ export default function NewTrayectoria() {
               evidencesData={selectedPacActions.evidences}
               rol={rol}
               openDetail={(ma) => {setSelectedMADetail(ma); setMADetail(true);}}
+              isInProgressPac={selectedPac.id === inProgressPac.id}
+              onOpenVersionDetails={(versions) => setVersionDetailVersions(versions)}
             />
           </div>
 }
         </div>
       )}
 
+      {versionDetailVersions && (
+        <VersionDetailsPopup
+          versions={versionDetailVersions}
+          onClose={() => setVersionDetailVersions(null)}
+        />
+      )}
     </div>
   )
 }
 
+// Componente que muestra el listado desplegable de versiones de una microacción
+const MicroActionVersionList = ({ versions, onOpenDetails }) => {
+  const { t } = useTranslation('trayectoria');
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="my-3">
+      <div className="flex items-center gap-2 flex-wrap">
+        <button
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          className="border border-glass py-0.5 px-2 rounded-2xl cursor-pointer flex items-center gap-2 text-(--text-secondary) hover:text-white transition text-body"
+        >
+          <span>{t('versionsTitle')}</span>
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ duration: 0.25 }}
+            className="inline-block"
+          >
+            ▾
+          </motion.span>
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenDetails?.(versions)}
+          className="border border-glass py-0.5 px-2 rounded-2xl cursor-pointer flex items-center gap-2 text-(--text-secondary) hover:text-white transition text-body"
+        >
+          {t('versionDetailsTitle')}
+        </button>
+      </div>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="versions"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            {versions && versions.length ? (
+              <div className="mt-2">
+                <ul className="space-y-2">
+                  {versions.map((v) => (
+                    <li
+                      key={v.id}
+                      className="flex flex-row items-center justify-between gap-3 rounded-lg border border-glass-dark bg-white/5 px-3 py-2"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-[3ch] text-body text-(--text-primary) font-semibold">
+                          {`v${v.versionNumber}`}
+                        </span>
+                        <VersionStatusPill changeType={v.changeType} />
+                      </div>
+                      <div className="max-w-[260px]">
+                        <CopyableLink url={v.canonicalUri} />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <p className="mt-2 text-helper text-(--text-tertiary)">
+                {t('noVersions')}
+              </p>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// Componente reutilizable para mostrar una URL copiable
+const CopyableLink = ({ url }) => {
+  const { t } = useTranslation('trayectoria');
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // no-op: clipboard no disponible
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2 rounded-lg border border-(--text-secondary) bg-white/5 px-2 py-1 min-w-0 w-full">
+      <button
+        type="button"
+        onClick={handleCopy}
+        title={t('copyLink')}
+        className="cursor-pointer shrink-0 flex items-center justify-center w-8 h-8 rounded-md text-(--text-secondary) hover:text-white hover:bg-cyan-600/30 transition"
+      >
+        {copied ? (
+          <span className="text-(--status-success)">✓</span>
+        ) : (
+          <span className="text-(--text-secondary) text-lg">⧉</span>
+        )}
+      </button>
+      <span className="truncate text-helper text-(--text-tertiary)" title={url}>
+        {url}
+      </span>
+    </div>
+  );
+};
+
+// Pill de estado de una versión (changeType)
+const VersionStatusPill = ({ changeType }) => {
+  const { t } = useTranslation('trayectoria');
+
+  const labels = {
+    rejected: t('versionRejected'),
+    completed: t('versionCompleted'),
+    submitted: t('versionSubmitted'),
+  };
+
+  const colors = {
+    rejected: 'text-(--status-danger) bg-[rgba(255,77,109,0.2)]',
+    completed: 'text-(--status-success) bg-[rgba(0,153,117,0.2)]',
+    submitted: 'text-(--status-info) bg-[rgba(0,207,207,0.2)]',
+  };
+
+  return (
+    <span className={`px-3 py-1 rounded-full text-md font-semibold whitespace-nowrap ${colors[changeType] || 'text-(--text-secondary)'}`}>
+      {labels[changeType] || changeType}
+    </span>
+  );
+};
+
+// Popup con el detalle desplegable de las versiones de una microacción
+const VersionDetailsPopup = ({ versions, onClose }) => {
+  const { t } = useTranslation('trayectoria');
+  const [expandedId, setExpandedId] = useState(null);
+
+  const toggle = (id) => setExpandedId((prev) => (prev === id ? null : id));
+
+  return (
+    <NotificationPopup onClose={onClose} message={t('versionDetailsTitle')}>
+      <div className="max-h-[80vh] overflow-y-auto pr-2 space-y-2">
+        {versions?.length ? (
+          versions.map((v) => {
+            const isExpanded = expandedId === v.id;
+            return (
+              <div
+                key={v.id}
+                className="rounded-lg border border-glass-dark bg-white/5 overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => toggle(v.id)}
+                  className="w-full flex items-center justify-between gap-3 px-3 py-2 text-left cursor-pointer hover:bg-white/5 transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <motion.span
+                      animate={{ rotate: isExpanded ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="inline-block text-(--text-secondary)"
+                    >
+                      ▾
+                    </motion.span>
+                    <span className="text-body text-(--text-primary) font-semibold">
+                      {`v${v.versionNumber}`}
+                    </span>
+                    <VersionStatusPill changeType={v.changeType} />
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isExpanded && (
+                    <motion.div
+                      key={`detail-${v.id}`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-3 pb-3 flex flex-col gap-2">
+                        <CopyableLink url={v.canonicalUri} />
+                        <div>
+                          <p className="text-micro-label text-(--text-tertiary)">
+                            {t('versionNotes')}
+                          </p>
+                          <p className="text-body text-(--text-primary)">
+                            {v.changeSummary || '-'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-micro-label text-(--text-tertiary)">
+                            {t('labelSentDate')}
+                          </p>
+                          <p className="text-body text-(--text-primary)">
+                            {convertDate(v.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })
+        ) : (
+          <p className="text-helper text-(--text-tertiary)">{t('noVersions')}</p>
+        )}
+      </div>
+    </NotificationPopup>
+  );
+};
+
 // Componente que muestra las microacciones reales del PAC
-const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence, microActionCompleted }) => {
+const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUploadMicroaction, onUploadEvidence, microActionCompleted, isInProgressPac, onOpenVersionDetails }) => {
   const { t } = useTranslation('trayectoria');
   const language = useUserStore((state) => state.language);
+  
   
   if (!microActions.length) {
     return (
@@ -550,6 +772,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
       </div>
     );
   }
+  console.log(microActions)
 
   return (
     <div className="space-y-4">
@@ -578,11 +801,13 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
               <StatusBadge status={ma.status} />
             </div>
 
+            <MicroActionVersionList versions={ma.versions} onOpenDetails={onOpenVersionDetails} />
+
             {/* Botón de carga - para no completadas */}
-            {isPending && rol === 'entrepreneur' && (
+            {isPending && rol === 'entrepreneur' && isInProgressPac && !ma.versions?.some(v => v.changeType === 'submitted' || v.changeType === 'completed') && (
               <button
                 onClick={() => onUploadMicroaction(ma)}
-                className=" cursor-pointer text-(--text-primary) text-lg glass-effect-green border-glass font-bold p-3 rounded-full
+                className="cursor-pointer text-(--text-primary) text-lg glass-effect-green border-glass font-bold p-3 rounded-full
                     hover:bg-[rgba(0,207,207,0.25)] transition"
               >
                 {t('btnUpload')}
@@ -618,7 +843,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
         );
       })}
 
-      {/* Evidencia del PAC */}
+      {/* Evidencia del PAC 
       {evidencesData && (
         <EvidenceCard
           evidence={evidencesData}
@@ -627,6 +852,7 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
           onUpload={() => onUploadEvidence(evidencesData)}
         />
       )}
+        */}
     </div>
   );
 };

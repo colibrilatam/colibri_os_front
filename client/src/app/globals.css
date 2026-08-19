@@ -611,6 +611,11 @@ a {
   backdrop-filter: blur(12px);
 }
 
+.glass-effect-blue {
+  background: rgba(0, 207, 207, 0.25);
+  backdrop-filter: blur(12px);
+}
+
 /* ============================================================
    MODIFICADORES DE BORDE PARA GLASS EFFECTS
    ============================================================ */
