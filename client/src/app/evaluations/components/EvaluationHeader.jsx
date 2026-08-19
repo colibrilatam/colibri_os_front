@@ -1,6 +1,6 @@
 export default function EvaluationHeader({ total }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-4">
       <div>
         <p className="text-overline">Evaluaciones</p>
 
@@ -8,8 +8,8 @@ export default function EvaluationHeader({ total }) {
       </div>
 
       <div className="counter-badge rounded-xl px-4 py-2 text-badge">
-  {total} evidencias pendientes
-</div>
+        {total} microacciones
+      </div>
     </div>
   );
 }
