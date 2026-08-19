@@ -15,14 +15,13 @@ import { getMockVersions } from './mocks/microActionVersionsMock';
 export default function MicroActionDetailPage() {
   const pathname = usePathname();
   const microactionId = pathname.split('/').pop();
-  //console.log(microactionId)
 
   const router = useRouter();
 
   const [microAction, setMicroAction] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  //console.log(microAction);
+
   useEffect(() => {
     if (!microactionId) return;
 
@@ -115,11 +114,12 @@ export default function MicroActionDetailPage() {
           <MicroActionOverview microAction={microAction} />
           <MicroActionTimeline microAction={microAction} />
 
-          {/* Evidencias */}
+          {/* Evidencias 
           <MicroActionEvidenceList evidences={microAction.evidences} />
+          */}
 
           {/* Versiones */}
-          <MicroActionVersions versions={microAction.versions || []} />
+          <MicroActionVersions autor={microAction.actor} versions={microAction.versions || []} />
         </div>
       </div>
     </div>
