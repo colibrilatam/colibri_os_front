@@ -1,14 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  CheckCircle2,
-  XCircle,
-  Loader2,
-  X,
-} from 'lucide-react';
-
-import { microActionService } from '@/services/microAction';
+import { CheckCircle2, XCircle, Loader2, X } from 'lucide-react';
+import { microActionService } from '@/services/micro-action';
 
 export default function ResolutionModal({
   action,
@@ -19,12 +13,12 @@ export default function ResolutionModal({
   const [summary, setSummary] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  console.log(action);
+  console.log(summary);
 
   const isApproval = action === 'completed';
 
-  const title = isApproval
-    ? 'Aprobar versión'
-    : 'Rechazar versión';
+  const title = isApproval ? 'Aprobar versión' : 'Rechazar versión';
 
   const description = isApproval
     ? 'Confirma que la versión cumple con los requisitos establecidos.'
@@ -34,9 +28,7 @@ export default function ResolutionModal({
     const cleanSummary = summary.trim();
 
     if (!cleanSummary) {
-      setError(
-        'Debes ingresar un resumen antes de continuar.',
-      );
+      setError('Debes ingresar un resumen antes de continuar.');
 
       return;
     }
@@ -45,22 +37,20 @@ export default function ResolutionModal({
       setSubmitting(true);
       setError(null);
 
-      const updatedVersion =
-        await microActionService.resolveVersion(
-          version.id,
-          {
-            status: action,
-            summary: cleanSummary,
-          },
-        );
+      const updatedVersion = await microActionService.resolveVersion(
+        version.id,
+        {
+          status: action,
+          summary: cleanSummary,
+        },
+      );
 
       onResolved(updatedVersion);
     } catch (err) {
       console.error(err);
 
       setError(
-        err?.response?.data?.message ||
-          'No fue posible resolver la versión.',
+        err?.response?.data?.message || 'No fue posible resolver la versión.',
       );
     } finally {
       setSubmitting(false);
@@ -99,13 +89,9 @@ export default function ResolutionModal({
             </div>
 
             <div>
-              <p className="text-overline">
-                Versión #{version.versionNumber}
-              </p>
+              <p className="text-overline">Versión #{version.versionNumber}</p>
 
-              <h2 className="text-h2 mt-1">
-                {title}
-              </h2>
+              <h2 className="text-h2 mt-1">{title}</h2>
             </div>
           </div>
 
@@ -128,9 +114,7 @@ export default function ResolutionModal({
         {/* Body */}
 
         <div className="p-6">
-          <p className="text-body--muted">
-            {description}
-          </p>
+          <p className="text-body--muted">{description}</p>
 
           <div className="mt-6">
             <label
@@ -177,17 +161,13 @@ export default function ResolutionModal({
                 Este comentario quedará registrado en la versión.
               </span>
 
-              <span className="text-legend">
-                {summary.length}/1000
-              </span>
+              <span className="text-legend">{summary.length}/1000</span>
             </div>
           </div>
 
           {error && (
             <div className="badge-danger rounded-xl p-4 mt-5">
-              <p className="text-data">
-                {error}
-              </p>
+              <p className="text-data">{error}</p>
             </div>
           )}
         </div>
@@ -207,9 +187,7 @@ export default function ResolutionModal({
               cursor-pointer
             "
           >
-            <span className="text-data">
-              Cancelar
-            </span>
+            <span className="text-data">Cancelar</span>
           </button>
 
           <button
@@ -234,9 +212,7 @@ export default function ResolutionModal({
               <>
                 <Loader2 className="h-5 w-5 animate-spin" />
 
-                <span className="text-data">
-                  Guardando...
-                </span>
+                <span className="text-data">Guardando...</span>
               </>
             ) : (
               <>
@@ -247,9 +223,7 @@ export default function ResolutionModal({
                 )}
 
                 <span className="text-data">
-                  {isApproval
-                    ? 'Confirmar aprobación'
-                    : 'Confirmar rechazo'}
+                  {isApproval ? 'Confirmar aprobación' : 'Confirmar rechazo'}
                 </span>
               </>
             )}

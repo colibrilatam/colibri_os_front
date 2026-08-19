@@ -4,22 +4,66 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, Loader2 } from 'lucide-react';
 
-import { microActionService } from '@/services/microAction';
-
-import VersionEvaluationHeader from '@/components/micro-action-evaluation/VersionEvaluationHeader';
-import VersionEvaluationSummary from '@/components/micro-action-evaluation/VersionEvaluationSummary';
-import VersionEvaluationContent from '@/components/micro-action-evaluation/VersionEvaluationContent';
-import ResolutionActions from '@/components/micro-action-evaluation/ResolutionActions';
+import VersionEvaluationHeader from '../components/VersionEvaluationHeader';
+import VersionEvaluationSummary from '../components/VersionEvaluationSummary';
+import VersionEvaluationContent from '../components/VersionEvaluationContent';
+import ResolutionActions from '../components/ResolutionActions';
+import { microActionService } from '@/services/micro-action';
 
 export default function MicroActionEvaluationPage() {
+  const mockVersion = [
+    {
+      id: 'e4d492a1-f763-47e5-9dac-7c7284323d64-mock-version-2',
+
+      microActionInstanceId: 'mock-micro-action-instance-id',
+
+      versionNumber: 2,
+
+      changeType: 'submitted',
+
+      status: 'submitted',
+
+      previousStatus: 'pending',
+
+      executionNotes:
+        'Se presenta la segunda versión de la microacción con las evidencias y documentación solicitadas.',
+
+      attemptNumber: 1,
+
+      reopenedCount: 0,
+
+      changeSummary: 'Versión 2 enviada para revisión del evaluador.',
+
+      supersedesVersionNumber: 1,
+
+      canonicalUri:
+        'https://res.cloudinary.com/demo/image/upload/v1/mock/micro-action-version-2.pdf',
+
+      createdByUserId: 'mock-user-id',
+
+      createdAt: new Date().toISOString(),
+
+      createdBy: {
+        id: 'mock-user-id',
+        fullName: 'Franz Duran',
+        email: 'evaluador@colibri.test',
+      },
+
+      microActionInstance: {
+        id: 'mock-micro-action-instance-id',
+      },
+    },
+  ];
   const params = useParams();
   const router = useRouter();
 
-  const instanceId = params?.instanceId;
+  const instanceId = params?.microactionId;
   const versionId = params?.versionId;
 
   const [microAction, setMicroAction] = useState(null);
   const [version, setVersion] = useState(null);
+  //console.log('microAction----', microAction);
+  //console.log('version-----', version);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,7 +78,8 @@ export default function MicroActionEvaluationPage() {
 
         const data = await microActionService.getById(instanceId);
 
-        const versions = Array.isArray(data?.versions) ? data.versions : [];
+        const versions =
+          data?.versions.length > 0 ? 'data.versions' : mockVersion;
 
         const selectedVersion = versions.find((item) => item.id === versionId);
 

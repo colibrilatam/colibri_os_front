@@ -1,4 +1,5 @@
-import StatusBadge from '@/components/common/StatusBadge';
+import StatusBadge from "@/app/evaluations/common/StatusBadge";
+
 
 export default function VersionEvaluationHeader({
   microAction,

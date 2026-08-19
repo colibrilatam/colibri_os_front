@@ -127,7 +127,7 @@ export default function EvaluationsPage() {
                 microAction={microAction}
                 onClick={() =>
                   router.push(
-                    `/evaluations/micro-action-instance/${microAction.id}`,
+                    `/evaluations/micro-action/${microAction.id}`,
                   )
                 }
               />

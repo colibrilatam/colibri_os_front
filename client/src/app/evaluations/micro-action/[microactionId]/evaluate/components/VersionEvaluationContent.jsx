@@ -1,13 +1,6 @@
-import {
-  ExternalLink,
-  FileText,
-  ClipboardCheck,
-} from 'lucide-react';
+import { ExternalLink, FileText, ClipboardCheck } from 'lucide-react';
 
-export default function VersionEvaluationContent({
-  microAction,
-  version,
-}) {
+export default function VersionEvaluationContent({ microAction, version }) {
   const definition = microAction?.microActionDefinition;
 
   return (
@@ -18,13 +11,9 @@ export default function VersionEvaluationContent({
         </div>
 
         <div>
-          <p className="text-overline">
-            Contenido
-          </p>
+          <p className="text-overline">Contenido</p>
 
-          <h2 className="text-h3 mt-1">
-            Información presentada
-          </h2>
+          <h2 className="text-h3 mt-1">Información presentada</h2>
         </div>
       </div>
 
@@ -46,17 +35,11 @@ export default function VersionEvaluationContent({
               Definición de la microacción
             </p>
 
-            <h3 className="text-h3">
-              {definition.name ||
-                definition.title ||
-                '-'}
-            </h3>
+            <h3 className="text-h3">{definition.instruction_es || '-'}</h3>
 
-            {(definition.description ||
-              definition.description_es) && (
+            {(definition.description || definition.description_es) && (
               <p className="text-body--muted mt-3">
-                {definition.description ||
-                  definition.description_es}
+                {definition.description || definition.description_es}
               </p>
             )}
           </div>
@@ -84,9 +67,7 @@ export default function VersionEvaluationContent({
             >
               <ExternalLink className="h-5 w-5" />
 
-              <span className="text-data">
-                Abrir evidencia
-              </span>
+              <span className="text-data">Abrir evidencia</span>
             </a>
           </div>
         )}
@@ -95,29 +76,17 @@ export default function VersionEvaluationContent({
   );
 }
 
-function ContentBlock({
-  title,
-  value,
-  icon,
-}) {
+function ContentBlock({ title, value, icon }) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-3">
-        {icon && (
-          <span className="text-accent-cyan">
-            {icon}
-          </span>
-        )}
+        {icon && <span className="text-accent-cyan">{icon}</span>}
 
-        <p className="text-micro-label">
-          {title}
-        </p>
+        <p className="text-micro-label">{title}</p>
       </div>
 
       <div className="glass-effect-secondary rounded-xl p-5">
-        <p className="text-body">
-          {value || 'No se proporcionó información.'}
-        </p>
+        <p className="text-body">{value || 'No se proporcionó información.'}</p>
       </div>
     </div>
   );
