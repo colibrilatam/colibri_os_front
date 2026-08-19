@@ -25,9 +25,9 @@ export default function MicroActionDetailHeader({ microAction }) {
 
           <div className="flex flex-wrap gap-3 mt-5">
             <div className="counter-badge rounded-xl px-4 py-2">
-              <span className="text-micro-label">ID</span>
+              <span className="text-micro-label">CODE</span>
 
-              <span className="text-badge ml-2">{microAction.id}</span>
+              <span className="text-badge ml-2">{microAction.microActionDefinition.code}</span>
             </div>
 
             <div className="counter-badge rounded-xl px-4 py-2">

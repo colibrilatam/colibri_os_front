@@ -21,7 +21,7 @@ export default function MicroActionCard({ microAction, onClick }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-6">
         <div className="min-w-0 flex-1">
-          <p className="text-overline">
+          <p className="text-(--text-secondary) font-semibold">
             {microAction.project?.projectName ?? 'Proyecto'}
           </p>
 
@@ -64,9 +64,6 @@ export default function MicroActionCard({ microAction, onClick }) {
           value={formatDate(microAction.createdAt)}
         />
 
-        <Info label="Intento" value={microAction.attemptNumber} />
-
-        <Info label="Reaperturas" value={microAction.reopenedCount} />
       </div>
 
       {/* Footer */}
@@ -105,7 +102,7 @@ function getMicroActionName(microAction) {
     microAction.microActionDefinition?.name ??
     microAction.microActionDefinition?.name_es ??
     microAction.microActionDefinition?.title ??
-    `Microacción ${microAction.id?.slice(0, 8) ?? ''}`
+    `Microacción [${microAction.microActionDefinition.code ?? ''}]`
   );
 }
 
