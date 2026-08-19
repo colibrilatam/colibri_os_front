@@ -91,7 +91,7 @@ export default function MicroActionDetailPage() {
         <div className="mx-auto max-w-7xl space-y-6 pb-8">
           {/* Volver */}
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/evaluations')}
             className="
               filter-chip
               inline-flex

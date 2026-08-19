@@ -79,7 +79,7 @@ export default function MicroActionEvaluationPage() {
         const data = await microActionService.getById(instanceId);
 
         const versions =
-          data?.versions.length > 0 ? 'data.versions' : mockVersion;
+          data?.versions.length > 0 ? data.versions : mockVersion;
 
         const selectedVersion = versions.find((item) => item.id === versionId);
 

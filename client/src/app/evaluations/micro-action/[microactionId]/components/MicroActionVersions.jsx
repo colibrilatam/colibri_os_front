@@ -133,21 +133,22 @@ function VersionCard({ version, isLatest, onView, microAction }) {
           <button
             onClick={onView}
             className="
-              btn-primary
-              rounded-xl
-              px-5
-              py-3
-              cursor-pointer
+            
+              filter-chip
               inline-flex
               items-center
-              justify-center
+              
               gap-2
+              rounded-xl
+              px-4
+              py-3
+              cursor-pointer
             "
           >
             <Eye size={20} />
-            Ver detalles
+            <span className="text-(--text-primary)">Ver detalles</span>
           </button>
-          {version.status === 'pending' && (
+          {version.status === 'submitted' && (
             <button
               type="button"
               onClick={() =>
@@ -155,7 +156,7 @@ function VersionCard({ version, isLatest, onView, microAction }) {
                   `/evaluations/micro-action/${microAction.id}/evaluate/${version.id}`,
                 )
               }
-              className="btn-primary rounded-xl px-5 py-3"
+              className="cursor-pointer btn-primary rounded-xl px-5 py-3"
             >
               Evaluar versión
             </button>
