@@ -117,6 +117,7 @@ useEffect(() => {
   const onSubmitReal = async (data) => {
   try {
     onLoadingChange(true);
+    setToken(null);
     const result = await handleRegister({ ...data});
 
     if (result.success) {
@@ -146,6 +147,7 @@ useEffect(() => {
 
   const onSubmitDemo = async (e) => {
     e.preventDefault();
+    setToken(null);
     const result = await handleDemoLogin(selectedRole);
     if (result?.success !== false) {
       onSuccess();
