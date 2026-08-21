@@ -12,6 +12,7 @@ export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
   const router = useRouter();
   const { handleLogin, userData, retrying } = useLogin();
+  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -52,6 +53,7 @@ export default function Login({ onLoadingChange }) {
   // enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setToken(null);
     if (!isFormValid()) {
       setServerError(t('errorFormInvalid'));
       return;
