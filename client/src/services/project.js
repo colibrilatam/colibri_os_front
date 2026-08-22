@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api';
-import { validateResponse } from '@/lib/api/contract';
-import { ProjectSchema, PaginatedProjectsSchema } from '@colibri/contracts';
+import { validateResponse } from '@/lib/contracts/validate';
+import { ProjectSchema, PaginatedProjectsSchema } from '@/lib/contracts/generated';
 
 export const projectsService = {
   getAll: async () => {
