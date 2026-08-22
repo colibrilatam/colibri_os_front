@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ChevronDown, MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 
@@ -10,8 +10,7 @@ import EntrepreneurCard from '@/components/Contact';
 import NotificationPopup from '@/components/NotificationPopup';
 import { useProject } from '@/lib/projectContext';
 import { usePathname } from 'next/navigation';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
+import { useProjectMembers } from '@/hooks/queries/useProjectMembers';
 import { useTranslation } from '@/hooks/useTranslation';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
@@ -77,29 +76,12 @@ const getRoleInTeamLabel = (role) => {
 
 export default function ProjectSection() {
   const { t } = useTranslation('about');
-  const { execute: getMembers, error: getMembersError } = useRequest(
-    projectsService.getProjectMembers,
-  );
-
-  const [projectMembers, setProjectMembers] = useState([]);
 
   const { dbProject, translatedContent } = useProject();
-  //console.log(translatedContent);
   const pathname = usePathname();
   const projectId = pathname.split('/')[2];
 
-  useEffect(() => {
-    const getData = async () => {
-      const { data: projectMembersData } = await getMembers(projectId).catch(
-        (err) => {
-          console.error(err);
-          // set some error state
-        },
-      );
-      setProjectMembers(projectMembersData);
-    };
-    getData();
-  }, [projectId]);
+  const { data: projectMembers = [] } = useProjectMembers(projectId);
 
   const [isOpen, setIsOpen] = useState(false);
 

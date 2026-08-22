@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json'
 
 import { useProject } from '@/lib/projectContext';
 import AllTranches from './components/AllTranches';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
+import { useProjectTramoData } from '@/hooks/queries/useProjectTramoData';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLocalizedField } from '@/hooks/useLocalizedField';
 
@@ -18,30 +17,15 @@ const fadeUp = {
 
 export default function TramoDashboard() {
   const { t } = useTranslation('tramo');
-  
-  const [ tramoInfo, setTramoInfo ] = useState(null);
+
   // contexto
   const { tramoData, dbProject, mockProject } = useProject();
   const { project, currentState, pacProgress } = mockProject;
 
-  const { execute: getProjectTramoData, error: projectTramoDataError } = useRequest(projectsService.projectTramoData);
+  const { data: tramoInfo, error: projectTramoDataError } = useProjectTramoData(dbProject?.id);
 
   // Campos localizados para tramos
   const tramoName = useLocalizedField(tramoData, 'name');
-
-  useEffect(() => {
-
-    async function fetchTramoData() {
-      const { data: projectTramoData, error: projectTramoDataError } = await getProjectTramoData(dbProject.id);
-
-    if (projectTramoData) {
-      setTramoInfo(projectTramoData);
-    }
-    else console.log('Error fetching tramo data: ' + projectTramoDataError);
-    };
-    fetchTramoData();
-    
-  }, [])
 
 
   /* =========================

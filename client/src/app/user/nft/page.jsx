@@ -1,14 +1,9 @@
 "use client"
 import ProgressBar from "@/components/ProgressBar";
 import svg from "@/../public/base_aliado_semilla.svg"
-import { useRequest } from "@/hooks/useRequest";
-import { userService } from "@/services/user";
-import { useState,  useEffect } from "react";
-import { nftService } from "@/services/nft";
-import { projectsService } from "@/services/project";
+import { useNftProjectsInfo } from "@/hooks/queries/useNftProjectsInfo";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useTranslation } from "@/hooks/useTranslation";
-import { getProjectIC } from "@/lib/hooks/createIcMap";
 
 
 const STATUS_CONFIG = {
@@ -45,52 +40,11 @@ function StatusBadge({ estado }) {
 export default function NftPage(){
   const { t } = useTranslation('userNft');
 
-  const [ error, setError ] = useState(null);
-
-  const [ loading, setLoading ] = useState(false);
-  const [ projectsInfo, setProjectsInfo ] = useState(null);
- 
-  const { execute: getNftProjectsInfo, error: nftProjectsInfoError, loading: nftProjectsInfoLoading } = useRequest(nftService.getNftProjects);
-  const { execute: getTramo, error: tramosError, loading: tramosLoading } = useRequest(projectsService.currentTramo);
-  const { execute: getUserData, error: userDataError, loading: userDataLoading } = useRequest(userService.userData);
-
-      async function getData(){
-    setLoading(true);
-    try {
-      const { data: allProjects, error: allProjectsError} = await getNftProjectsInfo();
-
-      const allProjectsInfo = [];
-
-      if(allProjects){
-        const flujoClave = allProjects.find(project => project.project.projectName === "FlujoClave")
-
-        const { data:  FCUserData } = await getUserData(flujoClave.project.ownerUserId);
-        const { data:  FCTramoData } = await getTramo(flujoClave.project.currentTramoId);
-        const ic = getProjectIC(flujoClave.project.projectName);
-
-        allProjectsInfo.push({ nftProject: flujoClave, user: FCUserData, tramo: FCTramoData, ic: ic })
-      }
-
-      for(let i = 0; i < 2;  i++){
-        const { data:  userData } = await getUserData(allProjects[i].project.ownerUserId);
-        const { data:  tramoData } = await getTramo(allProjects[i].project.currentTramoId);
-        const ic = getProjectIC(allProjects[i].project.projectName);
-
-        allProjectsInfo.push({ nftProject: allProjects[i], user: userData, tramo: tramoData, ic: ic })
-      }
-      setProjectsInfo(allProjectsInfo)
-    } catch (err) {
-      console.error('Error fetching NFT data:', err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-
-    getData();
-    
-  }, []);
+  const {
+    data: projectsInfo,
+    isLoading: loading,
+    error,
+  } = useNftProjectsInfo();
 
 
     const stats = [

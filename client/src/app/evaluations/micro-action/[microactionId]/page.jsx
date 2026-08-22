@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 
 import MicroActionDetailHeader from './components/MicroActionDetailHeader';
 import MicroActionOverview from './components/MicroActionOverview';
 import MicroActionVersions from './components/MicroActionVersions';
 import MicroActionEvidenceList from './components/MicroActionEvidenceList';
-import { microActionService } from '@/services/micro-action';
+import { useMicroAction } from '@/hooks/queries/useMicroAction';
 import MicroActionTimeline from './components/MicroActionTimeline';
 import { getMockVersions } from './mocks/microActionVersionsMock';
 
@@ -18,41 +17,17 @@ export default function MicroActionDetailPage() {
 
   const router = useRouter();
 
-  const [microAction, setMicroAction] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const {
+    data: microActionData,
+    isLoading,
+    error,
+  } = useMicroAction(microactionId);
 
-  useEffect(() => {
-    if (!microactionId) return;
+  const microAction = microActionData
+    ? { ...microActionData, versions: getMockVersions(microActionData) }
+    : null;
 
-    async function loadMicroAction() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const data = await microActionService.getById(microactionId);
-        const microActionWithMockVersions = {
-          ...data,
-          versions: getMockVersions(data),
-        };
-
-        setMicroAction(microActionWithMockVersions);
-      } catch (err) {
-        console.error('Error cargando microacción:', err);
-
-        setError(
-          err?.response?.data?.message ||
-            'No se pudo cargar la información de la microacción.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadMicroAction();
-  }, [microactionId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-[calc(100vh-6rem)] items-center justify-center p-6">
         <div className="glass-effect rounded-2xl p-10 text-center">
@@ -68,7 +43,10 @@ export default function MicroActionDetailPage() {
         <div className="glass-effect rounded-2xl p-10 text-center max-w-xl">
           <p className="text-h3 mb-4">No se pudo cargar la microacción</p>
 
-          <p className="text-body--muted mb-6">{error}</p>
+          <p className="text-body--muted mb-6">
+            {error?.message ||
+              'No se pudo cargar la información de la microacción.'}
+          </p>
 
           <button
             onClick={() => router.back()}

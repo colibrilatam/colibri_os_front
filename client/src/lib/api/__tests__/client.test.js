@@ -79,7 +79,7 @@ describe('apiClient', () => {
 
   describe('Timeout handling', () => {
     it('should have timeout configured', () => {
-      expect(apiClient.defaults.timeout).toBe(30000);
+      expect(apiClient.defaults.timeout).toBe(60000);
     });
 
     it('should allow custom timeout per request', async () => {

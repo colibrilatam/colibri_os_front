@@ -40,4 +40,16 @@ export const evidencesService = {
     const response = await apiClient.get(`/evidence/${evidenceId}/versions`);
     return response.data;
   },
+
+  // Actualizar una evidencia
+  update: async (evidenceId, data) => {
+    const response = await apiClient.patch(`/evidence/${evidenceId}`, data);
+    return response.data;
+  },
+
+  // Eliminar una evidencia
+  delete: async (evidenceId) => {
+    const response = await apiClient.delete(`/evidence/${evidenceId}`);
+    return response.data;
+  },
 };

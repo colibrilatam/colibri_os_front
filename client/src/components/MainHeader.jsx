@@ -2,9 +2,7 @@
 
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { userService } from '@/services/user';
-import { useRequest } from '@/hooks/useRequest';
+import { useUser } from '@/hooks/queries/useUser';
 import { getUserRoleLabel } from '@/lib/mappers/evidence-labels';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
@@ -16,23 +14,7 @@ export default function MainHeader() {
 
   const { logout, user: authUser } = useUserStore();
 
-  const { execute: fetchProfile, loading: profileLoading } = useRequest(
-    userService.userData,
-  );
-
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    if (!authUser?.sub) return;
-
-    const loadProfile = async () => {
-      const { data } = await fetchProfile(authUser.sub);
-
-      setProfile(data);
-    };
-
-    loadProfile();
-  }, [authUser]);
+  const { data: profile, isLoading: profileLoading } = useUser(authUser?.sub);
 
   const handleLogout = () => {
     logout();

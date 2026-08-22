@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { evidencesService } from '../evidences.js';
+import { evaluationsService } from '../evaluations.js';
 import { ApiError } from '@/lib/api/errors';
 import { ERROR_CODES } from '@/lib/api/types';
 
@@ -97,7 +98,7 @@ describe('evidencesService', () => {
       const { apiClient } = await import('@/lib/api');
       apiClient.post.mockResolvedValueOnce(mockResponse);
 
-      const result = await evidencesService.createEvaluation(mockEvalData);
+      const result = await evaluationsService.create(mockEvalData);
 
       expect(result).toEqual(mockResponse.data);
       expect(apiClient.post).toHaveBeenCalledWith('/evaluations', mockEvalData);
@@ -116,7 +117,7 @@ describe('evidencesService', () => {
       const { apiClient } = await import('@/lib/api');
       apiClient.get.mockResolvedValueOnce(mockResponse);
 
-      const result = await evidencesService.getActiveRubrics();
+      const result = await evaluationsService.getActiveRubrics();
 
       expect(result).toEqual(mockRubrics);
       expect(apiClient.get).toHaveBeenCalledWith('/evaluations/rubrics/active');
@@ -137,7 +138,7 @@ describe('evidencesService', () => {
       const { apiClient } = await import('@/lib/api');
       apiClient.post.mockResolvedValueOnce(mockResponse);
 
-      const result = await evidencesService.closeEvaluation(mockData);
+      const result = await evaluationsService.finalize(mockData);
 
       expect(result).toEqual(mockResponse.data);
       expect(apiClient.post).toHaveBeenCalledWith('/evaluations/finalize', mockData);

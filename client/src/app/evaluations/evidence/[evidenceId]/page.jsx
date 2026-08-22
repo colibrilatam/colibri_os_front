@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-import { evidencesService } from '@/services/evidences';
+import { useEvidence } from '@/hooks/queries/useEvidence';
+import { useEvidenceVersions } from '@/hooks/queries/useEvidenceVersions';
 
 import EvidenceHeader from './components/EvidenceHeader';
 import EvidenceInformation from './components/EvidenceInformation';
@@ -17,29 +17,18 @@ export default function EvidenceDetailPage() {
   const pathname = usePathname();
   const evidenceId = pathname.split('/').pop();
 
-  const [evidence, setEvidence] = useState(null);
-  const [versions, setVersions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: evidence,
+    isLoading: evidenceLoading,
+    error: evidenceError,
+  } = useEvidence(evidenceId);
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [evidenceData, versionsData] = await Promise.all([
-          evidencesService.getById(evidenceId),
-          evidencesService.getVersions(evidenceId),
-        ]);
+  const {
+    data: versions = [],
+    isLoading: versionsLoading,
+  } = useEvidenceVersions(evidenceId);
 
-        setEvidence(evidenceData);
-        setVersions(versionsData);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-  }, [evidenceId]);
-  //console.log(evidence);
-  if (loading) {
+  if (evidenceLoading || versionsLoading) {
     return (
       <div className="empty-state rounded-2xl p-12">
         <p className="text-body">Cargando evidencia...</p>
@@ -47,8 +36,12 @@ export default function EvidenceDetailPage() {
     );
   }
 
-  if (!evidence) {
-    return <div className="p-6">No se encontró la evidencia.</div>;
+  if (evidenceError || !evidence) {
+    return (
+      <div className="p-6">
+        {evidenceError?.message || 'No se encontró la evidencia.'}
+      </div>
+    );
   }
 
   return (

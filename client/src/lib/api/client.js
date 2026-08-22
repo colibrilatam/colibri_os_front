@@ -7,14 +7,6 @@ import { ERROR_CODES } from './types.js';
 import { mergeHeaders } from './headers.js';
 
 const DEFAULT_TIMEOUT = 60000;
-const MAX_RETRIES = 2;
-const RETRY_DELAYS = [1000, 2000];
-
-const RETRYABLE_CODES = [ERROR_CODES.TIMEOUT, ERROR_CODES.NETWORK_ERROR];
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -26,14 +18,15 @@ const apiClient = axios.create({
 });
 
 let logoutCallback = null;
-let retryListener = null;
+
+/**
+ * @deprecated El retry ahora lo gestiona TanStack Query.
+ * Se mantiene como no-op para no romper importaciones antiguas.
+ */
+export function setRetryListener() {}
 
 export function setLogoutCallback(callback) {
   logoutCallback = callback;
-}
-
-export function setRetryListener(callback) {
-  retryListener = callback;
 }
 
 apiClient.interceptors.request.use(
@@ -47,13 +40,9 @@ apiClient.interceptors.request.use(
     config.metadata.startTime = Date.now();
 
     const token = await getToken();
-    /* if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    } */
-   // ← Toda la lógica de headers queda acá
     config.headers = mergeHeaders(config, token);
 
-    // Agregar request-id
+    // Asegurar request-id después del merge
     config.headers['x-request-id'] = requestId;
 
     logRequest(requestId, config.method, config.url);
@@ -87,52 +76,6 @@ apiClient.interceptors.response.use(
 
     const config = error.config;
     const apiError = ApiError.fromAxiosError(error, config?.metadata?.requestId);
-
-    if (config && RETRYABLE_CODES.includes(apiError.code)) {
-      const method = config.method || 'GET';
-      const url = config.baseURL + config.url || '';
-      const requestId = config.metadata?.requestId || 'unknown';
-      let retryCount = config.metadata?.retryCount || 0;
-
-      while (retryCount < MAX_RETRIES) {
-        retryCount++;
-        config.metadata.retryCount = retryCount;
-        config.metadata.startTime = Date.now();
-
-        const delay = RETRY_DELAYS[retryCount - 1] || 2000;
-
-        logError(requestId, apiError, method, url);
-
-        if (typeof config.onRetry === 'function') {
-          config.onRetry(retryCount, MAX_RETRIES);
-        }
-        if (typeof retryListener === 'function') {
-          retryListener(true);
-        }
-
-        await sleep(delay);
-
-        try {
-          const response = await axios.request(config);
-          const { startTime } = config.metadata || {};
-          const duration = Date.now() - (startTime || Date.now());
-          logResponse(requestId, response.status, method, url, duration);
-          if (typeof retryListener === 'function') {
-            retryListener(false);
-          }
-          return response;
-        } catch (retryError) {
-          if (retryCount >= MAX_RETRIES) {
-            if (typeof retryListener === 'function') {
-              retryListener(false);
-            }
-            const finalError = ApiError.fromAxiosError(retryError, requestId);
-            logError(requestId, finalError, method, url);
-            throw finalError;
-          }
-        }
-      }
-    }
 
     const { requestId, startTime } = config?.metadata || {};
     const duration = Date.now() - (startTime || Date.now());

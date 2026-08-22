@@ -4,8 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useLogin } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
 import { useTranslation } from '@/hooks/useTranslation';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
+import { useProjects } from '@/hooks/queries/useProjects';
 import { useUserStore } from '@/lib/store';
 
 export default function Login({ onLoadingChange }) {
@@ -21,7 +20,7 @@ export default function Login({ onLoadingChange }) {
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { execute: getAllProjects } = useRequest(projectsService.getAll);
+  const { data: allProjectsResponse, error: allProjectsError } = useProjects();
 
   // handlers
   const handleInputChange = (e) => {
@@ -90,16 +89,14 @@ export default function Login({ onLoadingChange }) {
     
     // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
     if (userResult.data.role === 'entrepreneur') {
-      const { data: allProjectsResponse, error: allProjectsError } =
-        await getAllProjects();
       if (allProjectsError) {
         setServerError(t('errorFetchProjects'));
         setLoading(false);
         onLoadingChange?.(false);
         return;
       }
-      const project = allProjectsResponse.find(
-        (project) => project.owner.id === userResult.data.sub,
+      const project = allProjectsResponse?.find(
+        (project) => project.owner?.id === userResult.data.sub,
       );
 
       if (project) {

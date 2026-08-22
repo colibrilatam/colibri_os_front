@@ -1,38 +1,44 @@
-import { handleRequest } from "@/lib/handleRequest";
-import ErrorScreen from "@/components/ErrorScreen";
-import { userService } from "@/services/user";
-import { redirect } from "next/navigation";
-import { projectsService } from "@/services/project";
+'use client';
 
-export default async function ProjectLayout({ children }){
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import ErrorScreen from '@/components/ErrorScreen';
+import { useUserProfile } from '@/hooks/queries/useUserProfile';
+import { useProjects } from '@/hooks/queries/useProjects';
 
-    const { data: user, error } = await handleRequest(() => userService.profile());
-    const { data: projectData, error: projectError } = await handleRequest(() => projectsService.getAll());
+export default function ProjectLayout({ children }) {
+  const router = useRouter();
+
+  const { data: user, isLoading: userLoading, error: userError } = useUserProfile();
+  const { data: projectData, isLoading: projectsLoading } = useProjects();
+
+  useEffect(() => {
+    if (userLoading || projectsLoading) return;
 
     // DEMO
-    const isDemo = true
+    const isDemo = true;
 
-    if(user && user.email && user.email  === 'ana@colibri.com' && isDemo) {
-        return(
-            <>
-            {children}
-            </>
-        )
+    if (user?.email === 'ana@colibri.com' && isDemo) {
+      return;
     }
-    
 
-    if(projectData){
-        if(projectData.find((p) => p.ownerUserId === user.sub)){ 
-            const userProject = projectData.find((p) => p.ownerUserId === user.sub);
-            redirect(`/dashboard/${userProject.id}/about`);
-        return;  
-        }
-}
+    if (projectData) {
+      const userProject = projectData.find((p) => p.ownerUserId === user?.sub);
+      if (userProject) {
+        router.replace(`/dashboard/${userProject.id}/about`);
+      }
+    }
+  }, [user, userLoading, projectData, projectsLoading, router]);
 
+  if (userError) {
+    return (
+      <ErrorScreen
+        error={userError}
+        redirect="/login"
+        next="Iniciar sesión"
+      />
+    );
+  }
 
-    return(
-        <>
-        {children}
-        </>
-    )
+  return <>{children}</>;
 }

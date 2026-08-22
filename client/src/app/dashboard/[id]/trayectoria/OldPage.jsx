@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useProject } from '@/lib/projectContext';
@@ -16,8 +16,8 @@ import 'swiper/css/navigation';
 //import { pacConfig } from './components/pacConfig';
 
 import { getPacConfig, defaultEvidence } from './components/pacConfig';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
+import { useProjectMicroActions } from '@/hooks/queries/useProjectMicroActions';
+import { useProjectEvidences } from '@/hooks/queries/useProjectEvidences';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 
@@ -37,41 +37,29 @@ const formatedDate = new Intl.DateTimeFormat('es-AR', {
 return formatedDate;
   }
 
-  const [microActionData, setMicroActionData] = useState([]);
-  const [evidencesData, setEvidencesData] = useState([]);
-
-
-  const { execute: getMicroActionInstances } = useRequest(projectsService.microActionInstance);
-  const { execute: getEvidenceData } = useRequest(projectsService.evidences);
-
   const { tramoData, dbProject, mockProject } = useProject();
-  //console.log(tramoData, dbProject);
 
-  const getData = async () => {
-    const { data: microactionData } = await getMicroActionInstances(dbProject.id);
-    const { data: evidenceData } = await getEvidenceData(dbProject.id);
+  const { data: microActionsResponse = [] } = useProjectMicroActions(dbProject?.id);
+  const { data: evidenceDataResponse = [] } = useProjectEvidences(dbProject?.id);
 
-    //console.log(microactionData)
+  const { microActionData, evidencesData } = useMemo(() => {
+    if (!tramoData?.code) {
+      return { microActionData: [], evidencesData: [] };
+    }
 
-    //  Obtener las instancias de microacciones del tramo actual
-    const currentTramoMicroActions = microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`));
-
-    //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
-    const filteredEvidences = evidenceData.filter(evidence =>
-      currentTramoMicroActions.some(ma => ma.id === evidence.microActionInstanceId)
+    const currentTramoMicroActions = microActionsResponse.filter((m) =>
+      m.microActionDefinition?.code.startsWith(`MAD_${tramoData.code[1]}`),
     );
 
-    // console.log(filteredEvidences)
+    const filteredEvidences = evidenceDataResponse.filter((evidence) =>
+      currentTramoMicroActions.some((ma) => ma.id === evidence.microActionInstanceId),
+    );
 
-    setMicroActionData(currentTramoMicroActions);
-    setEvidencesData(filteredEvidences);
-
-    setMetrics(prev => ({
-      ...prev,
-      microactions: `${microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`) && m.status === 'completed').length} / 21`,
-      evidences: `${filteredEvidences.length} / 7`,
-    }))
-  }
+    return {
+      microActionData: currentTramoMicroActions,
+      evidencesData: filteredEvidences,
+    };
+  }, [microActionsResponse, evidenceDataResponse, tramoData?.code]);
 
   const [notification, setNotification] = useState(false);
   const rol = useUserStore((state) => state.rol);
@@ -94,6 +82,16 @@ return formatedDate;
     evidences: `${currentState.validatedEvidenceCount} / 7`,
   })
 
+  useEffect(() => {
+    if (!tramoData?.code) return;
+
+    setMetrics((prev) => ({
+      ...prev,
+      microactions: `${microActionData.filter((m) => m.status === 'completed').length} / 21`,
+      evidences: `${evidencesData.length} / 7`,
+    }));
+  }, [microActionData, evidencesData, tramoData?.code]);
+
   const mapStatus = {
     approved: 'done',
     in_progress: 'current',
@@ -111,7 +109,6 @@ return formatedDate;
 
   // Cargar el progreso guardado SOLO en el cliente después del montaje
   useEffect(() => {
-    getData();
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('aulapuente_t3_c7_progress');
       if (saved) {

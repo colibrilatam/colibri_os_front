@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { evidencesService } from '@/services/evidences';
-import { evaluationsService } from '@/services/evaluations';
+import { useEvidence } from '@/hooks/queries/useEvidence';
+import { useEvidenceEvaluations } from '@/hooks/queries/useEvidenceEvaluations';
+import { useActiveRubrics } from '@/hooks/queries/useActiveRubrics';
 
 import ReviewHeader from './components/ReviewHeader';
 import RubricCard from './components/RubricCard';
@@ -18,47 +19,29 @@ export default function ReviewPage() {
   const pathname = usePathname();
   const evidenceId = pathname.split('/')[3];
 
-  const [evidence, setEvidence] = useState(null);
-  const [evaluation, setEvaluation] = useState(null);
+  const { data: evidence, isLoading: evidenceLoading } = useEvidence(evidenceId);
+  const { data: evaluations = [], isLoading: evaluationsLoading } =
+    useEvidenceEvaluations(evidenceId);
+  const { data: rubrics = [], isLoading: rubricsLoading } = useActiveRubrics();
 
-  const [rubric, setRubric] = useState(null);
-  //console.log(evidence);
-  //console.log(evaluation);
-  //console.log(rubric);
+  const evaluation = useMemo(
+    () => evaluations.find((e) => !e.isFinal),
+    [evaluations],
+  );
+
+  const rubric = useMemo(() => {
+    if (!rubrics.length) return null;
+    return (
+      rubrics.find((r) => r.id === evidence?.evaluations?.[0]?.rubricId) ||
+      rubrics[0]
+    );
+  }, [rubrics, evidence]);
 
   const [score, setScore] = useState(10);
   const [decision, setDecision] = useState('');
   const [comment, setComment] = useState('');
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const evidenceData = await evidencesService.getById(evidenceId);
-        setEvidence(evidenceData);
-
-        const evaluations = await evaluationsService.getByEvidence(
-          evidenceData.id,
-        );
-        setEvaluation(evaluations.find((e) => !e.isFinal));
-
-        const rubrics = await evaluationsService.getActiveRubrics();
-        const currentRubric =
-          rubrics.find(
-            (r) => r.id === evidenceData.evaluations?.[0]?.rubricId,
-          ) || rubrics[0];
-
-        setRubric(currentRubric);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-  }, [evidenceId]);
-
-  if (loading) {
+  if (evidenceLoading || evaluationsLoading || rubricsLoading) {
     return <div className="p-6">Cargando...</div>;
   }
 

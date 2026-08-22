@@ -1,8 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useLogin } from '../useLogin.js';
 import { ApiError } from '@/lib/api/errors';
 import { ERROR_CODES } from '@/lib/api/types';
+import { createElement } from 'react';
+
+function createTestQueryClient() {
+  return new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+}
+
+function createWrapper() {
+  const queryClient = createTestQueryClient();
+  return ({ children }) => createElement(QueryClientProvider, { client: queryClient }, children);
+}
 
 vi.mock('@/services/authService', () => ({
   authService: {
@@ -53,7 +66,7 @@ describe('useLogin', () => {
       authService.login.mockResolvedValueOnce({ token: mockToken });
       userService.profile.mockResolvedValueOnce(mockUser);
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       let loginResult;
       await act(async () => {
@@ -75,7 +88,7 @@ describe('useLogin', () => {
         })
       );
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       let loginResult;
       await act(async () => {
@@ -91,7 +104,7 @@ describe('useLogin', () => {
 
       authService.login.mockRejectedValueOnce(new Error('Network error'));
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       let loginResult;
       await act(async () => {
@@ -110,7 +123,7 @@ describe('useLogin', () => {
 
       userService.profile.mockResolvedValueOnce(mockUser);
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       let dataResult;
       await act(async () => {
@@ -130,7 +143,7 @@ describe('useLogin', () => {
       authService.login.mockResolvedValueOnce({ token: 'demo-token' });
       userService.profile.mockResolvedValueOnce({ id: 1, email: 'ana@colibri.com', role: 'CEO' });
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       let loginResult;
       await act(async () => {
@@ -151,7 +164,7 @@ describe('useLogin', () => {
       authService.login.mockResolvedValueOnce({ token: 'demo-token' });
       userService.profile.mockResolvedValueOnce({ id: 2, email: 'mecenas@colibri.com', role: 'MENTOR' });
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       await act(async () => {
         await result.current.handleDemoLogin('mecenas');
@@ -170,7 +183,7 @@ describe('useLogin', () => {
       authService.login.mockResolvedValueOnce({ token: 'demo-token' });
       userService.profile.mockResolvedValueOnce({ id: 3, email: 'mentor@colibri.com', role: 'MENTOR' });
 
-      const { result } = renderHook(() => useLogin());
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       await act(async () => {
         await result.current.handleDemoLogin('mentor');
@@ -184,20 +197,8 @@ describe('useLogin', () => {
   });
 
   describe('retrying', () => {
-    it('should register retry listener on mount and cleanup on unmount', async () => {
-      const { setRetryListener } = await import('@/lib/api');
-
-      const { unmount } = renderHook(() => useLogin());
-
-      expect(setRetryListener).toHaveBeenCalledWith(expect.any(Function));
-
-      unmount();
-
-      expect(setRetryListener).toHaveBeenCalledWith(null);
-    });
-
-    it('should expose retrying state', () => {
-      const { result } = renderHook(() => useLogin());
+    it('should expose retrying state as false by default', () => {
+      const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
       expect(result.current.retrying).toBe(false);
     });
