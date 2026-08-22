@@ -7,7 +7,6 @@ import { useState } from 'react';
 export default function ReviewActions({
   evidence,
   evaluation,
-  score,
   decision,
   comment,
 }) {
@@ -18,27 +17,23 @@ export default function ReviewActions({
     console.log({
       evidence,
       evaluation,
-      score,
       decision,
       comment,
     });
 
     try {
-      // 1. Registrar revisión humana
+      // 1. Registrar revisión humana (el backend determina resultado y puntaje)
 
       await evaluationsService.submitHumanReview({
         evaluationId: evaluation.id,
         reviewDecision: decision,
-        humanScore: Number(score),
         comment,
       });
 
-      // 2. Finalizar evaluación
+      // 2. Finalizar evaluación (sin score ni evaluationResult — el backend calcula)
 
       await evaluationsService.finalize({
         evaluationId: evaluation.id,
-        evaluationResult: decision,
-        score: Number(score),
         comment,
       });
       showToast('success', 'Evaluación finalizada correctamente.');

@@ -1,4 +1,4 @@
-export default function ScoreCard({ score, setScore, decision, setDecision }) {
+export default function ScoreCard({ decision, setDecision }) {
   return (
     <div className="flex flex-col gap-6">
       {/* <div>

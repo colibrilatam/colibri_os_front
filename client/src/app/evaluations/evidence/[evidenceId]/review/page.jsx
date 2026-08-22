@@ -37,7 +37,6 @@ export default function ReviewPage() {
     );
   }, [rubrics, evidence]);
 
-  const [score, setScore] = useState(10);
   const [decision, setDecision] = useState('');
   const [comment, setComment] = useState('');
 
@@ -62,8 +61,6 @@ export default function ReviewPage() {
         <h2 className="text-h3 text-primary-theme">Evaluación</h2>
 
         <ScoreCard
-          score={score}
-          setScore={setScore}
           decision={decision}
           setDecision={setDecision}
         />
@@ -75,7 +72,6 @@ export default function ReviewPage() {
       <ReviewActions
         evidence={evidence}
         evaluation={evaluation}
-        score={score}
         decision={decision}
         comment={comment}
         onCancel={() => router.back()}
