@@ -1,19 +1,33 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useEffect } from 'react';
 
 import LoadingScreen from '@/components/LoadingScreen';
 import ErrorScreen from '@/components/ErrorScreen';
 import { useUserStore } from '@/lib/store';
 
 export default function DashboardLayout({ children }) {
-  const isAuthenticated = useSyncExternalStore(
+  const authChecked = useSyncExternalStore(
     useUserStore.subscribe,
-    () => useUserStore.getState().isAuthenticated(),  // cliente
-    () => null,                                        // servidor → null = "no sé todavía"
+    () => useUserStore.getState().authChecked,
+    () => false,
   );
 
-  if (isAuthenticated === null) return <LoadingScreen />;
+  const isAuthenticated = useSyncExternalStore(
+    useUserStore.subscribe,
+    () => useUserStore.getState().isAuthenticated(),
+    () => false,
+  );
+
+  const checkSession = useUserStore((state) => state.checkSession);
+
+  useEffect(() => {
+    if (!authChecked) {
+      checkSession();
+    }
+  }, [authChecked, checkSession]);
+
+  if (!authChecked) return <LoadingScreen />;
 
   if (!isAuthenticated) {
     return (

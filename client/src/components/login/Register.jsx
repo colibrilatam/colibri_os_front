@@ -36,7 +36,6 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     
   const isDemo = useUserStore((state) => state.isDemo);
   const setIsDemo = useUserStore((state) => state.setIsDemo);
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const { handleDemoLogin } = useLogin();
 
@@ -117,13 +116,11 @@ useEffect(() => {
   const onSubmitReal = async (data) => {
   try {
     onLoadingChange(true);
-    setToken(null);
     const result = await handleRegister({ ...data});
 
     if (result.success) {
       setRol(selectedRole);
       sessionStorage.removeItem(STORAGE_KEY);
-      setToken(result.data.token);
       onSuccess();
     } else {
       const errorMessage = result.error?.message || result.error || t('errorUnknown');
@@ -134,8 +131,8 @@ useEffect(() => {
     }
   } catch (error) {
     console.error(error);
-    setError('root', { 
-      type: 'manual', 
+    setError('root', {
+      type: 'manual',
       message: t('errorConnection')
     });
     setGeneralError(t('errorConnection'));
@@ -147,7 +144,6 @@ useEffect(() => {
 
   const onSubmitDemo = async (e) => {
     e.preventDefault();
-    setToken(null);
     const result = await handleDemoLogin(selectedRole);
     if (result?.success !== false) {
       onSuccess();

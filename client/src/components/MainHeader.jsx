@@ -4,6 +4,7 @@ import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { userService } from '@/services/user';
+import { authService } from '@/services/authService';
 import { useRequest } from '@/hooks/useRequest';
 import { getUserRoleLabel } from '@/lib/mappers/evidence-labels';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -34,9 +35,13 @@ export default function MainHeader() {
     loadProfile();
   }, [authUser]);
 
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } finally {
+      logout();
+      router.push('/login');
+    }
   };
 
   const displayName = profile?.fullName || t('userFallback');

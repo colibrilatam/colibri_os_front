@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { ApiError } from './errors.js';
-import { getToken, clearToken } from './token.js';
 import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
@@ -19,6 +18,7 @@ function sleep(ms) {
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   timeout: DEFAULT_TIMEOUT,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -46,12 +46,9 @@ apiClient.interceptors.request.use(
     config.metadata.requestId = requestId;
     config.metadata.startTime = Date.now();
 
-    const token = await getToken();
-    /* if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    } */
-   // ← Toda la lógica de headers queda acá
-    config.headers = mergeHeaders(config, token);
+    // La autenticación se maneja mediante cookie httpOnly;
+    // el navegador envía la cookie automáticamente con withCredentials: true.
+    config.headers = mergeHeaders(config, null);
 
     // Agregar request-id
     config.headers['x-request-id'] = requestId;
@@ -138,7 +135,6 @@ apiClient.interceptors.response.use(
     const duration = Date.now() - (startTime || Date.now());
 
     if (apiError.status === 401) {
-      clearToken();
       if (logoutCallback) {
         logoutCallback();
       }

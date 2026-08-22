@@ -2,26 +2,28 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from '@/hooks/useTranslation'
+import { userService } from '@/services/user';
 import { useUserStore } from '@/lib/store';
 
 export default function GoogleCallback() {
   const router = useRouter();
-  const setToken = useUserStore((state) => state.setToken);
+  const setUser = useUserStore((state) => state.setUser);
+  const setRol = useUserStore((state) => state.setRol);
+  const { t } = useTranslation('login');
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const token = params.get('token')
-
-    if (token) {
-      window.history.replaceState({}, '', window.location.pathname) // borra ?token=xxx de la URL
-      setToken(token)
-      router.replace('/')
-    } else {
-      router.replace('/login?error=google_failed')
-    }
-  }, [])
-
-  const { t } = useTranslation('login');
+    // El backend ya seteó la cookie httpOnly antes de redirigir aquí.
+    // Verificamos la sesión llamando al perfil.
+    userService.profile()
+      .then((userData) => {
+        setUser(userData);
+        setRol(userData.role);
+        router.replace('/');
+      })
+      .catch(() => {
+        router.replace('/login?error=google_failed');
+      });
+  }, [router, setUser, setRol]);
 
   return <p>{t('loggingIn')}</p>
 }

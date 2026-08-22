@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { isTokenExpired } from './auth';
 import { setCookie, deleteCookie } from './cookies';
 import { resetTheme } from './theme';
+import { userService } from '@/services/user';
 
 export const useUserStore = create(
   persist(
@@ -25,6 +25,21 @@ export const useUserStore = create(
       user: null,
       setUser: (user) => set({ user }),
 
+      authChecked: false,
+      setAuthChecked: (authChecked) => set({ authChecked }),
+
+      // Verifica la sesión activa contra el backend (cookie httpOnly).
+      checkSession: async () => {
+        try {
+          const userData = await userService.profile();
+          set({ user: userData, rol: userData.role, authChecked: true });
+          return { authenticated: true, user: userData };
+        } catch {
+          set({ user: null, authChecked: true });
+          return { authenticated: false, user: null };
+        }
+      },
+
       theme: null,
       setTheme: (theme) => set({ theme }),
       clearTheme: () => set({ theme: null }),
@@ -45,23 +60,6 @@ export const useUserStore = create(
         })),
 
       getTranslation: (key) => get().translationsCache[key],
-      
-      // Token
-      token: null,
-      setToken: (token) => {
-        set({ token });
-        if (typeof window !== 'undefined') {
-          if (token) {
-            setCookie('token', token);
-          } else {
-            deleteCookie('token');
-          }
-        }
-        // Si se establece un token, desactivar modo invitado
-        set({ isGuest: false });
-        deleteCookie('isGuest');
-      },
-      getToken: () => get().token,
 
       // Guest mode
       isGuest: false,
@@ -79,12 +77,10 @@ export const useUserStore = create(
       // Logout
       logout: () => {
         if (typeof window !== 'undefined') {
-          deleteCookie('token');
           deleteCookie('isGuest');
           resetTheme();
         }
         set({
-          token: null,
           rol: null,
           user: null,
           theme: null,
@@ -94,21 +90,11 @@ export const useUserStore = create(
         });
       },
 
-      // Verificar si hay token y si es válido, o si es invitado
+      // Verificar si hay sesión activa consultando el usuario en memoria.
+      // NOTA: con cookie httpOnly el frontend no puede leer el JWT;
+      // para determinar si hay sesión se debe llamar a /users/profile.
       isAuthenticated: () => {
-        const token = get().token;
-        //const isGuest = get().isGuest
-
-        // Si es invitado, está autenticado sin token
-        // El parámetro 'guest' permite verificar explícitamente el modo invitado
-        // no se bien por que lo puse pero creo que no tiene sentido
-
-        // Si no es invitado, validar token
-        if (isTokenExpired(token)) {
-          //set({ token: null })
-          return false;
-        }
-        return true;
+        return get().user !== null || get().isGuest === true;
       },
 
       // Estado del Sidebar

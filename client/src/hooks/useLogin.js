@@ -7,7 +7,6 @@ import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
 import { useUserStore } from '@/lib/store';
 
 export const useLogin = () => {
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
   const [retrying, setRetrying] = useState(false);
@@ -19,11 +18,11 @@ export const useLogin = () => {
 
   const handleLogin = async (formData) => {
     try {
-      const data = await authService.login({
+      // El backend setea la cookie httpOnly; el frontend no recibe ni maneja el JWT.
+      await authService.login({
         email: formData.email,
         password: formData.password,
       });
-      setToken(data.token);
 
       const userData = await userService.profile();
 
@@ -33,7 +32,7 @@ export const useLogin = () => {
         if(formData.email === 'BancoDV@colibri.com') userData.theme = bancoVenezuelaTheme;
       }
       setUser(userData);
-      return { success: true, data };
+      return { success: true, data: userData };
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Error al iniciar sesión';
       return { success: false, error: message };
@@ -57,12 +56,11 @@ export const useLogin = () => {
     else if (rol === 'mentor') email = 'mentor@colibri.com';
 
     try {
-      const demoLoginData = await authService.login({
+      await authService.login({
         email,
         password: 'Test@1234',
       });
 
-      setToken(demoLoginData.token);
       const userData = await userService.profile();
 
       if (userData) {
@@ -70,7 +68,7 @@ export const useLogin = () => {
       }
       setUser(userData);
       setRol(userData.role);
-      return { data: demoLoginData, error: null };
+      return { data: userData, error: null };
     } catch (err) {
       const error = err instanceof ApiError ? err : { message: 'Error en login demo', code: 'UNKNOWN_ERROR' };
       return { data: null, error };

@@ -1,8 +1,6 @@
 'use client';
 import NftAvatar from './señal/NftAvatar';
-import { useState } from 'react';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 // contexto
 import { formatDateSafe } from '@/lib/hooks/date';
@@ -16,24 +14,21 @@ import LanguageSwitcher from './common/LanguageSwitcher';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 import { useLocalizedField } from '@/hooks/useLocalizedField';
+import { authService } from '@/services/authService';
 
 export default function Header({ isHome = false }) {
-  const [auth, setAuth] = useState(false);
   const { t } = useTranslation('header');
   const contextData = useProject();
 
   const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
-  
+  const auth = isAuthenticated();
+
   // Campos localizados para tramos
   const tramoName = useLocalizedField(contextData?.tramoData, 'name');
   const logoSrc =
     user?.theme?.logoUrl &&
     user?.role === 'mecenas_semilla' &&
     user.theme.logoUrl;
-
-  useEffect(() => {
-    setAuth(isAuthenticated());
-  }, []);
 
   const router = useRouter();
 
@@ -80,7 +75,14 @@ export default function Header({ isHome = false }) {
                 )}
                 <Link className="hover:text-gray-200" href="/login">
                   <button
-                    onClick={() => logout()}
+                    onClick={async () => {
+                      try {
+                        await authService.logout();
+                      } finally {
+                        logout();
+                        router.push('/login');
+                      }
+                    }}
                     className="rounded-xl bg-linear-to-r from-red-600 to-red-800 p-2 lg:px-5 lg:py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
                    {t('logout')}

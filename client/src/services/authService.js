@@ -8,6 +8,11 @@ export const authService = {
 
     login: async (data) => {
         const response = await apiClient.post('/auth/signin', data);
-       return response.data;
+        return response.data;
+    },
+
+    logout: async () => {
+        const response = await apiClient.post('/auth/logout');
+        return response.data;
     },
 };

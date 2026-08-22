@@ -23,6 +23,7 @@ import TourButton from './tutoriales/TourButton';
 import { useProject } from '@/lib/projectContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import { authService } from '@/services/authService';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
   const { logout } = useUserStore();
@@ -117,9 +118,13 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     }
   };
 
-  function handleLogout() {
-    logout();
-    router.push('/login');
+  async function handleLogout() {
+    try {
+      await authService.logout();
+    } finally {
+      logout();
+      router.push('/login');
+    }
   }
 
   function handleContact() {

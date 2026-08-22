@@ -1,13 +1,11 @@
-export function mergeHeaders(config, token) {
+export function mergeHeaders(config) {
   const headers = {
     Accept: 'application/json',
     ...(config.headers || {}),
   };
 
-  // Authorization
-  if (token && headers.Authorization == null) {
-    headers.Authorization = `Bearer ${token}`;
-  }
+  // La autenticación se maneja mediante cookie httpOnly;
+  // no se envía token en el header Authorization.
 
   // Si envía FormData, dejar que el navegador genere el Content-Type
   if (config.data instanceof FormData) {

@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useEffect } from 'react';
 
 import Header from '@/components/Header';
 import MainHeader from '@/components/MainHeader';
@@ -13,6 +13,7 @@ import OnbordaWrapper from '@/lib/tutorial/layout';
 
 import { getRouteConfig } from '@/lib/layoutConfig';
 import { useUserStore } from '@/lib/store';
+import { setLogoutCallback } from '@/lib/api';
 
 
 export default function ClientLayout({ children }) {
@@ -20,15 +21,35 @@ export default function ClientLayout({ children }) {
 
   const route = getRouteConfig(pathname);
 
+  const authChecked = useSyncExternalStore(
+    useUserStore.subscribe,
+    () => useUserStore.getState().authChecked,
+    () => false,
+  );
+
   const isAuthenticated = useSyncExternalStore(
     useUserStore.subscribe,
     () => useUserStore.getState().isAuthenticated(),
-    () => null,
+    () => false,
   );
 
+  const checkSession = useUserStore((state) => state.checkSession);
+  const logout = useUserStore((state) => state.logout);
+
+  useEffect(() => {
+    setLogoutCallback(logout);
+    return () => setLogoutCallback(null);
+  }, [logout]);
+
+  useEffect(() => {
+    if (!authChecked) {
+      checkSession();
+    }
+  }, [authChecked, checkSession]);
+
   const userRole = useUserStore((state) => state.rol);
-  // Loading mientras hidrata Zustand
-  if (route.protected && isAuthenticated === null) {
+  // Loading mientras se verifica la sesión con el backend
+  if (route.protected && !authChecked) {
     return <LoadingScreen />;
   }
 
