@@ -68,10 +68,15 @@ export const useLogin = () => {
     else if (rol === 'mecenas') email = 'mecenas@colibri.com';
     else if (rol === 'mentor') email = 'mentor@colibri.com';
 
+    const demoPassword = process.env.NEXT_PUBLIC_DEMO_PASSWORD;
+    if (!demoPassword) {
+      return { data: null, error: { message: 'Demo no disponible', code: 'DEMO_DISABLED' } };
+    }
+
     try {
       const demoLoginData = await authService.login({
         email,
-        password: 'Test@1234',
+        password: demoPassword,
       });
 
       setToken(demoLoginData.token);
