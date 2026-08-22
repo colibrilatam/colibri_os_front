@@ -1,14 +1,24 @@
 import { apiClient } from '@/lib/api';
+import { validateResponse } from '@/lib/api/contract';
+import { ProjectSchema, PaginatedProjectsSchema } from '@colibri/contracts';
 
 export const projectsService = {
   getAll: async () => {
     const response = await apiClient.get('/projects');
-    return response.data;
+    const data = response.data;
+    if (Array.isArray(data)) {
+      return data.map(p => validateResponse(ProjectSchema, p));
+    }
+    if (data?.data && Array.isArray(data.data)) {
+      const validated = validateResponse(PaginatedProjectsSchema, data);
+      return validated.data;
+    }
+    return data;
   },
 
   getById: async (id) => {
     const response = await apiClient.get(`/projects/${id}`);
-    return response.data;
+    return validateResponse(ProjectSchema, response.data);
   },
 
   create: async (data) => {
@@ -24,12 +34,12 @@ export const projectsService = {
       body = data;
     }
     const response = await apiClient.post('/projects', body);
-    return response.data;
+    return validateResponse(ProjectSchema, response.data);
   },
 
   update: async (id, data) => {
     const response = await apiClient.put(`/projects/${id}`, data);
-    return response.data;
+    return validateResponse(ProjectSchema, response.data);
   },
 
   delete: async (id) => {
