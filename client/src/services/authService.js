@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api';
-import { validateResponse } from '@/lib/api/contract';
-import { AuthResponseSchema, RegisterResponseSchema } from '@colibri/contracts';
+import { validateResponse } from '@/lib/contracts/validate';
+import { AuthResponseSchema, RegisterResponseSchema } from '@/lib/contracts/generated';
 
 export const authService = {
     register: async (data) => {
