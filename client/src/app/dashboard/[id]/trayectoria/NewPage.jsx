@@ -820,9 +820,6 @@ const RealCargaPac = ({ openDetail, pac, microActions, evidencesData, rol, onUpl
                 <div className="mt-3 text-[var(--status-success)] text-body flex items-center gap-2">
                   {t('microactionCompleted')}
                 </div>
-                <div onClick={() => openDetail(ma)} className="px-2 items-center justify-center flex text-[var(--text-secondary)] hover:text-white hover:bg-cyan-600-30 text-lg rounded-full bg-cyan-600/30 hover:border-cyan-300 border-cyan-500 border cursor-pointer">
-                  {t('btnDetails')}
-                </div>
               </div>
             )}
 
