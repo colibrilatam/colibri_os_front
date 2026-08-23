@@ -6,6 +6,8 @@ import { validateEmail } from '@/lib/validations';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useProjects } from '@/hooks/queries/useProjects';
 import { useUserStore } from '@/lib/store';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
@@ -125,55 +127,37 @@ export default function Login({ onLoadingChange }) {
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label className="text-micro-label block mb-2">{t('email')}</label>
-          <input
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            disabled={loading}
-            className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-              errors.email ? 'border-red-500' : ''
-            }`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
-        </div>
+        <Input
+          label={t('email')}
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          disabled={loading}
+          error={errors.email}
+        />
 
-        <div>
-          <label className="text-micro-label block mb-2">{t('password')}</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            disabled={loading}
-            className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-              errors.password ? 'border-red-500' : ''
-            }`}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-          )}
-        </div>
+        <Input
+          label={t('password')}
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          disabled={loading}
+          error={errors.password}
+        />
+
         {serverError && (
           <p className="text-red-500 text-sm text-center">{serverError}</p>
         )}
 
-        <button
+        <Button
           type="submit"
+          variant="action"
+          fullWidth
           disabled={loading}
-          className={`w-full py-3 rounded-lg font-semibold transition 
-  ${
-    loading
-      ? 'bg-gray-500 cursor-not-allowed'
-      : 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer'
-  }
-`}
         >
           {t('loginSubmit')}
-        </button>
+        </Button>
       </form>
     </>
   );

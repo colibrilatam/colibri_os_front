@@ -6,6 +6,7 @@ import { Eye, History } from 'lucide-react';
 import VersionDetailModal from './VersionDetailModal';
 import StatusBadge from '@/app/evaluations/common/StatusBadge';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/Button';
 
 export default function MicroActionVersions({
   versions = [],
@@ -123,43 +124,31 @@ function VersionCard({ version, isLatest, onView, microAction }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="text-left sm:text-right">
             <p className="text-micro-label">Fecha</p>
 
             <p className="text-date">{formatDate(version.createdAt)}</p>
           </div>
 
-          <button
+          <Button
+            variant="ghost"
             onClick={onView}
-            className="
-            
-              filter-chip
-              inline-flex
-              items-center
-              
-              gap-2
-              rounded-xl
-              px-4
-              py-3
-              cursor-pointer
-            "
           >
             <Eye size={20} />
-            <span className="text-(--text-primary)">Ver detalles</span>
-          </button>
+            <span>Ver detalles</span>
+          </Button>
           {version.status === 'submitted' && (
-            <button
-              type="button"
+            <Button
+              variant="primary"
               onClick={() =>
                 router.push(
                   `/evaluations/micro-action/${microAction.id}/evaluate/${version.id}`,
                 )
               }
-              className="cursor-pointer btn-primary rounded-xl px-5 py-3"
             >
               Evaluar versión
-            </button>
+            </Button>
           )}
         </div>
       </div>

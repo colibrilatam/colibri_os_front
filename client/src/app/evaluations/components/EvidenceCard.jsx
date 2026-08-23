@@ -1,5 +1,7 @@
 import { useTranslation } from '@/hooks/useTranslation';
 import StatusBadge from '../common/StatusBadge';
+import Button from '@/components/ui/Button';
+import InfoCard from '@/components/ui/InfoCard';
 
 export default function EvidenceCard({ evidence, onClick }) {
   const { t } = useTranslation('enums');
@@ -30,14 +32,14 @@ hover:glass-effect-secondary
       {/* Información */}
 
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
-        <Info label="Autor" value={evidence.evidence.author?.fullName} />
+        <InfoCard label="Autor" value={evidence.evidence.author?.fullName} />
 
-        <Info
+        <InfoCard
           label="Tipo de evidencia"
           value={t(evidence.evidence.evidenceType)}
         />
 
-        <Info
+        <InfoCard
           label="Rúbrica"
           value={
             evidence.rubric
@@ -46,44 +48,25 @@ hover:glass-effect-secondary
           }
         />
 
-        <Info label="Tipo de evaluación" value={t(evidence.evaluationType)} />
+        <InfoCard label="Tipo de evaluación" value={t(evidence.evaluationType)} />
 
-        <Info
+        <InfoCard
           label="Fecha de envío"
           value={formatDate(
             evidence.evidence.submittedAt ?? evidence.evidence.createdAt,
           )}
         />
 
-        <Info label="Estado" value="Pendiente" />
+        <InfoCard label="Estado" value="Pendiente" />
       </div>
       <div className="border-theme-top mt-6 pt-5 flex justify-end"></div>
       {/* Footer */}
 
       <div className="flex justify-end mt-6">
-        <button
-          onClick={onClick}
-          className="
-btn-primary
-rounded-xl
-px-5
-py-2
-cursor-pointer
-"
-        >
+        <Button variant="primary" size="sm" onClick={onClick}>
           Revisar
-        </button>
+        </Button>
       </div>
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-micro-label">{label}</p>
-
-      <p className="text-data--label">{value || '-'}</p>
     </div>
   );
 }
@@ -97,16 +80,6 @@ function formatDate(date) {
     year: 'numeric',
   });
 }
-
-/* function formatEvaluationType(type) {
-  const map = {
-    automatic: 'Automática',
-    human: 'Humana',
-    hybrid: 'Híbrida',
-  };
-
-  return map[type] || type;
-} */
 
 function formatEvidenceType(type) {
   const map = {

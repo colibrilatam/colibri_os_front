@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
+import Button from '@/components/ui/Button';
 
 export default function RetryButton() {
   const router = useRouter();
@@ -15,12 +16,12 @@ export default function RetryButton() {
   };
 
   return (
-    <button
-      onClick={handleRetry}
+    <Button
+      variant="danger-flat"
       disabled={retrying}
-      className="px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+      onClick={handleRetry}
     >
       {retrying ? t('retrying') : t('retry')}
-    </button>
+    </Button>
   );
 }

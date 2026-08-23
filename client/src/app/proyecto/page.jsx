@@ -6,6 +6,9 @@ import { useUserProfile } from '@/hooks/queries/useUserProfile';
 import { useNewProject } from '@/hooks/useNewProject';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import Input from '@/components/ui/Input';
+import Textarea from '@/components/ui/Textarea';
+import Button from '@/components/ui/Button';
 
 export default function CreateProject() {
   const { t } = useTranslation('proyecto');
@@ -207,31 +210,25 @@ useEffect(() => {
         <form onSubmit={isDemo ? demoHandleSubmit : handleSubmit} className="space-y-5 max-w-4xl glass-effect p-6 rounded-2xl border-glass">
         {fields.map(({ name, label, type, isRequired }) => (
             <div key={name}>
-            <label className="text-micro-label block mb-2">{label}{isRequired && <span className="text-red-500">*</span>}</label>
             {type === 'textarea' ? (
-                <textarea
+                <Textarea
                 name={name}
+                label={label}
                 value={formData[name]}
                 onChange={handleInputChange}
                 rows={3}
-                className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 resize-none ${
-                    errors[name] ? 'border-red-500' : ''
-                }`}
+                error={errors[name]}
                 />
             ) : (
-                <input
-                type="text"
+                <Input
                 name={name}
+                label={label}
                 value={formData[name]}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-                    errors[name] ? 'border-red-500' : ''
-                }`}
+                error={errors[name]}
                 />
             )}
-            {errors[name] && (
-                <p className="text-red-500 text-xs mt-1">{errors[name]}</p>
-            )}
+            {isRequired && <span className="text-red-500">*</span>}
             </div>
         ))}
 
@@ -258,25 +255,23 @@ useEffect(() => {
             <p className="text-red-500 text-xl mt-2">{formError}</p>
         )}
 
-        <button
+        <Button
             type="submit"
+            variant="action"
+            fullWidth
             disabled={loading}
-            className={`w-full py-3 rounded-lg font-semibold transition ${
-            !loading
-                ? 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer'
-                : 'bg-gray-500 cursor-not-allowed opacity-60'
-            }`}
         >
             {loading ? t('btnCreating') : t('btnCreate')}
-        </button>
+        </Button>
 
-        <button
+        <Button
             type="button"
+            variant="secondary-full"
+            fullWidth
             onClick={() => router.back()}
-            className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
         >
             {t('btnBack')}
-        </button>
+        </Button>
         </form>
     </div>
   );

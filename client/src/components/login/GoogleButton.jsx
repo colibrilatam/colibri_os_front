@@ -1,4 +1,5 @@
 import { useTranslation } from '@/hooks/useTranslation';
+import Button from '@/components/ui/Button';
 
 export default function GoogleButton() {
   const { t } = useTranslation('login');
@@ -7,11 +8,12 @@ export default function GoogleButton() {
   };
 
   return (
-    <button
+    <Button
+      variant="secondary-full"
+      fullWidth
       onClick={handleGoogleClick}
-      className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
     >
       {t('continueGoogle')}
-    </button>
+    </Button>
   );
 }

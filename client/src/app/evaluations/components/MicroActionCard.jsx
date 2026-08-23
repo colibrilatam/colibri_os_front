@@ -1,4 +1,6 @@
 import StatusBadge from '../common/StatusBadge';
+import Button from '@/components/ui/Button';
+import InfoCard from '@/components/ui/InfoCard';
 
 export default function MicroActionCard({ microAction, onClick }) {
   const versions = microAction?.versions ?? [];
@@ -35,64 +37,46 @@ export default function MicroActionCard({ microAction, onClick }) {
 
       {/* Información */}
       <div className="mt-6 grid grid-cols-2 gap-5 lg:grid-cols-4">
-        <Info label="Autor" value={microAction.actor?.fullName} />
+        <InfoCard label="Autor" value={microAction.actor?.fullName} className="min-w-0" />
 
-        <Info label="Estado" value={formatStatus(microAction.status)} />
+        <InfoCard label="Estado" value={formatStatus(microAction.status)} className="min-w-0" />
 
-        <Info label="Versiones" value={versions.length} />
+        <InfoCard label="Versiones" value={versions.length} className="min-w-0" />
 
-        <Info
+        <InfoCard
           label="Última versión"
           value={
             latestVersion
               ? `Versión ${latestVersion.versionNumber}`
               : 'Sin versiones'
           }
+          className="min-w-0"
         />
 
-        <Info
+        <InfoCard
           label="Estado última versión"
           value={
             latestVersion
               ? formatVersionStatus(latestVersion.changeType)
               : 'Sin versiones'
           }
+          className="min-w-0"
         />
 
-        <Info
+        <InfoCard
           label="Fecha de creación"
           value={formatDate(microAction.createdAt)}
+          className="min-w-0"
         />
 
       </div>
 
       {/* Footer */}
       <div className="border-theme-top mt-6 flex justify-end pt-5">
-        <button
-          type="button"
-          onClick={onClick}
-          className="
-            btn-primary
-            rounded-xl
-            px-5
-            py-2
-            text-badge
-            cursor-pointer
-          "
-        >
+        <Button variant="primary" size="sm" onClick={onClick}>
           Revisar
-        </button>
+        </Button>
       </div>
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div className="min-w-0">
-      <p className="text-micro-label">{label}</p>
-
-      <p className="text-data--label mt-1 truncate">{value ?? '-'}</p>
     </div>
   );
 }

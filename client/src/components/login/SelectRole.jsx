@@ -4,6 +4,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { HelpCircle } from "lucide-react";
 import NotificationPopup from "../NotificationPopup";
 import { useUserStore } from "@/lib/store";
+import Button from "@/components/ui/Button";
 
 export default function SelectRole({ onSelectRole }) {
   const { t } = useTranslation('login');
@@ -35,12 +36,14 @@ export default function SelectRole({ onSelectRole }) {
             {t('entrepreneurDesc')}
           </p>
         </div>
-        <button
+        <Button
+          variant="action"
+          fullWidth
+          className="mt-6"
           onClick={() => onSelectRole('entrepreneur')}
-          className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
           {t('continueEntrepreneur')}
-        </button>
+        </Button>
       </div>
 
       {/* MECENAS */}
@@ -52,12 +55,14 @@ export default function SelectRole({ onSelectRole }) {
             {t('patronDesc')}
           </p>
         </div>
-        <button
+        <Button
+          variant="action"
+          fullWidth
+          className="mt-6"
           onClick={() => onSelectRole('mecenas_semilla')}
-          className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
           {t('continuePatron')}
-        </button>
+        </Button>
       </div>
       </div>
     </div>

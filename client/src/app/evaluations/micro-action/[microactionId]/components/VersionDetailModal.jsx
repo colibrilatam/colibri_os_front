@@ -1,6 +1,7 @@
 'use client';
 
 import StatusBadge from '@/app/evaluations/common/StatusBadge';
+import Button from '@/components/ui/Button';
 import {
   X,
   CalendarDays,
@@ -63,19 +64,15 @@ export default function VersionDetailModal({ version, onClose, autor }) {
               </p>
             </div>
 
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={onClose}
               aria-label="Cerrar"
-              className="
-                filter-chip
-                rounded-xl
-                p-2.5
-                cursor-pointer
-                shrink-0
-              "
+              className="shrink-0"
             >
               <X size={24} />
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -210,18 +207,9 @@ export default function VersionDetailModal({ version, onClose, autor }) {
         {/* Footer */}
 
         <div className="border-theme-top p-5 md:p-6 flex justify-end">
-          <button
-            onClick={onClose}
-            className="
-              filter-chip
-              rounded-xl
-              px-5
-              py-2.5
-              cursor-pointer
-            "
-          >
+          <Button variant="ghost" onClick={onClose}>
             Cerrar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

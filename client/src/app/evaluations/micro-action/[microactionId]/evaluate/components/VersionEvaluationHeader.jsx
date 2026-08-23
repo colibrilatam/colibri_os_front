@@ -1,4 +1,5 @@
 import StatusBadge from "@/app/evaluations/common/StatusBadge";
+import InfoCard from "@/components/ui/InfoCard";
 
 
 export default function VersionEvaluationHeader({
@@ -37,37 +38,23 @@ export default function VersionEvaluationHeader({
 
       <div className="border-theme-top mt-6 pt-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Info
+          <InfoCard
             label="Proyecto"
             value={microAction?.project?.projectName}
           />
 
-          <Info
+          <InfoCard
             label="Versión"
             value={`#${version.versionNumber}`}
           />
 
-          <Info
+          <InfoCard
             label="Fecha de creación"
             value={formatDate(version.createdAt)}
           />
         </div>
       </div>
     </section>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div>
-      <p className="text-micro-label">
-        {label}
-      </p>
-
-      <p className="text-data--label mt-1">
-        {value || '-'}
-      </p>
-    </div>
   );
 }
 

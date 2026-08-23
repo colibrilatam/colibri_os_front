@@ -6,6 +6,7 @@ import {
   XCircle,
   ShieldCheck,
 } from 'lucide-react';
+import Button from '@/components/ui/Button';
 
 import ResolutionModal from './ResolutionModal';
 
@@ -65,54 +66,23 @@ export default function ResolutionActions({
             </p>
 
             <div className="flex flex-col gap-3 mt-6">
-              <button
-                type="button"
+              <Button
+                variant="primary"
+                fullWidth
                 onClick={() => openModal('completed')}
-                className="
-                  btn-primary
-                  rounded-xl
-                  px-5
-                  py-4
-                  flex
-                  items-center
-                  justify-center
-                  gap-3
-                  cursor-pointer
-                "
               >
                 <CheckCircle2 className="h-5 w-5" />
+                <span>Aprobar versión</span>
+              </Button>
 
-                <span className="text-data--label">
-                  Aprobar versión
-                </span>
-              </button>
-
-              <button
-                type="button"
+              <Button
+                variant="danger-outline"
+                fullWidth
                 onClick={() => openModal('rejected')}
-                className="
-                  rounded-xl
-                  px-5
-                  py-4
-                  flex
-                  items-center
-                  justify-center
-                  gap-3
-                  cursor-pointer
-                  border
-                  border-red-500/20
-                  text-red-400
-                  bg-red-500/10
-                  hover:bg-red-500/20
-                  transition-all
-                "
               >
                 <XCircle className="h-5 w-5" />
-
-                <span className="text-data--label">
-                  Rechazar versión
-                </span>
-              </button>
+                <span>Rechazar versión</span>
+              </Button>
             </div>
           </>
         )}

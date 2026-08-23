@@ -3,6 +3,7 @@ import { useToast } from '@/lib/hooks/useToast';
 import { evaluationsService } from '@/services/evaluations';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Button from '@/components/ui/Button';
 
 export default function ReviewActions({
   evidence,
@@ -22,15 +23,11 @@ export default function ReviewActions({
     });
 
     try {
-      // 1. Registrar revisión humana (el backend determina resultado y puntaje)
-
       await evaluationsService.submitHumanReview({
         evaluationId: evaluation.id,
         reviewDecision: decision,
         comment,
       });
-
-      // 2. Finalizar evaluación (sin score ni evaluationResult — el backend calcula)
 
       await evaluationsService.finalize({
         evaluationId: evaluation.id,
@@ -58,36 +55,17 @@ export default function ReviewActions({
         onClose={hideToast}
       />
       <div className="flex justify-end gap-4">
-        <button
-          onClick={() => router.back()}
-          className="
-border-theme
-glass-effect
-rounded-xl
-px-5
-py-3
-cursor-pointer
-hover:glass-effect-secondary
-transition
-"
-        >
+        <Button variant="ghost-hover" onClick={() => router.back()}>
           Cancelar
-        </button>
+        </Button>
 
-        <button
-          onClick={handleSubmit}
+        <Button
+          variant="primary"
           disabled={!isFormValid}
-          className="
-btn-primary
-rounded-xl
-px-6
-py-3
-cursor-pointer
-disabled:opacity-40
-"
+          onClick={handleSubmit}
         >
           Finalizar evaluación
-        </button>
+        </Button>
       </div>
     </>
   );

@@ -7,6 +7,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 import { useEffect, useState, useMemo } from 'react';
 import { useUserStore } from '@/lib/store';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 
 // Clave para guardar datos en localStorage (opcional)
 const STORAGE_KEY = 'register_form_backup';
@@ -159,42 +161,27 @@ useEffect(() => {
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       {/* Nombre completo */}
-      <div>
-        <label className="text-micro-label block mb-2">{t('fullName')}</label>
-        <input
-          {...register('fullName')}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.fullName ? 'border-red-500' : ''
-          }`}
-        />
-        {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
-      </div>
+      <Input
+        label={t('fullName')}
+        {...register('fullName')}
+        error={errors.fullName?.message}
+      />
 
       {/* Email */}
-      <div>
-        <label className="text-micro-label block mb-2">{t('email')}</label>
-        <input
-          type="email"
-          {...register('email')}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.email ? 'border-red-500' : ''
-          }`}
-        />
-        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
-      </div>
+      <Input
+        label={t('email')}
+        type="email"
+        {...register('email')}
+        error={errors.email?.message}
+      />
 
       {/* Contraseña */}
-      <div>
-        <label className="text-micro-label block mb-2">{t('password')}</label>
-        <input
-          type="password"
-          {...register('password')}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.password ? 'border-red-500' : ''
-          }`}
-        />
-        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
-      </div>
+      <Input
+        label={t('password')}
+        type="password"
+        {...register('password')}
+        error={errors.password?.message}
+      />
 
       {/* Lista de requisitos */}
       <div className="space-y-2 mt-2 mb-4 bg-white/5 p-3 rounded-lg">
@@ -216,47 +203,39 @@ useEffect(() => {
       </div>
 
       {/* Confirmar contraseña */}
-      <div>
-        <label className="text-micro-label block mb-2">{t('confirmPassword')}</label>
-        <input
-          type="password"
-          {...register('confirmPassword')}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.confirmPassword ? 'border-red-500' : ''
-          }`}
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
-        )}
-      </div>
+      <Input
+        label={t('confirmPassword')}
+        type="password"
+        {...register('confirmPassword')}
+        error={errors.confirmPassword?.message}
+      />
 
       {/* Error general */}
       {errors.root && <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>}
       {generalError.length > 0 && <p className="text-red-500 text-sm mt-2">{generalError}</p>}
 
       {/* Botón registro */}
-      <button
+      <Button
         type="submit"
+        variant="action"
+        fullWidth
         disabled={(!isDemo && !isValid) || isSubmitting}
-        className={`w-full py-3 rounded-lg font-semibold transition bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer ${
-          (!isDemo && !isValid) || isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
       >
         {isSubmitting ? t('registering') : t('registerSubmit')}
-      </button>
+      </Button>
 
       {!isDemo && !isValid && !isSubmitting && (
   <p className="text-yellow-400 text-sm">{t('registerHint')}</p>
 )}
 
       {/* Botón volver */}
-      <button
-        type="button"
+      <Button
+        variant="secondary-full"
+        fullWidth
         onClick={onBack}
-        className=" w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
       >
         {t('backAlt')}
-      </button>
+      </Button>
     </form>
   );
 }

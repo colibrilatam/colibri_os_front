@@ -1,4 +1,5 @@
 import { useTranslation } from "@/hooks/useTranslation";
+import Button from "@/components/ui/Button";
 
 export function HeroSection({ stats }) {
   const { t } = useTranslation('heroSection');
@@ -40,12 +41,12 @@ export function HeroSection({ stats }) {
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
-            <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95">
+            <Button variant="primary-gradient">
               {t('exploreProjects')}
-            </button>
-            <button className="rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-slate-300 transition-all duration-150 hover:border-white/25 hover:bg-white/10 active:scale-95">
+            </Button>
+            <Button variant="secondary">
               {t('viewGlobalMetrics')}
-            </button>
+            </Button>
           </div>
         </div>
 

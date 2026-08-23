@@ -1,3 +1,5 @@
+import InfoCard from '@/components/ui/InfoCard';
+
 export default function VersionEvaluationSummary({
   microAction,
   version,
@@ -29,27 +31,27 @@ export default function VersionEvaluationSummary({
       <div className="border-theme-bottom pb-5" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-        <Info
+        <InfoCard
           label="Intento"
           value={version.attemptNumber}
         />
 
-        <Info
+        <InfoCard
           label="Reaperturas"
           value={version.reopenedCount}
         />
 
-        <Info
+        <InfoCard
           label="Tipo de cambio"
           value={formatChangeType(version.changeType)}
         />
 
-        <Info
+        <InfoCard
           label="Estado anterior"
           value={formatStatus(version.previousStatus)}
         />
 
-        <Info
+        <InfoCard
           label="Versión reemplazada"
           value={
             version.supersedesVersionNumber
@@ -58,7 +60,7 @@ export default function VersionEvaluationSummary({
           }
         />
 
-        <Info
+        <InfoCard
           label="Creado por"
           value={
             version.createdBy?.fullName ||
@@ -66,36 +68,22 @@ export default function VersionEvaluationSummary({
           }
         />
 
-        <Info
+        <InfoCard
           label="Estado de la microacción"
           value={formatStatus(microAction.status)}
         />
 
-        <Info
+        <InfoCard
           label="Inicio"
           value={formatDate(microAction.startedAt)}
         />
 
-        <Info
+        <InfoCard
           label="Enviado"
           value={formatDate(microAction.submittedAt)}
         />
       </div>
     </section>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div className="min-w-0">
-      <p className="text-micro-label">
-        {label}
-      </p>
-
-      <p className="text-data--label mt-1 break-words">
-        {value ?? '-'}
-      </p>
-    </div>
   );
 }
 

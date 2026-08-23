@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ERROR_CODES } from "@/lib/api/types";
 import { isValidElement } from "react";
+import Button from "@/components/ui/Button";
 
 export default function ErrorScreen({ error, reset, back = '/home', next = null, redirect = '/login' }) {
   const { t } = useTranslation('errorScreen');
@@ -33,29 +34,29 @@ export default function ErrorScreen({ error, reset, back = '/home', next = null,
           )}
         </div>
         { next &&
-        <button
+        <Button
+          variant="danger-flat"
           onClick={() => router.push(redirect === '/home' ? '/login' : redirect)}
-          className="cursor-pointer px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200"
         >
           {next}
-        </button>
+        </Button>
         }
-        <button
+        <Button
+          variant="danger-flat"
           onClick={() => router.push(back)}
-          className="cursor-pointer px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200"
         >
           {t('back')}
-        </button>
+        </Button>
 
         {reset && isValidElement(reset) && reset}
 
         {reset && typeof reset === 'function' && (
-          <button
+          <Button
+            variant="danger-flat"
             onClick={() => reset()}
-            className="px-6 py-3 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors duration-200"
           >
             {t('retry')}
-          </button>
+          </Button>
         )}
       </div>
     </div>

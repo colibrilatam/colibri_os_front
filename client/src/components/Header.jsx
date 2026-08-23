@@ -16,6 +16,7 @@ import LanguageSwitcher from './common/LanguageSwitcher';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 import { useLocalizedField } from '@/hooks/useLocalizedField';
+import Button from '@/components/ui/Button';
 
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
@@ -73,26 +74,26 @@ export default function Header({ isHome = false }) {
               <div className="flex gap-4">
                 {rol === 'mecenas_semilla' && (
                   <Link className="hover:text-gray-200" href="/user/nft">
-                    <button className="rounded-xl bg-linear-to-r primary-button px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
+                    <Button variant="primary-gradient">
                       {t('nfts')}
-                    </button>
+                    </Button>
                   </Link>
                 )}
                 <Link className="hover:text-gray-200" href="/login">
-                  <button
+                  <Button
+                    variant="danger"
                     onClick={() => logout()}
-                    className="rounded-xl bg-linear-to-r from-red-600 to-red-800 p-2 lg:px-5 lg:py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
                    {t('logout')}
-                  </button>
+                  </Button>
                 </Link>
               </div>
             ) : (
               <div>
                 <Link className="hover:text-gray-200" href="/login">
-                  <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-cyan-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95">
+                  <Button variant="primary-gradient">
                    {t('login')}
-                  </button>
+                  </Button>
                 </Link>
               </div>
             )}
@@ -139,9 +140,9 @@ export default function Header({ isHome = false }) {
               </span>
             </div>
             <div>
-              <button className="rounded-xl bg-linear-to-r from-cyan-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition-all duration-150 hover:opacity-90 active:scale-95">
+              <Button variant="primary-gradient">
                 {t('access')}
-              </button>
+              </Button>
             </div>
            
           </div>

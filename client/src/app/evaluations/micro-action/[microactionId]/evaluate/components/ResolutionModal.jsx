@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { CheckCircle2, XCircle, Loader2, X } from 'lucide-react';
 import { microActionService } from '@/services/micro-action';
+import Button from '@/components/ui/Button';
+import Textarea from '@/components/ui/Textarea';
 
 export default function ResolutionModal({
   action,
@@ -95,20 +97,15 @@ export default function ResolutionModal({
             </div>
           </div>
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onClose}
             disabled={submitting}
-            className="
-              filter-chip
-              rounded-xl
-              p-2
-              cursor-pointer
-            "
             aria-label="Cerrar"
           >
             <X className="h-5 w-5" />
-          </button>
+          </Button>
         </div>
 
         {/* Body */}
@@ -124,7 +121,7 @@ export default function ResolutionModal({
               Resumen de la resolución
             </label>
 
-            <textarea
+            <Textarea
               id="resolution-summary"
               value={summary}
               onChange={(event) => {
@@ -141,19 +138,7 @@ export default function ResolutionModal({
                   ? 'Explica por qué la versión cumple con los requisitos...'
                   : 'Explica qué requisitos no fueron cumplidos...'
               }
-              className="
-                w-full
-                rounded-xl
-                surface-secondary
-                border-theme
-                px-4
-                py-3
-                text-body
-                text-primary-theme
-                placeholder:text-tertiary-theme
-                resize-none
-                focus:outline-none
-              "
+              className="rounded-xl"
             />
 
             <div className="flex justify-between mt-2">
@@ -175,44 +160,23 @@ export default function ResolutionModal({
         {/* Footer */}
 
         <div className="border-theme-top p-6 flex flex-col-reverse sm:flex-row justify-end gap-3">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             onClick={onClose}
             disabled={submitting}
-            className="
-              filter-chip
-              rounded-xl
-              px-5
-              py-3
-              cursor-pointer
-            "
           >
-            <span className="text-data">Cancelar</span>
-          </button>
+            Cancelar
+          </Button>
 
-          <button
-            type="button"
-            onClick={submit}
+          <Button
+            variant="primary"
             disabled={submitting || !summary.trim()}
-            className="
-              btn-primary
-              rounded-xl
-              px-6
-              py-3
-              cursor-pointer
-              disabled:opacity-50
-              disabled:cursor-not-allowed
-              flex
-              items-center
-              justify-center
-              gap-2
-            "
+            onClick={submit}
           >
             {submitting ? (
               <>
                 <Loader2 className="h-5 w-5 animate-spin" />
-
-                <span className="text-data">Guardando...</span>
+                <span>Guardando...</span>
               </>
             ) : (
               <>
@@ -221,13 +185,12 @@ export default function ResolutionModal({
                 ) : (
                   <XCircle className="h-5 w-5" />
                 )}
-
-                <span className="text-data">
+                <span>
                   {isApproval ? 'Confirmar aprobación' : 'Confirmar rechazo'}
                 </span>
               </>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
