@@ -29,7 +29,7 @@ export const useUserStore = create(
       setTheme: (theme) => set({ theme }),
       clearTheme: () => set({ theme: null }),
 
-      language: 'en',
+      language: 'es',
       setLanguage: (language) =>
         set({
           language,
