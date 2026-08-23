@@ -137,6 +137,10 @@
     "nftDescription": "Full scholarship. Permanently associated with your NFT.",
     "createAccount": "Create account",
     "continueGoogle": "Continue with Google",
+    "continueWallet": "Connect Wallet",
+    "walletConnecting": "Connecting MetaMask...",
+    "walletSigning": "Signing message...",
+    "walletAuthenticating": "Authenticating...",
     "loggingIn": "Logging in..."
   },
 

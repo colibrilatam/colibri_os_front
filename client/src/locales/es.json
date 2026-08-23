@@ -137,6 +137,10 @@
     "nftDescription": "Beca completa. Asociado permanentemente a tu NFT.",
     "createAccount": "Crear cuenta",
     "continueGoogle": "Continuar con Google",
+    "continueWallet": "Conectar Wallet",
+    "walletConnecting": "Conectando MetaMask...",
+    "walletSigning": "Firmando mensaje...",
+    "walletAuthenticating": "Autenticando...",
     "loggingIn": "Iniciando sesión..."
   },
 

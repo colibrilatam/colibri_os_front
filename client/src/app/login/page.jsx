@@ -6,9 +6,10 @@ import { useGuestLogin } from '@/hooks/useGuestLogin';
 import NotificationPopup from '@/components/NotificationPopup';
 import SelectRole from '@/components/login/SelectRole';
 import GoogleButton from '@/components/login/GoogleButton';
+import WalletButton from '@/components/login/WalletButton';
 import Login from '@/components/login/Login';
 import Register from '@/components/login/Register';
-import Button from '@/components/Button';
+import Button from '@/components/ui/Button';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 
@@ -128,12 +129,14 @@ export default function LoginRegisterPage() {
           <>
             <Login onLoadingChange={setLoading} />
             <GoogleButton />
-            <button
+            <WalletButton onLoadingChange={setLoading} />
+            <Button
+              variant="secondary-full"
+              fullWidth
               onClick={handleGuestLoginClick}
-              className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
             >
               {t('guestLogin')}
-            </button>
+            </Button>
             {guestError && (
               <p className="text-red-500 text-sm text-center mt-3">{guestError}</p>
             )}

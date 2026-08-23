@@ -32,6 +32,21 @@ export const AuthResponseSchema = z.object({
   token: z.string(),
 }).strict();
 
+export const WalletNonceRequestSchema = z.object({
+  address: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
+}).strict();
+
+export const WalletNonceResponseSchema = z.object({
+  nonce: z.string(),
+  message: z.string(),
+}).strict();
+
+export const WalletVerifyRequestSchema = z.object({
+  address: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
+  message: z.string(),
+  signature: z.string().regex(/^0x[0-9a-fA-F]{130}$/),
+}).strict();
+
 export const RegisterResponseSchema = z.object({
   message: z.string(),
   token: z.string(),
@@ -49,11 +64,17 @@ export const UserSchema = z.object({
   fullName: z.string(),
   role: UserRoleSchema,
   status: UserStatusSchema,
-  provider: z.enum(['local', 'google']),
+  provider: z.enum(['local', 'google', 'wallet']),
   avatar: z.string().nullable().optional(),
   bio: z.string().nullable().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
+}).strict();
+
+export const WalletAuthResponseSchema = z.object({
+  message: z.string(),
+  token: z.string(),
+  user: UserSchema,
 }).strict();
 
 export const ProjectSchema = z.object({
@@ -127,3 +148,7 @@ export type Project = z.infer<typeof ProjectSchema>;
 export type CreateProjectRequest = z.infer<typeof CreateProjectRequestSchema>;
 export type UpdateProjectRequest = z.infer<typeof UpdateProjectRequestSchema>;
 export type PaginatedProjects = z.infer<typeof PaginatedProjectsSchema>;
+export type WalletNonceRequest = z.infer<typeof WalletNonceRequestSchema>;
+export type WalletNonceResponse = z.infer<typeof WalletNonceResponseSchema>;
+export type WalletVerifyRequest = z.infer<typeof WalletVerifyRequestSchema>;
+export type WalletAuthResponse = z.infer<typeof WalletAuthResponseSchema>;
