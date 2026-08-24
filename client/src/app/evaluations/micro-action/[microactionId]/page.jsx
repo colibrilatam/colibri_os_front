@@ -31,12 +31,9 @@ export default function MicroActionDetailPage() {
         setError(null);
 
         const data = await microActionService.getById(microactionId);
-        const microActionWithMockVersions = {
-          ...data,
-          versions: getMockVersions(data),
-        };
+        
 
-        setMicroAction(microActionWithMockVersions);
+        setMicroAction(data);
       } catch (err) {
         console.error('Error cargando microacción:', err);
 
