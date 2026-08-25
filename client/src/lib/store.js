@@ -90,7 +90,7 @@ export const useUserStore = create(
           theme: null,
           isGuest: false,
           sidebarDesktopExpanded: false,
-          language: 'en',
+          language: 'es',
         });
       },
 

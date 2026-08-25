@@ -7,6 +7,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { projectsService } from '@/services/project';
 import { useRequest } from '@/hooks/useRequest';
 import { useUserStore } from '@/lib/store';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
@@ -17,6 +18,8 @@ export default function Login({ onLoadingChange }) {
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({ email: '', password: '' });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -146,8 +149,9 @@ export default function Login({ onLoadingChange }) {
 
         <div>
           <label className="text-micro-label block mb-2">{t('password')}</label>
+          <div className="relative">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             value={formData.password}
             onChange={handleInputChange}
@@ -156,6 +160,15 @@ export default function Login({ onLoadingChange }) {
               errors.password ? 'border-red-500' : ''
             }`}
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+            aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          >
+            {showPassword ? <EyeOff size={26} /> : <Eye size={26} />}
+          </button>
+          </div>
           {errors.password && (
             <p className="text-red-500 text-sm mt-1">{errors.password}</p>
           )}
