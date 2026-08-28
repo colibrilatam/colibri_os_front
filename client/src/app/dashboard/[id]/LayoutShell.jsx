@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 import ThemeLoader from '@/components/ThemeLoader';
 import { useOnborda } from 'onborda';
 import Footer from '@/components/Footer';
-import { useTranslatedObject } from '@/hooks/useTranslatedObject';
 import { useTranslatedContent } from '@/hooks/useTranslatedContent';
 import { useUserStore } from '@/lib/store';
 
@@ -80,8 +79,6 @@ export default function LayoutShell({ children, projectInfo }) {
     };
   }, [setSidebarMobileOpen]);
 
-  const language = useUserStore((state) => state.language);
-
   const translatedContent = useTranslatedContent(
     projectInfo.translatableContent,
   );
@@ -113,6 +110,7 @@ export default function LayoutShell({ children, projectInfo }) {
             title="Abrir sidebar"
             aria-label="Abrir menú de navegación"
             aria-expanded={false}
+            aria-controls="mobile-sidebar"
           >
             <svg
               className="w-12 h-12 text-white"
