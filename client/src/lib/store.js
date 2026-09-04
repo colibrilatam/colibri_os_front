@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { isTokenExpired } from './auth';
 import { setCookie, deleteCookie } from './cookies';
 import { resetTheme } from './theme';
+import { userService } from '@/services/user';
 
 export const useUserStore = create(
   persist(
@@ -23,7 +24,21 @@ export const useUserStore = create(
       setRol: (newRol) => set({ rol: newRol }),
 
       user: null,
-      setUser: (user) => set({ user }),
+authChecked: false,      // ← ¿ya terminamos de preguntarle al backend?
+setUser: (user) => set({ user }),
+
+checkAuth: async () => {
+  try {
+    const res = await userService.profile(); // withCredentials: true ya seteado
+    set({ user: res, rol: res.role, authChecked: true });
+    return true;
+  } catch {
+    set({ user: null, rol: null, authChecked: true });
+    return false;
+  }
+},
+
+isAuth: () => !!get().user,
 
       theme: null,
       setTheme: (theme) => set({ theme }),
@@ -90,26 +105,18 @@ export const useUserStore = create(
           theme: null,
           isGuest: false,
           sidebarDesktopExpanded: false,
-          sidebarMobileOpen: false,
-          language: 'en',
+          language: 'es',
         });
       },
 
-      // Verificar si hay token y si es válido, o si es invitado
-      isAuthenticated: () => {
+      // Verificar si hay token y si es válido
+      isAuthenticated: async () => {
         const token = get().token;
-        //const isGuest = get().isGuest
-
-        // Si es invitado, está autenticado sin token
-        // El parámetro 'guest' permite verificar explícitamente el modo invitado
-        // no se bien por que lo puse pero creo que no tiene sentido
-
-        // Si no es invitado, validar token
         if (isTokenExpired(token)) {
           //set({ token: null })
           return false;
         }
-        return true;
+        return false;
       },
 
       // Estado del Sideba: false,

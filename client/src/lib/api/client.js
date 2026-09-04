@@ -19,6 +19,7 @@ function sleep(ms) {
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   timeout: DEFAULT_TIMEOUT,
+  withCredentials: true, 
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
