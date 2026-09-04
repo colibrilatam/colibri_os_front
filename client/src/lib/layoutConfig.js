@@ -44,6 +44,13 @@ export const routeConfig = {
       header: null,
       padding: '',
     },
+    {
+      path: '/home',
+      protected: true,
+      roles: ['admin','entrepreneur', 'mentor', 'mecenas_semilla'],
+      header: 'project',
+      padding: 'pt-0',
+    },
   ],
 };
 
