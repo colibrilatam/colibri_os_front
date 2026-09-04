@@ -60,7 +60,7 @@ isAuth: () => !!get().user,
         })),
 
       getTranslation: (key) => get().translationsCache[key],
-      
+
       // Token
       token: null,
       setToken: (token) => {
@@ -119,7 +119,7 @@ isAuth: () => !!get().user,
         return false;
       },
 
-      // Estado del Sidebar
+      // Estado del Sideba: false,
       sidebarMobileOpen: false,
       setSidebarMobileOpen: (isOpen) => set({ sidebarMobileOpen: isOpen }),
       toggleSidebarMobile: () =>
@@ -136,7 +136,12 @@ isAuth: () => !!get().user,
     }),
 
     {
-      name: 'app-state', // key en localStorage
+      name: 'app-state',
+      partialize: (state) => {
+        const { sidebarMobileOpen, ...persistedState } = state;
+
+        return persistedState;
+      },
     },
   ),
 );
