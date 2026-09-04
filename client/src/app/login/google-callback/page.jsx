@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
@@ -15,7 +15,7 @@ const GENDERS = [
   { value: 'prefer_not_to_say', label: 'Prefiero no decir' },
 ];
 
-export default function GoogleCallback() {
+function GoogleCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation('login');
@@ -30,28 +30,28 @@ export default function GoogleCallback() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
- useEffect(() => {
-  const role = searchParams.get('role');
-  const temp = searchParams.get('tempToken');
+  useEffect(() => {
+    const role = searchParams.get('role');
+    const temp = searchParams.get('tempToken');
 
-  if (role) {
-    window.history.replaceState({}, '', window.location.pathname);
-    checkAuth().then(() => {
-      router.replace(
-        role === 'entrepreneur' ? '/proyecto' : role === 'mecenas_semilla' ? '/evaluations' : role === 'evaluator' ? '/evaluations' : '/home'
-      );
-    });
-    return;
-  }
+    if (role) {
+      window.history.replaceState({}, '', window.location.pathname);
+      checkAuth().then(() => {
+        router.replace(
+          role === 'entrepreneur' ? '/proyecto' : role === 'mecenas_semilla' ? '/evaluations' : role === 'evaluator' ? '/evaluations' : '/home'
+        );
+      });
+      return;
+    }
 
-  if (temp) {
-    setTempToken(temp);
-    window.history.replaceState({}, '', window.location.pathname);
-    return;
-  }
+    if (temp) {
+      setTempToken(temp);
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
 
-  router.replace('/login?error=google_failed');
-}, []); // eslint-disable-line
+    router.replace('/login?error=google_failed');
+  }, []); // eslint-disable-line
 
   const handleRoleSelect = (role) => setSelectedRole(role);
   const handleGenderChange = (e) => setSelectedGender(e.target.value);
@@ -79,7 +79,6 @@ export default function GoogleCallback() {
       setLoading(false);
     }
   };
-
 
   if (tempToken) {
     return (
@@ -125,4 +124,12 @@ export default function GoogleCallback() {
   }
 
   return <p>{t('loggingIn')}</p>;
+}
+
+export default function GoogleCallback() {
+  return (
+    <Suspense fallback={<p>Cargando...</p>}>
+      <GoogleCallbackInner />
+    </Suspense>
+  );
 }
