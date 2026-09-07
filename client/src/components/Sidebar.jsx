@@ -23,9 +23,10 @@ import TourButton from './tutoriales/TourButton';
 import { useProject } from '@/lib/projectContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import { useLogout } from '@/hooks/mutations/useLogout';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
-  const { logout } = useUserStore();
+  const { mutate: logout } = useLogout();
   const { t } = useTranslation('sidebar');
   const rol = useUserStore((state) => state.rol);
   const { dbProject } = useProject();
