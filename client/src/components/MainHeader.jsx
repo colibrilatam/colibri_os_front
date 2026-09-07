@@ -12,7 +12,9 @@ export default function MainHeader() {
   const { t } = useTranslation('mainHeader');
   const router = useRouter();
 
-  const { logout, user: authUser } = useUserStore();
+
+  const logout = useUserStore((state) => state.logout);
+  const authUser = useUserStore((state) => state.user);
 
   const { data: profile, isLoading: profileLoading } = useUser(authUser?.sub);
 

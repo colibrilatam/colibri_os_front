@@ -53,7 +53,7 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
-          onClick={() => onSelectRole('mecenas_semilla')}
+          onClick={() => onSelectRole('evaluator')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
           {t('continuePatron')}

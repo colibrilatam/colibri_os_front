@@ -7,6 +7,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 import { useEffect, useState, useMemo } from 'react';
 import { useUserStore } from '@/lib/store';
+import { Eye, EyeOff } from 'lucide-react';
 
 // Clave para guardar datos en localStorage (opcional)
 const STORAGE_KEY = 'register_form_backup';
@@ -41,6 +42,8 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
   const { handleDemoLogin } = useLogin();
 
   const [ generalError, setGeneralError ] = useState('');
+  const [ showPassword, setShowPassword ] = useState(false);
+    const [ showConfirmPassword, setShowConfirmPassword ] = useState(false);
 
   const {
     register,
@@ -186,13 +189,24 @@ useEffect(() => {
       {/* Contraseña */}
       <div>
         <label className="text-micro-label block mb-2">{t('password')}</label>
-        <input
-          type="password"
+        <div className="relative">
+           <input
+          type={showPassword ? "text" : "password"}
           {...register('password')}
           className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
             errors.password ? 'border-red-500' : ''
           }`}
         />
+          <button
+  type="button"
+  onClick={() => setShowPassword(!showPassword)}
+  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+>
+  {showPassword ? <EyeOff size={26} /> : <Eye size={26} />}
+</button>
+        </div>
+       
         {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
       </div>
 
@@ -217,18 +231,35 @@ useEffect(() => {
 
       {/* Confirmar contraseña */}
       <div>
-        <label className="text-micro-label block mb-2">{t('confirmPassword')}</label>
-        <input
-          type="password"
-          {...register('confirmPassword')}
-          className={`w-full px-4 py-3 rounded-lg bg-white/5 text-white border border-white/10 ${
-            errors.confirmPassword ? 'border-red-500' : ''
-          }`}
-        />
-        {errors.confirmPassword && (
-          <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
-        )}
-      </div>
+  <label className="text-micro-label block mb-2">
+    {t('confirmPassword')}
+  </label>
+
+  <div className="relative">
+    <input
+      type={showConfirmPassword ? 'text' : 'password'}
+      {...register('confirmPassword')}
+      className={`w-full px-4 py-3 pr-12 rounded-lg bg-white/5 text-white border border-white/10 ${
+        errors.confirmPassword ? 'border-red-500' : ''
+      }`}
+    />
+
+    <button
+  type="button"
+  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+  aria-label={showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+>
+  {showConfirmPassword ? <EyeOff size={26} /> : <Eye size={26} />}
+</button>
+  </div>
+
+  {errors.confirmPassword && (
+    <p className="text-red-500 text-sm mt-1">
+      {errors.confirmPassword.message}
+    </p>
+  )}
+</div>
 
       {/* Error general */}
       {errors.root && <p className="text-red-500 text-sm mt-2">{errors.root.message}</p>}
