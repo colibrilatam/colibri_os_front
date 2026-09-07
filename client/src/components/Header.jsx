@@ -94,7 +94,7 @@ export default function Header({ isHome = false }) {
                     onClick={() => logout()}
                     className="rounded-xl bg-linear-to-r from-red-600 to-red-800 p-2 lg:px-5 lg:py-2.5 text-sm font-semibold text-white shadow-lg hover:text-gray-200 shadow-red-500/20 transition-all duration-150 cursor-pointer  hover:opacity-90 active:scale-95"
                   >
-                   {asdasdasd}
+                   {t('logout')}
                   </button>
                 </Link>
               </div>

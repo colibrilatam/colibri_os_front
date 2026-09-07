@@ -149,7 +149,7 @@ export default function MainHeader() {
               "
             >
               <LogOut size={14} />
-              <span>asdasd</span>
+              <span>{t('logout')}</span>
             </button>
             <LanguageSwitcher />
           </div>
