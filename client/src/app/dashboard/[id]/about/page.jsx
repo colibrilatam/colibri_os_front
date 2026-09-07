@@ -115,32 +115,32 @@ export default function ProjectSection() {
               <h2 className="text-h2">{dbProject.projectName}</h2>
             </div>
 
-<div className="glass-effect p-4 rounded-2xl">
-            {dbProject.tagline && (
-              <p className="text-body-lg text-(--text-accent)">
-                {translatedContent?.project?.tagline || dbProject.tagline_en}
-              </p>
-            )}
+            <div className="glass-effect p-4 rounded-2xl">
+              {dbProject.tagline && (
+                <p className="text-body-lg text-(--text-accent)">
+                  {dbProject.tagline}
+                </p>
+              )}
 
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="emerald">
-                {getProjectStatusLabel(t, dbProject.status)}
-              </Badge>
-
-              {dbProject.trajectoryStatus && (
+              <div className="flex flex-wrap gap-2">
                 <Badge variant="emerald">
-                  {getTrajectoryStatusLabel(t, dbProject.trajectoryStatus)}
+                  {getProjectStatusLabel(t, dbProject.status)}
                 </Badge>
-              )}
 
-              {dbProject.industry && (
-                <Badge variant="amber">{dbProject.industry}</Badge>
-              )}
+                {dbProject.trajectoryStatus && (
+                  <Badge variant="emerald">
+                    {getTrajectoryStatusLabel(t, dbProject.trajectoryStatus)}
+                  </Badge>
+                )}
 
-              {dbProject.country && (
-                <Badge variant="amber">{dbProject.country}</Badge>
-              )}
-            </div>
+                {dbProject.industry && (
+                  <Badge variant="amber">{dbProject.industry}</Badge>
+                )}
+
+                {dbProject.country && (
+                  <Badge variant="amber">{dbProject.country}</Badge>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -155,8 +155,7 @@ export default function ProjectSection() {
           <p className="text-overline">{t('description')}</p>
 
           <p className="text-(--text-secondary)">
-            {translatedContent?.project?.shortDescription ||
-              dbProject.shortDescription_en}
+            {dbProject.shortDescription}
           </p>
         </div>
       )}
@@ -170,7 +169,9 @@ export default function ProjectSection() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <p className="text-(--text-primary)">{dbProject.owner.fullName}</p>
+                  <p className="text-(--text-primary)">
+                    {dbProject.owner.fullName}
+                  </p>
 
                   <button
                     onClick={() => setOpenEntrepreneurCard(true)}
@@ -384,8 +385,7 @@ export default function ProjectSection() {
 
                         {member.participationWeight && (
                           <span>
-                            {t('participation')}{' '}
-                            {member.participationWeight}%
+                            {t('participation')} {member.participationWeight}%
                           </span>
                         )}
                       </div>
@@ -417,10 +417,7 @@ export default function ProjectSection() {
       <div className="grid md:grid-cols-3 gap-4">
         <LinkCard label={t('website')} url={dbProject.websiteUrl} />
 
-        <LinkCard
-          label={t('linkedin')}
-          url={dbProject.startupLinkedinUrl}
-        />
+        <LinkCard label={t('linkedin')} url={dbProject.startupLinkedinUrl} />
 
         <LinkCard
           label={t('rlabProfile')}
