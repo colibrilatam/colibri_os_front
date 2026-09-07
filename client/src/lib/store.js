@@ -95,6 +95,7 @@ isAuth: () => !!get().user,
       logout: () => {
         if (typeof window !== 'undefined') {
           deleteCookie('token');
+          deleteCookie('colibri_access_token')
           deleteCookie('isGuest');
           resetTheme();
         }
