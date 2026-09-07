@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSyncExternalStore, Suspense, lazy, useState } from 'react';
 
