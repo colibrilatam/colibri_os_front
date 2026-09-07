@@ -1,4 +1,4 @@
-import { QueryClient, isServer } from '@tanstack/react-query';
+import { QueryClient, environmentManager } from '@tanstack/react-query';
 import { ApiError } from './api/errors.js';
 
 /**
@@ -43,7 +43,7 @@ let browserQueryClient;
  * En servidor crea una instancia nueva en cada request.
  */
 export function getQueryClient() {
-  if (isServer) {
+  if (environmentManager.isServer()) {
     return createQueryClient();
   }
 
