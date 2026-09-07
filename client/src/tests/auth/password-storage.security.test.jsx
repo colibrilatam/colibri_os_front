@@ -1,7 +1,19 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Login from '@/components/login/Login.jsx';
 import Register from '@/components/login/Register.jsx';
+import { createElement } from 'react';
+
+function createTestQueryClient() {
+  return new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+}
+
+function QueryWrapper({ children }) {
+  return createElement(QueryClientProvider, { client: createTestQueryClient() }, children);
+}
 
 // Suprimir logs de debug del componente Register
 vi.stubGlobal('console', { ...console, log: vi.fn() });
@@ -172,7 +184,7 @@ describe('Password Storage Security', () => {
     });
 
     it('no guarda la contraseña en localStorage después de un login exitoso', async () => {
-      const { container } = render(<Login />);
+      const { container } = render(<Login />, { wrapper: QueryWrapper });
 
       typeInInput(getInputByName(container, 'email'), TEST_EMAIL);
       typeInInput(getInputByName(container, 'password'), TEST_PASSWORD);
@@ -187,7 +199,7 @@ describe('Password Storage Security', () => {
     });
 
     it('no guarda la contraseña en sessionStorage después de un login exitoso', async () => {
-      const { container } = render(<Login />);
+      const { container } = render(<Login />, { wrapper: QueryWrapper });
 
       typeInInput(getInputByName(container, 'email'), TEST_EMAIL);
       typeInInput(getInputByName(container, 'password'), TEST_PASSWORD);
@@ -202,7 +214,7 @@ describe('Password Storage Security', () => {
     });
 
     it('no guarda la contraseña en cookies después de un login exitoso', async () => {
-      const { container } = render(<Login />);
+      const { container } = render(<Login />, { wrapper: QueryWrapper });
 
       typeInInput(getInputByName(container, 'email'), TEST_EMAIL);
       typeInInput(getInputByName(container, 'password'), TEST_PASSWORD);
@@ -219,7 +231,7 @@ describe('Password Storage Security', () => {
     it('no guarda la contraseña en ningún storage después de un login fallido', async () => {
       mockLogin.mockRejectedValue(new Error('Credenciales inválidas'));
 
-      const { container } = render(<Login />);
+      const { container } = render(<Login />, { wrapper: QueryWrapper });
 
       typeInInput(getInputByName(container, 'email'), TEST_EMAIL);
       typeInInput(getInputByName(container, 'password'), TEST_PASSWORD);
@@ -236,7 +248,7 @@ describe('Password Storage Security', () => {
     });
 
     it('envía email y password al servicio de login, pero no los persiste en storage', async () => {
-      const { container } = render(<Login />);
+      const { container } = render(<Login />, { wrapper: QueryWrapper });
 
       typeInInput(getInputByName(container, 'email'), TEST_EMAIL);
       typeInInput(getInputByName(container, 'password'), TEST_PASSWORD);
@@ -263,7 +275,7 @@ describe('Password Storage Security', () => {
         onBack: vi.fn(),
         onLoadingChange: vi.fn(),
       };
-      return render(<Register {...defaultProps} {...props} />);
+      return render(<Register {...defaultProps} {...props} />, { wrapper: QueryWrapper });
     };
 
     beforeEach(() => {

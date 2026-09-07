@@ -10,35 +10,22 @@ vi.mock('../token.js', () => ({
   setToken: vi.fn(),
 }));
 
-describe('client retry logic', () => {
+describe('apiClient retry behavior', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetRetryCounter();
   });
 
-  it('should retry on network error and succeed', async () => {
-    const response = await apiClient.get('/test/retry-then-success');
-    expect(response.data).toEqual({ data: 'recovered', attempt: 2 });
-  }, 15000);
-
-  it('should call onRetry callback during retries', async () => {
-    const onRetry = vi.fn();
-
-    const response = await apiClient.get('/test/retry-then-success', { onRetry });
-
-    expect(onRetry).toHaveBeenCalledWith(1, 2);
-    expect(response.data).toEqual({ data: 'recovered', attempt: 2 });
-  }, 15000);
-
-  it('should throw ApiError after exhausting retries', async () => {
+  it('should NOT retry network errors at the HTTP client level', async () => {
     try {
       await apiClient.get('/test/retry-always-fails');
       expect.fail('Should have thrown');
     } catch (error) {
       expect(error).toBeInstanceOf(ApiError);
       expect(error.code).toBe(ERROR_CODES.NETWORK_ERROR);
+      // El retry ahora lo gestiona TanStack Query, no el cliente HTTP
     }
-  }, 15000);
+  });
 
   it('should NOT retry on 4xx errors', async () => {
     try {
@@ -48,5 +35,5 @@ describe('client retry logic', () => {
       expect(error).toBeInstanceOf(ApiError);
       expect(error.status).toBe(400);
     }
-  }, 5000);
+  });
 });

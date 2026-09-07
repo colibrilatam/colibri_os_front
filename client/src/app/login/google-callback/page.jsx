@@ -6,6 +6,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 import { authService } from '@/services/authService';
 import SelectRole from '@/components/login/SelectRole';
+import { useCompleteProfile, normalizeCompleteProfileError } from '@/hooks/mutations/useCompleteProfile';
 
 const GENDERS = [
   { value: 'male', label: 'Masculino' },
@@ -29,6 +30,12 @@ function GoogleCallbackInner() {
   const [selectedGender, setSelectedGender] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const { mutate: completeProfile, isPending } = useCompleteProfile({
+    onError: (error) => {
+      console.error(normalizeCompleteProfileError(error));
+    },
+  });
 
   useEffect(() => {
     const role = searchParams.get('role');
@@ -65,8 +72,11 @@ function GoogleCallbackInner() {
     setLoading(true);
     setError(null);
     try {
+
+      
+
       const data = { tempToken, role: selectedRole, gender: selectedGender };
-      await authService.completeProfile(data);
+      await completeProfile(data);
       setRol(selectedRole || 'entrepreneur');
       if (selectedRole === 'entrepreneur') router.replace('/proyecto');
       else if (selectedRole === 'mecenas_semilla') router.replace('/evaluations');

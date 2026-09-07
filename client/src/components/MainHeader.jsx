@@ -2,44 +2,35 @@
 
 import { LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { userService } from '@/services/user';
-import { useRequest } from '@/hooks/useRequest';
+import { useUser } from '@/hooks/queries/useUser';
 import { getUserRoleLabel } from '@/lib/mappers/evidence-labels';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 import LanguageSwitcher from './common/LanguageSwitcher';
+import { useLogout, normalizeLogoutError } from '@/hooks/mutations/useLogout';
 
 export default function MainHeader() {
   const { t } = useTranslation('mainHeader');
   const router = useRouter();
 
 
-  const logout = useUserStore((state) => state.logout);
+  const { mutate: logout, isPending } = useLogout({
+    onError: (error) => {
+      console.error(normalizeLogoutError(error));
+    },
+    // También puedes pasar onSuccess para acciones extra
+    // (se ejecutará después del reset, limpieza y redirección)
+  });
   const authUser = useUserStore((state) => state.user);
 
-  const { execute: fetchProfile, loading: profileLoading } = useRequest(
-    userService.userData,
-  );
-
-  const [profile, setProfile] = useState(null);
-
-  useEffect(() => {
-    if (!authUser?.sub) return;
-
-    const loadProfile = async () => {
-      const { data } = await fetchProfile(authUser.sub);
-
-      setProfile(data);
-    };
-
-    loadProfile();
-  }, [authUser]);
+  const { data: profile, isLoading: profileLoading } = useUser(authUser?.sub);
 
   const handleLogout = () => {
     logout();
     router.push('/login');
   };
+
+  
 
   const displayName = profile?.fullName || t('userFallback');
   const displayRole = getUserRoleLabel(profile?.role) || t('evaluatorFallback');
@@ -158,7 +149,7 @@ export default function MainHeader() {
               "
             >
               <LogOut size={14} />
-              <span>{t('logout')}</span>
+              <span>asdasd</span>
             </button>
             <LanguageSwitcher />
           </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import EvaluationHeader from './components/EvaluationHeader';
@@ -8,66 +8,40 @@ import MicroActionCard from './components/MicroActionCard';
 import MicroActionStatusFilter from './components/MicroActionStatusFilter';
 import Pagination from './components/Pagination';
 
-import { microActionService } from '@/services/micro-action';
+import { useMicroActions } from '@/hooks/queries/useMicroActions';
 
 const LIMIT = 10;
 
 export default function EvaluationsPage() {
   const router = useRouter();
 
-  const [microActions, setMicroActions] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const [status, setStatus] = useState('submitted');
   const [page, setPage] = useState(1);
 
-  const [pagination, setPagination] = useState({
-    total: 0,
-    page: 1,
-    limit: LIMIT,
-  });
+  const params = useMemo(
+    () => ({
+      page,
+      limit: LIMIT,
+      ...(status ? { status } : {}),
+    }),
+    [page, status],
+  );
 
-  useEffect(() => {
-    async function loadMicroActions() {
-      setLoading(true);
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+    error,
+  } = useMicroActions(params);
 
-      try {
-        const params = {
-          page,
-          limit: LIMIT,
-        };
+  const microActions = response?.data ?? [];
+  const pagination = {
+    total: response?.total ?? 0,
+    page: response?.page ?? page,
+    limit: response?.limit ?? LIMIT,
+  };
 
-        if (status) {
-          params.status = status;
-        }
-
-        const response = await microActionService.getAll(params);
-
-        setMicroActions(response.data ?? []);
-
-        setPagination({
-          total: response.total ?? 0,
-          page: response.page ?? page,
-          limit: response.limit ?? LIMIT,
-        });
-      } catch (error) {
-        console.error('Error cargando microacciones:', error);
-
-        setMicroActions([]);
-
-        setPagination({
-          total: 0,
-          page: 1,
-          limit: LIMIT,
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadMicroActions();
-  }, [page, status]);
-
+  const loading = isLoading || isFetching;
   const totalPages = Math.ceil(pagination.total / pagination.limit);
 
   function handleStatusChange(newStatus) {

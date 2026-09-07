@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useProject } from '@/lib/projectContext';
 import AllTranches from './components/AllTranches';
+import { useProjectTramoData } from '@/hooks/queries/useProjectTramoData';
 import { useTranslation } from '@/hooks/useTranslation';
 import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json';
 
@@ -14,6 +15,20 @@ const fadeUp = {
 
 export default function TramoDashboard() {
   const { t } = useTranslation('tramo');
+
+  // contexto
+  const { tramoData, dbProject, mockProject } = useProject();
+  const { project, currentState, pacProgress } = mockProject;
+
+  const { data: tramoInfo, error: projectTramoDataError } = useProjectTramoData(dbProject?.id);
+
+  // Campos localizados para tramos
+  const tramoName = useLocalizedField(tramoData, 'name');
+
+
+  /* =========================
+     🔗 DATA MAPPING REAL
+  ========================= */
 
   // contexto
   const { currentTramoData, projectTramoData } = useProject();
