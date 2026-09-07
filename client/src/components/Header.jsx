@@ -107,7 +107,7 @@ export default function Header({ isHome = false }) {
   // contexto // LOGIN, SEED, un proyecto completo para seed, las contraseñas de los usuarios.
 
   const {
-    tramoData,
+    currentTramoData,
     dbProject,
     projectNftData,
     projectTramoData,
@@ -177,7 +177,7 @@ export default function Header({ isHome = false }) {
                   ID {project.id}
                 </span> */}
               <span className="rounded-full border border-(--text-accent) text-(--text-accent) glass-effect-accent font-bold glass-effect-dark px-2 sm:px-3 py-0.5 sm:py-1">
-                {tramoData.code} - {tramoName}
+                {currentTramoData.code} - {tramoName}
               </span>
               <span className="rounded-full font-bold border border-(--text-accent) glass-effect-accent px-2 sm:px-3 py-0.5 sm:py-1 text-(--text-accent)">
                 {t('status' + dbProject.status.charAt(0).toUpperCase() + dbProject.status.slice(1))}

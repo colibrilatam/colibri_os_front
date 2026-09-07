@@ -44,8 +44,8 @@ return formatedDate;
   const { execute: getMicroActionInstances } = useRequest(projectsService.microActionInstance);
   const { execute: getEvidenceData } = useRequest(projectsService.evidences);
 
-  const { tramoData, dbProject, mockProject } = useProject();
-  //console.log(tramoData, dbProject);
+  const { currentTramoData, dbProject, mockProject } = useProject();
+  //console.log(currentTramoData, dbProject);
 
   const getData = async () => {
     const { data: microactionData } = await getMicroActionInstances(dbProject.id);
@@ -54,7 +54,7 @@ return formatedDate;
     //console.log(microactionData)
 
     //  Obtener las instancias de microacciones del tramo actual
-    const currentTramoMicroActions = microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`));
+    const currentTramoMicroActions = microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${currentTramoData.code[1]}`));
 
     //  Filtrar evidencias usando los IDs de las microacciones del tramo actual
     const filteredEvidences = evidenceData.filter(evidence =>
@@ -68,7 +68,7 @@ return formatedDate;
 
     setMetrics(prev => ({
       ...prev,
-      microactions: `${microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`) && m.status === 'completed').length} / 21`,
+      microactions: `${microactionData.filter(m => m.microActionDefinition.code.startsWith(`MAD_${currentTramoData.code[1]}`) && m.status === 'completed').length} / 21`,
       evidences: `${filteredEvidences.length} / 7`,
     }))
   }
@@ -255,9 +255,9 @@ return formatedDate;
       <div id="cabecera" className="glass-effect border-glass rounded-2xl p-6">
         <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('operationalPath')}</p>
 
-        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData.code} · {tramoData.name}</h2>
+        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{currentTramoData.code} · {currentTramoData.name}</h2>
 
-        <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{tramoData.description}</p>
+        <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{currentTramoData.description}</p>
 
         <div className="flex gap-3 mt-4 flex-wrap">
           <Metric label={t('metricCurrentPac')} value={metrics.currentPac} /> 

@@ -1,15 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json'
-
 import { useProject } from '@/lib/projectContext';
 import AllTranches from './components/AllTranches';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useLocalizedField } from '@/hooks/useLocalizedField';
+import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -18,44 +14,14 @@ const fadeUp = {
 
 export default function TramoDashboard() {
   const { t } = useTranslation('tramo');
-  
-  const [ tramoInfo, setTramoInfo ] = useState(null);
+
   // contexto
-  const { tramoData, dbProject, mockProject } = useProject();
-  const { project, currentState, pacProgress } = mockProject;
+  const { currentTramoData, projectTramoData } = useProject();
+  const [tramosData, setTramosData] = useState(projectTramoData);
 
-  const { execute: getProjectTramoData, error: projectTramoDataError } = useRequest(projectsService.projectTramoData);
-
-  // Campos localizados para tramos
-  const tramoName = useLocalizedField(tramoData, 'name');
-
-  useEffect(() => {
-
-    async function fetchTramoData() {
-      const { data: projectTramoData, error: projectTramoDataError } = await getProjectTramoData(dbProject.id);
-
-    if (projectTramoData) {
-      setTramoInfo(projectTramoData);
-    }
-    else console.log('Error fetching tramo data: ' + projectTramoDataError);
-    };
-    fetchTramoData();
-    
-  }, [])
-
-
-  /* =========================
-     🔗 DATA MAPPING REAL
-  ========================= */
-
-  const currentTramoMockData = tramosMockData.find(t => t.tranchCode === currentState.currentTramoCode);
-
-  const tramo = {
-    code: currentState.currentTramoCode,
-    name: tramoName,
-  };
-  /* ========================= */
-
+  const currentTramoMockData = tramosMockData.find(
+    (t) => t.tranchCode === currentTramoData.code,
+  );
 
   return (
     <div className="min-h-screen mx-auto overflow-x-hidden">
@@ -67,278 +33,104 @@ export default function TramoDashboard() {
         id="cabecera"
         className="glass-effect-dark border-glass rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6"
       >
-        <div  className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('analyticHeader')}</p>
+            <p
+              className="text-overline"
+              style={{ color: 'var(--text-tertiary)' }}
+            >
+              {t('analyticHeader')}
+            </p>
 
             <h1 className="text-h1" style={{ color: 'var(--text-primary)' }}>
-              {tramo.code} · {tramo.name}
+              {currentTramoData.code} · {currentTramoData.name_es}
             </h1>
 
-            <p className="text-body-lg text-(--text-secondary) mt-1">{currentTramoMockData.tranchShortDesc}</p>
+            <p className="text-body-lg text-(--text-secondary) mt-1">
+              {currentTramoMockData.tranchShortDesc}
+            </p>
           </div>
 
           <div className="flex gap-2 sm:gap-3 flex-wrap">
-            <InfoBox  label={t('dominantUncertainty')} value={currentTramoMockData.incertidumbre} />
-            {/* <InfoBox label="Ventana" value={ventana} /> */}
+            <InfoBox
+              label={t('dominantUncertainty')}
+              value={currentTramoData.uncertaintyType}
+            />
           </div>
         </div>
       </motion.div>
 
-      <div className='w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-[var(--text-primary)] gap-4 flex flex-col'>
+      <div className="w-full  glass-effect rounded-2xl border-glass p-2 lg:p-4 mb-1 lg:mb-6 text-[var(--text-primary)] gap-4 flex flex-col">
         <div id="incertidumbre" className=" rounded-2xl p-1 lg:p-4">
-          <h3 className='text-red-500/70 font-bold'>{currentTramoMockData.incertidumbre}</h3>
-          <div className='text-[var(--text-primary)] text-lg my-4' >{currentTramoMockData.incertidumbreDescCorta}</div>
-          <div className=' max-w-3xl text-[var(--text-secondary)] text-lg leading-relaxed'>{currentTramoMockData.incertidumbreDescLarga}</div>
+          <h3 className="text-red-500/70 font-bold">
+            {currentTramoData.uncertaintyType}
+          </h3>
+          <div className="text-[var(--text-primary)] text-lg my-4">
+            {currentTramoMockData.incertidumbreDescCorta}
+          </div>
+          <div className=" max-w-3xl text-[var(--text-secondary)] text-lg leading-relaxed">
+            {currentTramoMockData.incertidumbreDescLarga}
+          </div>
         </div>
-        <div id="riesgos" className="glass-effect rounded-2xl border-glass p-1 lg:p-4">
-          <h3 className="m-4" style={{ color: 'var(--text-primary)' }}>{t('risks')}</h3>
-          <div className='flex flex-col lg:flex-row gap-2 justify-between'>
-            
+        <div
+          id="riesgos"
+          className="glass-effect rounded-2xl border-glass p-1 lg:p-4"
+        >
+          <h3 className="m-4" style={{ color: 'var(--text-primary)' }}>
+            {t('risks')}
+          </h3>
+          <div className="flex flex-col lg:flex-row gap-2 justify-between">
             {currentTramoMockData.riesgosPrincipales.map((r, i) => (
-              <div className="flex flex-col items-center border-glass glass-effect rounded-2xl p-4" key={i}>
-
-                <div key={i} className='w-fit justify-center flex items-center gap-2 glass-effect-red border-glass px-3 py-2 rounded-xl'>
-                  <span className='text-center text-red-400 text-lg'>⚠</span>
-                  <p className="text-center  text-red-400/80 text-lg font-bold">{r.nombre}</p>
+              <div
+                className="flex flex-col items-center border-glass glass-effect rounded-2xl p-4"
+                key={i}
+              >
+                <div
+                  key={i}
+                  className="w-fit justify-center flex items-center gap-2 glass-effect-red border-glass px-3 py-2 rounded-xl"
+                >
+                  <span className="text-center text-red-400 text-lg">⚠</span>
+                  <p className="text-center  text-red-400/80 text-lg font-bold">
+                    {r.nombre}
+                  </p>
                 </div>
 
-                <div className='text-start w-full my-4 text-[var(--text-primary)] text-lg'>{r.descripcionCorta}</div>
-                <div className='text-start w-full text-[var(--text-secondary)] text-lg leading-relaxed'>{r.descripcionLarga}</div>
-
+                <div className="text-start w-full my-4 text-[var(--text-primary)] text-lg">
+                  {r.descripcionCorta}
+                </div>
+                <div className="text-start w-full text-[var(--text-secondary)] text-lg leading-relaxed">
+                  {r.descripcionLarga}
+                </div>
               </div>
             ))}
-
           </div>
         </div>
       </div>
 
-      { tramoInfo && <div id="tramos" className="glass-effect border-glass text-[var(--text-primary)] text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4">
-        <h3 className="my-4" style={{ color: 'var(--text-primary)' }}>{t('allTranchesTitle')}</h3>
-        <AllTranches elements={tramoInfo}  />
-      </div>}
-
-      {/*<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-       
-        <AnimatedCard title="Avance por PAC">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-3 gap-3">
-            <div>
-              <h2 className="text-h3">{currentPacCode}</h2>
-
-              <p className="text-body--muted">
-                PAC actual · {currentPac?.categoryName} · {currentPac?.title}
-              </p>
-            </div>
-
-            <Block>
-              <p className="text-micro-label">PACs cerrados</p>
-
-              <p className="text-value-lg">
-                {closedPacs} de {totalPacs}
-              </p>
-            </Block>
-          </div>
-
-          <ProgressBar
-            progreso={percentage}
-            color="multicolor"
-            tamaño="md"
-            label="Progreso estructural del tramo"
-            mostrarPorcentaje={true}
-            className="mb-4"
-          />
-
-          <div className="flex flex-wrap gap-2">
-            {pacs.map((p, i) => {
-              const statusStyles = {
-                closed:
-                  'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald',
-                current:
-                  'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan',
-                pending: 'bg-white/5 border-glass-dark text-body--muted',
-              };
-
-              const statusLabel = {
-                closed: 'cerrado',
-                current: 'actual',
-                pending: 'pendiente',
-              };
-
-              const statusIcon = {
-                closed: '✓',
-                current: '•',
-                pending: '○',
-              };
-
-              const uiStatus = mapStatus[p.status];
-
-              return (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className={`px-3 py-2 rounded-xl border flex flex-col items-center ${statusStyles[uiStatus]}`}
-                >
-                  <div className="flex items-center gap-1 text-sm font-medium">
-                    {p.pacCode}
-                    <span>{statusIcon[uiStatus]}</span>
-                  </div>
-
-                  <span className="text-xs opacity-80">
-                    {statusLabel[uiStatus]}
-                  </span>
-                </motion.div>
-              );
-            })}
-          </div>
-        </AnimatedCard>
-
-       
-        <AnimatedCard title="Densidad de avance">
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
-            <MetricBox
-              label="Microacciones"
-              value={`${completedMicro} / ${totalMicro}`}
-              sub="Actividad visible"
-            />
-            <MetricBox
-              label="Evidencias"
-              value={`${validatedEvidence} / ${totalEvidence}`}
-              sub="Soporte probatorio"
-            />
-          </div>
-
-          <Block>
-            <p className="text-body">{currentState.nextMilestone}</p>
-          </Block>
-        </AnimatedCard>
-
-       
-        <AnimatedCard title="Categorías activadas">
-          <div className="flex flex-wrap gap-2 sm:gap-3">
-            {categories.map((c) => {
-              const isDone = c.status === 'done';
-              const isCurrent = c.status === 'current';
-              const isNext = c.status === 'next';
-
-              return (
-                <div
-                  key={c.code}
-                  className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full flex items-center gap-2 border text-sm sm:text-base
-                    ${
-                      isDone
-                        ? 'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald'
-                        : isCurrent
-                          ? 'bg-[rgba(0,207,207,0.15)] border-glass text-accent-cyan'
-                          : 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber'
-                    }
-                  `}
-                >
-                  <span>{c.code}</span>
-                  <span className="text-helper">·</span>
-                  <span>{c.label}</span>
-
-                  {isDone && <span>✔</span>}
-                  {isCurrent && <span className="text-legend">actual</span>}
-                  {isNext && <span className="text-legend">próxima</span>}
-                </div>
-              );
-            })}
-          </div>
-        </AnimatedCard>
-
-       
-        <AnimatedCard title="Señales de avance">
-          <div className="space-y-3">
-            {signals.map((s, i) => (
-              <Signal key={i} ok={s.type === 'success'}>
-                {s.text}
-              </Signal>
-            ))}
-          </div>
-        </AnimatedCard>
-
-      
-        <AnimatedCard title="Bloqueos">
-          {blockers.length === 0 ? (
-            <Block>
-              <p className="text-body">Sin bloqueos activos</p>
-            </Block>
-          ) : (
-            blockers.map((b, i) => (
-              <Block key={i}>
-                <p className="text-body">{b}</p>
-              </Block>
-            ))
-          )}
-        </AnimatedCard>
-      </div>*/}
+      {tramosData && (
+        <div
+          id="tramos"
+          className="glass-effect border-glass text-[var(--text-primary)] text-center rounded-2xl p-2 lg:px-6 lg:p-4 my-4"
+        >
+          <h3 className="my-4" style={{ color: 'var(--text-primary)' }}>
+            {t('allTranchesTitle')}
+          </h3>
+          <AllTranches elements={tramosData} />
+        </div>
+      )}
     </div>
   );
 }
 
 /* COMPONENTES */
 
-/*const AnimatedCard = ({ title, children }) => (
-  <motion.div
-    variants={fadeUp}
-    initial="hidden"
-    animate="show"
-    className="glass-effect border-glass rounded-2xl p-4 sm:p-6"
-  >
-    <p className="text-overline mb-4">{title}</p>
-    {children}
-  </motion.div>
-);*/
-
 const InfoBox = ({ label, value }) => (
   <div className="glass-effect border-glass px-3 py-2 sm:px-4 sm:py-2 rounded-xl">
-    <p className="text-micro-label" style={{ color: 'var(--text-tertiary)' }}>{label}</p>
-    <p className="text-body-lg" style={{ color: 'var(--text-primary)' }}>{value}</p>
+    <p className="text-micro-label" style={{ color: 'var(--text-tertiary)' }}>
+      {label}
+    </p>
+    <p className="text-body-lg" style={{ color: 'var(--text-primary)' }}>
+      {value}
+    </p>
   </div>
 );
-
-/*const MetricBox = ({ label, value, sub }) => (
-  <div className="glass-effect border-glass p-3 sm:p-4 rounded-xl text-center">
-    <p className="text-micro-label">{label}</p>
-    <p className="text-value-lg">{value}</p>
-    <p className="text-legend">{sub}</p>
-  </div>
-);*/
-
-/*const Signal = ({ children, ok }) => {
-  const styles = ok
-    ? {
-        container:
-          'bg-[rgba(0,153,117,0.15)] border-glass-green text-accent-emerald',
-        icon: 'bg-[rgba(0,153,117,0.2)] text-accent-emerald',
-        symbol: '✓',
-      }
-    : {
-        container: 'bg-[rgba(255,209,102,0.15)] border-glass text-accent-amber',
-        icon: 'bg-[rgba(255,209,102,0.2)] text-accent-amber',
-        symbol: '⚠',
-      };
-
-  return (
-    <div
-      className={`flex items-start gap-3 rounded-2xl border px-3 py-2 sm:px-4 sm:py-3 ${styles.container}`}
-    >
-      <div
-        className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${styles.icon}`}
-      >
-        {styles.symbol}
-      </div>
-
-      <p className="text-body">{children}</p>
-    </div>
-  );
-};*/
-
-/*const Block = ({ children }) => (
-  <div className="glass-effect border-glass p-3 sm:p-4 rounded-xl mb-2">
-    {children}
-  </div>
-);
-*/
