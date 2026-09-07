@@ -21,7 +21,7 @@ export default function IdentidadPage() {
   // contexto
   const {
     microActionInstanceData,
-    tramoData,
+    currentTramoData,
     dbProject,
     mockProject,
     projectNftData,
@@ -30,13 +30,13 @@ export default function IdentidadPage() {
   } = useProject();
 
   // Campos localizados para tramos
-  const tramoName = useLocalizedField(tramoData, 'name');
+  const tramoName = useLocalizedField(currentTramoData, 'name');
 
   //console.log("IdentidadPage - dbProject:", dbProject);
 // Métricas - Hay que crear un hook para calcular estas métricas para no repetir este código siempre
   const currentPac = dbProject.projectPacs.find((pac) => pac.status === 'in_progress')?.pac.code[6] || null;
   const aprovedPacs = dbProject.projectPacs.filter((pac) => pac.status === 'completed' && pac.pac.code.startsWith(`PAC_${tramoData.code[1]}`)).length;
-  const currentTramoMicroActions = microActionInstanceData.filter((instance) => instance.microActionDefinition.code.startsWith(`MAD_${tramoData.code[1]}`));
+  const currentTramoMicroActions = microActionInstanceData.filter((instance) => instance.microActionDefinition.code.startsWith(`MAD_${currentTramoData.code[1]}`));
   const completedMicroActions = currentTramoMicroActions.filter((instance) => (instance.status === 'completed' || instance.status === 'validated')).length;
   const currentMicroActionsId = new Set(currentTramoMicroActions.map((instance) => instance.id));
   const completedEvidences = evidenceData.filter((evidence) => evidence.status === 'approved' && currentMicroActionsId.has(evidence.microActionInstanceId)).length;
@@ -66,16 +66,16 @@ export default function IdentidadPage() {
               {dbProject.projectName}
             </span>{' '}
             {t('transitsCurrently')}{' '}
-            {tramoData.code === 'T4' ? (
+            {currentTramoData.code === 'T4' ? (
               <span className="text-(--text-accent) font-medium">T4</span>
             ) : (
               <>
                 <span className="text-(--text-accent) font-medium">
-                  {tramoData.code}
+                  {currentTramoData.code}
                 </span>{' '}
                 {t('towards')}{' '}
                 <span className="text-(--text-accent) font-medium">
-                  {`T${parseInt(tramoData.code?.replace('T', ''), 10) + 1}` ||
+                  {`T${parseInt(currentTramoData.code?.replace('T', ''), 10) + 1}` ||
                     'Tn+1'}
                 </span>
               </>
@@ -86,11 +86,11 @@ export default function IdentidadPage() {
             </span>
             {t('whileReducingUncertainty')}{' '}
             <span className="text-accent-amber font-medium">
-              {getUncertaintyLabel(tramoData.uncertaintyType) ||
+              {getUncertaintyLabel(currentTramoData.uncertaintyType) ||
                 '[INCERTIDUMBRE DEL TRAMO]'}
             </span>{' '}
             {t('andFollowingRisks')}{' '}
-            {tramoData.associatedRisks.map((risk) => {
+            {currentTramoData.associatedRisks.map((risk) => {
               return (
                 <span key={risk} className="text-accent-amber font-medium">
                   {risk}
@@ -134,7 +134,7 @@ export default function IdentidadPage() {
                     color: 'var(--text-accent)',
                   }}
                 >
-                  {t('visualStatus')} {tramoData.code}
+                  {t('visualStatus')} {currentTramoData.code}
                 </span>
               </div>
 
@@ -153,7 +153,7 @@ export default function IdentidadPage() {
                   <div className="flex flex-col items-center gap-2 text-center">
                     <div className="text-sm text-[var(--text-secondary)]">
                       <span className="text-[var(--text-primary)] font-medium">
-                        {tramoData.code} ·{' '}
+                        {currentTramoData.code} ·{' '}
                         {tramoName || t('tramoNameFallback')}
                       </span>
                     </div>
@@ -208,19 +208,19 @@ export default function IdentidadPage() {
                         color: 'var(--text-primary)',
                       }}
                     >
-                      {tramoData.code === 'Tramo actual: T6' ? (
+                      {currentTramoData.code === 'Tramo actual: T6' ? (
                         <span className="text-accent-emerald font-medium">
                           T4
                         </span>
                       ) : (
                         <>
                           <span className="text-accent-emerald font-medium">
-                            {tramoData.code}
+                            {currentTramoData.code}
                           </span>{' '}
                           {t('inTransitTowards')}{' '}
                           <span className="text-accent-emerald font-medium">
                             {`T${
-                              parseInt(tramoData.code?.replace('T', ''), 10) + 1
+                              parseInt(currentTramoData.code?.replace('T', ''), 10) + 1
                             }` || 'Tn+1'}
                           </span>
                         </>
@@ -340,7 +340,7 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="mb-4 rounded-xl bg-red-600/30 border border-red-600 px-4 py-2 text-center text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-                      {getUncertaintyLabel(tramoData.uncertaintyType) ||
+                      {getUncertaintyLabel(currentTramoData.uncertaintyType) ||
                         t('notDefined')}
                     </div>
 
@@ -352,7 +352,7 @@ export default function IdentidadPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      {tramoData.associatedRisks.map((risk, index) => {
+                      {currentTramoData.associatedRisks.map((risk, index) => {
                         return (
                           <div
                             key={risk}

@@ -65,7 +65,7 @@ const convertDate = (date) => {
 export default function NewTrayectoria() {
   const { t } = useTranslation('trayectoria');
   // contexto para obtener el id del proyecto
-  const { tramoData, dbProject } = useProject();
+  const { currentTramoData, dbProject } = useProject();
 
   const { execute: getMicroActions } = useRequest(projectsService.microActionInstance);
   const { execute: getEvidences } = useRequest(projectsService.evidences);
@@ -115,7 +115,7 @@ export default function NewTrayectoria() {
   const [ versionDetailVersions, setVersionDetailVersions ] = useState(null);
 
   // Obtener el tramo actual
-  const currentTramo = useMemo(() => tramoData.code, [tramoData]);
+  const currentTramo = useMemo(() => currentTramoData.code, [currentTramoData]);
 
   // Obtener información de PACs
   const getPacsInfo = async () => {
@@ -343,7 +343,7 @@ export default function NewTrayectoria() {
   // Campos localizados para PACs y tramos
   const selectedPacTitle = useLocalizedField(selectedPac?.pac, 'title');
   const selectedPacObjective = useLocalizedField(selectedPac?.pac, 'objectiveLine');
-  const tramoNameLocalized = useLocalizedField(tramoData, 'name');
+  const tramoNameLocalized = useLocalizedField(currentTramoData, 'name');
 
   return (
     <div className="relative space-y-6">
@@ -397,7 +397,7 @@ export default function NewTrayectoria() {
       {/* HEADER */}
       <div id="cabecera" className="glass-effect border-glass rounded-2xl p-6">
         <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('operationalPath')}</p>
-        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData?.code} · {tramoNameLocalized}</h2>
+        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{currentTramoData?.code} · {tramoNameLocalized}</h2>
         <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{currentTramo?.description}</p>
         <div className="flex gap-3 mt-4 flex-wrap">
           <Metric label={t('metricCurrentPac')} value={metrics.currentPac} />
