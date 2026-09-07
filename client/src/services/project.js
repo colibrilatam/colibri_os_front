@@ -58,12 +58,16 @@ export const projectsService = {
   },
 
   microActionInstance: async (id) => {
-    const response = await apiClient.get(`/micro-action-instances/project/${id}`);
+    const response = await apiClient.get(
+      `/micro-action-instances/project/${id}`,
+    );
     return response.data;
   },
 
   getMicroActionDefinition: async (pacId) => {
-    const response = await apiClient.get(`/micro-action-definitions?pacId=${pacId}`);
+    const response = await apiClient.get(
+      `/micro-action-definitions?pacId=${pacId}`,
+    );
     return response.data;
   },
 
@@ -78,12 +82,18 @@ export const projectsService = {
   },
 
   updateMicroAction: async (id, data) => {
-    const response = await apiClient.patch(`/micro-action-instances/${id}`, data);
+    const response = await apiClient.patch(
+      `/micro-action-instances/${id}`,
+      data,
+    );
     return response.data;
   },
 
   requestUploadSignature: async (data) => {
-    const response = await apiClient.post(`/evidence/request-upload-signature`, data);
+    const response = await apiClient.post(
+      `/evidence/request-upload-signature`,
+      data,
+    );
     return response.data;
   },
 
@@ -108,7 +118,9 @@ export const projectsService = {
   },
 
   createProjectPac: async (projectId, pacId) => {
-    const response = await apiClient.post(`/projects/${projectId}/pac/${pacId}`);
+    const response = await apiClient.post(
+      `/projects/${projectId}/pac/${pacId}`,
+    );
     return response.data;
   },
 
@@ -118,15 +130,20 @@ export const projectsService = {
   },
 
   submitMicroAction: async (id) => {
-    const response = await apiClient.post(`/micro-action-instances/${id}/submit`);
+    const response = await apiClient.post(
+      `/micro-action-instances/${id}/submit`,
+    );
     return response.data;
   },
 
   changeActiveTranche: async (projectId, tramoId, changeReason) => {
-    const response = await apiClient.post(`/tramos/project/${projectId}/change`, {
-      newTramoId: tramoId,
-      changeReason,
-    });
+    const response = await apiClient.post(
+      `/tramos/project/${projectId}/change`,
+      {
+        newTramoId: tramoId,
+        changeReason,
+      },
+    );
     return response.data;
   },
 

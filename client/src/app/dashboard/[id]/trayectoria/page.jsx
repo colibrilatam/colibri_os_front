@@ -1,20 +1,19 @@
-"use client";
-import NewTrayectoria from "./NewPage";
-import OldTrayectoria from "./OldPage";
+'use client';
+import NewTrayectoria from './NewPage';
+import OldTrayectoria from './OldPage';
 import { useProject } from '@/lib/projectContext';
 import mockProjectsData from '@/lib/mock/projectsData.json';
 
 export default function TrayectoriaSection() {
-
-  const { tramoData, dbProject, mockProject } = useProject();
+  const { dbProject } = useProject();
 
   const mockProjectMatch = mockProjectsData.find(
-      (p) =>
-        p.project.name?.toLowerCase().trim() ===
-        dbProject.projectName?.toLowerCase().trim() && p.project.name !== "FlujoClave",
-    );
+    (p) =>
+      p.project.name?.toLowerCase().trim() ===
+        dbProject.projectName?.toLowerCase().trim() &&
+      p.project.name !== 'FlujoClave',
+  );
 
-
-  if(mockProjectMatch) return <OldTrayectoria />
-  else return <NewTrayectoria />
-};
+  if (mockProjectMatch) return <OldTrayectoria />;
+  else return <NewTrayectoria />;
+}

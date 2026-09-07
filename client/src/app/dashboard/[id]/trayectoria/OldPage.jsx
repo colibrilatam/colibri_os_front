@@ -252,9 +252,9 @@ return formatedDate;
       <div id="cabecera" className="glass-effect border-glass rounded-2xl p-6">
         <p className="text-overline" style={{ color: 'var(--text-tertiary)' }}>{t('operationalPath')}</p>
 
-        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{tramoData.code} · {tramoData.name}</h2>
+        <h2 className="text-h2" style={{ color: 'var(--text-primary)' }}>{currentTramoData.code} · {currentTramoData.name}</h2>
 
-        <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{tramoData.description}</p>
+        <p className="text-body mt-2 max-w-2xl" style={{ color: 'var(--text-secondary)' }}>{currentTramoData.description}</p>
 
         <div className="flex gap-3 mt-4 flex-wrap">
           <Metric label={t('metricCurrentPac')} value={metrics.currentPac} /> 
