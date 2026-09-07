@@ -72,8 +72,6 @@ useEffect(() => {
     image: ''
   });
 
-  console.log(errors)
-
 
   const [loading, setLoading] = useState(false);
 
@@ -167,9 +165,7 @@ useEffect(() => {
 
     setLoading(true);
     try {
-      console.log(payload)
       const createdProject = await create(payload);
-      console.log(createdProject)
       if(createdProject.error){
         const errorMessage = createdProject.error || t('errorUnknown');
 

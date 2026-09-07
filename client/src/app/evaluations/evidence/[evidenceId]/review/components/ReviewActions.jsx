@@ -15,13 +15,6 @@ export default function ReviewActions({
   const router = useRouter();
 
   async function handleSubmit() {
-    console.log({
-      evidence,
-      evaluation,
-      score,
-      decision,
-      comment,
-    });
 
     try {
       // 1. Registrar revisión humana

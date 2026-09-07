@@ -13,9 +13,7 @@ export default function ResolutionModal({
   const [summary, setSummary] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  console.log(action);
-  console.log(summary);
-
+  
   const isApproval = action === 'completed';
 
   const title = isApproval ? 'Aprobar versión' : 'Rechazar versión';
