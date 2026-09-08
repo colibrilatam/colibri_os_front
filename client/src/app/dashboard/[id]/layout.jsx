@@ -126,7 +126,7 @@ export default function DataLayout({ children }) {
       projectInfo={{
         dbProject: enrichedProjectData,
         mockProject: mockProjectMatch,
-        tramoData: tramoData,
+        currentTramoData: tramoData,
         projectTramoData: ProjectTramoData,
         projectNftData: projectNftData,
         evidenceData: evidenceData || null,

@@ -1,12 +1,13 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useProject } from '@/lib/projectContext';
 import AllTranches from './components/AllTranches';
 import { useProjectTramoData } from '@/hooks/queries/useProjectTramoData';
 import { useTranslation } from '@/hooks/useTranslation';
 import tramosMockData from '@/lib/mock/tramos-incertidumbre-riesgos.json';
+import { useLocalizedField } from '@/hooks/useLocalizedField';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },

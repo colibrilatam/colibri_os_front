@@ -179,7 +179,7 @@ export default function NewTrayectoria() {
   }, [evidencesResponse, microActionData]);
 
   // Obtener el tramo actual
-  const currentTramo = useMemo(() => tramoData?.code, [tramoData]);
+  const currentTramo = useMemo(() => currentTramoData?.code, [currentTramoData]);
 
   // Inicializar métricas y estado del PAC cuando los datos estén listos
   useEffect(() => {
