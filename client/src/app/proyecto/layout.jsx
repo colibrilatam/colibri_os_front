@@ -47,7 +47,7 @@ export default function ProjectLayout({ children }) {
 
   // 🔄 Redirección cuando los datos estén listos
   useEffect(() => {
-    if (userLoading || projectsLoading) return;
+    if (projectsLoading) return;
 
     // DEMO
     const isDemo = true;
@@ -62,13 +62,13 @@ export default function ProjectLayout({ children }) {
         router.replace(`/dashboard/${userProject.id}/about`);
       }
     }
-  }, [user, userLoading, projectData, projectsLoading, router]);
+  }, [user, projectData, projectsLoading, router]);
 
   // ⚠️ Manejo de error al cargar el perfil
   if (!user || !projectData || projectsLoading) {
     return (
       <ErrorScreen
-        error={userError}
+        error="Error al cargar el perfil o los proyectos. Por favor, inténtalo de nuevo más tarde."
         redirect="/login"
         next="Iniciar sesión"
       />
