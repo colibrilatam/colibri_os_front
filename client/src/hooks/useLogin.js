@@ -22,7 +22,7 @@ export const useLogin = () => {
       });
       setToken(data.token);
 
-      const userData = await userService.profile();
+      const userData = data.user;
 
       if (userData) {
         if (formData.email === 'mecenas@colibri.com') userData.theme = unimetTheme;
