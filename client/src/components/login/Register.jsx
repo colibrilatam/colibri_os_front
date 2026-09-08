@@ -39,6 +39,7 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
   const setIsDemo = useUserStore((state) => state.setIsDemo);
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
+  const setUser = useUserStore((state) => state.setUser);
   const { handleDemoLogin } = useLogin();
 
   const [ generalError, setGeneralError ] = useState('');
@@ -127,6 +128,7 @@ useEffect(() => {
       setRol(selectedRole);
       sessionStorage.removeItem(STORAGE_KEY);
       setToken(result.data.token);
+      setUser(result.data.user);
       onSuccess();
     } else {
       const errorMessage = result.error?.message || result.error || t('errorUnknown');

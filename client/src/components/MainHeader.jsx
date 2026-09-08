@@ -21,9 +21,9 @@ export default function MainHeader() {
     // También puedes pasar onSuccess para acciones extra
     // (se ejecutará después del reset, limpieza y redirección)
   });
-  const authUser = useUserStore((state) => state.user);
+  const profile = useUserStore((state) => state.user);
 
-  const { data: profile, isLoading: profileLoading } = useUser(authUser?.sub);
+ // const { data: profile, isLoading: profileLoading } = useUser(authUser?.sub); para que llamar a la api si ya tenemos la info del usuario en el store
 
   const handleLogout = () => {
     logout();
