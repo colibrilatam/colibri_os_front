@@ -7,7 +7,7 @@ export default function ReputacionPage() {
   const { t } = useTranslation('reputacion');
 
   // contexto
-    const { tramoData, dbProject, mockProject, reputationData } = useProject();
+    const { mockProject, reputationData } = useProject();
   const { project, reputationSnapshot, pacProgress } = mockProject;
  
 

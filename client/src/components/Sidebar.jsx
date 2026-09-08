@@ -23,9 +23,10 @@ import TourButton from './tutoriales/TourButton';
 import { useProject } from '@/lib/projectContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
+import { useLogout } from '@/hooks/mutations/useLogout';
 
 export default function Sidebar({ isOpen = false, onClose = () => {} }) {
-  const { logout } = useUserStore();
+  const { mutate: logout } = useLogout();
   const { t } = useTranslation('sidebar');
   const rol = useUserStore((state) => state.rol);
   const { dbProject } = useProject();
@@ -111,10 +112,13 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
     return true; // visible para todos
   });
 
-  const handleNavClick = () => {
+  /* const handleNavClick = () => {
     if (!sidebarDesktopExpanded) {
       onClose();
     }
+  }; */
+  const handleMobileNavClick = () => {
+    onClose();
   };
 
   function handleLogout() {
@@ -147,6 +151,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
       )}
       {/* Mobile */}
       <aside
+        id="mobile-sidebar"
         className={`flex flex-col justify-between surface-dark border-theme-right fixed lg:hidden w-64 p-4 h-full overflow-y-auto z-50 top-0 left-0 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
@@ -155,8 +160,9 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
           <button
             onClick={onClose}
             className="z-50 p-2 glass-effect-dark rounded-lg transition-colors flex items-center justify-center"
+            aria-label="Cerrar menú de navegación"
           >
-            <Menu size={24} />
+            <Menu size={24} aria-hidden="true" />
           </button>
 
           <div className="mt-6">
@@ -171,7 +177,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
                   <Link
                     key={link.href}
                     href={link.href}
-                    onClick={handleNavClick}
+                    onClick={handleMobileNavClick}
                     className={`px-4 py-2 rounded transition-colors flex items-center gap-3 ${
                       isActive(link.href)
                         ? 'sidebar-item-active'
@@ -208,9 +214,7 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
         <button
           onClick={() => setSidebarDesktopExpanded(!sidebarDesktopExpanded)}
           className="p-3 mb-2 rounded-lg glass-effect-dark hover:surface-secondary text-(--text-primary) transition-colors flex justify-center "
-          title={
-            sidebarDesktopExpanded ? t('collapse') : t('expand')
-          }
+          title={sidebarDesktopExpanded ? t('collapse') : t('expand')}
         >
           <Menu size={24} />
         </button>
@@ -255,13 +259,12 @@ export default function Sidebar({ isOpen = false, onClose = () => {} }) {
               color="blue"
               /* content="Contactar al emprendedor" */
               content={t('contactEntrepreneur')}
-
               onClick={handleContact}
             ></Button>
             <Button
               color="red"
               /* content="Cerrar sesión" */
-             content={t('logout')}
+              content={t('logout')}
               onClick={handleLogout}
             />
           </div>

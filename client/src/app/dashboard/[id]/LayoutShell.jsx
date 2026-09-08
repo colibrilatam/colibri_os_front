@@ -11,7 +11,6 @@ import { useEffect } from 'react';
 import ThemeLoader from '@/components/ThemeLoader';
 import { useOnborda } from 'onborda';
 import Footer from '@/components/Footer';
-import { useTranslatedObject } from '@/hooks/useTranslatedObject';
 import { useTranslatedContent } from '@/hooks/useTranslatedContent';
 import { useUserStore } from '@/lib/store';
 
@@ -50,18 +49,37 @@ export default function LayoutShell({ children, projectInfo }) {
     };
   }
 
-  // estado del sidebar
-  const sidebarDesktopExpanded = useUserStore(
-    (state) => state.sidebarMobileOpen,
-  );
+  // Estado independiente del sidebar móvil
+  const sidebarMobileOpen = useUserStore((state) => state.sidebarMobileOpen);
+
   const setSidebarMobileOpen = useUserStore(
     (state) => state.setSidebarMobileOpen,
   );
 
-  const language = useUserStore((state) => state.language);
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)');
 
-  const translatedContent =
-  useTranslatedContent(
+    const handleBreakpointChange = (event) => {
+      if (event.matches) {
+        // Al entrar en desktop, el estado móvil debe quedar cerrado.
+        setSidebarMobileOpen(false);
+      }
+    };
+
+    // Si ya estamos en desktop durante el montaje,
+    // garantizamos que el estado móvil esté cerrado.
+    if (mediaQuery.matches) {
+      setSidebarMobileOpen(false);
+    }
+
+    mediaQuery.addEventListener('change', handleBreakpointChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleBreakpointChange);
+    };
+  }, [setSidebarMobileOpen]);
+
+  const translatedContent = useTranslatedContent(
     projectInfo.translatableContent,
   );
   return (
@@ -75,7 +93,7 @@ export default function LayoutShell({ children, projectInfo }) {
       <div className=" lg:pt-0 min-h-screen flex flex-col w-full">
         {/* Sidebar */}
         <Sidebar
-          isOpen={sidebarDesktopExpanded}
+          isOpen={sidebarMobileOpen}
           onClose={() => setSidebarMobileOpen(false)}
         />
 
@@ -85,17 +103,21 @@ export default function LayoutShell({ children, projectInfo }) {
             <Header />
           </div>
         )}
-        {!sidebarDesktopExpanded && (
+        {!sidebarMobileOpen && (
           <button
-            onClick={() => setSidebarMobileOpen(!sidebarDesktopExpanded)}
+            onClick={() => setSidebarMobileOpen(true)}
             className="fixed z-50 md:top-34 top-42 left-2 cursor-pointer rounded-2xl px-2 bg-gray-900 hover:bg-gray-800 flex items-center h-fit justify-center transition-colors lg:hidden"
-            title={sidebarDesktopExpanded ? 'Cerrar sidebar' : 'Abrir sidebar'}
+            title="Abrir sidebar"
+            aria-label="Abrir menú de navegación"
+            aria-expanded={false}
+            aria-controls="mobile-sidebar"
           >
             <svg
               className="w-12 h-12 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

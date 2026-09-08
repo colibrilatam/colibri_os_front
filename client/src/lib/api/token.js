@@ -1,7 +1,7 @@
 import { getCookie, deleteCookie } from '../cookies.js';
 import { isTokenExpired } from '../auth.js';
 
-const TOKEN_COOKIE_NAME = 'token';
+const TOKEN_COOKIE_NAME = 'colibri_access_token';
 
 /**
  * Obtiene el token JWT.
@@ -13,15 +13,10 @@ export async function getToken() {
   if (typeof window === 'undefined') {
     const { cookies } = await import('next/headers');
     const cookieStore = await cookies();
-    return cookieStore.get(TOKEN_COOKIE_NAME)?.value ?? null;
+    return cookieStore.get('colibri_access_token')?.value ?? null;
   }
-
-  const token = getCookie(TOKEN_COOKIE_NAME);
-  if (token && isTokenExpired(token)) {
-    clearToken();
-    return null;
-  }
-  return token;
+  // En cliente no hay nada que leer: la cookie es httpOnly.
+  return null;
 }
 
 /**

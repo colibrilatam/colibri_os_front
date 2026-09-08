@@ -2,15 +2,16 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NotificationPopup from "@/components/NotificationPopup";
-import { useRequest } from "@/hooks/useRequest";
-import { projectsService } from "@/services/project";
-import { evidencesService } from "@/services/evidences";
-import { microActionService } from "@/services/micro-action";
+import { useCreateMicroActionVersion } from "@/hooks/mutations/useCreateMicroActionVersion";
+import { useRequestUploadSignature } from "@/hooks/mutations/useRequestUploadSignature";
+import { useConfirmUpload } from "@/hooks/mutations/useConfirmUpload";
+import { useSubmitEvidence } from "@/hooks/mutations/useSubmitEvidence";
+import { useCreateEvaluation } from "@/hooks/mutations/useCreateEvaluation";
+import { useActiveRubrics } from "@/hooks/queries/useActiveRubrics";
 import { useTranslation } from '@/hooks/useTranslation';
 import { getLocalizedValue } from '@/hooks/useLocalizedField';
 import { useUserStore } from '@/lib/store';
 import { uploadToCloudinary } from "@/lib/api/cloudinary";
-import { evaluationsService } from "@/services/evaluations";
 
 const ALLOWED_MIME_TYPES = [
   "application/pdf",
@@ -36,15 +37,12 @@ export default function UploadModal({
   }
 }) {
 
-    const { execute: updateMicroAction } = useRequest(projectsService.updateMicroAction);
-    const { execute: submitMicroAction } = useRequest(projectsService.submitMicroAction);
-    const { execute: requestUpload } = useRequest(projectsService.requestUploadSignature);
-    const { execute: confirmUpload } = useRequest(projectsService.confirmUpload);
-    const { execute: createEvidence } = useRequest(evidencesService.createEvidence);
-    const { execute: submitEvidence } = useRequest(evidencesService.submit);
-    const { execute: createEvaluation } = useRequest(evaluationsService.create);
-    const { execute: createMicroActionVersion } = useRequest(microActionService.createVersion);
-    const { execute: getActiveRubrics } = useRequest(evaluationsService.getActiveRubrics);
+    const createMicroActionVersion = useCreateMicroActionVersion();
+    const requestUpload = useRequestUploadSignature();
+    const confirmUpload = useConfirmUpload();
+    const submitEvidence = useSubmitEvidence();
+    const createEvaluation = useCreateEvaluation();
+    const { data: activeRubricsResponse } = useActiveRubrics();
 
   const [formData, setFormData] = useState({
     file: null,
@@ -106,66 +104,50 @@ export default function UploadModal({
 
     try {
         if(type === 'microaction') {
-          const { error: createVersionError } = await createMicroActionVersion(data.id, {
+          await createMicroActionVersion.mutateAsync({
+            instanceId: data.id,
             file: formData.file,
             executionNotes: formData.executionNotes,
           });
-          if (createVersionError) {
-            setError(createVersionError.message || createVersionError || 'Error al enviar. Intenta nuevamente.');
-            return;
-          }
 
           microactionRefresh();
         }
 
         if(type === 'evidence'){
           // PASO 1 - Solicitar firma al backend
-            const requestUploadBody = {
-  evidenceId: data.id,
-  mimeType: formData.file.type,
-  evidenceType: "file"
-}
-        const { data: requestSignatureResponse, error: requestUploadError } = await requestUpload(requestUploadBody);
-        if(requestUploadError){
-          setError(requestUploadError.message || requestUploadError || 'Error al enviar. Intenta nuevamente.');
-          return;
-        }
-
-        // PASO 2 - Subir archivo a Cloudinary con firma
-        const cloudinaryData = await uploadToCloudinary(formData.file, requestSignatureResponse);
-
-        // PASO 3 - Confirmar subida al backend
-        const { data: confirmUploadResponse, error: confirmUploadError } = await confirmUpload({
-          evidenceId: data.id,
-          cloudinaryPublicId: cloudinaryData.public_id,
-          changeSummary: "Corrección de formato solicitada por el evaluador.",
-          isMaterialChange: false
-        })
-        if(confirmUploadError){
-          setError(confirmUploadError.message || confirmUploadError || 'Error al enviar. Intenta nuevamente.');
-          return;
-        }
-
-        // PASO 4 - Enviar evidencia a revisión
-        const { data: submitEvidenceResponse, error: submitEvidenceError } = await submitEvidence(data.id);
-        if(submitEvidenceError){
-          setError(submitEvidenceError.message || submitEvidenceError || 'Error al enviar. Intenta nuevamente.');
-          return;
-        };
-
-        // PASO 5 - Crear evaluación de evidencia
-        const { data: activeRubricsResponse, error: activeRubricsError } = await getActiveRubrics();
-        if(!activeRubricsError && activeRubricsResponse?.length > 0){
-          await createEvaluation({
+          const requestUploadBody = {
             evidenceId: data.id,
-            rubricId: activeRubricsResponse[0].id,
-            evaluationType: "hybrid",
-            evaluationSourceWeight: 0.5
-          });
-        }
+            mimeType: formData.file.type,
+            evidenceType: "file"
+          };
+          const requestSignatureResponse = await requestUpload.mutateAsync(requestUploadBody);
 
-        checkPacStatus();
-}
+          // PASO 2 - Subir archivo a Cloudinary con firma
+          const cloudinaryData = await uploadToCloudinary(formData.file, requestSignatureResponse);
+
+          // PASO 3 - Confirmar subida al backend
+          await confirmUpload.mutateAsync({
+            evidenceId: data.id,
+            cloudinaryPublicId: cloudinaryData.public_id,
+            changeSummary: "Corrección de formato solicitada por el evaluador.",
+            isMaterialChange: false
+          });
+
+          // PASO 4 - Enviar evidencia a revisión
+          await submitEvidence.mutateAsync(data.id);
+
+          // PASO 5 - Crear evaluación de evidencia
+          if (activeRubricsResponse?.length > 0) {
+            await createEvaluation.mutateAsync({
+              evidenceId: data.id,
+              rubricId: activeRubricsResponse[0].id,
+              evaluationType: "hybrid",
+              evaluationSourceWeight: 0.5
+            });
+          }
+
+          checkPacStatus();
+        }
 
       setFormData({
         file: null,

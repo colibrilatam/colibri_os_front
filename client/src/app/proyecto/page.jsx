@@ -1,9 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
-import { userService } from '@/services/user';
+import { useProjects } from '@/hooks/queries/useProjects';
+import { useUserProfile } from '@/hooks/queries/useUserProfile';
 import { useNewProject } from '@/hooks/useNewProject';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
@@ -15,19 +14,24 @@ export default function CreateProject() {
   const { create } = useNewProject();
   const [ formError, setFormError ] = useState(null);
 
-  const { execute: createProject } = useRequest(projectsService.create);
-  const { execute, error } = useRequest(projectsService.getAll);
-  const { execute: getUser } = useRequest(() => userService.profile());
+  const { data: projects = [], error: projectsError } = useProjects();
+  const { data: userData } = useUserProfile();
 
   const demoHandleSubmit = async (e) => {
     e.preventDefault();
-    
-    const { data } = await execute();
-    if(error){
-        setFormError(t('errorFetchProjects'));
+
+    if (projectsError) {
+      setFormError(t('errorFetchProjects'));
+      return;
     }
-    const { data: userData } = await getUser();
-    const projectId = data?.find((p) => p.projectName === "FlujoClave").id || [];
+
+    const project = projects.find((p) => p.projectName === 'FlujoClave');
+    const projectId = project?.id;
+
+    if (!projectId) {
+      setFormError(t('errorProjectNotFound'));
+      return;
+    }
 
     router.push(`/dashboard/${projectId}/identidad`);
   };
@@ -71,8 +75,6 @@ useEffect(() => {
     websiteUrl: '',
     image: ''
   });
-
-  console.log(errors)
 
 
   const [loading, setLoading] = useState(false);
@@ -167,9 +169,7 @@ useEffect(() => {
 
     setLoading(true);
     try {
-      console.log(payload)
       const createdProject = await create(payload);
-      console.log(createdProject)
       if(createdProject.error){
         const errorMessage = createdProject.error || t('errorUnknown');
 

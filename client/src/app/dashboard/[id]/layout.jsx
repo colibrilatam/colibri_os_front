@@ -1,112 +1,138 @@
-import mockDataProject from '@/lib/mock/proyectos ficticios/dataProjects.json';
+'use client';
+
+import { useParams } from 'next/navigation';
 import mockProjectsData from '@/lib/mock/projectsData.json';
-import { notFound } from 'next/navigation';
 import LayoutShell from './LayoutShell';
-import { projectsService } from '@/services/project';
-import { handleRequest } from '@/lib/handleRequest';
+import { useProject } from '@/hooks/queries/useProject';
+import { useProjectTramo } from '@/hooks/queries/useProjectTramo';
+import { useProjectTramoData } from '@/hooks/queries/useProjectTramoData';
+import { useProjectNft } from '@/hooks/queries/useProjectNft';
+import { useProjectEvidences } from '@/hooks/queries/useProjectEvidences';
+import { useProjectMicroActions } from '@/hooks/queries/useProjectMicroActions';
 import ErrorScreen from '@/components/ErrorScreen';
 import RetryButton from '@/components/RetryButton';
-import repData from './IC-hardcodeado.json'
+import LoadingScreen from '@/components/LoadingScreen';
+import repData from './IC-hardcodeado.json';
 
-export default async function DataLayout({ children, params }) {
-  // Obtener el ID de la URL
-  const { id } = await params;
+export default function DataLayout({ children }) {
+  const params = useParams();
+  const id = params?.id;
 
-  // Obtener información del proyecto desde el backend
-  const { data: projectData, error } = await handleRequest(() =>
-    projectsService.getById(id),
-  );
+  const {
+    data: projectData,
+    isLoading: projectLoading,
+    error,
+  } = useProject(id);
 
-  // NOTA: La tabla projects AÚN no tiene columnas _es/_en
-  // Cuando se agreguen, reemplazar estos hardcodeos con:
-  // projectData.name_en, projectData.tagline_en, projectData.shortDescription_en
-  projectData.shortDescription_en =
-    'Fintech project in the live prototype stage that helps Colombian merchants consolidate collections, reconciliations, and cash flow alerts when operating with multiple payment methods.';
+  const tramoId = projectData?.currentTramoId;
 
-  projectData.tagline_en =
-    'Streamlines reconciliations, collections, and cash flow visibility in real-world operations.';
+  const {
+    data: tramoData,
+    isLoading: tramoLoading,
+    error: tramoError,
+  } = useProjectTramo(projectData ? tramoId : null);
 
-  //console.log(projectData);
+  const {
+    data: ProjectTramoData,
+    isLoading: tramoDataLoading,
+    error: ProjectTramoError,
+  } = useProjectTramoData(id);
 
-  // tramo.json
-  const { data: tramoData, error: tramoError } = await handleRequest(() =>
-    projectsService.currentTramo(projectData.currentTramoId),
-  );
-   //const { data: reputationData, error: reputationDataError } = await handleRequest(() =>
-    //projectsService.projectReputation({projectId: projectData.id, userId: projectData.ownerUserId}),
-  //);
+  const {
+    data: projectNftData,
+    isLoading: nftLoading,
+    error: projectNftError,
+  } = useProjectNft(id);
 
-  // allTramosProject.json
-  const { data: ProjectTramoData, error: ProjectTramoError } =
-    await handleRequest(() => projectsService.projectTramoData(id));
+  const {
+    data: evidenceData,
+    isLoading: evidenceLoading,
+    error: evidenceError,
+  } = useProjectEvidences(id);
 
-  const { data: projectNftData, error: projectNftError } = await handleRequest(
-    () => projectsService.nft(id),
-  );
+  const {
+    data: microActionInstanceData,
+    isLoading: microActionsLoading,
+    error: microActionInstanceError,
+  } = useProjectMicroActions(id);
 
-  const { data: evidenceData, error: evidenceError } = await handleRequest(() =>
-    projectsService.evidences(id),
-  );
+  const loading =
+    projectLoading ||
+    tramoLoading ||
+    tramoDataLoading ||
+    nftLoading ||
+    evidenceLoading ||
+    microActionsLoading;
 
-  const { data: microActionInstanceData, error: microActionInstanceError } =
-    await handleRequest(() => projectsService.microActionInstance(id));
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
-  // Manejo de errores
   if (error || tramoError || ProjectTramoError || projectNftError) {
     return (
       <ErrorScreen
-        error={error || tramoError || ProjectTramoError || projectNftError }
+        error={error || tramoError || ProjectTramoError || projectNftError}
         back="/home"
         reset={<RetryButton />}
       />
     );
   }
 
-  // Si no se encuentra el proyecto, mostrar página de error
-  let mockProjectMatch = null;
   if (!projectData) {
-    notFound();
-  }
-
-  if (projectData) {
-    mockProjectMatch = mockProjectsData.find(
-      (p) =>
-        p.project.name?.toLowerCase().trim() ===
-        projectData.projectName?.toLowerCase().trim(),
+    return (
+      <ErrorScreen
+        error={{ message: 'Proyecto no encontrado' }}
+        back="/home"
+      />
     );
-
-    if (!mockProjectMatch) {
-      console.warn(
-        'No se encontró mock para el proyecto:',
-        projectData.projectName,
-      );
-      mockProjectMatch = mockProjectsData[0];
-    }
-    projectData.mock = mockProjectMatch || mockProjectsData[0];
   }
+
+  // NOTA: La tabla projects AÚN no tiene columnas _es/_en
+  const enrichedProjectData = {
+    ...projectData,
+    shortDescription_en:
+      'Fintech project in the live prototype stage that helps Colombian merchants consolidate collections, reconciliations, and cash flow alerts when operating with multiple payment methods.',
+    tagline_en:
+      'Streamlines reconciliations, collections, and cash flow visibility in real-world operations.',
+  };
+
+  let mockProjectMatch = mockProjectsData.find(
+    (p) =>
+      p.project.name?.toLowerCase().trim() ===
+      enrichedProjectData.projectName?.toLowerCase().trim(),
+  );
+
+  if (!mockProjectMatch) {
+    console.warn(
+      'No se encontró mock para el proyecto:',
+      enrichedProjectData.projectName,
+    );
+    mockProjectMatch = mockProjectsData[0];
+  }
+
+  enrichedProjectData.mock = mockProjectMatch || mockProjectsData[0];
+
   const translatableContent = {
     project: {
-      tagline: projectData.tagline_en,
-      shortDescription: projectData.shortDescription_en,
+      tagline: enrichedProjectData.tagline_en,
+      shortDescription: enrichedProjectData.shortDescription_en,
     },
-
     evidences: {},
     microActions: {},
   };
-  
-  
+
   return (
     <LayoutShell
       projectInfo={{
-        dbProject: projectData,
+        dbProject: enrichedProjectData,
         mockProject: mockProjectMatch,
-        tramoData: tramoData,
+        currentTramoData: tramoData,
         projectTramoData: ProjectTramoData,
         projectNftData: projectNftData,
         evidenceData: evidenceData || null,
         microActionInstanceData: microActionInstanceData || null,
         translatableContent,
-        reputationData: repData
+        reputationData: repData,
       }}
     >
       {children}
