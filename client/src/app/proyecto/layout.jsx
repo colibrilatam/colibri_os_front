@@ -41,7 +41,8 @@ export default function ProjectLayout({ children }) {
   }
 
   // 🔐 Ahora sí, el usuario está autenticado, cargamos datos
-  const { data: user, isLoading: userLoading, error: userError } = useUserProfile();
+  const user = useUserStore((state) => state.user);
+  
   const { data: projectData, isLoading: projectsLoading } = useProjects();
 
   // 🔄 Redirección cuando los datos estén listos
