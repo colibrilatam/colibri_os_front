@@ -72,7 +72,6 @@ export default function Login({ onLoadingChange }) {
     }
 
     const userResult = result.data.user
-    console.log(userResult)
     if (userResult.error) {
       setServerError(t('errorUserInfo'));
       setLoading(false);
