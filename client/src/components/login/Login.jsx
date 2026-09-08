@@ -71,8 +71,8 @@ export default function Login({ onLoadingChange }) {
       return;
     }
 
-    const userResult = await userData();
-
+    const userResult = result.data.user
+    console.log(userResult)
     if (userResult.error) {
       setServerError(t('errorUserInfo'));
       setLoading(false);
@@ -80,18 +80,18 @@ export default function Login({ onLoadingChange }) {
       return;
     }
 
-    setRol(userResult.data.role);
-    if (userResult.data.role === 'mecenas_semilla') {
+    setRol(userResult.role);
+    if (userResult.role === 'mecenas_semilla') {
       router.push('/user/nft');
       return;
     }
-    if (userResult.data.role === 'mentor' || userResult.data.role === 'evaluator') {
+    if (userResult.role === 'mentor' || userResult.role === 'evaluator') {
       router.push('/evaluations');
       return;
     }
     
     // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
-    if (userResult.data.role === 'entrepreneur') {
+    if (userResult.role === 'entrepreneur') {
       if (allProjectsError) {
         setServerError(t('errorFetchProjects'));
         setLoading(false);
@@ -99,7 +99,7 @@ export default function Login({ onLoadingChange }) {
         return;
       }
       const project = allProjectsResponse?.find(
-        (project) => project.owner?.id === userResult.data.sub,
+        (project) => project.owner?.id === userResult.sub || project.owner?.id === userResult.id,
       );
 
       if (project) {
