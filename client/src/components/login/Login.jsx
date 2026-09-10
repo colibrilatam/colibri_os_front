@@ -4,8 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useLogin } from '@/hooks/useLogin';
 import { validateEmail } from '@/lib/validations';
 import { useTranslation } from '@/hooks/useTranslation';
-import { projectsService } from '@/services/project';
-import { useRequest } from '@/hooks/useRequest';
+import { useProjects } from '@/hooks/queries/useProjects';
 import { useUserStore } from '@/lib/store';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -24,7 +23,7 @@ export default function Login({ onLoadingChange }) {
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { execute: getAllProjects } = useRequest(projectsService.getAll);
+  const { data: allProjectsResponse, error: allProjectsError } = useProjects();
 
   // handlers
   const handleInputChange = (e) => {
@@ -72,8 +71,8 @@ export default function Login({ onLoadingChange }) {
       return;
     }
 
-    const userResult = await userData();
-
+    const userResult = result.data.user
+    console.log(userResult)
     if (userResult.error) {
       setServerError(t('errorUserInfo'));
       setLoading(false);
@@ -81,28 +80,26 @@ export default function Login({ onLoadingChange }) {
       return;
     }
 
-    setRol(userResult.data.role);
-    if (userResult.data.role === 'mecenas_semilla') {
+    setRol(userResult.role);
+    if (userResult.role === 'mecenas_semilla') {
       router.push('/user/nft');
       return;
     }
-    if (userResult.data.role === 'mentor' || userResult.data.role === 'evaluator') {
+    if (userResult.role === 'mentor' || userResult.role === 'evaluator') {
       router.push('/evaluations');
       return;
     }
     
     // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
-    if (userResult.data.role === 'entrepreneur') {
-      const { data: allProjectsResponse, error: allProjectsError } =
-        await getAllProjects();
+    if (userResult.role === 'entrepreneur') {
       if (allProjectsError) {
         setServerError(t('errorFetchProjects'));
         setLoading(false);
         onLoadingChange?.(false);
         return;
       }
-      const project = allProjectsResponse.find(
-        (project) => project.owner.id === userResult.data.sub,
+      const project = allProjectsResponse?.find(
+        (project) => project.owner?.id === userResult.sub || project.owner?.id === userResult.id,
       );
 
       if (project) {

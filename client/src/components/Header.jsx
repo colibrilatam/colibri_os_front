@@ -17,12 +17,23 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 import { useLocalizedField } from '@/hooks/useLocalizedField';
 
+import { useLogout, normalizeLogoutError } from '@/hooks/mutations/useLogout';
+
+
 export default function Header({ isHome = false }) {
   const [auth, setAuth] = useState(false);
   const { t } = useTranslation('header');
   const contextData = useProject();
 
-  const { isAuthenticated, logout, rol, subioTramo, user } = useUserStore();
+  const { isAuthenticated, rol, subioTramo, user } = useUserStore();
+
+  const { mutate: logout, isPending } = useLogout({
+    onError: (error) => {
+      alert.error(normalizeLogoutError(error));
+    },
+    // También puedes pasar onSuccess para acciones extra
+    // (se ejecutará después del reset, limpieza y redirección)
+  });
   
   // Campos localizados para tramos
   const tramoName = useLocalizedField(contextData?.tramoData, 'name');

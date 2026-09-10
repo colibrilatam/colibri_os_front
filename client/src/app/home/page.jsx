@@ -1,55 +1,37 @@
 'use client';
 
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { HeroSection } from '@/components/home/HeroSection';
 import { FiltersBar } from '@/components/home/FiltersBar';
 import { ProjectGrid } from '@/components/home/ProjectGrid';
-import { useRequest } from '@/hooks/useRequest';
-import { projectsService } from '@/services/project';
+import { useProjects } from '@/hooks/queries/useProjects';
+import { useTramos } from '@/hooks/queries/useTramos';
 import Header from '@/components/Header';
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function HomePage() {
-  const [projects, setProjects] = useState([]);
-  const [tramos, setTramos] = useState([]);
-
   const [search, setSearch] = useState('');
   const [selectedTranche, setSelectedTranche] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState(null);
-  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
 
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
-  const [projectsError, setProjectsError] = useState('');
 
   const { t: tHome } = useTranslation('homePage');
   const { t: tFilters } = useTranslation('filtersBar');
 
-  // Hook personalizado para manejar la solicitud de proyectos
-  const { execute, loading, error } = useRequest(projectsService.getAll);
-  const { execute: getAllTramosData } = useRequest(
-    projectsService.getAllTramos,
-  );
+  const {
+    data: projects = [],
+    isLoading: projectsLoading,
+    error: projectsError,
+  } = useProjects();
 
-  //console.log('TRAMO-----', tramos);
-  // Cargar proyectos desde el backend al montar el componente
-  useEffect(() => {
-    async function loadProjects() {
-      setIsLoadingProjects(false);
-      const { data, error } = await execute();
-      const { data: allTramos } = await getAllTramosData();
-      if (error) {
-        setProjectsError(error);
-      } else {
-        setProjects(data);
-        setTramos(allTramos);
-      }
-      setIsLoadingProjects(true);
-    }
+  const {
+    data: tramos = [],
+    isLoading: tramosLoading,
+  } = useTramos();
 
-    loadProjects();
-  }, []);
+  const loading = projectsLoading || tramosLoading;
   //console.log(projects);
 
   // Calcular estadísticas para la sección Hero
@@ -232,7 +214,7 @@ export default function HomePage() {
             {tHome('loading')}
           </div>
         ) : projectsError ? (
-          <div className="px-6 py-10 text-sm text-red-400">{projectsError}</div>
+          <div className="px-6 py-10 text-sm text-red-400">{projectsError.message}</div>
         ) : (
           <>
             <FiltersBar

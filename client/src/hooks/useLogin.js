@@ -1,39 +1,51 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
 import { userService } from '@/services/user';
 import { ApiError } from '@/lib/api/errors';
-import { setRetryListener } from '@/lib/api';
 import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
 import { useUserStore } from '@/lib/store';
+import { queryKeys } from '@/lib/query-keys';
 
 export const useLogin = () => {
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
   const [retrying, setRetrying] = useState(false);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    setRetryListener(setRetrying);
-    return () => setRetryListener(null);
-  }, []);
-
-  const handleLogin = async (formData) => {
-    try {
+  const loginMutation = useMutation({
+    mutationFn: async (formData) => {
       const data = await authService.login({
         email: formData.email,
         password: formData.password,
       });
       setToken(data.token);
 
-      const userData = await userService.profile();
+      const userData = data.user;
+
+      if (userData) {
+        if (formData.email === 'mecenas@colibri.com') userData.theme = unimetTheme;
+        if (formData.email === 'BancoDV@colibri.com') userData.theme = bancoVenezuelaTheme;
+      }
 
       setRol(userData.role);
-      if (userData) {
-        if(formData.email === 'mecenas@colibri.com') userData.theme = unimetTheme;
-        if(formData.email === 'BancoDV@colibri.com') userData.theme = bancoVenezuelaTheme;
-      }
       setUser(userData);
-      return { success: true, data };
+      queryClient.invalidateQueries({ queryKey: queryKeys.users.profile });
+
+      return { ...data, user: userData };
+    },
+  });
+
+  // Mantener compatibilidad con UI que mostraba estado de retry del cliente HTTP
+  useEffect(() => {
+    setRetrying(loginMutation.isPending);
+  }, [loginMutation.isPending]);
+
+  const handleLogin = async (formData) => {
+    try {
+      const result = await loginMutation.mutateAsync(formData);
+      return { success: true, data: result };
     } catch (err) {
       const message = err instanceof ApiError ? err.message : 'Error al iniciar sesión';
       return { success: false, error: message };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -8,7 +8,7 @@ import VersionEvaluationHeader from '../components/VersionEvaluationHeader';
 import VersionEvaluationSummary from '../components/VersionEvaluationSummary';
 import VersionEvaluationContent from '../components/VersionEvaluationContent';
 import ResolutionActions from '../components/ResolutionActions';
-import { microActionService } from '@/services/micro-action';
+import { useMicroAction } from '@/hooks/queries/useMicroAction';
 
 export default function MicroActionEvaluationPage() {
   const mockVersion = [
@@ -60,62 +60,36 @@ export default function MicroActionEvaluationPage() {
   const instanceId = params?.microactionId;
   const versionId = params?.versionId;
 
-  const [microAction, setMicroAction] = useState(null);
-  const [version, setVersion] = useState(null);
-  //console.log('microAction----', microAction);
-  //console.log('version-----', version);
+  const {
+    data: microAction,
+    isLoading,
+    error: queryError,
+  } = useMicroAction(instanceId);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const version = useMemo(() => {
+    if (!microAction || !versionId) return null;
 
-  useEffect(() => {
-    if (!instanceId || !versionId) return;
+    const versions =
+      microAction.versions?.length > 0 ? microAction.versions : mockVersion;
 
-    async function load() {
-      try {
-        setLoading(true);
-        setError(null);
+    return versions.find((item) => item.id === versionId) || null;
+  }, [microAction, versionId]);
 
-        const data = await microActionService.getById(instanceId);
+  const [localVersion, setLocalVersion] = useState(null);
 
-        const versions =
-          data?.versions.length > 0 ? data.versions : mockVersion;
+  const effectiveVersion = localVersion || version;
 
-        const selectedVersion = versions.find((item) => item.id === versionId);
-
-        if (!selectedVersion) {
-          throw new Error(
-            'No se encontró la versión solicitada dentro de la microacción.',
-          );
-        }
-
-        setMicroAction(data);
-        setVersion(selectedVersion);
-      } catch (err) {
-        console.error(err);
-
-        setError(
-          err?.response?.data?.message ||
-            err?.message ||
-            'No fue posible cargar la información.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-  }, [instanceId, versionId]);
+  const error = queryError?.message || (!version ? 'No se encontró la versión solicitada dentro de la microacción.' : null);
 
   const isResolved = useMemo(() => {
-    if (!version) return false;
+    if (!effectiveVersion) return false;
 
     return ['completed', 'rejected'].includes(
-      version.changeType || version.status,
+      effectiveVersion.changeType || effectiveVersion.status,
     );
-  }, [version]);
+  }, [effectiveVersion]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex h-[calc(100vh-6rem)] items-center justify-center p-6">
         <div className="glass-effect rounded-2xl px-8 py-6 flex items-center gap-4">
@@ -127,7 +101,7 @@ export default function MicroActionEvaluationPage() {
     );
   }
 
-  if (error || !microAction || !version) {
+  if (error || !microAction || !effectiveVersion) {
     return (
       <div className="flex h-[calc(100vh-6rem)] items-center justify-center p-6">
         <div className="glass-effect rounded-2xl max-w-xl w-full p-8 text-center">
@@ -182,28 +156,28 @@ export default function MicroActionEvaluationPage() {
         <div className="max-w-7xl mx-auto pb-8">
           <VersionEvaluationHeader
             microAction={microAction}
-            version={version}
+            version={effectiveVersion}
           />
 
           <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_360px] gap-6 mt-6">
             <main className="flex flex-col gap-6">
               <VersionEvaluationSummary
                 microAction={microAction}
-                version={version}
+                version={effectiveVersion}
               />
 
               <VersionEvaluationContent
                 microAction={microAction}
-                version={version}
+                version={effectiveVersion}
               />
             </main>
 
             <aside>
               <ResolutionActions
-                version={version}
+                version={effectiveVersion}
                 disabled={isResolved}
                 onResolved={(updatedVersion) => {
-                  setVersion((current) => ({
+                  setLocalVersion((current) => ({
                     ...current,
                     ...updatedVersion,
                   }));
