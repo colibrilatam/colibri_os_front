@@ -120,16 +120,9 @@ export default function Header({ isHome = false }) {
   const {
     currentTramoData,
     dbProject,
-    projectNftData,
-    projectTramoData,
-    mockProject,
     reputationData
   } = contextData;
-
-  if (mockProject !== null) {
-    const { project, currentState, reputationSnapshot } = mockProject;
-  }
-
+  
   const effectiveName = subioTramo && dbProject.projectName === "FlujoClave" ? "FlujoClaveT4" : dbProject.projectName;
   const icFromProject = getProjectIC(effectiveName);
   const ic = icFromProject !== null ? Number(icFromProject) : reputationData.icPublic;
