@@ -14,6 +14,8 @@ export default async function DataLayout({ children, params }) {
     projectsService.getById(id),
   );
 
+  const hola = {}
+
   // Proyecto no encontrado / error al obtenerlo
   if (error) {
     return (
