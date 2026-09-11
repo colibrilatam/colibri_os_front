@@ -127,7 +127,7 @@ export default function LoginRegisterPage() {
         {isLogin && (
           <>
             <Login onLoadingChange={setLoading} />
-            <GoogleButton />
+            {/*<GoogleButton />*/}
             <button
               onClick={handleGuestLoginClick}
               className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
