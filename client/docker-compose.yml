@@ -5,13 +5,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3000/api/v1}
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-https://api.colibrilatam.io/api/v1}
     environment:
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: "1"
-      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://localhost:3000/api/v1}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-https://api.colibrilatam.io/api/v1}
     ports:
-      - "${COLIBRI_CLIENT_PORT:-3001}:3001"
+      - "${COLIBRI_CLIENT_PORT:-3031}:3031"
     restart: unless-stopped
     init: true
     healthcheck:
@@ -20,7 +20,7 @@ services:
           "CMD",
           "node",
           "-e",
-          "fetch('http://127.0.0.1:3001').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+          "fetch('http://127.0.0.1:3031').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
         ]
       interval: 30s
       timeout: 5s
