@@ -39,6 +39,6 @@ COPY --from=builder /app/next.config.mjs ./next.config.mjs
 
 USER nextjs
 
-EXPOSE 3001
+EXPOSE 3031
 
 CMD ["npm", "run", "start"]
