@@ -86,7 +86,7 @@ export default function LoginRegisterPage() {
         color="green"
         content={t('back')}
         //redirect="https://colibrilatam.com/index.html"
-        redirect="https://app.colibrilatam.io/index.html"
+        redirect="https://colibrilatam.com/"
       ></Button>
       <div className="absolute top-4 right-4">
       <LanguageSwitcher />
