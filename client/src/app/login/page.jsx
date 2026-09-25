@@ -86,7 +86,7 @@ export default function LoginRegisterPage() {
         color="green"
         content={t('back')}
         //redirect="https://colibrilatam.com/index.html"
-        redirect="https://app.colibrilatam.io/index.html"
+        redirect="https://colibrilatam.com/"
       ></Button>
       <div className="absolute top-4 right-4">
       <LanguageSwitcher />
@@ -128,7 +128,7 @@ export default function LoginRegisterPage() {
         {isLogin && (
           <>
             <Login onLoadingChange={setLoading} />
-            {/*<GoogleButton />*/}
+            <GoogleButton />
             <button
               onClick={handleGuestLoginClick}
               className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
