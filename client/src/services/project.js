@@ -1,20 +1,16 @@
 import { apiClient } from '@/lib/api';
 import { validateResponse } from '@/lib/contracts/validate';
-import { ProjectSchema, PaginatedProjectsSchema } from '@/lib/contracts/generated';
+import { ProjectSchema } from '@/lib/contracts/generated';
 
 export const projectsService = {
   getAll: async () => {
-    const response = await apiClient.get('/projects');
-    const data = response.data;
-    if (Array.isArray(data)) {
-      return data.map(p => validateResponse(ProjectSchema, p));
-    }
-    if (data?.data && Array.isArray(data.data)) {
-      const validated = validateResponse(PaginatedProjectsSchema, data);
-      return validated.data;
-    }
-    return data;
-  },
+  const response = await apiClient.get('/projects');
+  const data = response.data;
+  if (Array.isArray(data)) {
+    return data.map(p => validateResponse(ProjectSchema, p));
+  }
+  return data;
+},
 
   getById: async (id) => {
     const response = await apiClient.get(`/projects/${id}`);
