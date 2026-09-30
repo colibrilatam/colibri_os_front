@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api';
 import { validateResponse } from '@/lib/contracts/validate';
-import { AuthResponseSchema, RegisterResponseSchema } from '@/lib/contracts/generated';
+import { AuthResponseSchema, RegisterResponseSchema, CompleteProfileResponseSchema, MessageResponseSchema } from '@/lib/contracts/generated';
 
 export const authService = {
     register: async (data) => {
@@ -14,10 +14,10 @@ export const authService = {
     },
     completeProfile: async (data) => {
         const response = await apiClient.post('/auth/complete-profile', data);
-        return response.data;
+        return validateResponse(CompleteProfileResponseSchema, response.data);
     },
     logout: async() => {
         const response = await apiClient.post('/auth/logout'); 
-        return response.data;
+        return validateResponse(MessageResponseSchema, response.data);
     }
 };

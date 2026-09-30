@@ -1,15 +1,18 @@
 import { apiClient } from '@/lib/api';
 import { validateResponse } from '@/lib/contracts/validate';
 import { ProjectSchema } from '@/lib/contracts/generated';
+import { z } from 'zod';
+
+const ProjectArraySchema = z.array(ProjectSchema);
 
 export const projectsService = {
   getAll: async () => {
   const response = await apiClient.get('/projects');
   const data = response.data;
   if (Array.isArray(data)) {
-    return data.map(p => validateResponse(ProjectSchema, p));
+    return validateResponse(ProjectArraySchema, data);
   }
-  return data;
+  return validateResponse(ProjectSchema, data);
 },
 
   getById: async (id) => {
@@ -34,12 +37,13 @@ export const projectsService = {
   },
 
   update: async (id, data) => {
-    const response = await apiClient.put(`/projects/${id}`, data);
+    const response = await apiClient.patch(`/projects/${id}`, data);
     return validateResponse(ProjectSchema, response.data);
   },
 
   delete: async (id) => {
     const response = await apiClient.delete(`/projects/${id}`);
+    // 204 No Content - no body to validate
     return response.data;
   },
 

@@ -75,7 +75,7 @@ export const useLogin = () => {
       });
 
       setToken(demoLoginData.token);
-      const userData = await userService.profile();
+      const userData = demoLoginData.user;
 
       if (userData) {
         // userData.theme = theme;

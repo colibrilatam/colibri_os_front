@@ -1,6 +1,5 @@
 import { z, ZodSchema } from 'zod';
-
-const isDev = process.env.NODE_ENV === 'development';
+import { ContractValidationError } from '@/lib/api/errors';
 
 export function validateResponse<T>(schema: ZodSchema<T>, data: unknown): T {
   const result = schema.safeParse(data);
@@ -9,12 +8,11 @@ export function validateResponse<T>(schema: ZodSchema<T>, data: unknown): T {
       .map(i => `  ${i.path.join('.')}: ${i.message}`)
       .join('\n');
     const msg = `[Contract] Response invalido:\n${issues}`;
-    if (isDev) {
+    if (process.env.NEXT_PUBLIC_STRICT_CONTRACTS === 'false') {
       console.warn(msg);
+      return data as T;
     }
-    if (isDev && process.env.NEXT_PUBLIC_STRICT_CONTRACTS === 'true') {
-      throw new Error(msg);
-    }
+    throw new ContractValidationError(msg, result.error);
   }
   return result.data;
 }
