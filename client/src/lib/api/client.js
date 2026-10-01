@@ -5,6 +5,7 @@ import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
 import { mergeHeaders } from './headers.js';
+import { checkContractVersion } from '../contracts/version-check.js';
 
 const DEFAULT_TIMEOUT = 60000;
 
@@ -61,6 +62,7 @@ apiClient.interceptors.response.use(
     const method = response.config?.method || 'GET';
     const url = response.config?.baseURL + response.config?.url || '';
     logResponse(requestId, response.status, method, url, duration);
+    checkContractVersion(response);
     return response;
   },
   async (error) => {
