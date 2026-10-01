@@ -17,6 +17,36 @@ function createWrapper() {
   return ({ children }) => createElement(QueryClientProvider, { client: queryClient }, children);
 }
 
+function mockUser(overrides = {}) {
+  return {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    email: 'test@example.com',
+    fullName: 'Test User',
+    role: 'entrepreneur',
+    status: 'active',
+    provider: 'local',
+    linkedinId: null,
+    googleId: null,
+    cryptoWallet: null,
+    credentialsWallet: null,
+    adnHash: null,
+    bio: null,
+    avatar: null,
+    gender: null,
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    ...overrides,
+  };
+}
+
+function mockAuthResponse(overrides = {}) {
+  return {
+    message: 'Usuario logueado con éxito',
+    user: mockUser(),
+    ...overrides,
+  };
+}
+
 vi.mock('@/services/authService', () => ({
   authService: {
     login: vi.fn(),
@@ -60,11 +90,11 @@ describe('useLogin', () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
 
-      const mockToken = 'mock-jwt-token';
-      const mockUser = { id: 1, email: 'test@example.com', role: 'CEO' };
+      const mockAuthResponseData = mockAuthResponse();
+      const mockUserData = mockUser();
 
-      authService.login.mockResolvedValueOnce({ token: mockToken });
-      userService.profile.mockResolvedValueOnce(mockUser);
+      authService.login.mockResolvedValueOnce(mockAuthResponseData);
+      userService.profile.mockResolvedValueOnce(mockUserData);
 
       const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
@@ -74,7 +104,8 @@ describe('useLogin', () => {
       });
 
       expect(loginResult.success).toBe(true);
-      expect(loginResult.data.token).toBe(mockToken);
+      expect(loginResult.data.user).toEqual(mockUserData);
+      expect(loginResult.data.message).toBe('Usuario logueado con éxito');
     });
 
     it('should return error on login failure', async () => {
@@ -119,9 +150,9 @@ describe('useLogin', () => {
   describe('userData', () => {
     it('should return user profile data', async () => {
       const { userService } = await import('@/services/user');
-      const mockUser = { id: 1, email: 'test@example.com' };
+      const mockUserData = mockUser();
 
-      userService.profile.mockResolvedValueOnce(mockUser);
+      userService.profile.mockResolvedValueOnce(mockUserData);
 
       const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
@@ -130,7 +161,7 @@ describe('useLogin', () => {
         dataResult = await result.current.userData();
       });
 
-      expect(dataResult.data).toEqual(mockUser);
+      expect(dataResult.data).toEqual(mockUserData);
       expect(dataResult.error).toBeNull();
     });
   });
@@ -140,8 +171,11 @@ describe('useLogin', () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
 
-      authService.login.mockResolvedValueOnce({ token: 'demo-token' });
-      userService.profile.mockResolvedValueOnce({ id: 1, email: 'ana@colibri.com', role: 'CEO' });
+      const mockAuthResponseData = mockAuthResponse({ user: mockUser({ email: 'ana@colibri.com' }) });
+      const mockUserData = mockUser({ email: 'ana@colibri.com' });
+
+      authService.login.mockResolvedValueOnce(mockAuthResponseData);
+      userService.profile.mockResolvedValueOnce(mockUserData);
 
       const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
@@ -150,7 +184,7 @@ describe('useLogin', () => {
         loginResult = await result.current.handleDemoLogin('emprendedor');
       });
 
-      expect(loginResult.data.token).toBe('demo-token');
+      expect(loginResult.data.user).toEqual(mockUserData);
       expect(authService.login).toHaveBeenCalledWith({
         email: 'ana@colibri.com',
         password: 'Test@1234',
@@ -161,8 +195,11 @@ describe('useLogin', () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
 
-      authService.login.mockResolvedValueOnce({ token: 'demo-token' });
-      userService.profile.mockResolvedValueOnce({ id: 2, email: 'mecenas@colibri.com', role: 'MENTOR' });
+      const mockAuthResponseData = mockAuthResponse({ user: mockUser({ email: 'mecenas@colibri.com', role: 'mentor' }) });
+      const mockUserData = mockUser({ email: 'mecenas@colibri.com', role: 'mentor' });
+
+      authService.login.mockResolvedValueOnce(mockAuthResponseData);
+      userService.profile.mockResolvedValueOnce(mockUserData);
 
       const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 
@@ -180,8 +217,11 @@ describe('useLogin', () => {
       const { authService } = await import('@/services/authService');
       const { userService } = await import('@/services/user');
 
-      authService.login.mockResolvedValueOnce({ token: 'demo-token' });
-      userService.profile.mockResolvedValueOnce({ id: 3, email: 'mentor@colibri.com', role: 'MENTOR' });
+      const mockAuthResponseData = mockAuthResponse({ user: mockUser({ email: 'mentor@colibri.com', role: 'mentor' }) });
+      const mockUserData = mockUser({ email: 'mentor@colibri.com', role: 'mentor' });
+
+      authService.login.mockResolvedValueOnce(mockAuthResponseData);
+      userService.profile.mockResolvedValueOnce(mockUserData);
 
       const { result } = renderHook(() => useLogin(), { wrapper: createWrapper() });
 

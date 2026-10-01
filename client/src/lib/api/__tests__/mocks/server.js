@@ -9,6 +9,28 @@ export function resetRetryCounter() {
   retryCounter = 0;
 }
 
+function mockUser(overrides = {}) {
+  return {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    email: 'test@example.com',
+    fullName: 'Test User',
+    role: 'entrepreneur',
+    status: 'active',
+    provider: 'local',
+    linkedinId: null,
+    googleId: null,
+    cryptoWallet: null,
+    credentialsWallet: null,
+    adnHash: null,
+    bio: null,
+    avatar: null,
+    gender: null,
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    ...overrides,
+  };
+}
+
 export const handlers = [
   http.get(`${API_BASE}/test/success`, () => {
     return HttpResponse.json({ data: 'ok' });
@@ -73,20 +95,11 @@ export const handlers = [
   }),
 
   http.get(`${API_BASE}/users/profile`, () => {
-    return HttpResponse.json({
-      id: 1,
-      email: 'test@example.com',
-      fullName: 'Test User',
-      role: 'CEO',
-    });
+    return HttpResponse.json(mockUser());
   }),
 
   http.get(`${API_BASE}/users/:id`, ({ params }) => {
-    return HttpResponse.json({
-      id: parseInt(params.id),
-      email: 'user@example.com',
-      fullName: 'User Test',
-    });
+    return HttpResponse.json(mockUser({ id: params.id }));
   }),
 ];
 

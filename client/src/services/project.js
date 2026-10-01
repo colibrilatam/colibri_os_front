@@ -1,14 +1,23 @@
 import { apiClient } from '@/lib/api';
+import { validateResponse } from '@/lib/contracts/validate';
+import { ProjectSchema } from '@/lib/contracts/generated';
+import { z } from 'zod';
+
+const ProjectArraySchema = z.array(ProjectSchema);
 
 export const projectsService = {
   getAll: async () => {
-    const response = await apiClient.get('/projects');
-    return response.data;
-  },
+  const response = await apiClient.get('/projects');
+  const data = response.data;
+  if (Array.isArray(data)) {
+    return validateResponse(ProjectArraySchema, data);
+  }
+  return validateResponse(ProjectSchema, data);
+},
 
   getById: async (id) => {
     const response = await apiClient.get(`/projects/${id}`);
-    return response.data;
+    return validateResponse(ProjectSchema, response.data);
   },
 
   create: async (data) => {
@@ -24,16 +33,17 @@ export const projectsService = {
       body = data;
     }
     const response = await apiClient.post('/projects', body);
-    return response.data;
+    return validateResponse(ProjectSchema, response.data);
   },
 
   update: async (id, data) => {
-    const response = await apiClient.put(`/projects/${id}`, data);
-    return response.data;
+    const response = await apiClient.patch(`/projects/${id}`, data);
+    return validateResponse(ProjectSchema, response.data);
   },
 
   delete: async (id) => {
     const response = await apiClient.delete(`/projects/${id}`);
+    // 204 No Content - no body to validate
     return response.data;
   },
 

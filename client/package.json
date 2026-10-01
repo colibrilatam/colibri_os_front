@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3031",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 3031",
     "lint": "eslint",
-    "test": "cross-env NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/api/v1 vitest",
-    "test:run": "cross-env NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/api/v1 vitest run"
+    "test": "cross-env NEXT_PUBLIC_BACKEND_URL=https://api.colibrilatam.io/api/v1 vitest",
+    "test:run": "cross-env NEXT_PUBLIC_BACKEND_URL=https://api.colibrilatam.io/api/v1 vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
