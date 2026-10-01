@@ -15,6 +15,34 @@ vi.mock('@/lib/api', () => {
   };
 });
 
+function mockProject(overrides = {}) {
+  return {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    ownerUserId: '123e4567-e89b-12d3-a456-426614174001',
+    projectName: 'Project 1',
+    projectImageUrl: null,
+    status: 'active',
+    country: null,
+    industry: null,
+    tagline: null,
+    shortDescription: null,
+    startupLinkedinUrl: null,
+    websiteUrl: null,
+    rlabProfileUrl: null,
+    openedAt: null,
+    closedAt: null,
+    closeReason: null,
+    currentTramoId: null,
+    currentPacId: null,
+    trajectoryStatus: null,
+    nftImageUrl: null,
+    lastActivityAt: null,
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    ...overrides,
+  };
+}
+
 describe('projectsService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -22,7 +50,7 @@ describe('projectsService', () => {
 
   describe('CRUD operations', () => {
     it('getAll should return all projects', async () => {
-      const mockProjects = [{ id: 1, name: 'Project 1' }];
+      const mockProjects = [mockProject()];
       const { apiClient } = await import('@/lib/api');
       apiClient.get.mockResolvedValueOnce({ data: mockProjects });
 
@@ -33,19 +61,19 @@ describe('projectsService', () => {
     });
 
     it('getById should return project by id', async () => {
-      const mockProject = { id: 1, name: 'Project 1' };
+      const mockProjectData = mockProject();
       const { apiClient } = await import('@/lib/api');
-      apiClient.get.mockResolvedValueOnce({ data: mockProject });
+      apiClient.get.mockResolvedValueOnce({ data: mockProjectData });
 
-      const result = await projectsService.getById(1);
+      const result = await projectsService.getById('123e4567-e89b-12d3-a456-426614174000');
 
-      expect(result).toEqual(mockProject);
-      expect(apiClient.get).toHaveBeenCalledWith('/projects/1');
+      expect(result).toEqual(mockProjectData);
+      expect(apiClient.get).toHaveBeenCalledWith('/projects/123e4567-e89b-12d3-a456-426614174000');
     });
 
     it('create should create new project', async () => {
-      const mockData = { name: 'New Project' };
-      const mockResponse = { id: 1, ...mockData };
+      const mockData = { projectName: 'New Project' };
+      const mockResponse = mockProject({ ...mockData });
       const { apiClient } = await import('@/lib/api');
       apiClient.post.mockResolvedValueOnce({ data: mockResponse });
 
@@ -56,25 +84,25 @@ describe('projectsService', () => {
     });
 
     it('update should update project', async () => {
-      const mockData = { name: 'Updated Project' };
-      const mockResponse = { id: 1, ...mockData };
+      const mockData = { projectName: 'Updated Project' };
+      const mockResponse = mockProject({ ...mockData });
       const { apiClient } = await import('@/lib/api');
-      apiClient.put.mockResolvedValueOnce({ data: mockResponse });
+      apiClient.patch.mockResolvedValueOnce({ data: mockResponse });
 
-      const result = await projectsService.update(1, mockData);
+      const result = await projectsService.update('123e4567-e89b-12d3-a456-426614174000', mockData);
 
       expect(result).toEqual(mockResponse);
-      expect(apiClient.put).toHaveBeenCalledWith('/projects/1', mockData);
+      expect(apiClient.patch).toHaveBeenCalledWith('/projects/123e4567-e89b-12d3-a456-426614174000', mockData);
     });
 
     it('delete should delete project', async () => {
       const { apiClient } = await import('@/lib/api');
       apiClient.delete.mockResolvedValueOnce({ data: { success: true } });
 
-      const result = await projectsService.delete(1);
+      const result = await projectsService.delete('123e4567-e89b-12d3-a456-426614174000');
 
       expect(result).toEqual({ success: true });
-      expect(apiClient.delete).toHaveBeenCalledWith('/projects/1');
+      expect(apiClient.delete).toHaveBeenCalledWith('/projects/123e4567-e89b-12d3-a456-426614174000');
     });
   });
 
