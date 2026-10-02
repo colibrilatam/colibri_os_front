@@ -1,36 +1,149 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Colibrí — Frontend
 
-## Getting Started
+Cliente web de **Colibrí** — plataforma de emprendedurismo regenerativo
+con evaluación por pares, micro-acciones y una capa de financiamiento vía
+NFTs para mecenas.
 
-First, run the development server:
+- **Framework:** Next.js 16 (App Router) + React 19
+- **Estado remoto:** TanStack Query v5
+- **Estado UI:** Zustand
+- **HTTP:** axios (cliente centralizado)
+- **Contratos:** Zod v4 generado desde OpenAPI del backend
+- **Testing:** Vitest + MSW + jsdom
+- **Puerto de desarrollo:** `3031` (no 3000)
+
+> **Documentación completa:** [`docs/README.md`](./docs/README.md)
+
+---
+
+## Quickstart
+
+### Requisitos
+
+| Herramienta | Versión mínima |
+|---|---|
+| Node.js | 22 |
+| npm | 10 |
+
+El backend de Colibrí debe estar accesible (local o producción). Ver
+[`docs/entornos.md`](./docs/entornos.md).
+
+### Instalación
 
 ```bash
+git clone <repo-url> colibri_os_front
+cd colibri_os_front/client
+npm install
+cp .env.example .env.local
+# Editar .env.local con la URL del backend (ver docs/variables-entorno.md)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir **http://localhost:3031**.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Comandos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Todos los comandos verificados contra `package.json`:
 
-## Learn More
+| Comando | Qué hace | Puerto |
+|---|---|---|
+| `npm run dev` | Servidor de desarrollo | **3031** |
+| `npm run build` | Build de producción | — |
+| `npm run start` | Servidor de producción | **3031** |
+| `npm run lint` | ESLint | — |
+| `npm test` | Vitest (watch) | — |
+| `npm run test:run` | Vitest (single run) | — |
 
-To learn more about Next.js, take a look at the following resources:
+> ⚠️ El frontend corre en **3031**, no en 3000. El puerto 3000 suele
+> corresponder al backend NestJS en desarrollo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Variables de entorno mínimas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```env
+NEXT_PUBLIC_BACKEND_URL=http://localhost:3000/api/v1
+COLIBRI_CLIENT_PORT=3031
+```
 
-## Deploy on Vercel
+Ver [`docs/variables-entorno.md`](./docs/variables-entorno.md) para la
+lista completa y cómo afectan a build vs runtime.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Stack
+
+| Capa | Tecnología |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| UI | React 19, Tailwind CSS v4, Framer Motion |
+| Estado remoto | TanStack Query v5 |
+| Estado global UI | Zustand |
+| Formularios | React Hook Form + Zod |
+| HTTP | axios (`src/lib/api/client.js`) |
+| Contratos | `@colibri/contracts` (Zod v4 desde OpenAPI) |
+| Gráficos | Recharts |
+| Testing | Vitest + MSW + Testing Library + jsdom |
+| Lint / format | ESLint 9 + Prettier (manual) |
+
+---
+
+## Estructura del repositorio
+
+```
+colibri_os_front/
+└── client/                    ← este proyecto
+    ├── src/
+    │   ├── app/               # App Router (rutas)
+    │   ├── components/        # Componentes de UI
+    │   ├── design-system/     # Tokens y primitivas
+    │   ├── hooks/             # Hooks de queries/mutations
+    │   ├── lib/
+    │   │   ├── api/           # Cliente HTTP centralizado
+    │   │   └── contracts/     # Schemas Zod generados
+    │   ├── locales/           # i18n
+    │   ├── services/          # Capa de servicios
+    │   └── test/              # Utilidades de test
+    ├── docs/                  # Documentación (este índice)
+    ├── public/
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── next.config.mjs
+    ├── package.json
+    └── vitest.config.js
+```
+
+---
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [`docs/README.md`](./docs/README.md) | Índice general |
+| [`docs/quickstart.md`](./docs/quickstart.md) | Puesta en marcha paso a paso |
+| [`docs/arquitectura.md`](./docs/arquitectura.md) | Capas + diagrama |
+| [`docs/variables-entorno.md`](./docs/variables-entorno.md) | Todas las variables |
+| [`docs/entornos.md`](./docs/entornos.md) | Local y producción |
+| [`docs/autenticacion.md`](./docs/autenticacion.md) | JWT, cookie, Google OAuth |
+| [`docs/roles.md`](./docs/roles.md) | Roles y protección de rutas |
+| [`docs/contratos.md`](./docs/contratos.md) | `@colibri/contracts` |
+| [`docs/web3.md`](./docs/web3.md) | NFTs, Cloudinary, IPFS |
+| [`docs/i18n.md`](./docs/i18n.md) | Internacionalización |
+| [`docs/testing.md`](./docs/testing.md) | Vitest + MSW |
+| [`docs/despliegue.md`](./docs/despliegue.md) | Docker + Dokploy |
+| [`docs/troubleshooting.md`](./docs/troubleshooting.md) | Errores comunes |
+| [`docs/known-issues.md`](./docs/known-issues.md) | Deuda técnica referenciada |
+
+---
+
+## Contribuir
+
+1. Rama desde `develop`.
+2. PR contra `develop`.
+3. `npm run lint` y `npm run test:run` deben pasar.
+4. Adjuntar evidencia técnica en el PR (logs, screenshots, walkthrough).
+
+---
+
+## Deuda técnica conocida
+
+Ver [`docs/known-issues.md`](./docs/known-issues.md) y el informe
+original [`Deuda-tecnica-frontend.md`](./Deuda-tecnica-frontend.md).
