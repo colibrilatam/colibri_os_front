@@ -29,6 +29,13 @@
 - 🩺 [Troubleshooting](./troubleshooting.md) — 404, CORS, login
 - ⚠️ [Known issues](./known-issues.md) — deuda técnica vigente
 
+## Decisiones
+
+- ⚖️ [ADR-001 — Licencia propietaria](./decisiones/ADR-001-licencia-propietaria.md)
+
+> Política de seguridad pública: [`/SECURITY.md`](../SECURITY.md)
+> Licencia: [`/LICENSE`](../LICENSE)
+
 ---
 
 ## Cómo mantener esta documentación
