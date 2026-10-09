@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ApiError } from './errors.js';
-import { getToken, clearToken } from './token.js';
+import { getToken } from './token.js';
 import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
@@ -84,7 +84,6 @@ apiClient.interceptors.response.use(
     const duration = Date.now() - (startTime || Date.now());
 
     if (apiError.status === 401) {
-      clearToken();
       if (logoutCallback) {
         logoutCallback();
       }

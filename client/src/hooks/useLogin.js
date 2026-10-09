@@ -8,7 +8,6 @@ import { useUserStore } from '@/lib/store';
 import { queryKeys } from '@/lib/query-keys';
 
 export const useLogin = () => {
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
   const [retrying, setRetrying] = useState(false);
@@ -20,7 +19,6 @@ export const useLogin = () => {
         email: formData.email,
         password: formData.password,
       });
-      setToken(data.token);
 
       const userData = data.user;
 
@@ -74,7 +72,6 @@ export const useLogin = () => {
         password: 'Test@1234',
       });
 
-      setToken(demoLoginData.token);
       const userData = demoLoginData.user;
 
       if (userData) {

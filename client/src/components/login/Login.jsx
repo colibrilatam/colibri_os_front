@@ -12,7 +12,6 @@ export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
   const router = useRouter();
   const { handleLogin, userData, retrying } = useLogin();
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
