@@ -121,13 +121,13 @@ useEffect(() => {
   const onSubmitReal = async (data) => {
   try {
     onLoadingChange(true);
-    setToken(null);
-    const result = await handleRegister({ ...data});
-
+   
+    const result = await handleRegister({ ...data, role: selectedRole });
+    console.log(result)
     if (result.success) {
       setRol(selectedRole);
       sessionStorage.removeItem(STORAGE_KEY);
-      setToken(result.data.token);
+   
       setUser(result.data.user);
       onSuccess();
     } else {
