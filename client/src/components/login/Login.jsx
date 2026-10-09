@@ -55,7 +55,6 @@ export default function Login({ onLoadingChange }) {
   // enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setToken(null);
     if (!isFormValid()) {
       setServerError(t('errorFormInvalid'));
       return;

@@ -6,7 +6,6 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useUserStore } from '@/lib/store';
 import { authService } from '@/services/authService';
 import SelectRole from '@/components/login/SelectRole';
-import { useCompleteProfile, normalizeCompleteProfileError } from '@/hooks/mutations/useCompleteProfile';
 
 const GENDERS = [
   { value: 'male', label: 'Masculino' },
@@ -16,52 +15,66 @@ const GENDERS = [
   { value: 'prefer_not_to_say', label: 'Prefiero no decir' },
 ];
 
+function redirectByRole(router, role) {
+  if (role === 'entrepreneur') router.replace('/proyecto');
+  else if (role === 'mecenas_semilla') router.replace('/user/nft');
+  else if (role === 'evaluator' || role === 'mentor') router.replace('/evaluations');
+  else router.replace('/home');
+}
+
 function GoogleCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation('login');
 
-  const setToken = useUserStore((state) => state.setToken);
-  const setRol = useUserStore((state) => state.setRol);
-  const checkAuth = useUserStore((state) => state.isAuthenticated);
+  const setUser = useUserStore((s) => s.setUser);
+  const setRol = useUserStore((s) => s.setRol);
 
-  const [tempToken, setTempToken] = useState(null);
+  const [profileCompletionToken, setProfileCompletionToken] = useState(null);
   const [selectedRole, setSelectedRole] = useState(null);
   const [selectedGender, setSelectedGender] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const { mutate: completeProfile, isPending } = useCompleteProfile({
-    onError: (error) => {
-      console.error(normalizeCompleteProfileError(error));
-    },
-  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const role = searchParams.get('role');
-    const temp = searchParams.get('tempToken');
+    const code = searchParams.get('code');
 
-    if (role) {
+    // Limpieza inmediata de la URL, ANTES de cualquier llamada async.
+    if (typeof window !== 'undefined') {
       window.history.replaceState({}, '', window.location.pathname);
-      checkAuth().then(() => {
-        router.replace(
-          role === 'entrepreneur' ? '/proyecto' : role === 'mecenas_semilla' ? '/evaluations' : role === 'evaluator' ? '/evaluations' : '/home'
-        );
-      });
+    }
+
+    if (!code) {
+      router.replace('/login?error=google_failed');
       return;
     }
 
-    if (temp) {
-      setTempToken(temp);
-      window.history.replaceState({}, '', window.location.pathname);
-      return;
-    }
+    let cancelled = false;
 
-    router.replace('/login?error=google_failed');
-  }, []); // eslint-disable-line
+    (async () => {
+      try {
+        const data = await authService.exchangeGoogleCode(code);
+        console.log(data, 'data')
+        if (cancelled) return;
 
-  const handleRoleSelect = (role) => setSelectedRole(role);
-  const handleGenderChange = (e) => setSelectedGender(e.target.value);
+        if (data.requiresProfileCompletion) {
+          // Token SOLO en memoria; nunca en storage, store, ni cookies.
+          setProfileCompletionToken(data.profileCompletionToken);
+          return;
+        }
+
+        setUser(data.user);
+        setRol(data.user.role);
+        redirectByRole(router, data.user.role);
+      } catch(err) {
+        console.error(err);
+        if (cancelled) return;
+        router.replace('/login?error=google_failed');
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,25 +85,25 @@ function GoogleCallbackInner() {
     setLoading(true);
     setError(null);
     try {
+      const data = await authService.completeProfile({
+        profileCompletionToken,
+        role: selectedRole,
+        gender: selectedGender,
+      });
 
-      
+      setProfileCompletionToken(null); // limpiar de memoria
 
-      const data = { tempToken, role: selectedRole, gender: selectedGender };
-      await completeProfile(data);
-      setRol(selectedRole || 'entrepreneur');
-      if (selectedRole === 'entrepreneur') router.replace('/proyecto');
-      else if (selectedRole === 'mecenas_semilla') router.replace('/evaluations');
-      else if (selectedRole === 'evaluator') router.replace('/evaluations');
-      else router.replace('/');
+      setUser(data.user);
+      setRol(data.user.role);
+      redirectByRole(router, selectedRole);
     } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || 'Error al completar perfil. Intenta de nuevo.');
+      setError(err?.message || 'Error al completar perfil. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
   };
 
-  if (tempToken) {
+  if (profileCompletionToken) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="max-w-2xl w-full bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-8 shadow-xl">
@@ -109,9 +122,10 @@ function GoogleCallbackInner() {
               <select
                 id="gender"
                 value={selectedGender}
-                onChange={handleGenderChange}
+                onChange={(e) => setSelectedGender(e.target.value)}
                 className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--action-primary)]"
                 required
+                disabled={loading}
               >
                 <option className="text-black" value="">Selecciona una opción</option>
                 {GENDERS.map((g) => (
@@ -125,8 +139,21 @@ function GoogleCallbackInner() {
               <label className="block text-sm font-medium text-white/70 mb-3">
                 Elige tu rol principal
               </label>
-              <SelectRole onSelectRole={handleRoleSelect} />
+              <SelectRole onSelectRole={setSelectedRole} />
             </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 rounded-lg font-semibold transition 
+      ${
+        loading
+          ? 'bg-gray-500 cursor-not-allowed'
+          : 'bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] cursor-pointer'
+      }
+    `}
+            >
+              {loading ? 'Completando...' : 'Continuar'}
+            </button>
           </form>
         </div>
       </div>

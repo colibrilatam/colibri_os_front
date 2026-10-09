@@ -1,6 +1,6 @@
 import { apiClient } from '@/lib/api';
 import { validateResponse } from '@/lib/contracts/validate';
-import { AuthResponseSchema, RegisterResponseSchema, CompleteProfileResponseSchema, MessageResponseSchema } from '@/lib/contracts/generated';
+import { AuthResponseSchema, RegisterResponseSchema, CompleteProfileResponseSchema, MessageResponseSchema, GoogleExchangeResponseSchema } from '@/lib/contracts/generated';
 
 export const authService = {
     register: async (data) => {
@@ -12,7 +12,14 @@ export const authService = {
         const response = await apiClient.post('/auth/signin', data);
         return validateResponse(AuthResponseSchema, response.data);
     },
+
+    exchangeGoogleCode: async (code) => {
+        const response = await apiClient.post('/auth/google/exchange', { code });
+        return validateResponse(GoogleExchangeResponseSchema, response.data);
+    },
+
     completeProfile: async (data) => {
+        // data = { profileCompletionToken, role, gender }
         const response = await apiClient.post('/auth/complete-profile', data);
         return validateResponse(CompleteProfileResponseSchema, response.data);
     },
