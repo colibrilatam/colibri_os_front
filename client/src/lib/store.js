@@ -24,21 +24,21 @@ export const useUserStore = create(
       setRol: (newRol) => set({ rol: newRol }),
 
       user: null,
-authChecked: false,      // ← ¿ya terminamos de preguntarle al backend?
-setUser: (user) => set({ user }),
+      authChecked: false,      // ← ¿ya terminamos de preguntarle al backend?
+      setUser: (user) => set({ user }),
 
-checkAuth: async () => {
-  try {
-    const res = await userService.profile(); // withCredentials: true ya seteado
-    set({ user: res, rol: res.role, authChecked: true });
-    return true;
-  } catch {
-    set({ user: null, rol: null, authChecked: true });
-    return false;
-  }
-},
+      checkAuth: async () => {
+        try {
+          const res = await userService.profile(); // withCredentials: true ya seteado
+          set({ user: res, rol: res.role, authChecked: true });
+          return true;
+        } catch {
+          set({ user: null, rol: null, authChecked: true });
+          return false;
+        }
+      },
 
-isAuth: () => !!get().user,
+      isAuth: () => !!get().user,
 
       theme: null,
       setTheme: (theme) => set({ theme }),
@@ -61,23 +61,6 @@ isAuth: () => !!get().user,
 
       getTranslation: (key) => get().translationsCache[key],
 
-      // Token
-      token: null,
-      setToken: (token) => {
-        set({ token });
-        if (typeof window !== 'undefined') {
-          if (token) {
-            setCookie('token', token);
-          } else {
-            deleteCookie('token');
-          }
-        }
-        // Si se establece un token, desactivar modo invitado
-        set({ isGuest: false });
-        deleteCookie('isGuest');
-      },
-      getToken: () => get().token,
-
       // Guest mode
       isGuest: false,
       setIsGuest: (isGuest) => {
@@ -94,13 +77,11 @@ isAuth: () => !!get().user,
       // Logout
       logout: () => {
         if (typeof window !== 'undefined') {
-          deleteCookie('token');
           deleteCookie('colibri_access_token')
           deleteCookie('isGuest');
           resetTheme();
         }
         set({
-          token: null,
           rol: null,
           user: null,
           theme: null,
@@ -108,16 +89,6 @@ isAuth: () => !!get().user,
           sidebarDesktopExpanded: false,
           language: 'es',
         });
-      },
-
-      // Verificar si hay token y si es válido
-      isAuthenticated: async () => {
-        const token = get().token;
-        if (isTokenExpired(token)) {
-          //set({ token: null })
-          return false;
-        }
-        return false;
       },
 
       // Estado del Sideba: false,
@@ -143,6 +114,8 @@ isAuth: () => !!get().user,
 
         return persistedState;
       },
+      // R3 (CODE-006): el store NO debe contener profileCompletionToken ni access tokens.
+      // Si en el futuro se agrega, revisar `partialize` del persist para no filtrarlo a localStorage.
     },
   ),
 );

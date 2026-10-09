@@ -147,7 +147,9 @@ export default function LoginRegisterPage() {
             onSuccess={
               selectedRole === 'entrepreneur'
                 ? () => router.push('/proyecto')
-                : () => router.push('/user/nft')
+                : selectedRole === 'evaluator' ?
+                () => router.push('/evaluations')
+                : () => router.push('/home')
             }
             onBack={() => setView('selectRole')}
             onLoadingChange={setLoading}
