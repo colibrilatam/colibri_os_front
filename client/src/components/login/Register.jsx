@@ -152,7 +152,6 @@ useEffect(() => {
 
   const onSubmitDemo = async (e) => {
     e.preventDefault();
-    setToken(null);
     const result = await handleDemoLogin(selectedRole);
     if (result?.success !== false) {
       onSuccess();
