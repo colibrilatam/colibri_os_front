@@ -396,9 +396,7 @@ describe('Password Storage Security', () => {
   // código fuente del cliente. Si este test falla, alguien reintrodujo una
   // credencial hardcodeada en el bundle.
   describe('Demo credentials — regresión SEC-002', () => {
-    // SEC-002: it.fails() porque el literal todavía existe en useLogin.js:72.
-    // Se desmarca en PR-FE3 (commit que elimina el literal).
-    it.fails(
+    it(
       'el literal de la password demo no existe en el código fuente del cliente',
       async () => {
         const { readFileSync } = await import('node:fs');
