@@ -26,15 +26,17 @@ export default function ProjectLayout({ children }) {
 
   // 🔐 Hooks siempre al principio (regla de React). Los early returns vienen después.
   const user = useUserStore((state) => state.user);
+  const isDemo = useUserStore((state) => state.isDemo);
   const { data: projectData, isLoading: projectsLoading } = useProjects();
 
   // 🔄 Redirección cuando los datos estén listos
   useEffect(() => {
     if (projectsLoading) return;
 
-    // DEMO
-    const isDemo = true;
-
+    // SEC-002: antes estaba hardcodeado `const isDemo = true`. Ahora se lee del
+    // store, pero isDemo solo se deriva del claim del servidor cuando el backend
+    // emita role=demo_readonly (pendiente PR-BE3/PR-FE3). Hasta entonces es false
+    // y el redirect se ejecuta normalmente.
     if (user?.email === 'ana@colibri.com' && isDemo) {
       return;
     }
@@ -45,7 +47,7 @@ export default function ProjectLayout({ children }) {
         router.replace(`/dashboard/${userProject.id}/about`);
       }
     }
-  }, [user, projectData, projectsLoading, router]);
+  }, [user, projectData, projectsLoading, router, isDemo]);
 
   // ⏳ Esperar a que se verifique la autenticación
   if (!authChecked) {
