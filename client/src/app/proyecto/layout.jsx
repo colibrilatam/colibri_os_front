@@ -24,25 +24,8 @@ export default function ProjectLayout({ children }) {
     () => false,
   );
 
-  // ⏳ Esperar a que se verifique la autenticación
-  if (!authChecked) {
-    return <LoadingScreen />;
-  }
-
-  // 🚫 Si no está autenticado, mostrar error (aunque ClientLayout ya protege)
-  if (!isAuthenticated) {
-    return (
-      <ErrorScreen
-        error={{ message: 'Debes iniciar sesión para acceder a esta sección' }}
-        next="Iniciar sesión"
-        redirect="/login"
-      />
-    );
-  }
-
-  // 🔐 Ahora sí, el usuario está autenticado, cargamos datos
+  // 🔐 Hooks siempre al principio (regla de React). Los early returns vienen después.
   const user = useUserStore((state) => state.user);
-
   const { data: projectData, isLoading: projectsLoading } = useProjects();
 
   // 🔄 Redirección cuando los datos estén listos
@@ -63,6 +46,22 @@ export default function ProjectLayout({ children }) {
       }
     }
   }, [user, projectData, projectsLoading, router]);
+
+  // ⏳ Esperar a que se verifique la autenticación
+  if (!authChecked) {
+    return <LoadingScreen />;
+  }
+
+  // 🚫 Si no está autenticado, mostrar error (aunque ClientLayout ya protege)
+  if (!isAuthenticated) {
+    return (
+      <ErrorScreen
+        error={{ message: 'Debes iniciar sesión para acceder a esta sección' }}
+        next="Iniciar sesión"
+        redirect="/login"
+      />
+    );
+  }
 
   // ⚠️ Manejo de error al cargar el perfil
   if (!user || !projectData || projectsLoading) {
