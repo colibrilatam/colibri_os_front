@@ -391,4 +391,63 @@ describe('Password Storage Security', () => {
       });
     });
   });
+
+  // SEC-002: regresión. El literal de la password demo NO debe existir en el
+  // código fuente del cliente. Si este test falla, alguien reintrodujo una
+  // credencial hardcodeada en el bundle.
+  describe('Demo credentials — regresión SEC-002', () => {
+    // SEC-002: it.fails() porque el literal todavía existe en useLogin.js:72.
+    // Se desmarca en PR-FE3 (commit que elimina el literal).
+    it.fails(
+      'el literal de la password demo no existe en el código fuente del cliente',
+      async () => {
+        const { readFileSync } = await import('node:fs');
+        const { join } = await import('node:path');
+
+        const useLoginPath = join(
+          process.cwd(),
+          'src',
+          'hooks',
+          'useLogin.js',
+        );
+        const source = readFileSync(useLoginPath, 'utf-8');
+
+        // Busca el literal conocido (enmascarado en el reporte: Te***24, len 9).
+        expect(source).not.toMatch(/Test@1234/);
+
+        // También busca cualquier password literal sospechosa en hooks.
+        const hooksDir = join(process.cwd(), 'src', 'hooks');
+        const { readdirSync } = await import('node:fs');
+        const hookFiles = readdirSync(hooksDir).filter((f) => f.endsWith('.js'));
+        for (const file of hookFiles) {
+          const content = readFileSync(join(hooksDir, file), 'utf-8');
+          expect(content).not.toMatch(/Test@1234/);
+        }
+      },
+    );
+
+    it('el frontend no usa NEXT_PUBLIC_DEMO_PASSWORD (se hornea en el bundle)', async () => {
+      const { readdirSync, readFileSync } = await import('node:fs');
+      const { join } = await import('node:path');
+
+      const srcDir = join(process.cwd(), 'src');
+      const walk = (dir) => {
+        const results = [];
+        for (const entry of readdirSync(dir, { withFileTypes: true })) {
+          const full = join(dir, entry.name);
+          if (entry.isDirectory()) results.push(...walk(full));
+          // Excluir tests: contienen el patrón en sus propias regex.
+          else if (/\.(js|jsx|ts|tsx)$/.test(entry.name) && !/\.(test|spec)\./.test(entry.name))
+            results.push(full);
+        }
+        return results;
+      };
+
+      const pattern = new RegExp('NEXT_PUBLIC_' + 'DEMO_PASSWORD');
+      for (const file of walk(srcDir)) {
+        const content = readFileSync(file, 'utf-8');
+        expect(content, `Found in ${file}`).not.toMatch(pattern);
+      }
+    });
+  });
 });
