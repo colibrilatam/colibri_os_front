@@ -1,0 +1,14 @@
+# SEC-002: sin esto, Dockerfile:15 (COPY . .) mete client/.env
+# en la capa `builder` de la imagen.
+node_modules
+.next
+.git
+coverage
+download
+patches
+*.log
+
+# Secretos y archivos de entorno local — nunca al contenedor.
+.env
+.env.*
+!.env.example
