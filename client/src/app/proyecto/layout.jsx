@@ -7,7 +7,7 @@ import ErrorScreen from '@/components/ErrorScreen';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useUserProfile } from '@/hooks/queries/useUserProfile';
 import { useProjects } from '@/hooks/queries/useProjects';
-import { useUserStore } from '@/lib/store';
+import { useUserStore, useIsDemo } from '@/lib/store';
 
 export default function ProjectLayout({ children }) {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function ProjectLayout({ children }) {
 
   // 🔐 Hooks siempre al principio (regla de React). Los early returns vienen después.
   const user = useUserStore((state) => state.user);
-  const isDemo = useUserStore((state) => state.isDemo);
+  const isDemo = useIsDemo();
   const { data: projectData, isLoading: projectsLoading } = useProjects();
 
   // 🔄 Redirección cuando los datos estén listos

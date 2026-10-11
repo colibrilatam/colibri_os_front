@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useGuestLogin } from '@/hooks/useGuestLogin';
@@ -13,18 +13,14 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 
 import { useNewProject } from '@/hooks/useNewProject';
-import { useUserStore } from '@/lib/store';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
 export default function LoginRegisterPage() {
   const { t } = useTranslation('login');
-  
-  const setIsDemo = useUserStore((state) => state.setIsDemo);
-  useEffect(() => {
-    setIsDemo(false) 
-  }, [])
-  
-  
+
+  // SEC-002/FE4: setIsDemo(false) eliminado — isDemo ahora se deriva de
+  // user.role via useIsDemo(). No hay estado que resetear.
+
   const [view, setView] = useState('login'); // login | selectRole | register
   const [selectedRole, setSelectedRole] = useState('');
   const [loading, setLoading] = useState(false);

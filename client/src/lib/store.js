@@ -4,6 +4,26 @@ import { isTokenExpired } from './auth';
 import { setCookie, deleteCookie } from './cookies';
 import { resetTheme } from './theme';
 import { userService } from '@/services/user';
+import { UserRoleSchema } from '@/lib/contracts/generated/schemas';
+
+/**
+ * SEC-002 / FE4: rol demo. Usa el tipo del contrato generado, no un string
+ * literal. Si BE renombra el rol, TS lo detecta en compile-time.
+ */
+const DEMO_ROLE = /** @type {import('@/lib/contracts/generated/schemas').UserRole} */ (
+  'demo_readonly'
+);
+
+/**
+ * SEC-002 / FE4: selector derivado. `isDemo` NO es estado — se deriva de
+ * `user.role` en cada render. Una sola fuente de verdad.
+ *
+ * Fail-open: si user es null (no logueado), isDemo es false. Esto es
+ * intencional — la protección real es el 403 del backend
+ * (DemoReadOnlyGuard APP_GUARD, PR-BE2). La UI solo expresa.
+ */
+export const useIsDemo = () =>
+  useUserStore((state) => state.user?.role === DEMO_ROLE);
 
 export const useUserStore = create(
   persist(
@@ -15,9 +35,8 @@ export const useUserStore = create(
       subioTramo: false,
       setSubioTramo: (subioTramo) => set({ subioTramo }),
 
-      // Demo
-      isDemo: false,
-      setIsDemo: (isDemo) => set({ isDemo }),
+      // SEC-002/FE4: isDemo/setIsDemo eliminados del estado.
+      // isDemo se deriva de user.role via useIsDemo() (ver arriba).
 
       // Estado existente
       rol: 'CEO',
