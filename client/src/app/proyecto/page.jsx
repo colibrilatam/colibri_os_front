@@ -5,7 +5,7 @@ import { useProjects } from '@/hooks/queries/useProjects';
 import { useUserProfile } from '@/hooks/queries/useUserProfile';
 import { useNewProject } from '@/hooks/useNewProject';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useUserStore } from '@/lib/store';
+import { useUserStore, useIsDemo } from '@/lib/store';
 
 export default function CreateProject() {
   const { t } = useTranslation('proyecto');
@@ -37,7 +37,7 @@ export default function CreateProject() {
   };
 
   // DEMO
-  const isDemo = useUserStore((state) => state.isDemo);
+  const isDemo = useIsDemo();
 
 
     const [formData, setFormData] = useState({

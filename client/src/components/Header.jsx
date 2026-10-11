@@ -2,7 +2,7 @@
 import NftAvatar from './señal/NftAvatar';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 
 // contexto
 import { formatDateSafe } from '@/lib/hooks/date';
@@ -25,7 +25,13 @@ export default function Header({ isHome = false }) {
   const { t } = useTranslation('header');
   const contextData = useProject();
 
-  const { isAuthenticated, rol, subioTramo, user } = useUserStore();
+  const { rol, subioTramo, user } = useUserStore();
+
+  const isAuthenticated = useSyncExternalStore(
+      useUserStore.subscribe,
+      () => useUserStore.getState().isAuth(),
+      () => false,
+    );
 
   const { mutate: logout, isPending } = useLogout({
     onError: (error) => {
@@ -43,7 +49,7 @@ export default function Header({ isHome = false }) {
     user.theme.logoUrl;
 
   useEffect(() => {
-    setAuth(isAuthenticated());
+    setAuth(isAuthenticated);
   }, []);
 
   const router = useRouter();

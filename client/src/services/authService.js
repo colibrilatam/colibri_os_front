@@ -13,6 +13,18 @@ export const authService = {
         return validateResponse(AuthResponseSchema, response.data);
     },
 
+    /**
+     * SEC-002: login demo sin password.
+     *
+     * El backend emite un token con role=demo_readonly y setea la cookie
+     * HttpOnly. El body acepta un selector de persona para elegir que
+     * cuenta demo usar. No hay password en el request ni en el bundle.
+     */
+    demoLogin: async (role) => {
+        const response = await apiClient.post('/auth/demo-login', { role });
+        return validateResponse(AuthResponseSchema, response.data);
+    },
+
     exchangeGoogleCode: async (code) => {
         const response = await apiClient.post('/auth/google/exchange', { code });
         return validateResponse(GoogleExchangeResponseSchema, response.data);

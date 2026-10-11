@@ -3,12 +3,13 @@
 import { useTranslation } from "@/hooks/useTranslation";
 import { HelpCircle } from "lucide-react";
 import NotificationPopup from "../NotificationPopup";
-import { useUserStore } from "@/lib/store";
+
+// SEC-002/FE4: isDemo/setIsDemo eliminados del store. isDemo se deriva de
+// user.role via useIsDemo(). El checkbox de demo mode estaba comentado y
+// ya no tiene estado que leer.
 
 export default function SelectRole({ onSelectRole }) {
   const { t } = useTranslation('login');
-
-  const { isDemo, setIsDemo } = useUserStore();
 
   return (
     <div className="flex flex-col gap-6 items-center">

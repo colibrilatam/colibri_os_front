@@ -11,6 +11,7 @@ import { useActiveRubrics } from "@/hooks/queries/useActiveRubrics";
 import { useTranslation } from '@/hooks/useTranslation';
 import { getLocalizedValue } from '@/hooks/useLocalizedField';
 import { useUserStore } from '@/lib/store';
+import { DemoGuard } from '@/components/common/DemoGuard';
 import { uploadToCloudinary } from "@/lib/api/cloudinary";
 
 const ALLOWED_MIME_TYPES = [
@@ -250,27 +251,31 @@ export default function UploadModal({
               >
                 {t('btnCancel')}
               </button>
-              <button
-                onClick={() => handleSubmit(data)}
-                disabled={loading}
-                className="flex-1 px-4 py-3 rounded-lg font-bold bg-[rgba(0,207,207,0.2)] 
-                  border border-[var(--color-turquoise)] text-[var(--color-turquoise)]
-                  hover:bg-[rgba(0,207,207,0.35)] transition
-                  disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <motion.div
-                      className="w-4 h-4 border-2 border-transparent border-t-[var(--color-turquoise)] rounded-full"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    />
-                    {t('btnSending')}
-                  </>
-                ) : (
-                  t('btnSend')
-                )}
-              </button>
+              {/* SEC-002/FE4: botón de enviar evidencia oculto en modo demo.
+                  La restricción real es el 403 del backend. */}
+              <DemoGuard>
+                <button
+                  onClick={() => handleSubmit(data)}
+                  disabled={loading}
+                  className="flex-1 px-4 py-3 rounded-lg font-bold bg-[rgba(0,207,207,0.2)]
+                    border border-[var(--color-turquoise)] text-[var(--color-turquoise)]
+                    hover:bg-[rgba(0,207,207,0.35)] transition
+                    disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <motion.div
+                        className="w-4 h-4 border-2 border-transparent border-t-[var(--color-turquoise)] rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      />
+                      {t('btnSending')}
+                    </>
+                  ) : (
+                    t('btnSend')
+                  )}
+                </button>
+              </DemoGuard>
             </div>
           </motion.div>
         </NotificationPopup>

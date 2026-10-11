@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start -p 3031",
     "lint": "eslint",
-    "test": "cross-env NEXT_PUBLIC_BACKEND_URL=https://api.colibrilatam.io/api/v1 vitest",
-    "test:run": "cross-env NEXT_PUBLIC_BACKEND_URL=https://api.colibrilatam.io/api/v1 vitest run"
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
