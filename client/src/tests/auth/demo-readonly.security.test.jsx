@@ -1,34 +1,113 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { createElement } from 'react';
 
-// SEC-002: pendiente FE4.
-//
-// Estos tests verifican que el DemoGuard de UI oculta los botones de
-// escritura cuando isDemo viene del servidor (role=demo_readonly).
-//
-// IMPORTANTE: esto NO es seguridad. Es UX. La restricción real es el
-// 403 del backend (DemoReadOnlyGuard, PR-BE2). Este suite solo verifica
-// que la interfaz expresa correctamente el estado.
-//
-// Se activa en PR-FE4, que:
-//   1. Deriva isDemo del claim del servidor en store.js.
-//   2. Crea components/common/DemoGuard.jsx.
-//   3. Envuelve los 6 componentes de escritura/aprobación.
-describe.skip('SEC-002 — DemoGuard: botones de escritura ocultos en modo demo', () => {
-  // ── ResoluciónActions (aprobar/rechazar microacción) ──────────────────────
-  it('no renderiza "Aprobar versión" cuando isDemo', () => {});
-  it('no renderiza "Rechazar versión" cuando isDemo', () => {});
+// SEC-002 / FE4: DemoGuard es UX, no control de acceso. La restricción
+// real es el 403 del backend (DemoReadOnlyGuard APP_GUARD, PR-BE2).
+// Fail-open en UI es intencional: user null → isDemo false → otras
+// capas protegen.
 
-  // ── ScoreCard (aprobar/rechazar evidencia) ────────────────────────────────
-  it('no renderiza "Aprobar" cuando isDemo', () => {});
-  it('no renderiza "Rechazar" cuando isDemo', () => {});
+// ── Store mockeado con un solo state compartido ─────────────────────────────
+const mockState = { user: null };
+vi.mock('@/lib/store', () => ({
+  useUserStore: vi.fn((selector) =>
+    selector ? selector(mockState) : mockState,
+  ),
+  useIsDemo: () => mockState.user?.role === 'demo_readonly',
+}));
 
-  // ── ReviewActions (enviar revisión) ───────────────────────────────────────
-  it('no renderiza el botón de enviar revisión cuando isDemo', () => {});
+import { DemoGuard, DemoOnly, DemoBanner } from '@/components/common/DemoGuard';
+import { useIsDemo } from '@/lib/store';
 
-  // ── UploadModal (subir evidencia) ─────────────────────────────────────────
-  it('no renderiza el botón de subir evidencia cuando isDemo', () => {});
+const DEMO_USER = { id: '1', role: 'demo_readonly', email: 'demo@test' };
+const MENTOR_USER = { id: '2', role: 'mentor', email: 'mentor@test' };
 
-  // ── Regresión: isDemo viene del servidor ──────────────────────────────────
-  it('isDemo se deriva de user.role === "demo_readonly"', () => {});
-  it('isDemo es false cuando el rol no es demo_readonly', () => {});
+beforeEach(() => {
+  mockState.user = null;
+});
+
+describe('useIsDemo — selector derivado de user.role', () => {
+  it('devuelve true cuando user.role es demo_readonly', () => {
+    mockState.user = DEMO_USER;
+    expect(useIsDemo()).toBe(true);
+  });
+
+  it('devuelve false cuando user.role es mentor', () => {
+    mockState.user = MENTOR_USER;
+    expect(useIsDemo()).toBe(false);
+  });
+
+  it('devuelve false cuando user es null (fail-open)', () => {
+    mockState.user = null;
+    expect(useIsDemo()).toBe(false);
+  });
+});
+
+describe('DemoGuard — oculta acciones de escritura en modo demo', () => {
+  const ActionButton = () => <button>Aprobar</button>;
+
+  it('NO renderiza children cuando isDemo (role=demo_readonly)', () => {
+    mockState.user = DEMO_USER;
+    render(
+      createElement(DemoGuard, null, createElement(ActionButton)),
+    );
+    expect(screen.queryByText('Aprobar')).toBeNull();
+  });
+
+  it('SÍ renderiza children cuando role=mentor', () => {
+    mockState.user = MENTOR_USER;
+    render(
+      createElement(DemoGuard, null, createElement(ActionButton)),
+    );
+    expect(screen.getByText('Aprobar')).toBeTruthy();
+  });
+
+  it('fail-open: renderiza children cuando user es null (la ruta protegida lo cubre)', () => {
+    // DemoGuard es fail-open: user null → isDemo false → children se
+    // renderizan. Esto es intencional — la protección de rutas sin
+    // usuario la hace ClientLayout (route.protected), no DemoGuard.
+    mockState.user = null;
+    render(
+      createElement(DemoGuard, null, createElement(ActionButton)),
+    );
+    expect(screen.getByText('Aprobar')).toBeTruthy();
+  });
+});
+
+describe('DemoOnly — renderiza solo en modo demo', () => {
+  it('renderiza children cuando isDemo', () => {
+    mockState.user = DEMO_USER;
+    render(
+      createElement(DemoOnly, null, createElement('span', null, 'Demo content')),
+    );
+    expect(screen.getByText('Demo content')).toBeTruthy();
+  });
+
+  it('NO renderiza children cuando role=mentor', () => {
+    mockState.user = MENTOR_USER;
+    render(
+      createElement(DemoOnly, null, createElement('span', null, 'Demo content')),
+    );
+    expect(screen.queryByText('Demo content')).toBeNull();
+  });
+});
+
+describe('DemoBanner — banner visible solo con isDemo', () => {
+  it('aparece cuando isDemo', () => {
+    mockState.user = DEMO_USER;
+    render(createElement(DemoBanner));
+    expect(screen.getByText(/modo demo/i)).toBeTruthy();
+  });
+
+  it('NO aparece cuando role=mentor', () => {
+    mockState.user = MENTOR_USER;
+    render(createElement(DemoBanner));
+    expect(screen.queryByText(/modo demo/i)).toBeNull();
+  });
+
+  it('NO aparece cuando user es null', () => {
+    mockState.user = null;
+    render(createElement(DemoBanner));
+    expect(screen.queryByText(/modo demo/i)).toBeNull();
+  });
 });

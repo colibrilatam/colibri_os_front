@@ -6,6 +6,7 @@ import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
 import { mergeHeaders } from './headers.js';
 import { checkContractVersion } from '../contracts/version-check.js';
+import { useUserStore } from '../store';
 
 const DEFAULT_TIMEOUT = 60000;
 
@@ -86,6 +87,24 @@ apiClient.interceptors.response.use(
     if (apiError.status === 401) {
       if (logoutCallback) {
         logoutCallback();
+      }
+    }
+
+    // SEC-002/FE4: si el backend devuelve 403 y el usuario es demo,
+    // mostrar un mensaje amigable en vez del error crudo.
+    // Defensa en profundidad UX — la restricción real es el 403 del
+    // backend (DemoReadOnlyGuard APP_GUARD).
+    if (apiError.status === 403) {
+      const { user } = useUserStore.getState();
+      if (user?.role === 'demo_readonly') {
+        throw new ApiError({
+          code: apiError.code,
+          message: 'Estás en modo demo — solo lectura. Esta acción no está disponible.',
+          status: 403,
+          details: null,
+          requestId: apiError.requestId,
+          isNetworkError: false,
+        });
       }
     }
 
