@@ -48,7 +48,7 @@ export default function LoginRegisterPage() {
     setLoading(true);
     setGuestError('');
     try {
-      const { data, error } = await handleDemoLogin('mentor');
+      const { data, error } = await handleDemoLogin('entrepreneur');
       if (data) {
         setPopupMessage(t('guestLoginMessage'));
         setPopupIsError(false);
@@ -67,7 +67,7 @@ export default function LoginRegisterPage() {
   const handlePopupClose = () => {
     setIsPopupOpen(false);
     if (!popupIsError) {
-      router.push('/home');
+      router.push('/proyecto');
     }
   };
 

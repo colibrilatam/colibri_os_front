@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
 import ErrorScreen from '@/components/ErrorScreen';
 import LoadingScreen from '@/components/LoadingScreen';
-import { useUserProfile } from '@/hooks/queries/useUserProfile';
 import { useProjects } from '@/hooks/queries/useProjects';
-import { useUserStore, useIsDemo } from '@/lib/store';
+import { useUserStore } from '@/lib/store';
 
 export default function ProjectLayout({ children }) {
   const router = useRouter();
@@ -26,31 +25,25 @@ export default function ProjectLayout({ children }) {
 
   // 🔐 Hooks siempre al principio (regla de React). Los early returns vienen después.
   const user = useUserStore((state) => state.user);
-  const isDemo = useIsDemo();
-  const { data: projectData, isLoading: projectsLoading } = useProjects();
+  const {
+    data: projectData,
+    isLoading: projectsLoading,
+    isError: projectsError,
+  } = useProjects();
+
+  // El usuario solo puede tener un proyecto propio (ownerUserId === user.id).
+  const userProject = projectData?.find((p) => p.ownerUserId === user?.id);
+  console.log('userProject', userProject, projectData, user);
 
   // 🔄 Redirección cuando los datos estén listos
   useEffect(() => {
-    if (projectsLoading) return;
-
-    // SEC-002: antes estaba hardcodeado `const isDemo = true`. Ahora se lee del
-    // store, pero isDemo solo se deriva del claim del servidor cuando el backend
-    // emita role=demo_readonly (pendiente PR-BE3/PR-FE3). Hasta entonces es false
-    // y el redirect se ejecuta normalmente.
-    if (user?.email === 'ana@colibri.com' && isDemo) {
-      return;
+    if (userProject) {
+      router.replace(`/dashboard/${userProject.id}/about`);
     }
+  }, [userProject, router]);
 
-    if (projectData) {
-      const userProject = projectData.find((p) => p.ownerUserId === user?.sub);
-      if (userProject) {
-        router.replace(`/dashboard/${userProject.id}/about`);
-      }
-    }
-  }, [user, projectData, projectsLoading, router, isDemo]);
-
-  // ⏳ Esperar a que se verifique la autenticación
-  if (!authChecked) {
+  // ⏳ Esperar a que se verifique la autenticación y carguen los proyectos
+  if (!authChecked || projectsLoading) {
     return <LoadingScreen />;
   }
 
@@ -65,8 +58,8 @@ export default function ProjectLayout({ children }) {
     );
   }
 
-  // ⚠️ Manejo de error al cargar el perfil
-  if (!user || !projectData || projectsLoading) {
+  // ⚠️ Manejo de error al cargar el perfil o los proyectos
+  if (projectsError || !user) {
     return (
       <ErrorScreen
         error="Error al cargar el perfil o los proyectos. Por favor, inténtalo de nuevo más tarde."
@@ -74,6 +67,11 @@ export default function ProjectLayout({ children }) {
         next="Iniciar sesión"
       />
     );
+  }
+
+  // ⏳ Redirección en curso: no renderizar el formulario de creación
+  if (userProject) {
+    return <LoadingScreen />;
   }
 
   return <>{children}</>;
