@@ -5,11 +5,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-https://api.colibrilatam.io/api/v1}
+        # SEC-002: sin fallback a prod. Si la variable no está definida,
+        # Docker Compose falla en vez de apuntar silenciosamente a producción.
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:?NEXT_PUBLIC_BACKEND_URL requerido}
     environment:
       NODE_ENV: production
       NEXT_TELEMETRY_DISABLED: "1"
-      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-https://api.colibrilatam.io/api/v1}
+      NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:?NEXT_PUBLIC_BACKEND_URL requerido}
     ports:
       - "${COLIBRI_CLIENT_PORT:-3031}:3031"
     restart: unless-stopped
