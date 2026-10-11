@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 
 import ResolutionModal from './ResolutionModal';
+import { DemoGuard } from '@/components/common/DemoGuard';
 
 export default function ResolutionActions({
   version,
@@ -64,7 +65,10 @@ export default function ResolutionActions({
               de tomar una decisión sobre esta versión.
             </p>
 
-            <div className="flex flex-col gap-3 mt-6">
+            {/* SEC-002/FE4: botones de aprobación/rechazo ocultos en modo demo.
+                La restricción real es el 403 del backend. */}
+            <DemoGuard>
+              <div className="flex flex-col gap-3 mt-6">
               <button
                 type="button"
                 onClick={() => openModal('completed')}
@@ -113,7 +117,8 @@ export default function ResolutionActions({
                   Rechazar versión
                 </span>
               </button>
-            </div>
+              </div>
+            </DemoGuard>
           </>
         )}
       </div>
