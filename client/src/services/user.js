@@ -1,11 +1,11 @@
 import { apiClient } from '@/lib/api';
 import { validateResponse } from '@/lib/contracts/validate';
-import { UserSchema } from '@/lib/contracts/generated';
+import { UserSchema, UserProfileSchema } from '@/lib/contracts/generated';
 
 export const userService = {
     profile: async () => {
         const response = await apiClient.get('/users/profile');
-        return validateResponse(UserSchema, response.data);
+        return validateResponse(UserProfileSchema, response.data);
     },
 
     userData: async (userId) => {

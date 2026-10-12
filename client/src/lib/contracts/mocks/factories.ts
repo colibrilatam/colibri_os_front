@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import type {
   User,
+  UserProfile,
   Project,
   AuthResponse,
   RegisterResponse,
@@ -39,6 +40,14 @@ export function mockUser(overrides?: Partial<User>): User {
     bio: faker.lorem.sentence(),
     createdAt: randomDatetime(),
     updatedAt: randomDatetime(),
+    ...overrides,
+  };
+}
+
+export function mockUserProfile(overrides?: Partial<UserProfile>): UserProfile {
+  return {
+    ...mockUser(),
+    permissions: ['catalog:read', 'project:read:own', 'project:manage:own'],
     ...overrides,
   };
 }

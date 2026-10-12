@@ -24,6 +24,7 @@ describe('userService', () => {
         gender: null,
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-01T00:00:00.000Z',
+        permissions: ['catalog:read', 'project:read:own', 'project:manage:own'],
       });
     });
   });
