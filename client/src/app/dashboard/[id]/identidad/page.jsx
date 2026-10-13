@@ -1,6 +1,7 @@
 'use client';
 import NftAvatar from '@/components/señal/NftAvatar';
 import ProgressBar from '@/components/ProgressBar';
+import WalletConnect from '@/components/wallet/WalletConnect';
 
 // contexto
 import { useProject } from '@/lib/projectContext';
@@ -165,6 +166,16 @@ export default function IdentidadPage() {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="mt-6 border-t border-white/10 pt-5">
+                <div
+                  className="mb-3 text-center text-xs uppercase tracking-[0.18em]"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {t('linkedWallet')}
+                </div>
+                <WalletConnect mode="link" />
               </div>
             </div>
 

@@ -180,6 +180,7 @@
     "advancingWithSignals": "while advancing with verifiable signals of the stage.",
     "reputationalIdentity": "Reputational identity",
     "dynamicNft": "Dynamic Colibrí NFT",
+    "linkedWallet": "Linked wallet",
     "visualStatus": "Visual status",
     "tramoNameFallback": "Stage name",
     "currentSignal": "Current reputational signal",
@@ -618,5 +619,18 @@
     "completed": "Completed",
     "closed": "Closed",
     "reopened": "Reopened"
+  },
+  "wallet": {
+    "connectWallet": "Connect Wallet",
+    "connecting": "Connecting...",
+    "signInWithWallet": "Sign in with Wallet",
+    "linkWallet": "Link Wallet",
+    "awaitingSignature": "Waiting for signature...",
+    "verified": "Verified",
+    "unlink": "Unlink",
+    "errorConnect": "Error connecting wallet",
+    "errorSign": "Error signing message",
+    "errorLink": "Error linking wallet",
+    "errorUnlink": "Error unlinking wallet"
   }
 }

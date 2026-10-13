@@ -180,6 +180,7 @@
     "advancingWithSignals": "mientras y avanza con señales verificables propias del tramo.",
     "reputationalIdentity": "Identidad reputacional",
     "dynamicNft": "NFT Colibrí dinámico",
+    "linkedWallet": "Wallet vinculada",
     "visualStatus": "Estado visual",
     "tramoNameFallback": "Nombre del tramo",
     "currentSignal": "Señal reputacional actual",
@@ -617,5 +618,18 @@
     "completed": "Completada",
     "closed": "Cerrada",
     "reopened": "Reabierta"
+  },
+  "wallet": {
+    "connectWallet": "Conectar Wallet",
+    "connecting": "Conectando...",
+    "signInWithWallet": "Iniciar sesión con Wallet",
+    "linkWallet": "Vincular Wallet",
+    "awaitingSignature": "Esperando firma...",
+    "verified": "Verificada",
+    "unlink": "Desvincular",
+    "errorConnect": "Error al conectar la wallet",
+    "errorSign": "Error al firmar el mensaje",
+    "errorLink": "Error al vincular la wallet",
+    "errorUnlink": "Error al desvincular la wallet"
   }
 }
