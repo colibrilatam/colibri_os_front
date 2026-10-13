@@ -7,6 +7,7 @@ import NotificationPopup from '@/components/NotificationPopup';
 import SelectRole from '@/components/login/SelectRole';
 import GoogleButton from '@/components/login/GoogleButton';
 import Login from '@/components/login/Login';
+import WalletConnect from '@/components/wallet/WalletConnect';
 import Register from '@/components/login/Register';
 import Button from '@/components/Button';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -125,6 +126,9 @@ export default function LoginRegisterPage() {
           <>
             <Login onLoadingChange={setLoading} />
             <GoogleButton />
+            <div className="mt-3">
+              <WalletConnect mode="login" />
+            </div>
             <button
               onClick={handleGuestLoginClick}
               className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
