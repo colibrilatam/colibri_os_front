@@ -90,6 +90,9 @@ export default function WalletConnect({ mode = 'login' }) {
 
       if (result.user?.role === 'mentor' || result.user?.role === 'evaluator') {
         router.push('/evaluations');
+      }
+      else if(result.user?.role === 'entrepreneur'){
+        router.push('/proyecto');
       } else {
         router.push('/home');
       }
@@ -142,7 +145,7 @@ export default function WalletConnect({ mode = 'login' }) {
           type="button"
           onClick={handleConnect}
           disabled={status === 'connecting'}
-          className="flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] text-white font-semibold transition disabled:opacity-50 cursor-pointer"
+          className="w-full content-center flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] text-white font-semibold transition disabled:opacity-50 cursor-pointer"
         >
           {status === 'connecting' ? (
             <Loader2 size={20} className="animate-spin" />
