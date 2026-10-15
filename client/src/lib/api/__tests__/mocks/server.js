@@ -95,7 +95,9 @@ export const handlers = [
   }),
 
   http.get(`${API_BASE}/users/profile`, () => {
-    return HttpResponse.json(mockUser());
+    return HttpResponse.json(
+      mockUser({ permissions: ['catalog:read', 'project:read:own', 'project:manage:own'] })
+    );
   }),
 
   http.get(`${API_BASE}/users/:id`, ({ params }) => {

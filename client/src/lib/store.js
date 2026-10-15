@@ -43,8 +43,13 @@ export const useUserStore = create(
       setRol: (newRol) => set({ rol: newRol }),
 
       user: null,
-      authChecked: false,      // ← ¿ya terminamos de preguntarle al backend?
+      authChecked: false,
       setUser: (user) => set({ user }),
+
+      updateWallet: (address) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, cryptoWallet: address } : state.user,
+        })),
 
       checkAuth: async () => {
         try {
