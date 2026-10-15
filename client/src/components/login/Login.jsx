@@ -87,25 +87,10 @@ export default function Login({ onLoadingChange }) {
       return;
     }
     
-    // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
+    // Si el rol es emprendedor se redirige a la página de proyectos, donde se buscará el proyecto del usuario y se redirigirá a su dashboard.
     if (userResult.role === 'entrepreneur') {
-      if (allProjectsError) {
-        setServerError(t('errorFetchProjects'));
-        setLoading(false);
-        onLoadingChange?.(false);
-        return;
-      }
-      const project = allProjectsResponse?.find(
-        (project) => project.owner?.id === userResult.sub || project.owner?.id === userResult.id,
-      );
-
-      if (project) {
-        router.push(`/dashboard/${project.id}/about`);
-        return;
-      } else {
-        router.push(`/proyecto`);
-        return;
-      }
+      router.push(`/proyecto`);
+      return;
     }
     router.push('/home');
   };
