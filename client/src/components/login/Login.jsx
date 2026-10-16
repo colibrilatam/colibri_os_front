@@ -62,7 +62,6 @@ export default function Login({ onLoadingChange }) {
     setServerError('');
 
     const result = await handleLogin(formData);
- console.log(" PASOOO 1",result)
 
     if (!result.success) {
 
@@ -70,7 +69,7 @@ export default function Login({ onLoadingChange }) {
       setLoading(false);
       return;
     }
- console.log(" PASOOO 2")
+
     const userResult = result.data.user
     if (userResult.error) {
       setServerError(t('errorUserInfo'));
@@ -91,10 +90,7 @@ export default function Login({ onLoadingChange }) {
     
     // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
     if (userResult.role === 'entrepreneur') {
-
-      console.log("ENTROOOOOO")
-      router.push('/proyecto');
-      /* if (allProjectsError) {
+      if (allProjectsError) {
         setServerError(t('errorFetchProjects'));
         setLoading(false);
         onLoadingChange?.(false);
@@ -110,7 +106,7 @@ export default function Login({ onLoadingChange }) {
       } else {
         router.push(`/proyecto`);
         return;
-      } */
+      }
     }
     router.push('/home');
   };
