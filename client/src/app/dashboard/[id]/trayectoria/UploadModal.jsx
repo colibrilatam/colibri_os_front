@@ -115,7 +115,6 @@ export default function UploadModal({
           file: formData.file,
           executionNotes: formData.executionNotes,
         });
-
         // El correo se intenta enviar después de guardar la microacción.
         try {
           const response = await fetch('/api/microaction-email', {
@@ -136,10 +135,10 @@ export default function UploadModal({
                 ) ?? 'Sin instrucciones',
               executionNotes: formData.executionNotes || '',
               fileName: formData.file?.name || '',
-              userName:
-                useUserStore.getState?.()?.user?.name ??
-                useUserStore.getState?.()?.user?.email ??
-                'No especificado',
+              userEmail:
+                useUserStore.getState?.()?.user?.email ?? 'No especificado',
+              fullName:
+                useUserStore.getState?.()?.user?.fullName ?? 'No especificado',
             }),
           });
 
