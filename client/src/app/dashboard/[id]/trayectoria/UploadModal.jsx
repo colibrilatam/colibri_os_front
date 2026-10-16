@@ -1,24 +1,25 @@
-"use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import NotificationPopup from "@/components/NotificationPopup";
-import { useCreateMicroActionVersion } from "@/hooks/mutations/useCreateMicroActionVersion";
-import { useRequestUploadSignature } from "@/hooks/mutations/useRequestUploadSignature";
-import { useConfirmUpload } from "@/hooks/mutations/useConfirmUpload";
-import { useSubmitEvidence } from "@/hooks/mutations/useSubmitEvidence";
-import { useCreateEvaluation } from "@/hooks/mutations/useCreateEvaluation";
-import { useActiveRubrics } from "@/hooks/queries/useActiveRubrics";
+'use client';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import NotificationPopup from '@/components/NotificationPopup';
+import { useCreateMicroActionVersion } from '@/hooks/mutations/useCreateMicroActionVersion';
+import { useRequestUploadSignature } from '@/hooks/mutations/useRequestUploadSignature';
+import { useConfirmUpload } from '@/hooks/mutations/useConfirmUpload';
+import { useSubmitEvidence } from '@/hooks/mutations/useSubmitEvidence';
+import { useCreateEvaluation } from '@/hooks/mutations/useCreateEvaluation';
+import { useActiveRubrics } from '@/hooks/queries/useActiveRubrics';
 import { useTranslation } from '@/hooks/useTranslation';
 import { getLocalizedValue } from '@/hooks/useLocalizedField';
 import { useUserStore } from '@/lib/store';
 import { DemoGuard } from '@/components/common/DemoGuard';
-import { uploadToCloudinary } from "@/lib/api/cloudinary";
+import { uploadToCloudinary } from '@/lib/api/cloudinary';
+import emailjs from '@emailjs/browser';
 
 const ALLOWED_MIME_TYPES = [
-  "application/pdf",
-  "image/jpeg",
-  "image/png",
-  "image/webp",
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
 ];
 
 export default function UploadModal({
@@ -35,15 +36,14 @@ export default function UploadModal({
     submitted: 'validated',
     validated: 'completed',
     completed: 'closed',
-  }
+  },
 }) {
-
-    const createMicroActionVersion = useCreateMicroActionVersion();
-    const requestUpload = useRequestUploadSignature();
-    const confirmUpload = useConfirmUpload();
-    const submitEvidence = useSubmitEvidence();
-    const createEvaluation = useCreateEvaluation();
-    const { data: activeRubricsResponse } = useActiveRubrics();
+  const createMicroActionVersion = useCreateMicroActionVersion();
+  const requestUpload = useRequestUploadSignature();
+  const confirmUpload = useConfirmUpload();
+  const submitEvidence = useSubmitEvidence();
+  const createEvaluation = useCreateEvaluation();
+  const { data: activeRubricsResponse } = useActiveRubrics();
 
   const [formData, setFormData] = useState({
     file: null,
@@ -57,18 +57,21 @@ export default function UploadModal({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  if(!data) return null
+  if (!data) return null;
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
       if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-        setError(t('errorInvalidFileType') || 'Solo se aceptan archivos PDF o imágenes (JPG, PNG, WebP)');
-        e.target.value = "";
+        setError(
+          t('errorInvalidFileType') ||
+            'Solo se aceptan archivos PDF o imágenes (JPG, PNG, WebP)',
+        );
+        e.target.value = '';
         return;
       }
 
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         file,
         fileName: file.name,
@@ -78,7 +81,7 @@ export default function UploadModal({
   };
 
   const handleexecutionNotesChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       executionNotes: e.target.value,
     }));
@@ -87,7 +90,9 @@ export default function UploadModal({
 
   const validateForm = () => {
     if (!formData.file) {
-      setError(t('errorAttachFile') || 'Debés adjuntar un archivo (PDF o imagen)');
+      setError(
+        t('errorAttachFile') || 'Debés adjuntar un archivo (PDF o imagen)',
+      );
       return false;
     }
     return true;
@@ -101,54 +106,98 @@ export default function UploadModal({
     setLoading(true);
     setError(null);
 
-    const STATES = ['pending', 'started','in_progress', 'submitted'];
+    const STATES = ['pending', 'started', 'in_progress', 'submitted'];
 
     try {
-        if(type === 'microaction') {
-          await createMicroActionVersion.mutateAsync({
-            instanceId: data.id,
-            file: formData.file,
-            executionNotes: formData.executionNotes,
+      if (type === 'microaction') {
+        await createMicroActionVersion.mutateAsync({
+          instanceId: data.id,
+          file: formData.file,
+          executionNotes: formData.executionNotes,
+        });
+        // El correo se intenta enviar después de guardar la microacción.
+        try {
+          const response = await fetch('/api/microaction-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              instanceId: data.id,
+              microActionType:
+                data.microActionDefinition?.microActionType ??
+                'No especificado',
+              instruction:
+                getLocalizedValue(
+                  data.microActionDefinition,
+                  'instruction',
+                  language,
+                ) ?? 'Sin instrucciones',
+              executionNotes: formData.executionNotes || '',
+              fileName: formData.file?.name || '',
+              userEmail:
+                useUserStore.getState?.()?.user?.email ?? 'No especificado',
+              fullName:
+                useUserStore.getState?.()?.user?.fullName ?? 'No especificado',
+            }),
           });
 
-          microactionRefresh();
-        }
-
-        if(type === 'evidence'){
-          // PASO 1 - Solicitar firma al backend
-          const requestUploadBody = {
-            evidenceId: data.id,
-            mimeType: formData.file.type,
-            evidenceType: "file"
-          };
-          const requestSignatureResponse = await requestUpload.mutateAsync(requestUploadBody);
-
-          // PASO 2 - Subir archivo a Cloudinary con firma
-          const cloudinaryData = await uploadToCloudinary(formData.file, requestSignatureResponse);
-
-          // PASO 3 - Confirmar subida al backend
-          await confirmUpload.mutateAsync({
-            evidenceId: data.id,
-            cloudinaryPublicId: cloudinaryData.public_id,
-            changeSummary: "Corrección de formato solicitada por el evaluador.",
-            isMaterialChange: false
-          });
-
-          // PASO 4 - Enviar evidencia a revisión
-          await submitEvidence.mutateAsync(data.id);
-
-          // PASO 5 - Crear evaluación de evidencia
-          if (activeRubricsResponse?.length > 0) {
-            await createEvaluation.mutateAsync({
-              evidenceId: data.id,
-              rubricId: activeRubricsResponse[0].id,
-              evaluationType: "hybrid",
-              evaluationSourceWeight: 0.5
-            });
+          if (!response.ok) {
+            const result = await response.json().catch(() => ({}));
+            throw new Error(result.error || 'Falló el envío del correo.');
           }
 
-          checkPacStatus();
+          console.info('Correo de microacción enviado correctamente.');
+        } catch (emailError) {
+          // No convertimos un error de correo en un error de guardado.
+          console.error(
+            'La microacción se guardó, pero el correo falló:',
+            emailError,
+          );
         }
+
+        await microactionRefresh();
+      }
+
+      if (type === 'evidence') {
+        // PASO 1 - Solicitar firma al backend
+        const requestUploadBody = {
+          evidenceId: data.id,
+          mimeType: formData.file.type,
+          evidenceType: 'file',
+        };
+        const requestSignatureResponse =
+          await requestUpload.mutateAsync(requestUploadBody);
+
+        // PASO 2 - Subir archivo a Cloudinary con firma
+        const cloudinaryData = await uploadToCloudinary(
+          formData.file,
+          requestSignatureResponse,
+        );
+
+        // PASO 3 - Confirmar subida al backend
+        await confirmUpload.mutateAsync({
+          evidenceId: data.id,
+          cloudinaryPublicId: cloudinaryData.public_id,
+          changeSummary: 'Corrección de formato solicitada por el evaluador.',
+          isMaterialChange: false,
+        });
+
+        // PASO 4 - Enviar evidencia a revisión
+        await submitEvidence.mutateAsync(data.id);
+
+        // PASO 5 - Crear evaluación de evidencia
+        if (activeRubricsResponse?.length > 0) {
+          await createEvaluation.mutateAsync({
+            evidenceId: data.id,
+            rubricId: activeRubricsResponse[0].id,
+            evaluationType: 'hybrid',
+            evaluationSourceWeight: 0.5,
+          });
+        }
+
+        checkPacStatus();
+      }
 
       setFormData({
         file: null,
@@ -156,7 +205,6 @@ export default function UploadModal({
         fileName: null,
       });
       onClose();
-
     } catch (err) {
       setError(err.message || t('errorSendTryAgain'));
     } finally {
@@ -165,7 +213,9 @@ export default function UploadModal({
   };
 
   const isMicroaction = type === 'microaction';
-  const title = isMicroaction ? t('uploadTitleMicro') : t('uploadTitleEvidence');
+  const title = isMicroaction
+    ? t('uploadTitleMicro')
+    : t('uploadTitleEvidence');
   //console.log(data)
 
   return (
@@ -197,11 +247,23 @@ export default function UploadModal({
             {isMicroaction && (
               <div className="space-y-2">
                 <div>
-                  <div className="text-[var(--text-tertiary)]">{t('labelInstruction')}</div>
-                  <p>{getLocalizedValue(data.microActionDefinition, 'instruction', language)}</p>
-                  <div className="text-[var(--text-tertiary)]">{data.microActionDefinition.microActionType}</div>
+                  <div className="text-[var(--text-tertiary)]">
+                    {t('labelInstruction')}
+                  </div>
+                  <p>
+                    {getLocalizedValue(
+                      data.microActionDefinition,
+                      'instruction',
+                      language,
+                    )}
+                  </p>
+                  <div className="text-[var(--text-tertiary)]">
+                    {data.microActionDefinition.microActionType}
+                  </div>
                 </div>
-                <label className="text-body-lg font-medium">{t('uploadNotesLabel')}</label>
+                <label className="text-body-lg font-medium">
+                  {t('uploadNotesLabel')}
+                </label>
                 <textarea
                   value={formData.executionNotes}
                   onChange={handleexecutionNotesChange}
@@ -236,7 +298,8 @@ export default function UploadModal({
               </div>
               {formData.fileName && (
                 <p className="text-helper text-[var(--status-success)]">
-                  {t('uploadFileSelected') || 'Archivo seleccionado:'} {formData.fileName}
+                  {t('uploadFileSelected') || 'Archivo seleccionado:'}{' '}
+                  {formData.fileName}
                 </p>
               )}
             </div>
@@ -267,7 +330,11 @@ export default function UploadModal({
                       <motion.div
                         className="w-4 h-4 border-2 border-transparent border-t-[var(--color-turquoise)] rounded-full"
                         animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        transition={{
+                          duration: 1,
+                          repeat: Infinity,
+                          ease: 'linear',
+                        }}
                       />
                       {t('btnSending')}
                     </>

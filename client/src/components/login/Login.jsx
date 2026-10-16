@@ -62,6 +62,7 @@ export default function Login({ onLoadingChange }) {
     setServerError('');
 
     const result = await handleLogin(formData);
+
     if (!result.success) {
 
       setServerError(result.error);
