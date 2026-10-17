@@ -61,12 +61,16 @@ jobs:
       - name: Checkout frontend
         uses: actions/checkout@v4
 
+      # Checkout cruzado del backend. Si el repo backend es privado, definir el
+      # secret E2E_BACKEND_REPO_TOKEN (PAT con read access a colibri_os_back).
+      # Si es público, el token por defecto del workflow alcanza.
       - name: Checkout backend (cross-repo)
         uses: actions/checkout@v4
         with:
           repository: colibrilatam/colibri_os_back
           ref: dev
           path: colibri_os_back
+          token: ${{ secrets.E2E_BACKEND_REPO_TOKEN || github.token }}
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -87,6 +87,10 @@ migraciones, siembra el dataset, arranca backend y frontend, instala Chromium y
 corre la suite. Publica `playwright-report/` y `test-results/` como artefactos.
 El job falla el pipeline si Playwright falla.
 
+> Si `colibri_os_back` es privado, configurar el secret
+> `E2E_BACKEND_REPO_TOKEN` (PAT con permiso de lectura sobre ese repo). Si es
+> público, el token por defecto del workflow alcanza.
+
 ## Casos cubiertos
 
 | ID   | Escenario                                                                 |
