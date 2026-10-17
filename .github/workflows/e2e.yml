@@ -1,0 +1,153 @@
+name: E2E QA-001 (Playwright)
+
+on:
+  pull_request:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-qa-001-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    name: Playwright E2E (entorno aislado)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: colibri_e2e
+          POSTGRES_PASSWORD: colibri_e2e
+          POSTGRES_DB: colibri_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U colibri_e2e"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://colibri_e2e:colibri_e2e@localhost:5432/colibri_e2e
+      E2E_DATABASE_URL: postgresql://colibri_e2e:colibri_e2e@localhost:5432/colibri_e2e
+      E2E_BACKEND_URL: http://localhost:3000
+      E2E_FRONTEND_URL: http://localhost:3031
+      E2E_JWT_SECRET: e2e-jwt-secret-please-change-32-chars-min
+      # En CI el seed corre como paso explícito; no se re-siembra por Playwright.
+      E2E_RESEED: 'false'
+      # Backend
+      JWT_SECRET: e2e-jwt-secret-please-change-32-chars-min
+      JWT_EXPIRES_IN: 1h
+      AUTH_COOKIE_MAX_AGE_MS: '3600000'
+      FRONTEND_URL: http://localhost:3031
+      FRONTEND_URLS: http://localhost:3031,http://127.0.0.1:3031
+      SWAGGER_ENABLED: 'false'
+      E2E_OAUTH_FAKE: 'true'
+      GOOGLE_CLIENT_ID: ci-dummy-client-id
+      GOOGLE_CLIENT_SECRET: ci-dummy-client-secret
+      GOOGLE_CALLBACK_URL: http://localhost:3000/api/v1/auth/google/callback
+      CLOUDINARY_CLOUD_NAME: ci-dummy
+      CLOUDINARY_API_KEY: ci-dummy
+      CLOUDINARY_API_SECRET: ci-dummy
+      # Frontend (embebido en build)
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:3000/api/v1
+
+    steps:
+      - name: Checkout frontend
+        uses: actions/checkout@v4
+
+      - name: Checkout backend (cross-repo)
+        uses: actions/checkout@v4
+        with:
+          repository: colibrilatam/colibri_os_back
+          ref: dev
+          path: colibri_os_back
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install backend deps
+        working-directory: colibri_os_back
+        run: npm ci
+
+      - name: Backend migrations
+        working-directory: colibri_os_back
+        run: npm run migration:run
+
+      - name: Backend seed E2E
+        working-directory: colibri_os_back
+        run: npm run seed:e2e
+
+      - name: Backend build
+        working-directory: colibri_os_back
+        run: npm run build
+
+      - name: Start backend
+        working-directory: colibri_os_back
+        run: |
+          nohup node dist/src/main.js > "$RUNNER_TEMP/backend.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/backend.pid"
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000/api/v1/ready > /dev/null; then
+              echo "Backend listo"; exit 0
+            fi
+            sleep 2
+          done
+          echo "Backend no arrancó"; cat "$RUNNER_TEMP/backend.log"; exit 1
+
+      - name: Install frontend deps
+        working-directory: client
+        run: npm ci
+
+      - name: Frontend build
+        working-directory: client
+        run: npm run build
+
+      - name: Start frontend
+        working-directory: client
+        run: |
+          nohup npm run start > "$RUNNER_TEMP/frontend.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/frontend.pid"
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3031/login > /dev/null; then
+              echo "Frontend listo"; exit 0
+            fi
+            sleep 2
+          done
+          echo "Frontend no arrancó"; cat "$RUNNER_TEMP/frontend.log"; exit 1
+
+      - name: Install E2E deps
+        working-directory: e2e
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright suite
+        working-directory: e2e
+        run: npx playwright test --reporter=list,junit,html
+
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-artifacts-${{ github.sha }}
+          path: |
+            e2e/playwright-report/
+            e2e/test-results/
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Dump server logs on failure
+        if: failure()
+        run: |
+          echo "===== backend.log ====="; cat "$RUNNER_TEMP/backend.log" || true
+          echo "===== frontend.log ====="; cat "$RUNNER_TEMP/frontend.log" || true
