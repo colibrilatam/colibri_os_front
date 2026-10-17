@@ -5,6 +5,7 @@ import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
 import { mergeHeaders } from './headers.js';
+import { attachCsrfHeader } from './csrf.js';
 import { checkContractVersion } from '../contracts/version-check.js';
 import { useUserStore } from '../store';
 
@@ -45,7 +46,10 @@ apiClient.interceptors.request.use(
     const token = await getToken();
     config.headers = mergeHeaders(config, token);
 
-    // Asegurar request-id después del merge
+    // QA-001: header CSRF (doble submit) en requests mutantes con cookie de sesión.
+    attachCsrfHeader(config);
+
+    // Asegurar request-id despuǸs del merge
     config.headers['x-request-id'] = requestId;
 
     logRequest(requestId, config.method, config.url);

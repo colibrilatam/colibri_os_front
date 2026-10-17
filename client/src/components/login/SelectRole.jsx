@@ -37,6 +37,7 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
+          type="button"
           onClick={() => onSelectRole('entrepreneur')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
@@ -54,6 +55,7 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
+          type="button"
           onClick={() => onSelectRole('evaluator')}
           className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
         >
