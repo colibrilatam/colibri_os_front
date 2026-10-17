@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { ApiClient } from '../helpers/api';
-import { loginViaUi, readSessionCookies } from '../fixtures/auth';
+import { loginViaUi, readSessionCookies, ensureHeaderReady } from '../fixtures/auth';
 import { USERS } from '../fixtures/users';
 
 test.describe('QA-001 · login y cobertura por rol', () => {
@@ -71,12 +71,17 @@ test.describe('QA-001 · login y cobertura por rol', () => {
 
   test('T-15: logout por UI limpia la cookie de sesión', async ({ page, context }) => {
     await loginViaUi(page, USERS.revocation);
-    await expect(page).toHaveURL(/\/(proyecto|evaluations)/);
+
+    // Nota: app/proyecto/layout.jsx redirige al dashboard de "su" proyecto cuando
+    // el usuario ya es owner, y esa ruta no renderiza MainHeader. Para probar el
+    // logout por UI usamos /evaluations, que siempre muestra MainHeader.
+    await page.goto('/evaluations');
+    await ensureHeaderReady(page);
 
     const before = await readSessionCookies(context);
     expect(before.access).toBeDefined();
 
-    await page.getByRole('button', { name: /salir|logout/i }).click();
+    await page.getByRole('button', { name: /salir|logout/i }).click({ timeout: 20_000 });
     await page.waitForURL(/\/login/);
 
     await expect

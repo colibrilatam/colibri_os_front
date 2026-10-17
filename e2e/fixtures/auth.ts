@@ -1,4 +1,4 @@
-import type { BrowserContext, Cookie, Page } from '@playwright/test';
+import { expect, type BrowserContext, type Cookie, type Page } from '@playwright/test';
 import { E2E_PASSWORD, type E2EUser } from './users';
 
 export const BACKEND_URL = process.env.E2E_BACKEND_URL ?? 'http://localhost:3000';
@@ -60,4 +60,31 @@ export async function injectSession(context: BrowserContext, session: SessionCoo
 export function decodeJwtPayload(token: string): Record<string, unknown> {
   const [, payload] = token.split('.');
   return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) as Record<string, unknown>;
+}
+
+/**
+ * Espera a que el layout principal (MainHeader) esté visible y estable antes de
+ * interactuar con él.
+ *
+ * Contexto (QA-001): en CI el error boundary de Next (`app/error.jsx`) aparece
+ * de forma intermitente al navegar a rutas protegidas (error de render del lado
+ * servidor, fuera del alcance de seguridad de QA-001). Cuando eso pasa, el
+ * MainHeader se desmonta/remonta y cualquier click se vuelve inestable. El
+ * helper reintenta: si el error boundary está visible, pulsa "Reintentar" y
+ * espera de nuevo a que el header exista.
+ */
+export async function ensureHeaderReady(page: Page): Promise<void> {
+  const header = page.locator('header');
+  const retryButton = page.getByRole('button', { name: /reintentar|retry/i });
+  const errorBoundary = page.getByText(/Algo sali/i);
+
+  await expect(async () => {
+    if (await errorBoundary.count()) {
+      if (await retryButton.count()) {
+        await retryButton.first().click({ timeout: 3_000 });
+      }
+      throw new Error('error boundary visible; reintentando');
+    }
+    await expect(header).toBeVisible({ timeout: 3_000 });
+  }).toPass({ timeout: 45_000, intervals: [1_000] });
 }

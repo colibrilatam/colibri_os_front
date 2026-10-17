@@ -47,6 +47,24 @@ test.describe('QA-001 · CSRF (double-submit cookie)', () => {
     }
   });
 
+  test('T-16: header válido permite una mutación real (201) y su borrado (200)', async () => {
+    const api = await ApiClient.login(USERS.entrepreneurA);
+    try {
+      const created = await api.post('/api/v1/projects', {
+        projectName: 'QA-001 CSRF probe',
+      });
+      expect(created.status(), 'POST con CSRF válido -> 201').toBe(201);
+
+      const { id } = (await created.json()) as { id: string };
+
+      const removed = await api.delete(`/api/v1/projects/${id}`);
+      // DELETE /projects responde 204 (sin contenido).
+      expect(removed.status(), 'DELETE con CSRF válido -> 204').toBe(204);
+    } finally {
+      await api.dispose();
+    }
+  });
+
   test('T-16: GET no requiere CSRF', async () => {
     const api = await ApiClient.login(USERS.entrepreneurA);
     try {
