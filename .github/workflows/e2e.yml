@@ -48,6 +48,8 @@ jobs:
       FRONTEND_URLS: http://localhost:3031,http://127.0.0.1:3031
       SWAGGER_ENABLED: 'false'
       E2E_OAUTH_FAKE: 'true'
+      # Relaja el rate limiting para la suite Playwright (muchos logins por IP).
+      E2E_RELAX_THROTTLE: 'true'
       GOOGLE_CLIENT_ID: ci-dummy-client-id
       GOOGLE_CLIENT_SECRET: ci-dummy-client-secret
       GOOGLE_CALLBACK_URL: http://localhost:3000/api/v1/auth/google/callback

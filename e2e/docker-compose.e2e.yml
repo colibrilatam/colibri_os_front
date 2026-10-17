@@ -42,6 +42,9 @@ services:
       FRONTEND_URLS: http://localhost:3031,http://127.0.0.1:3031
       SWAGGER_ENABLED: "false"
       E2E_OAUTH_FAKE: "true"
+      # Relaja el rate limiting para la suite Playwright (muchos logins por IP).
+      # Solo se usa en el entorno E2E: los tests Jest e2e conservan el throttling real.
+      E2E_RELAX_THROTTLE: "true"
       OAUTH_EXCHANGE_CODE_TTL_MS: "300000"
       GOOGLE_CLIENT_ID: e2e-dummy-client-id
       GOOGLE_CLIENT_SECRET: e2e-dummy-client-secret
