@@ -9,7 +9,6 @@ import { unimetTheme, bancoVenezuelaTheme } from '@/lib/themeMock';
 import { queryKeys } from '@/lib/query-keys';
 
 export function useLogin(options = {}) {
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
   const queryClient = useQueryClient();
@@ -20,7 +19,6 @@ export function useLogin(options = {}) {
         email: formData.email,
         password: formData.password,
       });
-      setToken(data.token);
 
       const userData = await userService.profile();
 

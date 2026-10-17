@@ -8,7 +8,6 @@ import { useUserStore } from '@/lib/store';
 import { queryKeys } from '@/lib/query-keys';
 
 export const useLogin = () => {
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
   const [retrying, setRetrying] = useState(false);
@@ -20,7 +19,6 @@ export const useLogin = () => {
         email: formData.email,
         password: formData.password,
       });
-      setToken(data.token);
 
       const userData = data.user;
 
@@ -62,24 +60,36 @@ export const useLogin = () => {
     }
   };
 
+  /**
+   * SEC-002: login demo sin contraseña.
+   *
+   * Llama a POST /auth/demo-login, que emite un token con role=demo_readonly
+   * y setea la cookie HttpOnly. No hay password en el request ni en el
+   * bundle del cliente.
+   *
+   * El rol del frontend puede llegar en español (login/page) o en inglés
+   * (SelectRole emite 'entrepreneur'/'evaluator'). Se mapea al enum del
+   * backend. Cualquier valor desconocido cae en 'entrepreneur'.
+   */
+  const DEMO_ROLE_MAP = {
+    // Español (login/page.jsx)
+    emprendedor: 'entrepreneur',
+    mentor: 'mentor',
+    evaluador: 'evaluator',
+    mecenas: 'mecenas_semilla',
+    // Inglés (SelectRole.jsx)
+    entrepreneur: 'entrepreneur',
+    evaluator: 'evaluator',
+  };
+
   const handleDemoLogin = async (rol) => {
-    let email;
-    if (rol === 'emprendedor') email = 'ana@colibri.com';
-    else if (rol === 'mecenas') email = 'mecenas@colibri.com';
-    else if (rol === 'mentor') email = 'mentor@colibri.com';
+    const backendRole = DEMO_ROLE_MAP[rol] ?? 'entrepreneur';
 
     try {
-      const demoLoginData = await authService.login({
-        email,
-        password: 'Test@1234',
-      });
+      const demoLoginData = await authService.demoLogin(backendRole);
 
-      setToken(demoLoginData.token);
-      const userData = await userService.profile();
+      const userData = demoLoginData.user;
 
-      if (userData) {
-        // userData.theme = theme;
-      }
       setUser(userData);
       setRol(userData.role);
       return { data: demoLoginData, error: null };

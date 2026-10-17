@@ -1,14 +1,29 @@
 "use client"
 
+import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { HelpCircle } from "lucide-react";
 import NotificationPopup from "../NotificationPopup";
-import { useUserStore } from "@/lib/store";
+
+// SEC-002/FE4: isDemo/setIsDemo eliminados del store. isDemo se deriva de
+// user.role via useIsDemo(). El checkbox de demo mode estaba comentado y
+// ya no tiene estado que leer.
 
 export default function SelectRole({ onSelectRole }) {
   const { t } = useTranslation('login');
+  const [selectedRole, setSelectedRole] = useState(null);
 
-  const { isDemo, setIsDemo } = useUserStore();
+  const handleSelect = (role) => {
+    setSelectedRole(role);
+    onSelectRole(role);
+  };
+
+  const getButtonClasses = (role) => {
+    const base = "mt-6 w-full py-3 rounded-lg font-semibold transition cursor-pointer";
+    return selectedRole === role
+      ? `${base} bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)]`
+      : `${base} bg-gray-500/60 hover:bg-gray-500 text-white/80 hover:text-white`;
+  };
 
   return (
     <div className="flex flex-col gap-6 items-center">
@@ -36,8 +51,9 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
-          onClick={() => onSelectRole('entrepreneur')}
-          className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
+          type="button"
+          onClick={() => handleSelect('entrepreneur')}
+          className={getButtonClasses('entrepreneur')}
         >
           {t('continueEntrepreneur')}
         </button>
@@ -53,8 +69,9 @@ export default function SelectRole({ onSelectRole }) {
           </p>
         </div>
         <button
-          onClick={() => onSelectRole('evaluator')}
-          className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
+          type="button"
+          onClick={() => handleSelect('evaluator')}
+          className={getButtonClasses('evaluator')}
         >
           {t('continuePatron')}
         </button>

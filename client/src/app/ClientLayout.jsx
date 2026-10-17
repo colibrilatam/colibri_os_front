@@ -7,6 +7,7 @@ import { useSyncExternalStore, Suspense, lazy, useState } from 'react';
 import MainHeader from '@/components/MainHeader';
 import ErrorScreen from '@/components/ErrorScreen';
 import LoadingScreen from '@/components/LoadingScreen';
+import { DemoBanner } from '@/components/common/DemoGuard';
 import OnbordaWrapper from '@/lib/tutorial/layout';
 import { getRouteConfig } from '@/lib/layoutConfig';
 import { useUserStore } from '@/lib/store';
@@ -76,6 +77,9 @@ export default function ClientLayout({ children }) {
     <QueryClientProvider client={queryClient}>
       <OnbordaWrapper>
         {route.header === 'main' && <MainHeader />}
+
+        {/* SEC-002/FE4: banner "modo demo — solo lectura" cuando isDemo */}
+        <DemoBanner />
 
         {/* {route.header === 'project' && <Header />} */}
 

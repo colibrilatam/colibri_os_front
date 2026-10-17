@@ -3,7 +3,7 @@ export const routeConfig = {
     {
       path: '/evaluations',
       protected: true,
-      roles: ['admin', 'mentor', 'evaluator', 'entrepreneur'],
+      roles: ['admin', 'mentor', 'evaluator', 'entrepreneur', 'demo_readonly'],
       header: 'main',
       padding: 'pt-24',
     },
@@ -11,21 +11,21 @@ export const routeConfig = {
     {
       path: '/dashboard',
       protected: true,
-      roles: ['admin', 'entrepreneur', 'mentor', 'mecenas_semilla'],
+      roles: ['admin', 'entrepreneur', 'mentor', 'mecenas_semilla', 'demo_readonly'],
       header: 'project',
       padding: 'pt-0',
     },
     {
       path: '/user',
       protected: true,
-      roles: ['admin', 'entrepreneur', 'mecenas_semilla'],
+      roles: ['admin', 'entrepreneur', 'mecenas_semilla', 'demo_readonly'],
       header: 'project',
       padding: 'pt-0',
     },
     {
       path: '/proyecto',
       protected: true,
-      roles: ['admin', 'entrepreneur', 'mecenas_semilla'],
+      roles: ['admin', 'entrepreneur', 'mecenas_semilla', 'demo_readonly'],
       header: 'main',
       padding: 'pt-24',
     },
@@ -47,7 +47,7 @@ export const routeConfig = {
     {
       path: '/home',
       protected: true,
-      roles: ['admin','entrepreneur', 'mentor', 'mecenas_semilla'],
+      roles: ['admin','entrepreneur', 'mentor', 'mecenas_semilla', 'demo_readonly'],
       header: 'project',
       padding: 'pt-0',
     },

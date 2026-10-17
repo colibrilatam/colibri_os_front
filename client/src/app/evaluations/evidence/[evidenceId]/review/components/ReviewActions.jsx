@@ -3,6 +3,7 @@ import { useToast } from '@/lib/hooks/useToast';
 import { evaluationsService } from '@/services/evaluations';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { DemoGuard } from '@/components/common/DemoGuard';
 
 export default function ReviewActions({
   evidence,
@@ -72,10 +73,13 @@ transition
           Cancelar
         </button>
 
-        <button
-          onClick={handleSubmit}
-          disabled={!isFormValid}
-          className="
+        {/* SEC-002/FE4: botón de finalizar oculto en modo demo.
+            La restricción real es el 403 del backend. */}
+        <DemoGuard>
+          <button
+            onClick={handleSubmit}
+            disabled={!isFormValid}
+            className="
 btn-primary
 rounded-xl
 px-6
@@ -83,9 +87,10 @@ py-3
 cursor-pointer
 disabled:opacity-40
 "
-        >
-          Finalizar evaluación
-        </button>
+          >
+            Finalizar evaluación
+          </button>
+        </DemoGuard>
       </div>
     </>
   );

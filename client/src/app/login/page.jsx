@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LoadingScreen from '@/components/LoadingScreen';
 import { useGuestLogin } from '@/hooks/useGuestLogin';
@@ -7,24 +7,21 @@ import NotificationPopup from '@/components/NotificationPopup';
 import SelectRole from '@/components/login/SelectRole';
 import GoogleButton from '@/components/login/GoogleButton';
 import Login from '@/components/login/Login';
+import WalletConnect from '@/components/wallet/WalletConnect';
 import Register from '@/components/login/Register';
 import Button from '@/components/Button';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLogin } from '@/hooks';
 
 import { useNewProject } from '@/hooks/useNewProject';
-import { useUserStore } from '@/lib/store';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
 
 export default function LoginRegisterPage() {
   const { t } = useTranslation('login');
-  
-  const setIsDemo = useUserStore((state) => state.setIsDemo);
-  useEffect(() => {
-    setIsDemo(false) 
-  }, [])
-  
-  
+
+  // SEC-002/FE4: setIsDemo(false) eliminado — isDemo ahora se deriva de
+  // user.role via useIsDemo(). No hay estado que resetear.
+
   const [view, setView] = useState('login'); // login | selectRole | register
   const [selectedRole, setSelectedRole] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,7 +49,7 @@ export default function LoginRegisterPage() {
     setLoading(true);
     setGuestError('');
     try {
-      const { data, error } = await handleDemoLogin('mentor');
+      const { data, error } = await handleDemoLogin('entrepreneur');
       if (data) {
         setPopupMessage(t('guestLoginMessage'));
         setPopupIsError(false);
@@ -71,7 +68,7 @@ export default function LoginRegisterPage() {
   const handlePopupClose = () => {
     setIsPopupOpen(false);
     if (!popupIsError) {
-      router.push('/home');
+      router.push('/proyecto');
     }
   };
 
@@ -129,6 +126,9 @@ export default function LoginRegisterPage() {
           <>
             <Login onLoadingChange={setLoading} />
             <GoogleButton />
+            <div className="mt-3">
+              <WalletConnect mode="login" />
+            </div>
             <button
               onClick={handleGuestLoginClick}
               className="w-full mt-3 py-3 rounded-lg border border-white/10 bg-white/5 text-white hover:bg-white/10 transition cursor-pointer"
@@ -147,7 +147,9 @@ export default function LoginRegisterPage() {
             onSuccess={
               selectedRole === 'entrepreneur'
                 ? () => router.push('/proyecto')
-                : () => router.push('/user/nft')
+                : selectedRole === 'evaluator' ?
+                () => router.push('/evaluations')
+                : () => router.push('/home')
             }
             onBack={() => setView('selectRole')}
             onLoadingChange={setLoading}

@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { ApiError } from './errors.js';
-import { getToken, clearToken } from './token.js';
+import { getToken } from './token.js';
 import { generateRequestId } from './requestId.js';
 import { logRequest, logResponse, logError } from './logger.js';
 import { ERROR_CODES } from './types.js';
 import { mergeHeaders } from './headers.js';
+import { attachCsrfHeader } from './csrf.js';
+import { checkContractVersion } from '../contracts/version-check.js';
+import { useUserStore } from '../store';
 
 const DEFAULT_TIMEOUT = 60000;
 
@@ -43,7 +46,10 @@ apiClient.interceptors.request.use(
     const token = await getToken();
     config.headers = mergeHeaders(config, token);
 
-    // Asegurar request-id después del merge
+    // QA-001: header CSRF (doble submit) en requests mutantes con cookie de sesión.
+    attachCsrfHeader(config);
+
+    // Asegurar request-id despuǸs del merge
     config.headers['x-request-id'] = requestId;
 
     logRequest(requestId, config.method, config.url);
@@ -61,6 +67,7 @@ apiClient.interceptors.response.use(
     const method = response.config?.method || 'GET';
     const url = response.config?.baseURL + response.config?.url || '';
     logResponse(requestId, response.status, method, url, duration);
+    checkContractVersion(response);
     return response;
   },
   async (error) => {
@@ -82,9 +89,26 @@ apiClient.interceptors.response.use(
     const duration = Date.now() - (startTime || Date.now());
 
     if (apiError.status === 401) {
-      clearToken();
       if (logoutCallback) {
         logoutCallback();
+      }
+    }
+
+    // SEC-002/FE4: si el backend devuelve 403 y el usuario es demo,
+    // mostrar un mensaje amigable en vez del error crudo.
+    // Defensa en profundidad UX — la restricción real es el 403 del
+    // backend (DemoReadOnlyGuard APP_GUARD).
+    if (apiError.status === 403) {
+      const { user } = useUserStore.getState();
+      if (user?.role === 'demo_readonly') {
+        throw new ApiError({
+          code: apiError.code,
+          message: 'Estás en modo demo — solo lectura. Esta acción no está disponible.',
+          status: 403,
+          details: null,
+          requestId: apiError.requestId,
+          isNetworkError: false,
+        });
       }
     }
 

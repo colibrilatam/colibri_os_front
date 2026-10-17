@@ -1,0 +1,98 @@
+# QA-001 — entorno aislado para la suite Playwright.
+#
+#   docker compose --env-file .env.e2e -f docker-compose.e2e.yml up -d --wait --build
+#
+# Servicios:
+#  - db:       Postgres efímero (tmpfs), puerto host 5433.
+#  - backend:  NestJS con NODE_ENV=test, migraciones + seed E2E + app.
+#  - frontend: Next.js build de producción en 3031.
+#
+# Playwright corre en el host y usa E2E_BACKEND_URL / E2E_FRONTEND_URL.
+name: colibri-e2e
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: colibri_e2e
+      POSTGRES_PASSWORD: colibri_e2e
+      POSTGRES_DB: colibri_e2e
+    tmpfs:
+      - /var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U colibri_e2e -d colibri_e2e"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ${E2E_BACKEND_CONTEXT:-../../colibri_os_back}
+      dockerfile: Dockerfile.e2e
+    environment:
+      NODE_ENV: test
+      PORT: "3000"
+      DATABASE_URL: postgresql://colibri_e2e:colibri_e2e@db:5432/colibri_e2e
+      JWT_SECRET: ${E2E_JWT_SECRET:?E2E_JWT_SECRET requerido}
+      JWT_EXPIRES_IN: 1h
+      AUTH_COOKIE_MAX_AGE_MS: "3600000"
+      FRONTEND_URL: http://localhost:3031
+      FRONTEND_URLS: http://localhost:3031,http://127.0.0.1:3031
+      SWAGGER_ENABLED: "false"
+      E2E_OAUTH_FAKE: "true"
+      # Relaja el rate limiting para la suite Playwright (muchos logins por IP).
+      # Solo se usa en el entorno E2E: los tests Jest e2e conservan el throttling real.
+      E2E_RELAX_THROTTLE: "true"
+      OAUTH_EXCHANGE_CODE_TTL_MS: "300000"
+      GOOGLE_CLIENT_ID: e2e-dummy-client-id
+      GOOGLE_CLIENT_SECRET: e2e-dummy-client-secret
+      GOOGLE_CALLBACK_URL: http://localhost:3000/api/v1/auth/google/callback
+      CLOUDINARY_CLOUD_NAME: e2e-dummy
+      CLOUDINARY_API_KEY: e2e-dummy
+      CLOUDINARY_API_SECRET: e2e-dummy
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/v1/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ${E2E_FRONTEND_CONTEXT:-../client}
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: http://localhost:3000/api/v1
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_BACKEND_URL: http://localhost:3000/api/v1
+    ports:
+      - "3031:3031"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3031/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s

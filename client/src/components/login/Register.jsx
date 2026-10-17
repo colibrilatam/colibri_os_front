@@ -35,8 +35,12 @@ export default function Register({ selectedRole, onSuccess, onBack, onLoadingCha
     }), [t]);
 
     
-  const isDemo = useUserStore((state) => state.isDemo);
-  const setIsDemo = useUserStore((state) => state.setIsDemo);
+  // SEC-002/FE4: isDemo/setIsDemo eliminados del store. El isDemo de Register
+  // es un concepto PRE-LOGIN (toggle de modo demo antes de autenticarse),
+  // distinto del isDemo post-login derivado de user.role (useIsDemo).
+  // Se usa estado local. El checkbox de SelectRole estaba comentado, así que
+  // este flujo es dead code — se mantiene por si se reactiva.
+  const [isDemo] = useState(false);
   const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
   const setUser = useUserStore((state) => state.setUser);
@@ -121,13 +125,13 @@ useEffect(() => {
   const onSubmitReal = async (data) => {
   try {
     onLoadingChange(true);
-    setToken(null);
-    const result = await handleRegister({ ...data});
-
+   
+    const result = await handleRegister({ ...data, role: selectedRole });
+    console.log(result)
     if (result.success) {
       setRol(selectedRole);
       sessionStorage.removeItem(STORAGE_KEY);
-      setToken(result.data.token);
+   
       setUser(result.data.user);
       onSuccess();
     } else {
@@ -152,7 +156,6 @@ useEffect(() => {
 
   const onSubmitDemo = async (e) => {
     e.preventDefault();
-    setToken(null);
     const result = await handleDemoLogin(selectedRole);
     if (result?.success !== false) {
       onSuccess();

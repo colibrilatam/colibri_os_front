@@ -18,23 +18,3 @@ export async function getToken() {
   // En cliente no hay nada que leer: la cookie es httpOnly.
   return null;
 }
-
-/**
- * Guarda el token JWT en cookie.
- * @param {string} token
- */
-export function setToken(token) {
-  if (typeof window !== 'undefined') {
-    const { setCookie } = require('../cookies.js');
-    setCookie(TOKEN_COOKIE_NAME, token);
-  }
-}
-
-/**
- * Elimina el token JWT de la cookie.
- */
-export function clearToken() {
-  if (typeof window !== 'undefined') {
-    deleteCookie(TOKEN_COOKIE_NAME);
-  }
-}

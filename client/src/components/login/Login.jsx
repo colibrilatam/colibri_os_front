@@ -12,7 +12,6 @@ export default function Login({ onLoadingChange }) {
   const { t } = useTranslation('login');
   const router = useRouter();
   const { handleLogin, userData, retrying } = useLogin();
-  const setToken = useUserStore((state) => state.setToken);
   const setRol = useUserStore((state) => state.setRol);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -55,7 +54,6 @@ export default function Login({ onLoadingChange }) {
   // enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setToken(null);
     if (!isFormValid()) {
       setServerError(t('errorFormInvalid'));
       return;
@@ -64,6 +62,7 @@ export default function Login({ onLoadingChange }) {
     setServerError('');
 
     const result = await handleLogin(formData);
+
     if (!result.success) {
 
       setServerError(result.error);
@@ -89,25 +88,10 @@ export default function Login({ onLoadingChange }) {
       return;
     }
     
-    // Si el rol es emprendedor se obtienen todos los proyectos y se busca el perteneciente al usuario logueado
+    // Si el rol es emprendedor se redirige a la página de proyectos, donde se buscará el proyecto del usuario y se redirigirá a su dashboard.
     if (userResult.role === 'entrepreneur') {
-      if (allProjectsError) {
-        setServerError(t('errorFetchProjects'));
-        setLoading(false);
-        onLoadingChange?.(false);
-        return;
-      }
-      const project = allProjectsResponse?.find(
-        (project) => project.owner?.id === userResult.sub || project.owner?.id === userResult.id,
-      );
-
-      if (project) {
-        router.push(`/dashboard/${project.id}/about`);
-        return;
-      } else {
-        router.push(`/proyecto`);
-        return;
-      }
+      router.push(`/proyecto`);
+      return;
     }
     router.push('/home');
   };

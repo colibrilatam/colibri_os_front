@@ -17,7 +17,7 @@ export function useCompleteProfile(options = {}) {
 
   return useMutation({
     mutationFn: async (formData) => {
-      // formData = { tempToken, role, gender }
+      // formData = { profileCompletionToken, role, gender }
       const data = await authService.completeProfile(formData);
 
       // La respuesta del backend: { message, user }

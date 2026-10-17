@@ -111,3 +111,14 @@ export class ApiError extends Error {
     });
   }
 }
+
+/**
+ * Error lanzado cuando la validación de contrato falla
+ */
+export class ContractValidationError extends Error {
+  constructor(message, zodError) {
+    super(message);
+    this.name = 'ContractValidationError';
+    this.zodError = zodError;
+  }
+}

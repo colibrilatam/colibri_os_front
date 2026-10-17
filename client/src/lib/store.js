@@ -4,6 +4,26 @@ import { isTokenExpired } from './auth';
 import { setCookie, deleteCookie } from './cookies';
 import { resetTheme } from './theme';
 import { userService } from '@/services/user';
+import { UserRoleSchema } from '@/lib/contracts/generated/schemas';
+
+/**
+ * SEC-002 / FE4: rol demo. Usa el tipo del contrato generado, no un string
+ * literal. Si BE renombra el rol, TS lo detecta en compile-time.
+ */
+const DEMO_ROLE = /** @type {import('@/lib/contracts/generated/schemas').UserRole} */ (
+  'demo_readonly'
+);
+
+/**
+ * SEC-002 / FE4: selector derivado. `isDemo` NO es estado — se deriva de
+ * `user.role` en cada render. Una sola fuente de verdad.
+ *
+ * Fail-open: si user es null (no logueado), isDemo es false. Esto es
+ * intencional — la protección real es el 403 del backend
+ * (DemoReadOnlyGuard APP_GUARD, PR-BE2). La UI solo expresa.
+ */
+export const useIsDemo = () =>
+  useUserStore((state) => state.user?.role === DEMO_ROLE);
 
 export const useUserStore = create(
   persist(
@@ -15,30 +35,34 @@ export const useUserStore = create(
       subioTramo: false,
       setSubioTramo: (subioTramo) => set({ subioTramo }),
 
-      // Demo
-      isDemo: false,
-      setIsDemo: (isDemo) => set({ isDemo }),
+      // SEC-002/FE4: isDemo/setIsDemo eliminados del estado.
+      // isDemo se deriva de user.role via useIsDemo() (ver arriba).
 
       // Estado existente
       rol: 'CEO',
       setRol: (newRol) => set({ rol: newRol }),
 
       user: null,
-authChecked: false,      // ← ¿ya terminamos de preguntarle al backend?
-setUser: (user) => set({ user }),
+      authChecked: false,
+      setUser: (user) => set({ user }),
 
-checkAuth: async () => {
-  try {
-    const res = await userService.profile(); // withCredentials: true ya seteado
-    set({ user: res, rol: res.role, authChecked: true });
-    return true;
-  } catch {
-    set({ user: null, rol: null, authChecked: true });
-    return false;
-  }
-},
+      updateWallet: (address) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, cryptoWallet: address } : state.user,
+        })),
 
-isAuth: () => !!get().user,
+      checkAuth: async () => {
+        try {
+          const res = await userService.profile(); // withCredentials: true ya seteado
+          set({ user: res, rol: res.role, authChecked: true });
+          return true;
+        } catch {
+          set({ user: null, rol: null, authChecked: true });
+          return false;
+        }
+      },
+
+      isAuth: () => !!get().user,
 
       theme: null,
       setTheme: (theme) => set({ theme }),
@@ -61,23 +85,6 @@ isAuth: () => !!get().user,
 
       getTranslation: (key) => get().translationsCache[key],
 
-      // Token
-      token: null,
-      setToken: (token) => {
-        set({ token });
-        if (typeof window !== 'undefined') {
-          if (token) {
-            setCookie('token', token);
-          } else {
-            deleteCookie('token');
-          }
-        }
-        // Si se establece un token, desactivar modo invitado
-        set({ isGuest: false });
-        deleteCookie('isGuest');
-      },
-      getToken: () => get().token,
-
       // Guest mode
       isGuest: false,
       setIsGuest: (isGuest) => {
@@ -94,13 +101,11 @@ isAuth: () => !!get().user,
       // Logout
       logout: () => {
         if (typeof window !== 'undefined') {
-          deleteCookie('token');
           deleteCookie('colibri_access_token')
           deleteCookie('isGuest');
           resetTheme();
         }
         set({
-          token: null,
           rol: null,
           user: null,
           theme: null,
@@ -108,16 +113,6 @@ isAuth: () => !!get().user,
           sidebarDesktopExpanded: false,
           language: 'es',
         });
-      },
-
-      // Verificar si hay token y si es válido
-      isAuthenticated: async () => {
-        const token = get().token;
-        if (isTokenExpired(token)) {
-          //set({ token: null })
-          return false;
-        }
-        return false;
       },
 
       // Estado del Sideba: false,
@@ -143,6 +138,8 @@ isAuth: () => !!get().user,
 
         return persistedState;
       },
+      // R3 (CODE-006): el store NO debe contener profileCompletionToken ni access tokens.
+      // Si en el futuro se agrega, revisar `partialize` del persist para no filtrarlo a localStorage.
     },
   ),
 );

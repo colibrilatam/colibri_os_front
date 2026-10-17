@@ -14,6 +14,44 @@ vi.mock('@/lib/api', () => {
   };
 });
 
+function mockUser(overrides = {}) {
+  return {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    email: 'test@example.com',
+    fullName: 'Test User',
+    role: 'entrepreneur',
+    status: 'active',
+    provider: 'local',
+    linkedinId: null,
+    googleId: null,
+    cryptoWallet: null,
+    credentialsWallet: null,
+    adnHash: null,
+    bio: null,
+    avatar: null,
+    gender: null,
+    createdAt: '2024-01-01T00:00:00.000Z',
+    updatedAt: '2024-01-01T00:00:00.000Z',
+    ...overrides,
+  };
+}
+
+function mockAuthResponse(overrides = {}) {
+  return {
+    message: 'Usuario logueado con éxito',
+    user: mockUser(),
+    ...overrides,
+  };
+}
+
+function mockRegisterResponse(overrides = {}) {
+  return {
+    message: 'Usuario registrado con éxito',
+    user: mockUser(),
+    ...overrides,
+  };
+}
+
 describe('authService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -22,11 +60,7 @@ describe('authService', () => {
   describe('register', () => {
     it('should return user data on successful registration', async () => {
       const mockResponse = {
-        data: {
-          id: 1,
-          email: 'test@example.com',
-          token: 'mock-token',
-        },
+        data: mockRegisterResponse(),
       };
 
       const { apiClient } = await import('@/lib/api');
@@ -70,12 +104,9 @@ describe('authService', () => {
   });
 
   describe('login', () => {
-    it('should return token on successful login', async () => {
+    it('should return user on successful login', async () => {
       const mockResponse = {
-        data: {
-          token: 'mock-jwt-token',
-          user: { id: 1, email: 'test@example.com' },
-        },
+        data: mockAuthResponse(),
       };
 
       const { apiClient } = await import('@/lib/api');
