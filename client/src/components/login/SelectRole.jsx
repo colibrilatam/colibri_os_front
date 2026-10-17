@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { HelpCircle } from "lucide-react";
 import NotificationPopup from "../NotificationPopup";
@@ -10,6 +11,19 @@ import NotificationPopup from "../NotificationPopup";
 
 export default function SelectRole({ onSelectRole }) {
   const { t } = useTranslation('login');
+  const [selectedRole, setSelectedRole] = useState(null);
+
+  const handleSelect = (role) => {
+    setSelectedRole(role);
+    onSelectRole(role);
+  };
+
+  const getButtonClasses = (role) => {
+    const base = "mt-6 w-full py-3 rounded-lg font-semibold transition cursor-pointer";
+    return selectedRole === role
+      ? `${base} bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)]`
+      : `${base} bg-gray-500/60 hover:bg-gray-500 text-white/80 hover:text-white`;
+  };
 
   return (
     <div className="flex flex-col gap-6 items-center">
@@ -38,8 +52,8 @@ export default function SelectRole({ onSelectRole }) {
         </div>
         <button
           type="button"
-          onClick={() => onSelectRole('entrepreneur')}
-          className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
+          onClick={() => handleSelect('entrepreneur')}
+          className={getButtonClasses('entrepreneur')}
         >
           {t('continueEntrepreneur')}
         </button>
@@ -56,8 +70,8 @@ export default function SelectRole({ onSelectRole }) {
         </div>
         <button
           type="button"
-          onClick={() => onSelectRole('evaluator')}
-          className="mt-6 w-full py-3 rounded-lg font-semibold bg-[var(--action-primary)] hover:bg-[var(--action-primary-hover)] transition cursor-pointer"
+          onClick={() => handleSelect('evaluator')}
+          className={getButtonClasses('evaluator')}
         >
           {t('continuePatron')}
         </button>
