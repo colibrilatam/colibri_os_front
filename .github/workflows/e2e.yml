@@ -139,7 +139,10 @@ jobs:
 
       - name: Run Playwright suite
         working-directory: e2e
-        run: npx playwright test --reporter=list,junit,html
+        # Sin --reporter en CLI: el config define list + html + junit con
+        # outputFile (test-results/junit.xml). El flag CLI sobrescribe el config
+        # y el junit terminaría en stdout en vez de como artefacto.
+        run: npx playwright test
 
       - name: Upload Playwright artifacts
         if: always()
